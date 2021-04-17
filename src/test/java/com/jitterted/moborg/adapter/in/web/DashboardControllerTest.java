@@ -17,9 +17,9 @@ class DashboardControllerTest {
     Model model = new ConcurrentModel();
     dashboardController.dashboardView(model);
 
-    List<Huddle> huddles = (List<Huddle>) model.getAttribute("huddles");
+    List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("huddles");
 
-    assertThat(huddles)
+    assertThat(huddleSummaryViews)
         .hasSize(1);
   }
 

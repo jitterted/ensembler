@@ -18,6 +18,9 @@ This project manages Remote Mob Programming huddles:
     - Name
     - Date/time (including time zone)
     - Number of people registered
+
+1. View details of a huddle
+
     - Participant details
       - Name
       - GitHub username
@@ -25,6 +28,4 @@ This project manages Remote Mob Programming huddles:
       - Discord username
       - New to group?
 
-Go to /dashboard, we'll see existing sessions
-
-2. Create new session
+1. Create new huddle
