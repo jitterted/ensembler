@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 class DashboardControllerTest {
@@ -15,8 +17,10 @@ class DashboardControllerTest {
     Model model = new ConcurrentModel();
     dashboardController.dashboardView(model);
 
-    assertThat(model.containsAttribute("huddles"))
-        .isTrue();
+    List<Huddle> huddles = (List<Huddle>) model.getAttribute("huddles");
+
+    assertThat(huddles)
+        .hasSize(1);
   }
 
 }

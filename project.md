@@ -1,22 +1,22 @@
 # MobOrg
 
-This project manages Remote Mob Programming sessions:
+This project manages Remote Mob Programming huddles:
 
 * Registration
     + Info for participants
-    + Limit registration to 5 per session
+    + Limit registration to 5 per huddle
     - Integrate with Calendars
     - Integrate with GitHub for adding collaborators to the repo
     - "Integrate" with MobTi.me
     - Integrate with Zoom
 
 * Dashboard
-    + Create a new session
-    + See sessions and how many registrations
+    + Create a new huddle
+    + See huddles and how many registrations
 
-1. See existing sessions
-    - Session name
-    - Session date/time (including time zone)
+1. See existing huddles
+    - Name
+    - Date/time (including time zone)
     - Number of people registered
     - Participant details
       - Name
