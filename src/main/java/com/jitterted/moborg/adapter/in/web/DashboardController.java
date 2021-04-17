@@ -9,6 +9,7 @@ public class DashboardController {
 
   @GetMapping("/dashboard")
   public String dashboardView(Model model) {
+    model.addAttribute("huddles", new Huddles("test"));
     return "dashboard";
   }
 
