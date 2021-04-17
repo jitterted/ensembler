@@ -20,4 +20,10 @@ public class WebConfigurationTest {
            .andExpect(status().isOk());
   }
 
+  @Test
+  public void getOfHuddleDetailEndpointReturns200Ok() throws Exception {
+    mockMvc.perform(get("/huddle"))
+           .andExpect(status().isOk());
+  }
+
 }

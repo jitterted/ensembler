@@ -20,6 +20,8 @@ This project manages Remote Mob Programming huddles:
     - Number of people registered
 
 1. View details of a huddle
+   
+   Requires Huddles to have identifiers to be inserted into the URI
 
     - Participant details
       - Name
