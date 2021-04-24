@@ -1,5 +1,6 @@
 package com.jitterted.moborg.adapter.in.web;
 
+import com.jitterted.moborg.domain.HuddleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
@@ -12,7 +13,8 @@ class DashboardControllerTest {
 
   @Test
   public void givenOneHuddleResultsInHuddlePutIntoModel() throws Exception {
-    DashboardController dashboardController = new DashboardController();
+    HuddleService huddleService = new HuddleService();
+    DashboardController dashboardController = new DashboardController(huddleService);
 
     Model model = new ConcurrentModel();
     dashboardController.dashboardView(model);
