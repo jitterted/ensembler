@@ -21,7 +21,7 @@ public class DashboardController {
 
   @GetMapping("/dashboard")
   public String dashboardView(Model model) {
-    List<Huddle> huddles = huddleService.activeHuddles();
+    List<Huddle> huddles = huddleService.allHuddles();
     List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
     model.addAttribute("huddles", huddleSummaryViews);
     return "dashboard";

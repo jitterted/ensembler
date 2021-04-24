@@ -10,11 +10,6 @@ public class HuddleService {
     this.huddleRepository = huddleRepository;
   }
 
-  public List<Huddle> activeHuddles() {
-    Huddle huddle = new Huddle("Name", ZonedDateTime.now());
-    return List.of(huddle);
-  }
-
   public void scheduleHuddle(String name, ZonedDateTime zonedDateTime) {
     Huddle huddle = new Huddle(name, zonedDateTime);
     huddleRepository.save(huddle);
