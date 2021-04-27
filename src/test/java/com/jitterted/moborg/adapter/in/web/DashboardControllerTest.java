@@ -35,7 +35,7 @@ class DashboardControllerTest {
     HuddleService huddleService = new HuddleService(huddleRepository);
     DashboardController dashboardController = new DashboardController(huddleService);
 
-    String pageName = dashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "2021-04-30", "10:00"));
+    String pageName = dashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "2021-04-30", "09:00 AM"));
 
     assertThat(pageName)
         .isEqualTo("redirect:/dashboard");

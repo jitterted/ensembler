@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <title>MobOrg Dashboard</title>
-  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+<!--  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">-->
   <style>
       table {
           width: 100%;
@@ -46,7 +46,8 @@
   <!-- display "none found" when there are none  -->
   </tbody>
 </table>
-<form action="/schedule" method="post" th:object="${scheduleHuddleForm}">
+<hr>
+<form th:action="@{/schedule}" action="#" method="post" th:object="${scheduleHuddleForm}">
   <div>Name: <input type="text" th:field="*{name}"></div>
   <div>Date: <input type="date" th:field="*{date}"></div>
   <div>Time: <input type="time" th:field="*{time}"></div>

@@ -1,5 +1,6 @@
 package com.jitterted.moborg.adapter.in.web;
 
+import com.jitterted.moborg.adapter.DateTimeFormatting;
 import com.jitterted.moborg.domain.Huddle;
 import com.jitterted.moborg.domain.HuddleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,9 @@ public class DashboardController {
 
   @PostMapping("/schedule")
   public String scheduleHuddle(ScheduleHuddleForm scheduleHuddleForm) {
-    ZonedDateTime dateTime = ZonedDateTime.now();
+    ZonedDateTime dateTime = DateTimeFormatting.fromBrowserDateAndTime(
+        scheduleHuddleForm.getDate(),
+        scheduleHuddleForm.getTime());
     huddleService.scheduleHuddle(scheduleHuddleForm.getName(), dateTime);
     return "redirect:/dashboard";
   }
