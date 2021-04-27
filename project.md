@@ -18,8 +18,8 @@ This project manages Remote Mob Programming huddles:
     - Provide WorldTimeBuddy.com links for huddles
 
 * Dashboard
-    + Schedule a new huddle: date/time, duration, topic
-    + See huddles and how many registrations
+    [X] Schedule a new huddle: date/time, duration, topic
+    [X] See huddles and how many registrations
 
 1. See existing huddles
     - Name

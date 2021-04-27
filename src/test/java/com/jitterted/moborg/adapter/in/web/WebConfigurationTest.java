@@ -29,7 +29,10 @@ public class WebConfigurationTest {
 
   @Test
   public void postToScheduleHuddleEndpointRedirects() throws Exception {
-    mockMvc.perform(post("/schedule"))
+    mockMvc.perform(post("/schedule")
+                        .param("name", "test")
+                        .param("date", "2021-04-30")
+                        .param("time", "09:00"))
            .andExpect(status().is3xxRedirection());
   }
 

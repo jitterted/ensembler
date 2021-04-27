@@ -3,8 +3,10 @@ package com.jitterted.moborg.domain;
 import java.time.ZonedDateTime;
 
 public class Huddle {
+  private HuddleId id;
+
   private final String name;
-  private final ZonedDateTime startDateTime; // do I need to worry about this when we switch back to Standard Time?
+  private final ZonedDateTime startDateTime;
   private int numberRegistered = 0;
 
   public Huddle(String name, ZonedDateTime startDateTime) {
@@ -22,5 +24,13 @@ public class Huddle {
 
   public int numberRegistered() {
     return numberRegistered;
+  }
+
+  public HuddleId getId() {
+    return id;
+  }
+
+  public void setId(HuddleId id) {
+    this.id = id;
   }
 }
