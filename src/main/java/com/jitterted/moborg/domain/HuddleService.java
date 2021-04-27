@@ -2,6 +2,7 @@ package com.jitterted.moborg.domain;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class HuddleService {
   private final HuddleRepository huddleRepository;
@@ -17,5 +18,9 @@ public class HuddleService {
 
   public List<Huddle> allHuddles() {
     return huddleRepository.findAll();
+  }
+
+  public Optional<Huddle> findById(HuddleId huddleId) {
+    return huddleRepository.findById(huddleId);
   }
 }

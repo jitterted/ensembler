@@ -3,6 +3,7 @@ package com.jitterted.moborg.domain;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemoryHuddleRepository implements HuddleRepository {
@@ -21,5 +22,10 @@ public class InMemoryHuddleRepository implements HuddleRepository {
   @Override
   public List<Huddle> findAll() {
     return List.copyOf(huddles.values());
+  }
+
+  @Override
+  public Optional<Huddle> findById(HuddleId huddleId) {
+    return Optional.ofNullable(huddles.get(huddleId));
   }
 }
