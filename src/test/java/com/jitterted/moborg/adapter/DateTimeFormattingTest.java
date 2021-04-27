@@ -20,7 +20,7 @@ class DateTimeFormattingTest {
         .isEqualTo(ZonedDateTime.of(2021, 4, 30, 9, 0, 0, 0, ZoneId.of("America/Los_Angeles")));
   }
 
-  @Testπ
+  @Test
   public void dateTimeFormattedAsMonthDayYear12HourTime() throws Exception {
     ZonedDateTime zonedDateTime = ZonedDateTime.of(2021, 4, 30, 9, 0, 0, 0, ZoneId.of("America/Los_Angeles"));
 
