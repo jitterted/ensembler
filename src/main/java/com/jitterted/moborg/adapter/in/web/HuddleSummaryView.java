@@ -1,5 +1,6 @@
 package com.jitterted.moborg.adapter.in.web;
 
+import com.jitterted.moborg.adapter.DateTimeFormatting;
 import com.jitterted.moborg.domain.Huddle;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public record HuddleSummaryView(String name,
   }
 
   public static HuddleSummaryView toView(Huddle huddle) {
-    return new HuddleSummaryView(huddle.name(), huddle.startDateTime().toString(), huddle.numberRegistered());
+    return new HuddleSummaryView(huddle.name(),
+                                 DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
+                                 huddle.numberRegistered());
   }
 }

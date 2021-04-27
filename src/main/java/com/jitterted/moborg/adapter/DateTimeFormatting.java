@@ -16,7 +16,7 @@ public class DateTimeFormatting {
     return ZonedDateTime.of(localDateTime, ZoneId.of("America/Los_Angeles"));
   }
 
-  public static String formatAsDate(LocalDateTime localDateTime) {
-    return DateTimeFormatter.ofPattern("MM/dd/yyyy").format(localDateTime);
+  public static String formatAsDateTime(ZonedDateTime zonedDateTime) {
+    return DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm a").format(zonedDateTime);
   }
 }
