@@ -9,9 +9,11 @@ import org.springframework.ui.Model;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
+@SuppressWarnings("ConstantConditions")
 class DashboardControllerTest {
 
   @Test
@@ -41,6 +43,35 @@ class DashboardControllerTest {
         .isEqualTo("redirect:/dashboard");
     assertThat(huddleRepository.findAll())
         .hasSize(1);
+  }
+
+  @Test
+  public void detailViewOfExistingHuddleByItsIdIsReturned() throws Exception {
+    InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+    Huddle savedHuddle = huddleRepository.save(new Huddle("Huddle #1", ZonedDateTime.now()));
+    HuddleService huddleService = new HuddleService(huddleRepository);
+    DashboardController dashboardController = new DashboardController(huddleService);
+
+    Model model = new ConcurrentModel();
+    dashboardController.huddleDetailView(model, 0L);
+
+    HuddleDetailView huddle = (HuddleDetailView) model.getAttribute("huddle");
+
+    assertThat(huddle.name())
+        .isEqualTo(savedHuddle.name());
+  }
+
+  @Test
+  public void detailViewOfNonExistentHuddleReturns404NotFound() throws Exception {
+    InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+    HuddleService huddleService = new HuddleService(huddleRepository);
+    DashboardController dashboardController = new DashboardController(huddleService);
+    Model model = new ConcurrentModel();
+
+    assertThatThrownBy(() -> {
+      dashboardController.huddleDetailView(model, 0L);
+    }).isInstanceOf(NoSuchElementException.class);
+
   }
 
 }
