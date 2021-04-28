@@ -4,12 +4,13 @@ import com.jitterted.moborg.domain.Huddle;
 import com.jitterted.moborg.domain.HuddleService;
 import com.jitterted.moborg.domain.InMemoryHuddleRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -70,8 +71,9 @@ class DashboardControllerTest {
 
     assertThatThrownBy(() -> {
       dashboardController.huddleDetailView(model, 0L);
-    }).isInstanceOf(NoSuchElementException.class);
-
+    }).isInstanceOf(ResponseStatusException.class)
+      .extracting("status")
+      .isEqualTo(HttpStatus.NOT_FOUND);
   }
 
 }
