@@ -25,20 +25,20 @@ This project manages Remote Mob Programming huddles:
     - Name
     - Date/time (including time zone)
     - Duration
-    - Topic 
+    - Topic
     - Number of people registered
 
 1. View details of a huddle
    
-   Requires Huddles to have identifiers to be inserted into the URI
+   (DONE) Requires Huddles to have identifiers to be inserted into the URI
 
     - Participant details
       - Name
-      - GitHub username
       - Email address 
+      - GitHub username
       - Discord username
-      - New to group?
+      - New to group
 
-    - Goals of the huddle (i.e., what's the mission)
+    - Goals (one or more) of the huddle (i.e., what's the mission)
 
-1. Schedule a new huddle
+1. (DONE) Schedule a new huddle

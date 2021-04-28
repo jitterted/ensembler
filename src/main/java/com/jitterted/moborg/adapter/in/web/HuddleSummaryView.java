@@ -5,7 +5,8 @@ import com.jitterted.moborg.domain.Huddle;
 
 import java.util.List;
 
-public record HuddleSummaryView(String name,
+public record HuddleSummaryView(long id,
+                                String name,
                                 String dateTime,
                                 int numberRegistered) {
   public static List<HuddleSummaryView> from(List<Huddle> huddles) {
@@ -15,7 +16,8 @@ public record HuddleSummaryView(String name,
   }
 
   public static HuddleSummaryView toView(Huddle huddle) {
-    return new HuddleSummaryView(huddle.name(),
+    return new HuddleSummaryView(huddle.getId().id(),
+                                 huddle.name(),
                                  DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
                                  huddle.numberRegistered());
   }

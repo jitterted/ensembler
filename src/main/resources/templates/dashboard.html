@@ -39,7 +39,7 @@
   </thead>
   <tbody>
   <tr th:each="huddle: ${huddles}">
-    <td th:text="${huddle.name}"/>
+    <td><a th:href="@{/huddle/__${huddle.id}__}" th:text="${huddle.name}">Name</a></td>
     <td th:text="${huddle.dateTime}"/>
     <td th:text="${huddle.numberRegistered}"/>
   </tr>
