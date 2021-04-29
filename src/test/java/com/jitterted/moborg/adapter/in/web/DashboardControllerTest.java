@@ -4,11 +4,9 @@ import com.jitterted.moborg.domain.Huddle;
 import com.jitterted.moborg.domain.HuddleService;
 import com.jitterted.moborg.domain.InMemoryHuddleRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -46,36 +44,6 @@ class DashboardControllerTest {
         .isEqualTo("redirect:/dashboard");
     assertThat(huddleRepository.findAll())
         .hasSize(1);
-  }
-
-  @Test
-  public void detailViewOfExistingHuddleByItsIdIsReturned() throws Exception {
-    InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-    Huddle savedHuddle = huddleRepository.save(new Huddle("Huddle #1", ZonedDateTime.now()));
-    HuddleService huddleService = new HuddleService(huddleRepository);
-    DashboardController dashboardController = new DashboardController(huddleService);
-
-    Model model = new ConcurrentModel();
-    dashboardController.huddleDetailView(model, 0L);
-
-    HuddleDetailView huddle = (HuddleDetailView) model.getAttribute("huddle");
-
-    assertThat(huddle.name())
-        .isEqualTo(savedHuddle.name());
-  }
-
-  @Test
-  public void detailViewOfNonExistentHuddleReturns404NotFound() throws Exception {
-    InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-    HuddleService huddleService = new HuddleService(huddleRepository);
-    DashboardController dashboardController = new DashboardController(huddleService);
-    Model model = new ConcurrentModel();
-
-    assertThatThrownBy(() -> {
-      dashboardController.huddleDetailView(model, 0L);
-    }).isInstanceOf(ResponseStatusException.class)
-      .extracting("status")
-      .isEqualTo(HttpStatus.NOT_FOUND);
   }
 
 }

@@ -15,6 +15,26 @@ public class Participant {
     this.newToMobbing = newToMobbing;
   }
 
+  public String name() {
+    return name;
+  }
+
+  public String githubUsername() {
+    return githubUsername;
+  }
+
+  public String email() {
+    return email;
+  }
+
+  public String discordUserName() {
+    return discordUsername;
+  }
+
+  public boolean isNewToMobbing() {
+    return newToMobbing;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
