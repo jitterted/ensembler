@@ -12,7 +12,7 @@
 
 [ ] User registers for a Huddle
     [ ] Precondition: Can't already be a registered Participant for that Huddle
-    [ ] Postcondition: 
+    [ ] Postcondition: Participant belongs to the Huddle and set of Participants is Unique
 
 [ ] Register as new User
     [ ] Onboard: GitHub, instructions for installing mob.sh, etc.

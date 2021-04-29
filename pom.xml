@@ -12,7 +12,7 @@
   <artifactId>moborg</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>moborg</name>
-  <description>Demo project for Spring Boot</description>
+  <description>Mobbing Organization Manager</description>
   <properties>
     <java.version>16</java.version>
     <testcontainers.version>1.15.2</testcontainers.version>
