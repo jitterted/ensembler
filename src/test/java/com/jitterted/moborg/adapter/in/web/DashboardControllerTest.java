@@ -5,6 +5,7 @@ import com.jitterted.moborg.domain.HuddleService;
 import com.jitterted.moborg.domain.InMemoryHuddleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,6 +14,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SuppressWarnings("ConstantConditions")
 class DashboardControllerTest {
@@ -25,7 +27,7 @@ class DashboardControllerTest {
     DashboardController dashboardController = new DashboardController(huddleService);
 
     Model model = new ConcurrentModel();
-    dashboardController.dashboardView(model);
+    dashboardController.dashboardView(model, mock(OAuth2User.class));
 
     List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("huddles");
     assertThat(huddleSummaryViews)

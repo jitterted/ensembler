@@ -6,6 +6,8 @@ import com.jitterted.moborg.domain.HuddleId;
 import com.jitterted.moborg.domain.HuddleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +29,11 @@ public class DashboardController {
   }
 
   @GetMapping("/dashboard")
-  public String dashboardView(Model model) {
+  public String dashboardView(Model model, @AuthenticationPrincipal OAuth2User principal) {
+    model.addAttribute("username", principal.getAttribute("login"));
+    model.addAttribute("name", principal.getAttribute("name"));
+    model.addAttribute("email", principal.getAttribute("email"));
+    model.addAttribute("github_id", principal.getAttribute("id"));
     List<Huddle> huddles = huddleService.allHuddles();
     List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
     model.addAttribute("huddles", huddleSummaryViews);

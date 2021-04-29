@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <title>MobOrg Dashboard</title>
 <!--  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">-->
@@ -28,7 +31,14 @@
   </style>
 </head>
 <body class="p-4">
-<h1 class="text-3xl mb-6">Huddles</h1>
+<div>
+  sec:authentication("name"): <span sec:authentication="name">NOT FOUND</span>
+  <br/>
+  Spring Roles (Principal Authorities): <span sec:authentication="principal.authorities">NOT FOUND</span>
+</div>
+
+<h2>Welcome <span th:text="${name}">Name</span> (username=<span th:text="${username}">username</span>)</h2>
+<h1 class="text-3xl mb-6">All Huddles</h1>
 <table>
   <thead>
     <tr>
@@ -43,10 +53,13 @@
     <td th:text="${huddle.dateTime}"/>
     <td th:text="${huddle.numberRegistered}"/>
   </tr>
-  <!-- display "none found" when there are none  -->
+  <!-- TODO: display "none found" when there are none  -->
   </tbody>
 </table>
+<div></div>
 <hr>
+<div></div>
+<h2>Schedule New Huddle</h2>
 <form th:action="@{/schedule}" action="#" method="post" th:object="${scheduleHuddleForm}">
   <div>Name: <input type="text" th:field="*{name}"></div>
   <div>Date: <input type="date" th:field="*{date}"></div>
