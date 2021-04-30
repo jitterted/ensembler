@@ -62,4 +62,6 @@ public class DashboardController {
     huddleService.scheduleHuddle(scheduleHuddleForm.getName(), dateTime);
     return "redirect:/dashboard";
   }
+
+
 }

@@ -15,9 +15,19 @@
 <p>Topic: <span th:text="${huddle.topic}">Blackjack</span></p>
 <p>Current Size: <span th:text="${huddle.size}">4</span> of 5</p>
 
-<h3>Participants</h3>
+<h2>Participants</h2>
 <div th:each="participant : ${huddle.participantViews}">
   <span th:text="${participant.name}">Participant Name</span>
   <span th:text="${participant.githubUsername}">GitHub Username</span>
 </div>
+
+<h2>Register Participant</h2>
+<form th:action="@{/register}" action="#" method="post" th:object="${registration}">
+  <div><input type="text" th:field="*{name}"></div>
+  <div><input type="text" th:field="*{githubUsername}"></div>
+  <input hidden="hidden" type="number" th:field="*{huddleId}" th:value="${huddle.huddleId}">
+  <div class="mt-3">
+    <button type="submit">Register Participant</button>
+  </div>
+</form>
 </body>
