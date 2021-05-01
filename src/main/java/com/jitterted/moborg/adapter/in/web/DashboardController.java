@@ -50,6 +50,7 @@ public class DashboardController {
 
     HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle);
     model.addAttribute("huddle", huddleDetailView);
+    model.addAttribute("registration", new RegistrationForm());
 
     return "huddle-detail";
   }
@@ -63,5 +64,11 @@ public class DashboardController {
     return "redirect:/dashboard";
   }
 
+  @PostMapping("/register")
+  public String registerParticipant(RegistrationForm registrationForm) {
+    HuddleId huddleId = HuddleId.of(registrationForm.getHuddleId());
+    huddleService.registerParticipant(huddleId, registrationForm.getName(), registrationForm.getGithubUsername());
 
+    return "redirect:/huddle/" + huddleId.id();
+  }
 }

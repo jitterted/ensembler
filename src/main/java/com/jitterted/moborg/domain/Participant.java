@@ -27,7 +27,7 @@ public class Participant {
     return email;
   }
 
-  public String discordUserName() {
+  public String discordUsername() {
     return discordUsername;
   }
 

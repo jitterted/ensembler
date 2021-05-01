@@ -15,7 +15,12 @@ public class MoborgApplication {
 
   @Bean
   public HuddleService createHuddleService() {
-    return new HuddleService(new InMemoryHuddleRepository());
+    return new HuddleService(createHuddleRepository());
+  }
+
+  @Bean
+  public InMemoryHuddleRepository createHuddleRepository() {
+    return new InMemoryHuddleRepository();
   }
 
 }

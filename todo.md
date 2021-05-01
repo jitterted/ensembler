@@ -1,7 +1,13 @@
 # To Do Next
 
 [ ] Admin management of Huddles
-    [ ] Add user as participant
+    [ ] Add user as participant - where participant is only Name and GitHub-Username
+
+# To Do Offline
+
+[ ] Mock the security for WebConfigurationTest
+
+[ ] Add Tailwind design to pages
 
 ## Participant Features
 

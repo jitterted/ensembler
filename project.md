@@ -15,6 +15,7 @@ This project manages Remote Mob Programming huddles:
     - "Integrate" with MobTi.me
     - Integrate with Zoom
     - Integrate with Discord
+      - As a bot, helping with self-service sign-up
     - Provide WorldTimeBuddy.com links for huddles
 
 * Dashboard

@@ -23,4 +23,12 @@ public class HuddleService {
   public Optional<Huddle> findById(HuddleId huddleId) {
     return huddleRepository.findById(huddleId);
   }
+
+  public void registerParticipant(HuddleId huddleId, String name, String githubUsername) {
+    Huddle huddle = findById(huddleId)
+                      .orElseThrow(HuddleNotFoundException::new);
+    Participant participant = new Participant(name, githubUsername, "", "", false);
+    huddle.register(participant);
+    huddleRepository.save(huddle);
+  }
 }
