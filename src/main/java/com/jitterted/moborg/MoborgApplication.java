@@ -10,23 +10,23 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class MoborgApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(MoborgApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(MoborgApplication.class, args);
+    }
 
-  @Bean
-  public HuddleService createHuddleService() {
-    return new HuddleService(createHuddleRepository());
-  }
+    @Bean
+    public HuddleService createHuddleService() {
+        return new HuddleService(createHuddleRepository());
+    }
 
 //  @Bean
 //  public HuddleRepository createHuddleRepository() {
 //    return new InMemoryHuddleRepository();
 //  }
 
-  @Bean
-  public HuddleRepository createHuddleRepository() {
-    return new FileHuddlePuddle();
-  }
+    @Bean
+    public HuddleRepository createHuddleRepository() {
+        return new FileHuddlePuddle();
+    }
 
 }

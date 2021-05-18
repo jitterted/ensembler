@@ -11,16 +11,16 @@ import java.time.ZonedDateTime;
 
 @Component
 public class DataLoader implements CommandLineRunner {
-  private final HuddleRepository huddleRepository;
+    private final HuddleRepository huddleRepository;
 
-  @Autowired
-  public DataLoader(HuddleRepository huddleRepository) {
-    this.huddleRepository = huddleRepository;
-  }
+    @Autowired
+    public DataLoader(HuddleRepository huddleRepository) {
+        this.huddleRepository = huddleRepository;
+    }
 
-  @Override
-  public void run(String... args) throws Exception {
-    Huddle huddle = new Huddle("Mob #6", ZonedDateTime.of(2021, 5, 7, 9, 0, 0, 0, ZoneId.of("America/Los_Angeles")));
-    huddleRepository.save(huddle);
-  }
+    @Override
+    public void run(String... args) throws Exception {
+        Huddle huddle = new Huddle("Mob #6", ZonedDateTime.of(2021, 5, 7, 9, 0, 0, 0, ZoneId.of("America/Los_Angeles")));
+        huddleRepository.save(huddle);
+    }
 }

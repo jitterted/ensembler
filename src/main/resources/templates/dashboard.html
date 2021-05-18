@@ -4,68 +4,68 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <title>MobOrg Dashboard</title>
-<!--  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">-->
-  <style>
-      table {
-          width: 100%;
-          border-collapse: collapse;
-      }
+    <title>MobOrg Dashboard</title>
+    <!--  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">-->
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-      /* Zebra striping */
-      tr:nth-of-type(odd) {
-          background: #eee;
-      }
+        /* Zebra striping */
+        tr:nth-of-type(odd) {
+            background: #eee;
+        }
 
-      th {
-          background: #333;
-          color: white;
-          font-weight: bold;
-      }
+        th {
+            background: #333;
+            color: white;
+            font-weight: bold;
+        }
 
-      td, th {
-          padding: 6px;
-          border: 1px solid #ccc;
-          text-align: left;
-      }
-  </style>
+        td, th {
+            padding: 6px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+    </style>
 </head>
 <body class="p-4">
 <div>
-  sec:authentication("name"): <span sec:authentication="name">NOT FOUND</span>
-  <br/>
-  Spring Roles (Principal Authorities): <span sec:authentication="principal.authorities">NOT FOUND</span>
+    sec:authentication("name"): <span sec:authentication="name">NOT FOUND</span>
+    <br/>
+    Spring Roles (Principal Authorities): <span sec:authentication="principal.authorities">NOT FOUND</span>
 </div>
 
 <h2>Welcome <span th:text="${name}">Name</span> (username=<span th:text="${username}">username</span>)</h2>
 <h1 class="text-3xl mb-6">All Huddles</h1>
 <table>
-  <thead>
+    <thead>
     <tr>
-      <th>Name</th>
-      <th>Date/Time</th>
-      <th># Registered</th>
+        <th>Name</th>
+        <th>Date/Time</th>
+        <th># Registered</th>
     </tr>
-  </thead>
-  <tbody>
-  <tr th:each="huddle: ${huddles}">
-    <td><a th:href="@{/huddle/__${huddle.id}__}" th:text="${huddle.name}">Name</a></td>
-    <td th:text="${huddle.dateTime}"/>
-    <td th:text="${huddle.numberRegistered}"/>
-  </tr>
-  <!-- TODO: display "none found" when there are none  -->
-  </tbody>
+    </thead>
+    <tbody>
+    <tr th:each="huddle: ${huddles}">
+        <td><a th:href="@{/huddle/__${huddle.id}__}" th:text="${huddle.name}">Name</a></td>
+        <td th:text="${huddle.dateTime}"/>
+        <td th:text="${huddle.numberRegistered}"/>
+    </tr>
+    <!-- TODO: display "none found" when there are none  -->
+    </tbody>
 </table>
 <div></div>
 <hr>
 <div></div>
 <h2>Schedule New Huddle</h2>
 <form th:action="@{/schedule}" action="#" method="post" th:object="${scheduleHuddleForm}">
-  <div>Name: <input type="text" th:field="*{name}"></div>
-  <div>Date: <input type="date" th:field="*{date}"></div>
-  <div>Time: <input type="time" th:field="*{time}"></div>
-  <div>
-    <button type="submit">Schedule New Huddle</button>
-  </div>
+    <div>Name: <input type="text" th:field="*{name}"></div>
+    <div>Date: <input type="date" th:field="*{date}"></div>
+    <div>Time: <input type="time" th:field="*{time}"></div>
+    <div>
+        <button type="submit">Schedule New Huddle</button>
+    </div>
 </form>
 </body>

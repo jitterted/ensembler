@@ -7,11 +7,11 @@ public record ParticipantView(String name,
                               String githubUsername,
                               String discordUsername,
                               boolean newToMobbing) {
-  public static ParticipantView from(Participant participant) {
-    return new ParticipantView(participant.name(),
-                               participant.email(),
-                               participant.githubUsername(),
-                               participant.discordUsername(),
-                               participant.isNewToMobbing());
-  }
+    public static ParticipantView from(Participant participant) {
+        return new ParticipantView(participant.name(),
+                                   participant.email(),
+                                   participant.githubUsername(),
+                                   participant.discordUsername(),
+                                   participant.isNewToMobbing());
+    }
 }

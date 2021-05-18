@@ -12,18 +12,18 @@ public record HuddleDetailView(long id,
                                String topic,
                                List<ParticipantView> participantViews) {
 
-  static HuddleDetailView from(Huddle huddle) {
-    List<ParticipantView> participantViews = huddle.participants().stream()
-                                                   .map(ParticipantView::from)
-                                                   .toList();
-    return new HuddleDetailView(huddle.getId().id(),
-                                huddle.name(),
-                                DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
-                                "90m", "topic",
-                                participantViews);
-  }
+    static HuddleDetailView from(Huddle huddle) {
+        List<ParticipantView> participantViews = huddle.participants().stream()
+                                                       .map(ParticipantView::from)
+                                                       .toList();
+        return new HuddleDetailView(huddle.getId().id(),
+                                    huddle.name(),
+                                    DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
+                                    "90m", "topic",
+                                    participantViews);
+    }
 
-  public int size() {
-    return participantViews.size();
-  }
+    public int size() {
+        return participantViews.size();
+    }
 }

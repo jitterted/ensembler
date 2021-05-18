@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Huddle Details</title>
-<!--  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">-->
-  <style>
-  </style>
+    <title>Huddle Details</title>
+    <!--  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">-->
+    <style>
+    </style>
 </head>
 <body class="p-4">
 <h1 class="text-3xl mb-6">Detail</h1>
@@ -17,17 +17,17 @@
 
 <h2>Participants</h2>
 <div th:each="participantView : ${huddle.participantViews}">
-  <span th:text="${participantView.name}">Participant Name</span>
-  <span th:text="${participantView.githubUsername}">GitHub Username</span>
+    <span th:text="${participantView.name}">Participant Name</span>
+    <span th:text="${participantView.githubUsername}">GitHub Username</span>
 </div>
 
 <h2>Register Participant</h2>
 <form th:action="@{/register}" action="#" method="post" th:object="${registration}">
-  <div>Name: <input type="text" th:field="*{name}"></div>
-  <div>GitHub Username: <input type="text" th:field="*{githubUsername}"></div>
-  <input hidden="hidden" type="number" th:field="*{huddleId}" th:value="${huddle.id}">
-  <div class="mt-3">
-    <button type="submit">Register Participant</button>
-  </div>
+    <div>Name: <input type="text" th:field="*{name}"></div>
+    <div>GitHub Username: <input type="text" th:field="*{githubUsername}"></div>
+    <input hidden="hidden" type="number" th:field="*{huddleId}" th:value="${huddle.id}">
+    <div class="mt-3">
+        <button type="submit">Register Participant</button>
+    </div>
 </form>
 </body>

@@ -21,54 +21,54 @@ import java.util.List;
 @Controller
 public class DashboardController {
 
-  private final HuddleService huddleService;
+    private final HuddleService huddleService;
 
-  @Autowired
-  public DashboardController(HuddleService huddleService) {
-    this.huddleService = huddleService;
-  }
+    @Autowired
+    public DashboardController(HuddleService huddleService) {
+        this.huddleService = huddleService;
+    }
 
-  @GetMapping("/dashboard")
-  public String dashboardView(Model model, @AuthenticationPrincipal OAuth2User principal) {
-    model.addAttribute("username", principal.getAttribute("login"));
-    model.addAttribute("name", principal.getAttribute("name"));
-    model.addAttribute("email", principal.getAttribute("email"));
-    model.addAttribute("github_id", principal.getAttribute("id"));
-    List<Huddle> huddles = huddleService.allHuddles();
-    List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
-    model.addAttribute("huddles", huddleSummaryViews);
-    model.addAttribute("scheduleHuddleForm", new ScheduleHuddleForm());
-    return "dashboard";
-  }
+    @GetMapping("/dashboard")
+    public String dashboardView(Model model, @AuthenticationPrincipal OAuth2User principal) {
+        model.addAttribute("username", principal.getAttribute("login"));
+        model.addAttribute("name", principal.getAttribute("name"));
+        model.addAttribute("email", principal.getAttribute("email"));
+        model.addAttribute("github_id", principal.getAttribute("id"));
+        List<Huddle> huddles = huddleService.allHuddles();
+        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
+        model.addAttribute("huddles", huddleSummaryViews);
+        model.addAttribute("scheduleHuddleForm", new ScheduleHuddleForm());
+        return "dashboard";
+    }
 
-  @GetMapping("/huddle/{huddleId}")
-  public String huddleDetailView(Model model, @PathVariable("huddleId") Long huddleId) {
-    Huddle huddle = huddleService.findById(HuddleId.of(huddleId))
-                                 .orElseThrow(() -> {
-                                   throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-                                 });
+    @GetMapping("/huddle/{huddleId}")
+    public String huddleDetailView(Model model, @PathVariable("huddleId") Long huddleId) {
+        Huddle huddle = huddleService.findById(HuddleId.of(huddleId))
+                                     .orElseThrow(() -> {
+                                         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                                     });
 
-    HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle);
-    model.addAttribute("huddle", huddleDetailView);
-    model.addAttribute("registration", new RegistrationForm());
+        HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle);
+        model.addAttribute("huddle", huddleDetailView);
+        model.addAttribute("registration", new RegistrationForm());
 
-    return "huddle-detail";
-  }
+        return "huddle-detail";
+    }
 
-  @PostMapping("/schedule")
-  public String scheduleHuddle(ScheduleHuddleForm scheduleHuddleForm) {
-    ZonedDateTime dateTime = DateTimeFormatting.fromBrowserDateAndTime(
-        scheduleHuddleForm.getDate(),
-        scheduleHuddleForm.getTime());
-    huddleService.scheduleHuddle(scheduleHuddleForm.getName(), dateTime);
-    return "redirect:/dashboard";
-  }
+    @PostMapping("/schedule")
+    public String scheduleHuddle(ScheduleHuddleForm scheduleHuddleForm) {
+        ZonedDateTime dateTime = DateTimeFormatting.fromBrowserDateAndTime(
+                scheduleHuddleForm.getDate(),
+                scheduleHuddleForm.getTime());
+        huddleService.scheduleHuddle(scheduleHuddleForm.getName(), dateTime);
+        return "redirect:/dashboard";
+    }
 
-  @PostMapping("/register")
-  public String registerParticipant(RegistrationForm registrationForm) {
-    HuddleId huddleId = HuddleId.of(registrationForm.getHuddleId());
-    huddleService.registerParticipant(huddleId, registrationForm.getName(), registrationForm.getGithubUsername());
+    @PostMapping("/register")
+    public String registerParticipant(RegistrationForm registrationForm) {
+        HuddleId huddleId = HuddleId.of(registrationForm.getHuddleId());
+        huddleService.registerParticipant(huddleId, registrationForm.getName(), registrationForm.getGithubUsername());
 
-    return "redirect:/huddle/" + huddleId.id();
-  }
+        return "redirect:/huddle/" + huddleId.id();
+    }
 }

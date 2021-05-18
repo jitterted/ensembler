@@ -17,33 +17,33 @@ import static org.mockito.Mockito.mock;
 @SuppressWarnings("ConstantConditions")
 class DashboardControllerTest {
 
-  @Test
-  public void givenOneHuddleResultsInHuddleInViewModel() throws Exception {
-    InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-    HuddleService huddleService = new HuddleService(huddleRepository);
-    huddleRepository.save(new Huddle("Name", ZonedDateTime.now()));
-    DashboardController dashboardController = new DashboardController(huddleService);
+    @Test
+    public void givenOneHuddleResultsInHuddleInViewModel() throws Exception {
+        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        HuddleService huddleService = new HuddleService(huddleRepository);
+        huddleRepository.save(new Huddle("Name", ZonedDateTime.now()));
+        DashboardController dashboardController = new DashboardController(huddleService);
 
-    Model model = new ConcurrentModel();
-    dashboardController.dashboardView(model, mock(OAuth2User.class));
+        Model model = new ConcurrentModel();
+        dashboardController.dashboardView(model, mock(OAuth2User.class));
 
-    List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("huddles");
-    assertThat(huddleSummaryViews)
-        .hasSize(1);
-  }
+        List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("huddles");
+        assertThat(huddleSummaryViews)
+                .hasSize(1);
+    }
 
-  @Test
-  public void scheduleNewHuddleResultsInHuddleCreatedInRepository() throws Exception {
-    InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-    HuddleService huddleService = new HuddleService(huddleRepository);
-    DashboardController dashboardController = new DashboardController(huddleService);
+    @Test
+    public void scheduleNewHuddleResultsInHuddleCreatedInRepository() throws Exception {
+        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        HuddleService huddleService = new HuddleService(huddleRepository);
+        DashboardController dashboardController = new DashboardController(huddleService);
 
-    String pageName = dashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "2021-04-30", "09:00"));
+        String pageName = dashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "2021-04-30", "09:00"));
 
-    assertThat(pageName)
-        .isEqualTo("redirect:/dashboard");
-    assertThat(huddleRepository.findAll())
-        .hasSize(1);
-  }
+        assertThat(pageName)
+                .isEqualTo("redirect:/dashboard");
+        assertThat(huddleRepository.findAll())
+                .hasSize(1);
+    }
 
 }

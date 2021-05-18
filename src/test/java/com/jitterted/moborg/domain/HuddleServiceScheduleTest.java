@@ -8,14 +8,14 @@ import static org.assertj.core.api.Assertions.*;
 
 class HuddleServiceScheduleTest {
 
-  @Test
-  public void singleScheduledHuddleIsReturnedForAllHuddles() throws Exception {
-    HuddleService huddleService = new HuddleService(new InMemoryHuddleRepository());
+    @Test
+    public void singleScheduledHuddleIsReturnedForAllHuddles() throws Exception {
+        HuddleService huddleService = new HuddleService(new InMemoryHuddleRepository());
 
-    huddleService.scheduleHuddle("Name", ZonedDateTime.now());
+        huddleService.scheduleHuddle("Name", ZonedDateTime.now());
 
-    assertThat(huddleService.allHuddles())
-        .hasSize(1);
-  }
+        assertThat(huddleService.allHuddles())
+                .hasSize(1);
+    }
 
 }

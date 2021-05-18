@@ -5,9 +5,9 @@ import java.util.Optional;
 
 // strager suggests renaming this to HuddlePuddle
 public interface HuddleRepository {
-  Huddle save(Huddle huddle);
+    Huddle save(Huddle huddle);
 
-  List<Huddle> findAll();
+    List<Huddle> findAll();
 
-  Optional<Huddle> findById(HuddleId huddleId);
+    Optional<Huddle> findById(HuddleId huddleId);
 }
