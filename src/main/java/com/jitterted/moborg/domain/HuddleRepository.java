@@ -3,6 +3,7 @@ package com.jitterted.moborg.domain;
 import java.util.List;
 import java.util.Optional;
 
+// strager suggests renaming this to HuddlePuddle
 public interface HuddleRepository {
   Huddle save(Huddle huddle);
 

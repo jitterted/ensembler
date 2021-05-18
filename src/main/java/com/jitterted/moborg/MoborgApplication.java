@@ -1,7 +1,8 @@
 package com.jitterted.moborg;
 
+import com.jitterted.moborg.adapter.out.file.FileHuddlePuddle;
+import com.jitterted.moborg.domain.HuddleRepository;
 import com.jitterted.moborg.domain.HuddleService;
-import com.jitterted.moborg.domain.InMemoryHuddleRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -18,9 +19,14 @@ public class MoborgApplication {
     return new HuddleService(createHuddleRepository());
   }
 
+//  @Bean
+//  public HuddleRepository createHuddleRepository() {
+//    return new InMemoryHuddleRepository();
+//  }
+
   @Bean
-  public InMemoryHuddleRepository createHuddleRepository() {
-    return new InMemoryHuddleRepository();
+  public HuddleRepository createHuddleRepository() {
+    return new FileHuddlePuddle();
   }
 
 }
