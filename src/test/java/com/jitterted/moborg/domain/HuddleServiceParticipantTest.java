@@ -15,7 +15,7 @@ class HuddleServiceParticipantTest {
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
         HuddleId huddleId = huddleRepository.save(huddle).getId();
 
-        huddleService.registerParticipant(huddleId, "Participant J. Name", "pjname");
+        huddleService.registerParticipant(huddleId, "Participant J. Name", "pjname", "partiname");
 
         assertThat(huddle.numberRegistered())
                 .isEqualTo(1);

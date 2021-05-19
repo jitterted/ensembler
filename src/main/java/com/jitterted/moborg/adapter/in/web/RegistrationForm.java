@@ -5,6 +5,7 @@ import com.jitterted.moborg.domain.HuddleId;
 public class RegistrationForm {
     private String name;
     private String githubUsername;
+    private String discordUsername;
     private long huddleId;
 
     // used by Spring to create the incoming form
@@ -38,5 +39,13 @@ public class RegistrationForm {
 
     public void setHuddleId(long huddleId) {
         this.huddleId = huddleId;
+    }
+
+    public String getDiscordUsername() {
+        return discordUsername;
+    }
+
+    public void setDiscordUsername(String discordUsername) {
+        this.discordUsername = discordUsername;
     }
 }

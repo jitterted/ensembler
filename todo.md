@@ -2,12 +2,19 @@
 
 [ ] Admin management of Huddles
     [X] Add user as participant - where participant is only Name and GitHub-Username
+    [X] Add discord username to participant info
+    [ ] Remove participant
+
+# External Integration
+
+[ ] MobTi.me - websocket connection to add list of names from a specific huddle
+    Figure out: protocol, when to push the info from MobOrg to Mobti.me.
 
 # To Do Offline
 
-[ ] Mock the security for WebConfigurationTest
-
 [ ] Add Tailwind design to pages
+
+[X] Mock the security for WebConfigurationTest
 
 ## Participant Features
 

@@ -10,9 +10,9 @@ This project manages Remote Mob Programming huddles:
 * Registration
     + Info for participants
     + Limit registration to 5 per huddle
-    - Integrate with Calendars (both theirs and mine)
-    - Integrate with GitHub for adding collaborators to the repo
     - "Integrate" with MobTi.me
+    - Integrate with Calendars (both theirs and mine) - Google and then ?? based on demand
+    - Integrate with GitHub for adding collaborators to the repo
     - Integrate with Zoom
     - Integrate with Discord
       - As a bot, helping with self-service sign-up

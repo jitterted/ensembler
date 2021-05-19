@@ -24,10 +24,10 @@ public class HuddleService {
         return huddleRepository.findById(huddleId);
     }
 
-    public void registerParticipant(HuddleId huddleId, String name, String githubUsername) {
+    public void registerParticipant(HuddleId huddleId, String name, String githubUsername, String discordUsername) {
         Huddle huddle = findById(huddleId)
                 .orElseThrow(HuddleNotFoundException::new);
-        Participant participant = new Participant(name, githubUsername, "", "", false);
+        Participant participant = new Participant(name, githubUsername, "", discordUsername, false);
         huddle.register(participant);
         huddleRepository.save(huddle);
     }

@@ -70,7 +70,10 @@ public class DashboardController {
     @PostMapping("/register")
     public String registerParticipant(RegistrationForm registrationForm) {
         HuddleId huddleId = HuddleId.of(registrationForm.getHuddleId());
-        huddleService.registerParticipant(huddleId, registrationForm.getName(), registrationForm.getGithubUsername());
+        huddleService.registerParticipant(huddleId,
+                                          registrationForm.getName(),
+                                          registrationForm.getGithubUsername(),
+                                          registrationForm.getDiscordUsername());
 
         return "redirect:/huddle/" + huddleId.id();
     }
