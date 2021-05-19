@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 <head>
     <title>MobOrg Dashboard</title>
     <!--  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">-->
@@ -32,9 +32,9 @@
 </head>
 <body class="p-4">
 <div>
-    sec:authentication("name"): <span sec:authentication="name">NOT FOUND</span>
+<!--    sec:authentication("name"): <span sec:authentication="name">NOT FOUND</span>-->
     <br/>
-    Spring Roles (Principal Authorities): <span sec:authentication="principal.authorities">NOT FOUND</span>
+<!--    Spring Roles (Principal Authorities): <span sec:authentication="principal.authorities">NOT FOUND</span>-->
 </div>
 
 <h2>Welcome <span th:text="${name}">Name</span> (username=<span th:text="${username}">username</span>)</h2>
