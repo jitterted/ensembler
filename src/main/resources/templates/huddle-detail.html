@@ -25,7 +25,7 @@
 <form th:action="@{/register}" action="#" method="post" th:object="${registration}">
     <div>Name: <input type="text" th:field="*{name}"></div>
     <div>GitHub Username: <input type="text" th:field="*{githubUsername}"></div>
-    <input hidden="hidden" type="number" th:field="*{huddleId}" th:value="${huddle.id}">
+    <input hidden="hidden" type="number" th:field="*{huddleId}">
     <div class="mt-3">
         <button type="submit">Register Participant</button>
     </div>

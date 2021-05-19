@@ -34,11 +34,7 @@ public class WebConfigurationTest {
 
     @Test
     public void getOfHuddleDetailEndpointReturns200Ok() throws Exception {
-        Huddle dummyHuddle = new Huddle("dummy", ZonedDateTime.now());
-        HuddleId huddleId = HuddleId.of(13L);
-        dummyHuddle.setId(huddleId);
-        when(huddleService.findById(huddleId))
-                .thenReturn(Optional.of(dummyHuddle));
+        createStubServiceReturningHuddleWithIdOf(13L);
 
         mockMvc.perform(get("/huddle/13"))
                .andExpect(status().isOk());
@@ -51,6 +47,24 @@ public class WebConfigurationTest {
                                 .param("date", "2021-04-30")
                                 .param("time", "09:00"))
                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void postToRegisterParticipantEndpointRedirects() throws Exception {
+        createStubServiceReturningHuddleWithIdOf(23L);
+        mockMvc.perform(post("/register")
+                                .param("huddleId", "23")
+                                .param("name", "participant")
+                                .param("githubUsername", "mygithub"))
+               .andExpect(status().is3xxRedirection());
+    }
+
+    private void createStubServiceReturningHuddleWithIdOf(long id) {
+        Huddle dummyHuddle = new Huddle("dummy", ZonedDateTime.now());
+        HuddleId huddleId = HuddleId.of(id);
+        dummyHuddle.setId(huddleId);
+        when(huddleService.findById(huddleId))
+                .thenReturn(Optional.of(dummyHuddle));
     }
 
 }

@@ -53,7 +53,7 @@ public class DashboardController {
 
         HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle);
         model.addAttribute("huddle", huddleDetailView);
-        model.addAttribute("registration", new RegistrationForm());
+        model.addAttribute("registration", new RegistrationForm(huddle.getId()));
 
         return "huddle-detail";
     }
