@@ -21,13 +21,23 @@ class DateTimeFormattingTest {
     }
 
     @Test
-    public void dateTimeFormattedAsMonthDayYear12HourTime() throws Exception {
+    public void givenPdtTimeZoneDateTimeFormattedAsMonthDayYear12HourTimeWithPdtTimeZone() throws Exception {
         ZonedDateTime zonedDateTime = ZonedDateTime.of(2021, 4, 30, 9, 0, 0, 0, ZoneId.of("America/Los_Angeles"));
 
         String formattedDateTime = DateTimeFormatting.formatAsDateTime(zonedDateTime);
 
         assertThat(formattedDateTime)
-                .isEqualTo("04/30/2021 09:00 AM");
+                .isEqualTo("04/30/2021 09:00 AM PDT");
+    }
+
+    @Test
+    public void givenUtcDateTimeFormattedAsMonthDayYear12HourTimeInPdt() throws Exception {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(2021, 4, 30, 11, 0, 0, 0, ZoneId.of("Z"));
+
+        String formattedDateTime = DateTimeFormatting.formatAsDateTime(zonedDateTime);
+
+        assertThat(formattedDateTime)
+                .isEqualTo("04/30/2021 04:00 AM PDT");
     }
 
 }
