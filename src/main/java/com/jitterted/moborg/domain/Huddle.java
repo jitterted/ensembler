@@ -9,7 +9,7 @@ public class Huddle {
 
     private final String name;
     private final ZonedDateTime startDateTime;
-    private List<Participant> participants = new ArrayList<>();
+    private final List<Participant> participants = new ArrayList<>();
 
     public Huddle(String name, ZonedDateTime startDateTime) {
         this.name = name;

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -29,11 +30,13 @@ public class DashboardController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboardView(Model model, @AuthenticationPrincipal OAuth2User principal) {
-        model.addAttribute("username", principal.getAttribute("login"));
-        model.addAttribute("name", principal.getAttribute("name"));
-        model.addAttribute("email", principal.getAttribute("email"));
-        model.addAttribute("github_id", principal.getAttribute("id"));
+    public String dashboardView(Model model, @AuthenticationPrincipal Principal principal) {
+        if (principal instanceof OAuth2User oAuth2User) {
+            model.addAttribute("username", oAuth2User.getAttribute("login"));
+            model.addAttribute("name", oAuth2User.getAttribute("name"));
+            model.addAttribute("email", oAuth2User.getAttribute("email"));
+            model.addAttribute("github_id", oAuth2User.getAttribute("id"));
+        }
         List<Huddle> huddles = huddleService.allHuddles();
         List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
         model.addAttribute("huddles", huddleSummaryViews);

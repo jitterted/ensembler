@@ -4,10 +4,10 @@ import com.jitterted.moborg.domain.Huddle;
 import com.jitterted.moborg.domain.HuddleService;
 import com.jitterted.moborg.domain.InMemoryHuddleRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
+import java.security.Principal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -25,7 +25,7 @@ class DashboardControllerTest {
         DashboardController dashboardController = new DashboardController(huddleService);
 
         Model model = new ConcurrentModel();
-        dashboardController.dashboardView(model, mock(OAuth2User.class));
+        dashboardController.dashboardView(model, mock(Principal.class));
 
         List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("huddles");
         assertThat(huddleSummaryViews)

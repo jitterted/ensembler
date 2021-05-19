@@ -3,7 +3,6 @@ package com.jitterted.moborg.adapter.in.web;
 import com.jitterted.moborg.domain.Huddle;
 import com.jitterted.moborg.domain.HuddleId;
 import com.jitterted.moborg.domain.HuddleService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,7 +18,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
-@Disabled("Figure out test for OAuth2-based authN")
 public class WebConfigurationTest {
 
     @MockBean
@@ -36,8 +34,12 @@ public class WebConfigurationTest {
 
     @Test
     public void getOfHuddleDetailEndpointReturns200Ok() throws Exception {
-        when(huddleService.findById(HuddleId.of(13L)))
-                .thenReturn(Optional.of(new Huddle("dummy", ZonedDateTime.now())));
+        Huddle dummyHuddle = new Huddle("dummy", ZonedDateTime.now());
+        HuddleId huddleId = HuddleId.of(13L);
+        dummyHuddle.setId(huddleId);
+        when(huddleService.findById(huddleId))
+                .thenReturn(Optional.of(dummyHuddle));
+
         mockMvc.perform(get("/huddle/13"))
                .andExpect(status().isOk());
     }
