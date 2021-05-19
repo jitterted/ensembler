@@ -17,6 +17,9 @@ class HuddleServiceParticipantTest {
 
         huddleService.registerParticipant(huddleId, "Participant J. Name", "pjname");
 
+        assertThat(huddle.numberRegistered())
+                .isEqualTo(1);
+
         assertThat(huddle.participants())
                 .extracting(Participant::githubUsername)
                 .containsOnly("pjname");

@@ -11,7 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class FileHuddlePuddle implements HuddleRepository {
@@ -33,11 +35,18 @@ public class FileHuddlePuddle implements HuddleRepository {
                                    .orElse(0L);
             huddle.setId(HuddleId.of(maxId + 1));
         }
-        allHuddles.add(huddle);
+        Map<HuddleId, Huddle> huddleMap = allHuddles.stream()
+                                                    .collect(
+                                                            Collectors.toMap(
+                                                                    Huddle::getId,
+                                                                    Function.identity(),
+                                                                    (a, b) -> b));
+        huddleMap.put(huddle.getId(), huddle);
 
-        List<HuddleDto> huddleDtos = allHuddles.stream()
-                                               .map(HuddleDto::from)
-                                               .toList();
+        List<HuddleDto> huddleDtos = huddleMap.values()
+                                              .stream()
+                                              .map(HuddleDto::from)
+                                              .toList();
         HuddlesDto huddlesDto = new HuddlesDto(huddleDtos);
 
         try {
