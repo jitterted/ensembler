@@ -22,12 +22,12 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
-public class DashboardController {
+public class AdminDashboardController {
 
     private final HuddleService huddleService;
 
     @Autowired
-    public DashboardController(HuddleService huddleService) {
+    public AdminDashboardController(HuddleService huddleService) {
         this.huddleService = huddleService;
     }
 

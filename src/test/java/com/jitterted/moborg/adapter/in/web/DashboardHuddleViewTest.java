@@ -21,10 +21,10 @@ public class DashboardHuddleViewTest {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
         Huddle savedHuddle = huddleRepository.save(new Huddle("Huddle #1", ZonedDateTime.now()));
-        DashboardController dashboardController = new DashboardController(huddleService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
 
         Model model = new ConcurrentModel();
-        dashboardController.huddleDetailView(model, 0L);
+        adminDashboardController.huddleDetailView(model, 0L);
 
         HuddleDetailView huddle = (HuddleDetailView) model.getAttribute("huddle");
 
@@ -39,10 +39,10 @@ public class DashboardHuddleViewTest {
         Huddle huddle = new Huddle("Huddle #1", ZonedDateTime.now());
         huddle.register(new Participant("name", "github", null, null, false));
         huddleRepository.save(huddle);
-        DashboardController dashboardController = new DashboardController(huddleService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
 
         Model model = new ConcurrentModel();
-        dashboardController.huddleDetailView(model, 0L);
+        adminDashboardController.huddleDetailView(model, 0L);
 
         HuddleDetailView huddleView = (HuddleDetailView) model.getAttribute("huddle");
 
@@ -54,11 +54,11 @@ public class DashboardHuddleViewTest {
     public void detailViewOfNonExistentHuddleReturns404NotFound() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
-        DashboardController dashboardController = new DashboardController(huddleService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
         Model model = new ConcurrentModel();
 
         assertThatThrownBy(() -> {
-            dashboardController.huddleDetailView(model, 0L);
+            adminDashboardController.huddleDetailView(model, 0L);
         }).isInstanceOf(ResponseStatusException.class)
           .extracting("status")
           .isEqualTo(HttpStatus.NOT_FOUND);

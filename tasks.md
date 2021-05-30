@@ -1,8 +1,12 @@
 # Tasks To Do Next
 
-[ ] Security roles
-    [ ] Admin pages only available to me
+[X] Security roles
+    [ ] Logout didn't lead me back to login page?
+    [X] Admin pages only available to me (hardcoded my username)
     [ ] Registration pages available to Members
+        [X] Setup security authority configuration
+        [ ] Create Repository for Members
+            [ ] Use Discord role to define membership?
 
 [ ] Externalize to configuration the MobTimer URI (reference https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.external-config) 
 

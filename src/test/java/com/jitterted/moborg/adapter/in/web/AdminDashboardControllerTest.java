@@ -15,17 +15,17 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 @SuppressWarnings("ConstantConditions")
-class DashboardControllerTest {
+class AdminDashboardControllerTest {
 
     @Test
     public void givenOneHuddleResultsInHuddleInViewModel() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
         huddleRepository.save(new Huddle("Name", ZonedDateTime.now()));
-        DashboardController dashboardController = new DashboardController(huddleService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
 
         Model model = new ConcurrentModel();
-        dashboardController.dashboardView(model, mock(Principal.class));
+        adminDashboardController.dashboardView(model, mock(Principal.class));
 
         List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("huddles");
         assertThat(huddleSummaryViews)
@@ -36,9 +36,9 @@ class DashboardControllerTest {
     public void scheduleNewHuddleResultsInHuddleCreatedInRepository() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
-        DashboardController dashboardController = new DashboardController(huddleService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
 
-        String pageName = dashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "2021-04-30", "09:00"));
+        String pageName = adminDashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "2021-04-30", "09:00"));
 
         assertThat(pageName)
                 .isEqualTo("redirect:/dashboard");
