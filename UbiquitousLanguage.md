@@ -4,6 +4,7 @@
 * Schedule - verb - to create the event
 
 * User - noun - represents someone who has authenticated with the system via GitHub.
-* Participant - noun (role??) - domain object in the system, mapped to 0..* Huddles
-* Admin/Mob Manager
+* Participant - noun - domain object in the system, mapped to 0..* Huddles
+* Member - role - someone who can see Huddles and register to become a Participant
+* Admin/Mob Manager - role - person who can access administrative pages 
 

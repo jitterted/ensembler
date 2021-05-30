@@ -1,15 +1,22 @@
-# To Do Next
+# Tasks To Do Next
+
+[ ] Security roles
+    [ ] Admin pages only available to me
+    [ ] Registration pages available to Members
+
+[ ] Externalize to configuration the MobTimer URI (reference https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.external-config) 
 
 [ ] Admin management of Huddles
     [X] Add user as participant - where participant is only Name and GitHub-Username
     [X] Add discord username to participant info
     [ ] Remove participant
+    [ ] Filter huddles: All|Future, Filled|Have Space, Free/Public|Member|Paid
 
 [ ] Persistence with Spring Data JDBC ("lightweight ORM")
 
 # External Integration
 
-[ ] MobTi.me - websocket connection to add list of names from a specific huddle
+[X] MobTi.me - websocket connection to add list of names from a specific huddle
     Figure out: protocol, when to push the info from MobOrg to Mobti.me.
 
 # To Do Offline
@@ -20,7 +27,9 @@
 
 ## Participant Features
 
-[ ] Show Available Huddles for a User
+[ ] Only allow known Members (identified by their GitHub username) to self-register
+
+[ ] Show Available Huddles for a Member
     [ ] Only show future Huddles
     [ ] Only show Huddles that are not full
     [ ] Only show Huddles that the User isn't already registered for

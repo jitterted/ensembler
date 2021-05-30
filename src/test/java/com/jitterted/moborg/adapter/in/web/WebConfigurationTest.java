@@ -28,7 +28,7 @@ public class WebConfigurationTest {
 
     @Test
     public void getOfDashboardEndpointReturns200Ok() throws Exception {
-        mockMvc.perform(get("/dashboard"))
+        mockMvc.perform(get("/admin/dashboard"))
                .andExpect(status().isOk());
     }
 
@@ -36,13 +36,13 @@ public class WebConfigurationTest {
     public void getOfHuddleDetailEndpointReturns200Ok() throws Exception {
         createStubServiceReturningHuddleWithIdOf(13L);
 
-        mockMvc.perform(get("/huddle/13"))
+        mockMvc.perform(get("/admin/huddle/13"))
                .andExpect(status().isOk());
     }
 
     @Test
     public void postToScheduleHuddleEndpointRedirects() throws Exception {
-        mockMvc.perform(post("/schedule")
+        mockMvc.perform(post("/admin/schedule")
                                 .param("name", "test")
                                 .param("date", "2021-04-30")
                                 .param("time", "09:00"))
@@ -52,7 +52,7 @@ public class WebConfigurationTest {
     @Test
     public void postToRegisterParticipantEndpointRedirects() throws Exception {
         createStubServiceReturningHuddleWithIdOf(23L);
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/admin/register")
                                 .param("huddleId", "23")
                                 .param("name", "participant")
                                 .param("githubUsername", "mygithub"))
