@@ -5,6 +5,8 @@
     [X] Add discord username to participant info
     [ ] Remove participant
 
+[ ] Persistence with Spring Data JDBC ("lightweight ORM")
+
 # External Integration
 
 [ ] MobTi.me - websocket connection to add list of names from a specific huddle
