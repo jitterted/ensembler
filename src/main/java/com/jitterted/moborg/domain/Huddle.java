@@ -1,15 +1,15 @@
 package com.jitterted.moborg.domain;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Huddle {
     private HuddleId id;
 
     private final String name;
     private final ZonedDateTime startDateTime;
-    private final List<Participant> participants = new ArrayList<>();
+    private final Set<Participant> participants = new HashSet<>();
 
     public Huddle(String name, ZonedDateTime startDateTime) {
         this.name = name;
@@ -28,8 +28,8 @@ public class Huddle {
         return participants.size();
     }
 
-    public List<Participant> participants() {
-        return List.copyOf(participants);
+    public Set<Participant> participants() {
+        return Set.copyOf(participants);
     }
 
     public void register(Participant participant) {

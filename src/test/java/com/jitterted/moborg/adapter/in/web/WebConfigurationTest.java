@@ -3,6 +3,7 @@ package com.jitterted.moborg.adapter.in.web;
 import com.jitterted.moborg.domain.Huddle;
 import com.jitterted.moborg.domain.HuddleId;
 import com.jitterted.moborg.domain.HuddleService;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
+@Tag("integration")
 public class WebConfigurationTest {
 
     @MockBean
