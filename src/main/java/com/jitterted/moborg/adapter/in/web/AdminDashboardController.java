@@ -6,6 +6,7 @@ import com.jitterted.moborg.domain.HuddleId;
 import com.jitterted.moborg.domain.HuddleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class AdminDashboardController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboardView(Model model, @AuthenticationPrincipal Principal principal) {
+    public String dashboardView(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         if (principal instanceof OAuth2User oAuth2User) {
             model.addAttribute("username", oAuth2User.getAttribute("login"));
             model.addAttribute("name", oAuth2User.getAttribute("name"));

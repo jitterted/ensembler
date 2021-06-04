@@ -6,9 +6,12 @@
     [ ] Registration pages available to Members
         [X] Setup security authority configuration
         [ ] Create Repository for Members
+            [ ] Temporarily use Collaborators on GitHub repo as defining "member"
             [ ] Use Discord role to define membership?
 
 [ ] Externalize to configuration the MobTimer URI (reference https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.external-config) 
+
+[ ] Update README for configuration information
 
 [ ] Admin management of Huddles
     [X] Add user as participant - where participant is only Name and GitHub-Username
@@ -16,7 +19,7 @@
     [ ] Remove participant
     [ ] Filter huddles: All|Future, Filled|Have Space, Free/Public|Member|Paid
 
-[ ] Persistence with Spring Data JDBC ("lightweight ORM")
+[X] Persistence with Spring Data JDBC ("lightweight ORM")
 
 # External Integration
 

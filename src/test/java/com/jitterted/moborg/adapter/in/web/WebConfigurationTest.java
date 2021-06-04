@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.ZonedDateTime;
@@ -27,6 +28,9 @@ public class WebConfigurationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
     @Test
     public void getOfDashboardEndpointReturns200Ok() throws Exception {

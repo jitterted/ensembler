@@ -3,6 +3,7 @@ package com.jitterted.moborg.adapter.out.jdbc;
 import com.jitterted.moborg.domain.Huddle;
 import com.jitterted.moborg.domain.HuddleId;
 import com.jitterted.moborg.domain.Participant;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
+@Tag("integration")
 class HuddleEntityH2Test {
 
     @Autowired

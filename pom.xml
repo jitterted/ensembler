@@ -64,6 +64,14 @@
       <artifactId>thymeleaf-extras-springsecurity5</artifactId>
     </dependency>
 
+
+    <!-- THIRD-PARTY API STUFF -->
+    <dependency>
+      <groupId>com.spotify</groupId>
+      <artifactId>github-client</artifactId>
+      <version>0.0.25</version>
+    </dependency>
+
     <!-- DATABASE STUFF   -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

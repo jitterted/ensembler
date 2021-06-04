@@ -4,10 +4,10 @@ import com.jitterted.moborg.domain.Huddle;
 import com.jitterted.moborg.domain.HuddleService;
 import com.jitterted.moborg.domain.InMemoryHuddleRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
-import java.security.Principal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -25,7 +25,7 @@ class AdminDashboardControllerTest {
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
 
         Model model = new ConcurrentModel();
-        adminDashboardController.dashboardView(model, mock(Principal.class));
+        adminDashboardController.dashboardView(model, mock(AuthenticatedPrincipal.class));
 
         List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("huddles");
         assertThat(huddleSummaryViews)
