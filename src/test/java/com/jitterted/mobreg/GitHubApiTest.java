@@ -16,19 +16,20 @@ import static org.assertj.core.api.Assertions.*;
 
 @Tag("manual")
 @SpringBootTest
+// pull in the GitHub Personal Access Token property
 @TestPropertySource("file:/Users/tedyoung/.config/spring-boot/spring-boot-devtools.properties")
 public class GitHubApiTest {
 
     @Value("${github.personal.access.token}")
     private String personalAccessToken;
 
-    private String gitHubApiUri = "https://api.github.com/";
+    private static final String GITHUB_API_URI = "https://api.github.com/";
 
     @Test
     public void canAccessCollaboratorsOfOwnedRepository() throws Exception {
         assertThat(personalAccessToken)
                 .isNotBlank();
-        URI gitHubUri = URI.create(gitHubApiUri);
+        URI gitHubUri = URI.create(GITHUB_API_URI);
         final GitHubClient github = GitHubClient.create(gitHubUri, personalAccessToken);
 
         // Do the requests
