@@ -2,6 +2,7 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
     <title>MobOrg Dashboard</title>
@@ -32,9 +33,13 @@
 </head>
 <body class="p-4">
 <div>
-<!--    sec:authentication("name"): <span sec:authentication="name">NOT FOUND</span>-->
-    <br/>
-<!--    Spring Roles (Principal Authorities): <span sec:authentication="principal.authorities">NOT FOUND</span>-->
+    <div sec:authorize="hasRole('ADMIN')">You are ADMIN</div>
+    <div sec:authorize="hasRole('MEMBER')">You are MEMBER</div>
+    <div sec:authorize="!hasAnyRole('ADMIN','MEMBER')">You are authenticated, but are neither Admin nor Member.</div>
+
+    <form action="#" th:action="@{/logout}" method="post">
+        <button type="submit" value="Logout">Logout</button>
+    </form>
 </div>
 
 <h2>Welcome <span th:text="${name}">Name</span> (username=<span th:text="${username}">username</span>)</h2>
