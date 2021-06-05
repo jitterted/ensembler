@@ -1,14 +1,11 @@
-# MobOrg
+# MobReg
 
 This project manages Remote Mob Programming huddles:
 
-# Name Ideas
-
-* Moborg (MoBORG)
-* Mobception (per TheGrumpyGameDev)
+# Features
 
 * Registration
-    + Info for participants
+    + Collect info for participants
     + Limit registration to 5 per huddle
     + "Integrate" with MobTi.me -- via WebSocket
     - Integrate with Calendars (both theirs and mine) - Google and then ?? based on demand
@@ -43,3 +40,8 @@ This project manages Remote Mob Programming huddles:
     - Goals (one or more) of the huddle (i.e., what's the mission)
 
 1. (DONE) Schedule a new huddle
+
+# Name Ideas
+
+* Moborg (MoBORG) -- discarded, name used in various places
+* Mobception (per TheGrumpyGameDev)

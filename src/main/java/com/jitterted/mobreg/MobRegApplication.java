@@ -14,10 +14,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.concurrent.ExecutionException;
 
 @SpringBootApplication
-public class MoborgApplication {
+public class MobRegApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MoborgApplication.class, args);
+        SpringApplication.run(MobRegApplication.class, args);
     }
 
     @Bean

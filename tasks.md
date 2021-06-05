@@ -13,6 +13,9 @@
 
 [ ] Update README for configuration information
 
+[ ] Admin Start the Huddle
+    [ ] Action to push participant names, etc., to Mobti.me.
+
 [ ] Admin management of Huddles
     [X] Add user as participant - where participant is only Name and GitHub-Username
     [X] Add discord username to participant info
@@ -24,7 +27,7 @@
 # External Integration
 
 [X] MobTi.me - websocket connection to add list of names from a specific huddle
-    Figure out: protocol, when to push the info from MobOrg to Mobti.me.
+    Figure out protocol.
 
 # To Do Offline
 

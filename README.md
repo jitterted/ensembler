@@ -1,19 +1,11 @@
 
-# MobOrg - The Mob Programming Organizer
+# MobReg - The Mob Programming Registrar
 
-I wrote this tool to help me manage public (and private)
-remote mob programming sessions, where participants are
-not part of an existing team, but are individuals joining
-to learn a skill, or help develop a product. Since folks can
-come and go, managing who is participating in which mob
-programming session (known as a "huddle") can get tedious.
-Managing whether they have access to the GitHub repository
-being used, are new to mobbing or have experience, and
-making sure no more than 5 people are part of each huddle
-pushed me over the edge into creating this tool.
+I wrote this tool to help me manage public (and private) remote mob programming sessions, where participants are not part of an existing team, but are individuals joining to learn a skill, or to help develop a product.
+Since folks can come and go, managing who is participating in which mob programming session (known as a "huddle") can get tedious.
+Managing their access to the GitHub repository, knowing if they're new to mobbing, and making sure no more than 5 people are part of each huddle, etc., pushed me over the edge into creating this tool.
 
-This is currently a Work In Progress, being built almost
-100% in public, [live on Twitch](https://JitterTed.Live).
+This is currently a Work In Progress, being built almost 100% in public, [live on Twitch](https://JitterTed.Live).
 
 
 
@@ -29,12 +21,10 @@ or update the `application.properties` file directly.
 `github.oauth2.clientSecret`
 
 
-## Installation 
+## Installation & Deployment
 
-Requires Java 16 and uses Maven for building.
+Requires Java 16 (or later) and uses Maven for building.
 
-Since it uses GitHub OAuth2 for authentication,
-you'll need to add a new app to your account
-if you want to run it yourself.
+Since it uses GitHub OAuth2 for authentication, you'll need to register this with your GitHub account if you want to run it yourself.
 
 (more details to come)

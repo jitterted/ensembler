@@ -9,10 +9,10 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.jitterted</groupId>
-  <artifactId>moborg</artifactId>
+  <artifactId>mobreg</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>moborg</name>
-  <description>Mobbing Organization Manager</description>
+  <name>mobreg</name>
+  <description>Mob Registration Manager</description>
   <properties>
     <java.version>16</java.version>
     <testcontainers.version>1.15.3</testcontainers.version>

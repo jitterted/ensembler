@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Tag("integration")
-class MoborgApplicationTests {
+class MobRegApplicationTests {
 
     @Test
     void contextLoads() {
