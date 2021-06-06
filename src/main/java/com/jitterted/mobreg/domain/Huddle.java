@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.domain;
 
+import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +10,7 @@ public class Huddle {
 
     private final String name;
     private final ZonedDateTime startDateTime;
+    private URI zoomMeetingLink;
     private final Set<Participant> participants = new HashSet<>();
 
     public Huddle(String name, ZonedDateTime startDateTime) {
