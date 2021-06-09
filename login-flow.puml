@@ -1,0 +1,43 @@
+@startuml
+
+!pragma useVerticalIf on
+
+start
+fork
+:click Sign-Up button;
+:Redirect to /user;
+fork again
+:click Welcome Back button;
+:Redirect to /member;
+end fork
+:__May__ show GitHub authentication;
+if (AUTHENTICATED) then (yes)
+    if (ROLE_MEMBER) then (yes)
+        :Show Member Home;
+        note left
+            If chose "sign UP"
+            They might have
+            forgotten they
+            are a member
+        end note
+        :Show available Huddles;
+        :etc.;
+        kill
+    else (no)
+        :Show New User Page;
+        note right
+            If chose "sign IN"
+            They thought they
+            were a member
+        end note
+        :Show available projects;
+        :Create invite for repo;
+        :etc.;
+        kill
+    endif
+else (no)
+    :Show error page;
+    kill
+endif
+stop
+@enduml

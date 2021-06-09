@@ -39,6 +39,7 @@ Someone who has participated in past Huddles wants to register for a future hudd
 
 ## User to Member
 
+This scenario needs more analysis.
 This scenario is in progress...
 
 1. Unknown person hits home page, presented with "Login via GitHub" or "Become a Member"

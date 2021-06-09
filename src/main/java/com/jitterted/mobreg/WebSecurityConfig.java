@@ -1,5 +1,6 @@
 package com.jitterted.mobreg;
 
+import com.jitterted.mobreg.adapter.in.web.MemberDeniedRedirectToUserOnboardingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,6 +30,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .hasAuthority("ROLE_ADMIN")
                 .mvcMatchers("/member/**")
                     .hasAuthority("ROLE_MEMBER")
+                .and()
+            .exceptionHandling()
+                .accessDeniedHandler(new MemberDeniedRedirectToUserOnboardingHandler())
                 .and()
             .logout()
                 .logoutSuccessUrl("/")
