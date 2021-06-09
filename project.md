@@ -24,23 +24,22 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
 
 Someone who has participated in past Huddles wants to register for a future huddle.
 
-1. When we load the home page, if we know who they are (they previously authenticated via GitHub), take them to Huddle View (step 3 below)
+1. Show sign-up/sign-in page
 
-2. User clicks on "Login via GitHub" and flow completes successfully. If it fails, redirect to error or "try again" page of some sort.
+2. User clicks on "Sign In via GitHub" and flow completes successfully. If it fails, redirect to error or "try again" page of some sort.
 
-3. If they are not a ROLE_MEMBER, then display "sorry, only members allowed" page **terminates journey** (later, this will go to the User-to-Member scenario below)
+3. If they are **not** a ROLE_MEMBER, then redirect them to User "Home Page" (placeholder for now), otherwise continue...
 
 4. Display list of Huddles, each having REGISTER buttons (if capacity limit hasn't been reached)
 
-1. Member clicks on REGISTER button
+5. Member clicks on REGISTER button
 
-1. Call HuddleService.register with info from Member. 
+6. Call HuddleService.register with info from Member. 
 
 
 ## User to Member
 
 This scenario needs more analysis.
-This scenario is in progress...
 
 1. Unknown person hits home page, presented with "Login via GitHub" or "Become a Member"
 2. If they choose Login via GitHub, then redirect to OAuth web flow
