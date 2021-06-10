@@ -1,4 +1,5 @@
-package com.jitterted.mobreg;
+package com.jitterted.mobreg.adapter.out.membership;
+
 
 import com.spotify.github.v3.User;
 import com.spotify.github.v3.clients.GitHubClient;
@@ -32,15 +33,17 @@ public class GitHubApiTest {
         URI gitHubUri = URI.create(GITHUB_API_URI);
         final GitHubClient github = GitHubClient.create(gitHubUri, personalAccessToken);
 
-        // Do the requests
+        // Check for specific user as collaborator
         RepositoryClient repositoryClient = github.createRepositoryClient("jitterted", "moborg");
+        assertThat(repositoryClient.isCollaborator("tedyoung").get())
+                .isTrue();
+
+        // check ownership info
         Repository repository = repositoryClient.getRepository().get();
         User owner = repository.owner();
         assertThat(owner.login())
                 .isEqualTo("jitterted");
         assertThat(owner.type())
                 .isEqualTo("Organization");
-        assertThat(repositoryClient.isCollaborator("tedyoung").get())
-                .isTrue();
     }
 }
