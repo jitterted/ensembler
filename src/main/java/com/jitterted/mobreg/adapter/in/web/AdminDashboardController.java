@@ -36,7 +36,6 @@ public class AdminDashboardController {
         if (principal instanceof OAuth2User oAuth2User) {
             model.addAttribute("username", oAuth2User.getAttribute("login"));
             model.addAttribute("name", oAuth2User.getAttribute("name"));
-            model.addAttribute("email", oAuth2User.getAttribute("email"));
             model.addAttribute("github_id", oAuth2User.getAttribute("id"));
         }
         List<Huddle> huddles = huddleService.allHuddles();

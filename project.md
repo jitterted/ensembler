@@ -30,7 +30,9 @@ Someone who has participated in past Huddles wants to register for a future hudd
 
 3. If they are **not** a ROLE_MEMBER, then redirect them to User "Home Page" (placeholder for now), otherwise continue...
 
-4. Display list of Huddles, each having REGISTER buttons (if capacity limit hasn't been reached)
+4. Display list of (optional: available) Huddles, each having REGISTER buttons
+
+    * (optional) if capacity limit hasn't been reached, otherwise we'll check later
 
 5. Member clicks on REGISTER button
 
