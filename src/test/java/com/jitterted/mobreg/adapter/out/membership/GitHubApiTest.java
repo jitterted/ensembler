@@ -13,7 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.net.URI;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("manual")
 @SpringBootTest
@@ -41,7 +41,9 @@ public class GitHubApiTest {
         // check ownership info
         Repository repository = repositoryClient.getRepository().get();
         User owner = repository.owner();
-        assertThat(owner.login())
+        assertThat(owner)
+                .isNotNull()
+                .extracting(User::login)
                 .isEqualTo("jitterted");
         assertThat(owner.type())
                 .isEqualTo("Organization");
