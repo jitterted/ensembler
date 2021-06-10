@@ -65,7 +65,7 @@
 <hr>
 <div></div>
 <h2>Schedule New Huddle</h2>
-<form th:action="@{/schedule}" action="#" method="post" th:object="${scheduleHuddleForm}">
+<form th:action="@{/admin/schedule}" action="#" method="post" th:object="${scheduleHuddleForm}">
     <div>Name: <input type="text" th:field="*{name}"></div>
     <div>Date: <input type="date" th:field="*{date}"></div>
     <div>Time: <input type="time" th:field="*{time}"></div>

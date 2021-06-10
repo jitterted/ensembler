@@ -66,7 +66,7 @@ public class AdminDashboardController {
                 scheduleHuddleForm.getDate(),
                 scheduleHuddleForm.getTime());
         huddleService.scheduleHuddle(scheduleHuddleForm.getName(), dateTime);
-        return "redirect:/dashboard";
+        return "redirect:/admin/dashboard";
     }
 
     @PostMapping("/register")
@@ -77,6 +77,6 @@ public class AdminDashboardController {
                                           registrationForm.getGithubUsername(),
                                           registrationForm.getDiscordUsername());
 
-        return "redirect:/huddle/" + huddleId.id();
+        return "redirect:/admin/huddle/" + huddleId.id();
     }
 }

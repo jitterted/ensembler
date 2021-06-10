@@ -41,7 +41,7 @@ class AdminDashboardControllerTest {
         String pageName = adminDashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "2021-04-30", "09:00"));
 
         assertThat(pageName)
-                .isEqualTo("redirect:/dashboard");
+                .isEqualTo("redirect:/admin/dashboard");
         assertThat(huddleRepository.findAll())
                 .hasSize(1);
     }

@@ -7,7 +7,7 @@
     </style>
 </head>
 <body class="p-4">
-<a href="#" th:href="@{/dashboard}"><h1>MobReg: Ensemble Programming Registration System</h1></a>
+<a href="#" th:href="@{/admin/dashboard}"><h1>MobReg: Ensemble Programming Registration System</h1></a>
 <h2 class="text-3xl mb-6">Detail</h2>
 
 <p>Name: <span th:text="${huddle.name}">Name</span></p>
@@ -24,7 +24,7 @@
 </div>
 
 <h2>Register Participant</h2>
-<form th:action="@{/register}" action="#" method="post" th:object="${registration}">
+<form th:action="@{/admin/register}" action="#" method="post" th:object="${registration}">
     <div>Name: <input type="text" th:field="*{name}"></div>
     <div>GitHub Username: <input type="text" th:field="*{githubUsername}"></div>
     <div>Discord Username: <input type="text" th:field="*{discordUsername}"></div>

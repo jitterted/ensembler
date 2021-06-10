@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(properties = {"GITHUB_OAUTH=dummy"})
 @AutoConfigureTestDatabase
 @Tag("integration")
 class HuddleEntityH2Test {
