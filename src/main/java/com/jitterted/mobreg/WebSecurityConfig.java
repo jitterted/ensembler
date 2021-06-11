@@ -26,8 +26,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .mvcMatchers("/", "/error")
                     .permitAll()
-                .mvcMatchers("/user/**")
-                    .hasAuthority("ROLE_USER")
+//                .mvcMatchers("/user/**")
+//                    .hasAuthority("ROLE_USER") // TODO: what?
                 .mvcMatchers("/admin/**")
                     .hasAuthority("ROLE_ADMIN")
                 .mvcMatchers("/member/**")
