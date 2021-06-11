@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Repository
 public class DataJdbcHuddleRepositoryAdapter implements HuddleRepository {
@@ -21,16 +22,22 @@ public class DataJdbcHuddleRepositoryAdapter implements HuddleRepository {
 
     @Override
     public Huddle save(Huddle huddle) {
-        return null;
+        HuddleEntity huddleEntity = HuddleEntity.from(huddle);
+        HuddleEntity savedHuddleEntity = jdbcHuddleRepository.save(huddleEntity);
+        return savedHuddleEntity.asHuddle();
     }
 
     @Override
     public List<Huddle> findAll() {
-        return null;
+        return StreamSupport.stream(
+                jdbcHuddleRepository.findAll().spliterator(), false)
+                            .map(HuddleEntity::asHuddle)
+                            .toList();
     }
 
     @Override
     public Optional<Huddle> findById(HuddleId huddleId) {
-        return Optional.empty();
+        Optional<HuddleEntity> found = jdbcHuddleRepository.findById(huddleId.id());
+        return found.map(HuddleEntity::asHuddle);
     }
 }
