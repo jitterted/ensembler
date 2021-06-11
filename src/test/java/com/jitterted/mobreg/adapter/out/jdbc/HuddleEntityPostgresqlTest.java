@@ -14,9 +14,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 @SpringBootTest(properties = {"GITHUB_OAUTH=dummy"})
 @Tag("container")
 @Tag("integration")

@@ -9,19 +9,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 @Tag("integration")
-public class WebConfigurationTest {
+@WithMockUser(username = "username", authorities = {"ROLE_MEMBER","ROLE_ADMIN"})
+public class AdminEndpointConfigurationTest {
 
     @MockBean
     HuddleService huddleService;
@@ -51,7 +54,8 @@ public class WebConfigurationTest {
         mockMvc.perform(post("/admin/schedule")
                                 .param("name", "test")
                                 .param("date", "2021-04-30")
-                                .param("time", "09:00"))
+                                .param("time", "09:00")
+                                .with(csrf()))
                .andExpect(status().is3xxRedirection());
     }
 
@@ -61,7 +65,8 @@ public class WebConfigurationTest {
         mockMvc.perform(post("/admin/register")
                                 .param("huddleId", "23")
                                 .param("name", "participant")
-                                .param("githubUsername", "mygithub"))
+                                .param("githubUsername", "mygithub")
+                                .with(csrf()))
                .andExpect(status().is3xxRedirection());
     }
 
