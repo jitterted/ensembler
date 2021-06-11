@@ -5,7 +5,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
-    <title>MobReg Admin Dashboard</title>
+    <title>MobReg Registration</title>
     <style>
         table {
             width: 100%;
@@ -46,6 +46,7 @@
 <table>
     <thead>
     <tr>
+        <th>Register</th>
         <th>Name</th>
         <th>Date/Time</th>
         <th># Registered</th>
@@ -53,23 +54,19 @@
     </thead>
     <tbody>
     <tr th:each="huddle: ${huddles}">
-        <td><a th:href="@{/admin/huddle/__${huddle.id}__}" th:text="${huddle.name}">Name</a></td>
-        <td th:text="${huddle.dateTime}"/>
-        <td th:text="${huddle.numberRegistered}"/>
+        <td>
+            <form action="#" th:action="@{/member/register}" th:object="${register}" method="post">
+                <input hidden="hidden" type="text" th:field="*{name}">
+                <input hidden="hidden" type="text" th:field="*{username}">
+                <input hidden="hidden" type="number" th:value="${huddle.id}" name="id">
+                <button type="submit" value="register">Register</button>
+            </form>
+        </td>
+        <td th:text="${huddle.name}">Name</td>
+        <td th:text="${huddle.dateTime}">Date/Time</td>
+        <td th:text="${huddle.numberRegistered}">9</td>
     </tr>
     <!-- TODO: display "none found" when there are none  -->
     </tbody>
 </table>
-<div></div>
-<hr>
-<div></div>
-<h2>Schedule New Huddle</h2>
-<form th:action="@{/admin/schedule}" action="#" method="post" th:object="${scheduleHuddleForm}">
-    <div>Name: <input type="text" th:field="*{name}"></div>
-    <div>Date: <input type="date" th:field="*{date}"></div>
-    <div>Time: <input type="time" th:field="*{time}"></div>
-    <div>
-        <button type="submit">Schedule New Huddle</button>
-    </div>
-</form>
 </body>

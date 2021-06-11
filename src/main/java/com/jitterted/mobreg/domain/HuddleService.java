@@ -26,7 +26,7 @@ public class HuddleService {
 
     public void registerParticipant(HuddleId huddleId, String name, String githubUsername, String discordUsername) {
         Huddle huddle = findById(huddleId)
-                .orElseThrow(HuddleNotFoundException::new);
+                .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));
         Participant participant = new Participant(name, githubUsername, "", discordUsername, false);
         huddle.register(participant);
         huddleRepository.save(huddle);
