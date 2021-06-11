@@ -2,6 +2,10 @@ package com.jitterted.mobreg.adapter.out.file;
 
 import java.util.List;
 
+/**
+ * Don't use this, left here for instructional purposes only
+ */
+@Deprecated
 public class HuddlesDto {
     private List<HuddleDto> huddleDtos;
 

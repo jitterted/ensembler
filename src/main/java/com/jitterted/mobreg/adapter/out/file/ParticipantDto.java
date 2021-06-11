@@ -2,6 +2,10 @@ package com.jitterted.mobreg.adapter.out.file;
 
 import com.jitterted.mobreg.domain.Participant;
 
+/**
+ * Don't use this, left here for instructional purposes only
+ */
+@Deprecated
 public class ParticipantDto {
     private String name;
     private String githubUsername;

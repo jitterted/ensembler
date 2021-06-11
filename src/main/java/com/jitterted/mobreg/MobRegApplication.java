@@ -1,6 +1,5 @@
 package com.jitterted.mobreg;
 
-import com.jitterted.mobreg.adapter.out.file.FileHuddlePuddle;
 import com.jitterted.mobreg.domain.HuddleRepository;
 import com.jitterted.mobreg.domain.HuddleService;
 import org.springframework.boot.SpringApplication;
@@ -21,18 +20,8 @@ public class MobRegApplication {
     }
 
     @Bean
-    public HuddleService createHuddleService() {
-        return new HuddleService(createHuddleRepository());
-    }
-
-//  @Bean
-//  public HuddleRepository createHuddleRepository() {
-//    return new InMemoryHuddleRepository();
-//  }
-
-    @Bean
-    public HuddleRepository createHuddleRepository() {
-        return new FileHuddlePuddle();
+    public HuddleService createHuddleService(HuddleRepository huddleRepository) {
+        return new HuddleService(huddleRepository);
     }
 
     @Bean

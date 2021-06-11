@@ -7,6 +7,10 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Don't use this, left here for instructional purposes only
+ */
+@Deprecated
 public class HuddleDto {
     private long id;
     private String name;

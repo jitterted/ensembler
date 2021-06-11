@@ -16,6 +16,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Don't use this, left here for instructional purposes only
+ */
+@Deprecated
 public class FileHuddlePuddle implements HuddleRepository {
     private final ObjectMapper objectMapper;
 
