@@ -45,4 +45,10 @@ public class Huddle {
     public void setId(HuddleId id) {
         this.id = id;
     }
+
+    public boolean isRegisteredByUsername(String username) {
+        return participants()
+                .stream()
+                .anyMatch(p -> p.githubUsername().equalsIgnoreCase(username));
+    }
 }

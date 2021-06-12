@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web;
 
+import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +25,20 @@ public class MemberController {
     }
 
     @GetMapping("/member/register")
-    public String memberRegister(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
-        MemberRegisterForm memberRegisterForm = null;
+    public String showHuddlesForUser(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
+        MemberRegisterForm memberRegisterForm;
+        String username;
         if (principal instanceof OAuth2User oAuth2User) {
-            model.addAttribute("username", oAuth2User.getAttribute("login"));
+            username = oAuth2User.getAttribute("login");
+            model.addAttribute("username", username);
             model.addAttribute("name", oAuth2User.getAttribute("name"));
             memberRegisterForm = new MemberRegisterForm();
             memberRegisterForm.setName(oAuth2User.getAttribute("name"));
-            memberRegisterForm.setUsername(oAuth2User.getAttribute("login"));
+            memberRegisterForm.setUsername(username);
         } else {
             throw new IllegalStateException("Not an OAuth2User");
         }
-        var huddles = huddleService.allHuddles();
+        List<Huddle> huddles = huddleService.allHuddles();
         List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
         model.addAttribute("register", memberRegisterForm);
         model.addAttribute("huddles", huddleSummaryViews);

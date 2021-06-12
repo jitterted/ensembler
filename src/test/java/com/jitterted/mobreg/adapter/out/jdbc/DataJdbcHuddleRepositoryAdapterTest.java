@@ -4,6 +4,7 @@ import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.Participant;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@Tag("integration")
 class DataJdbcHuddleRepositoryAdapterTest {
 
     @Autowired
