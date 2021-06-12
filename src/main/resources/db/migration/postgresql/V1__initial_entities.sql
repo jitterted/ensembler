@@ -1,7 +1,3 @@
-drop table if exists post_entity;
-drop table if exists huddle_entity;
-drop table if exists participant_entity;
-
 create table post_entity
 (
     id uuid DEFAULT gen_random_uuid() primary key,
