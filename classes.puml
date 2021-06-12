@@ -1,0 +1,9 @@
+@startuml
+class UserProfile
+class Participant
+class Huddle
+
+UserProfile - Participant : has-role-of >
+Participant *- Huddle : 0..5 >
+
+@enduml
