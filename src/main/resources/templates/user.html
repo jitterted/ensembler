@@ -13,7 +13,7 @@
 <h1 class="text-3xl mb-6">Welcome</h1>
 <div>
 
-    <div sec:authorize="hasRole('USER')">You are USER</div>
+    <div sec:authorize="hasRole('USER') && !hasRole('MEMBER')">You are a USER</div>
     <div sec:authorize="hasRole('ADMIN')">You are an ADMIN, so you can go to the <a class="underline text-blue-800 font-bold" th:href="@{/admin/dashboard}" href="#">dashboard.</a></div>
     <div sec:authorize="hasRole('MEMBER')">You are a MEMBER, so you can click <a class="underline text-blue-800" th:href="@{/member}" href="#">here</a> to register for a mob.</div>
     <div sec:authorize="!hasAnyRole('ADMIN','MEMBER')">
