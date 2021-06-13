@@ -39,7 +39,7 @@ public class MemberController {
             throw new IllegalStateException("Not an OAuth2User");
         }
         List<Huddle> huddles = huddleService.allHuddles();
-        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
+        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, username);
         model.addAttribute("register", memberRegisterForm);
         model.addAttribute("huddles", huddleSummaryViews);
         return "member-register";

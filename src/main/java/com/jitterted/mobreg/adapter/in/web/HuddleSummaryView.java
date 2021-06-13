@@ -8,17 +8,19 @@ import java.util.List;
 public record HuddleSummaryView(long id,
                                 String name,
                                 String dateTime,
-                                int numberRegistered) {
-    public static List<HuddleSummaryView> from(List<Huddle> huddles) {
+                                int numberRegistered,
+                                boolean memberRegistered) {
+    public static List<HuddleSummaryView> from(List<Huddle> huddles, String username) {
         return huddles.stream()
-                      .map(HuddleSummaryView::toView)
+                      .map(huddle -> toView(huddle, username))
                       .toList();
     }
 
-    public static HuddleSummaryView toView(Huddle huddle) {
+    public static HuddleSummaryView toView(Huddle huddle, String username) {
         return new HuddleSummaryView(huddle.getId().id(),
                                      huddle.name(),
                                      DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
-                                     huddle.numberRegistered());
+                                     huddle.numberRegistered(),
+                                     huddle.isRegisteredByUsername(username));
     }
 }

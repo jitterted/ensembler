@@ -33,13 +33,15 @@ public class AdminDashboardController {
 
     @GetMapping("/dashboard")
     public String dashboardView(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
+        String username = null;
         if (principal instanceof OAuth2User oAuth2User) {
-            model.addAttribute("username", oAuth2User.getAttribute("login"));
+            username = oAuth2User.getAttribute("login");
+            model.addAttribute("username", username);
             model.addAttribute("name", oAuth2User.getAttribute("name"));
             model.addAttribute("github_id", oAuth2User.getAttribute("id"));
         }
         List<Huddle> huddles = huddleService.allHuddles();
-        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
+        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, username);
         model.addAttribute("huddles", huddleSummaryViews);
         model.addAttribute("scheduleHuddleForm", new ScheduleHuddleForm());
         return "dashboard";

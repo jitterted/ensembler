@@ -54,13 +54,16 @@
     </thead>
     <tbody>
     <tr th:each="huddle: ${huddles}">
-        <td>
-            <form action="#" th:action="@{/member/register}" th:object="${register}" method="post">
-                <input hidden="hidden" type="text" th:field="*{name}">
-                <input hidden="hidden" type="text" th:field="*{username}">
-                <input hidden="hidden" type="number" th:value="${huddle.id}" name="id">
-                <button type="submit" value="register">Register</button>
-            </form>
+        <td th:unless="${huddle.memberRegistered}">
+                <form action="#" th:action="@{/member/register}" th:object="${register}" method="post">
+                    <input hidden="hidden" type="text" th:field="*{name}">
+                    <input hidden="hidden" type="text" th:field="*{username}">
+                    <input hidden="hidden" type="number" th:value="${huddle.id}" name="id">
+                    <button type="submit" value="register">Register</button>
+                </form>
+        </td>
+        <td th:if="${huddle.memberRegistered}">
+            You're Registered!
         </td>
         <td th:text="${huddle.name}">Name</td>
         <td th:text="${huddle.dateTime}">Date/Time</td>
