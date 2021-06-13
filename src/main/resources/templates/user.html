@@ -14,18 +14,20 @@
 <div>
 
     <div sec:authorize="hasRole('USER')">You are USER</div>
-    <div sec:authorize="hasRole('ADMIN')">You are ADMIN</div>
-    <div sec:authorize="hasRole('MEMBER')">You are MEMBER</div>
-    <div sec:authorize="!hasAnyRole('ADMIN','MEMBER')">You are authenticated, but are neither Admin nor Member.</div>
+    <div sec:authorize="hasRole('ADMIN')">You are an ADMIN, so you can go to the <a class="underline text-blue-800 font-bold" th:href="@{/admin/dashboard}" href="#">dashboard.</a></div>
+    <div sec:authorize="hasRole('MEMBER')">You are a MEMBER, so you can click <a class="underline text-blue-800" th:href="@{/member}" href="#">here</a> to register for a mob.</div>
+    <div sec:authorize="!hasAnyRole('ADMIN','MEMBER')">
+        You are authenticated, but are neither Admin nor Member.
+    </div>
 
-    <form action="#" th:action="@{/logout}" method="post">
+    <form class="my-20" action="#" th:action="@{/logout}" method="post">
         <button type="submit" value="Logout"
-                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                class="flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             Sign Out
         </button>
     </form>
 </div>
 <div>
-    Placeholder page for an authenticated GitHub user, but with no membership access.
+    This is a placeholder page for new users to go through the on-boarding process.
 </div>
 </body>
