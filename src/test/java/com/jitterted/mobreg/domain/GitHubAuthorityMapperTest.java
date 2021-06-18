@@ -24,7 +24,7 @@ class GitHubAuthorityMapperTest {
 
         assertThat(grantedAuthorities)
                 .extracting(GrantedAuthority::getAuthority)
-                .containsOnly("ROLE_MEMBER");
+                .containsOnly("ROLE_MEMBER", "ROLE_USER");
     }
 
     @Test
@@ -36,7 +36,8 @@ class GitHubAuthorityMapperTest {
                 .mapAuthorities(List.of(createGitHubUserWithLogin("noncollaborator")));
 
         assertThat(grantedAuthorities)
-                .isEmpty();
+                .extracting(GrantedAuthority::getAuthority)
+                .containsOnly("ROLE_USER");
     }
 
     @NotNull
