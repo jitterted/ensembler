@@ -11,7 +11,7 @@ public class Huddle {
     private final String name;
     private final ZonedDateTime startDateTime;
     private URI zoomMeetingLink;
-    private final Set<Participant> participants = new HashSet<>();
+    private final Set<Member> members = new HashSet<>();
 
     public Huddle(String name, ZonedDateTime startDateTime) {
         this.name = name;
@@ -27,15 +27,15 @@ public class Huddle {
     }
 
     public int numberRegistered() {
-        return participants.size();
+        return members.size();
     }
 
-    public Set<Participant> participants() {
-        return Set.copyOf(participants);
+    public Set<Member> participants() {
+        return Set.copyOf(members);
     }
 
-    public void register(Participant participant) {
-        participants.add(participant);
+    public void register(Member member) {
+        members.add(member);
     }
 
     public HuddleId getId() {

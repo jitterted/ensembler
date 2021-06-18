@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-class HuddleServiceParticipantTest {
+class HuddleServiceMemberTest {
 
     @Test
     public void givenParticipantRegistersForHuddleThenWillBeFoundInHuddle() throws Exception {
@@ -15,13 +15,13 @@ class HuddleServiceParticipantTest {
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
         HuddleId huddleId = huddleRepository.save(huddle).getId();
 
-        huddleService.registerParticipant(huddleId, "Participant J. Name", "pjname", "partiname");
+        huddleService.registerParticipant(huddleId, "Participant J. Name", "pjname");
 
         assertThat(huddle.numberRegistered())
                 .isEqualTo(1);
 
         assertThat(huddle.participants())
-                .extracting(Participant::githubUsername)
+                .extracting(Member::githubUsername)
                 .containsOnly("pjname");
     }
 }

@@ -3,7 +3,7 @@ package com.jitterted.mobreg.adapter.in.web;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
-import com.jitterted.mobreg.domain.Participant;
+import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.ConcurrentModel;
@@ -37,7 +37,7 @@ public class DashboardHuddleViewTest {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
         Huddle huddle = new Huddle("Huddle #1", ZonedDateTime.now());
-        huddle.register(new Participant("name", "github", null, null, false));
+        huddle.register(new Member("name", "github"));
         huddleRepository.save(huddle);
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
 

@@ -1,20 +1,28 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
-import com.jitterted.mobreg.domain.Participant;
+import com.jitterted.mobreg.domain.Member;
 
 public class ParticipantEntity {
-    private String name;
+    private String firstName;
     private String githubUsername;
-    private String email;
-    private String discordUsername;
-    private boolean newToMobbing;
 
-    public String getName() {
-        return name;
+    public static ParticipantEntity from(Member member) {
+        ParticipantEntity participantDto = new ParticipantEntity();
+        participantDto.setFirstName(member.firstName());
+        participantDto.setGithubUsername(member.githubUsername());
+        return participantDto;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Member asParticipant() {
+        return new Member(firstName, githubUsername);
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getGithubUsername() {
@@ -23,43 +31,5 @@ public class ParticipantEntity {
 
     public void setGithubUsername(String githubUsername) {
         this.githubUsername = githubUsername;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getDiscordUsername() {
-        return discordUsername;
-    }
-
-    public void setDiscordUsername(String discordUsername) {
-        this.discordUsername = discordUsername;
-    }
-
-    public boolean isNewToMobbing() {
-        return newToMobbing;
-    }
-
-    public void setNewToMobbing(boolean newToMobbing) {
-        this.newToMobbing = newToMobbing;
-    }
-
-    public static ParticipantEntity from(Participant participant) {
-        ParticipantEntity participantDto = new ParticipantEntity();
-        participantDto.setDiscordUsername(participant.discordUsername());
-        participantDto.setEmail(participant.email());
-        participantDto.setName(participant.name());
-        participantDto.setGithubUsername(participant.githubUsername());
-        participantDto.setNewToMobbing(participant.isNewToMobbing());
-        return participantDto;
-    }
-
-    public Participant asParticipant() {
-        return new Participant(name, githubUsername, email, discordUsername, newToMobbing);
     }
 }

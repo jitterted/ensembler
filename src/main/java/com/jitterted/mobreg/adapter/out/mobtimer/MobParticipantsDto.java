@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.out.mobtimer;
 
 import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.Participant;
+import com.jitterted.mobreg.domain.Member;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ class MobParticipantsDto {
     public static MobParticipantsDto from(Huddle huddle) {
         List<PersonDto> personDtos = huddle.participants()
                                            .stream()
-                                           .map(Participant::name)
+                                           .map(Member::firstName)
                                            .map(PersonDto::new)
                                            .toList();
         return new MobParticipantsDto(personDtos);

@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.out.mobtimer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.Participant;
+import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ class MobTimerMessageSenderTest {
     @Test
     public void mobPeopleUpdated() throws Exception {
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
-        huddle.register(new Participant("WooHoo", "", "", "", false));
+        huddle.register(new Member("WooHoo", ""));
 
         mobTimerMessageSender.updateParticipantsTo(huddle);
     }

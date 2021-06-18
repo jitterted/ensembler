@@ -23,13 +23,13 @@ public class HuddleParticipantsTest {
     public void addOneParticipantToHuddleRemembersTheParticipant() throws Exception {
         Huddle huddle = new Huddle("huddle", ZonedDateTime.now());
 
-        Participant participant = new Participant("name", "github", "email", "discord", false);
-        huddle.register(participant);
+        Member member = new Member("name", "github");
+        huddle.register(member);
 
         assertThat(huddle.numberRegistered())
                 .isEqualTo(1);
         assertThat(huddle.participants())
-                .containsOnly(participant);
+                .containsOnly(member);
     }
 
     @Test
@@ -52,8 +52,8 @@ public class HuddleParticipantsTest {
     private Huddle createHuddleWithParticipantUsername(String participantUsername) {
         Huddle huddle = new Huddle("huddle", ZonedDateTime.now());
 
-        Participant participant = new Participant("name", participantUsername, "email", "discord", false);
-        huddle.register(participant);
+        Member member = new Member("name", participantUsername);
+        huddle.register(member);
         return huddle;
     }
 }

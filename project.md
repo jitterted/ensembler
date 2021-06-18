@@ -18,9 +18,31 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
     - Integrate with Discord
       - As a bot, helping with self-service sign-up
 
+Huddle knows when/what, participants = member that registered
+
+Member (User) knows display name, GitHub username
+
+
+
+
 # Registration Scenarios
 
+## Edit Member Profile
+
+1. Display Profile link in upper-right
+
+2. Click on Profile Link -> Profile Page
+
+3. Profile Page:
+   
+    * GitHub username (not editable)
+    * Display Name (how do you want to appear in the Mob membership list)
+    * Update button to save
+
+
 ## Member to Huddle Registration
+
+DONE except for optional (constraint) parts
 
 Someone who has participated in past Huddles wants to register for a future huddle.
 

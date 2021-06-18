@@ -1,8 +1,8 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
-import com.jitterted.mobreg.domain.Participant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -71,8 +71,8 @@ class DataJdbcHuddleRepositoryAdapterTest {
     private Huddle createHuddleNamed(String huddleName) {
         Huddle huddle = new Huddle(huddleName, ZonedDateTime.now());
         huddle.register(
-                new Participant(
-                        "test participant", "github", "email", "discord", false));
+                new Member(
+                        "test participant", "github"));
         return huddle;
     }
 }

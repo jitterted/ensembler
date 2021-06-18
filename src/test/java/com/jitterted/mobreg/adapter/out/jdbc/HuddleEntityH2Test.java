@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
-import com.jitterted.mobreg.domain.Participant;
+import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ class HuddleEntityH2Test {
     @Test
     public void huddleEntityStoredViaJdbcIsRetrievedAsOriginal() throws Exception {
         Huddle huddle = new Huddle("entity", ZonedDateTime.now());
-        Participant participant = new Participant("name", "github", "email", "discord", false);
-        huddle.register(participant);
+        Member member = new Member("name", "github");
+        huddle.register(member);
 
         HuddleEntity originalEntity = HuddleEntity.from(huddle);
 
@@ -43,7 +43,7 @@ class HuddleEntityH2Test {
                 .isEqualTo(originalEntity);
 
         assertThat(retrievedEntity.get().asHuddle().participants())
-                .extracting(Participant::name)
+                .extracting(Member::firstName)
                 .containsOnly("name");
 
     }

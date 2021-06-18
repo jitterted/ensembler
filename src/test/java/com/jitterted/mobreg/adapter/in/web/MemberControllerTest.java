@@ -3,7 +3,7 @@ package com.jitterted.mobreg.adapter.in.web;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
-import com.jitterted.mobreg.domain.Participant;
+import com.jitterted.mobreg.domain.Member;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ class MemberControllerTest {
                 .isEqualTo("redirect:/member/register");
 
         assertThat(huddle.participants())
-                .extracting(Participant::name)
+                .extracting(Member::firstName)
                 .containsOnly("participant");
     }
 

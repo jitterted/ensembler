@@ -1,17 +1,11 @@
 package com.jitterted.mobreg.adapter.in.web;
 
-import com.jitterted.mobreg.domain.Participant;
+import com.jitterted.mobreg.domain.Member;
 
-public record ParticipantView(String name,
-                              String email,
-                              String githubUsername,
-                              String discordUsername,
-                              boolean newToMobbing) {
-    public static ParticipantView from(Participant participant) {
-        return new ParticipantView(participant.name(),
-                                   participant.email(),
-                                   participant.githubUsername(),
-                                   participant.discordUsername(),
-                                   participant.isNewToMobbing());
+public record ParticipantView(String firstName,
+                              String githubUsername) {
+    public static ParticipantView from(Member member) {
+        return new ParticipantView(member.firstName(),
+                                   member.githubUsername());
     }
 }

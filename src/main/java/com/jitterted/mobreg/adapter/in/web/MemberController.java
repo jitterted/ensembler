@@ -51,8 +51,8 @@ public class MemberController {
 
         huddleService.registerParticipant(huddleId,
                                           memberRegisterForm.getName(),
-                                          memberRegisterForm.getUsername(),
-                                          "blankDiscordName");
+                                          memberRegisterForm.getUsername()
+        );
 
         return "redirect:/member/register";
     }

@@ -75,8 +75,8 @@ public class AdminDashboardController {
         HuddleId huddleId = HuddleId.of(registrationForm.getHuddleId());
         huddleService.registerParticipant(huddleId,
                                           registrationForm.getName(),
-                                          registrationForm.getGithubUsername(),
-                                          registrationForm.getDiscordUsername());
+                                          registrationForm.getGithubUsername()
+        );
 
         return "redirect:/admin/huddle/" + huddleId.id();
     }

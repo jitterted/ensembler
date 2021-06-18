@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.out.mobtimer;
 
 import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.Participant;
+import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
@@ -13,7 +13,7 @@ class MobParticipantsDtoCreationTest {
     @Test
     public void convertsHuddleToMobParticipantsDto() throws Exception {
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
-        huddle.register(new Participant("Participant", "", "", "", false));
+        huddle.register(new Member("Participant", ""));
 
         MobParticipantsDto dto = MobParticipantsDto.from(huddle);
 
