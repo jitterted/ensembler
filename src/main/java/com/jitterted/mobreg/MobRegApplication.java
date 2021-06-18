@@ -2,6 +2,7 @@ package com.jitterted.mobreg;
 
 import com.jitterted.mobreg.domain.HuddleRepository;
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,11 @@ public class MobRegApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MobRegApplication.class, args);
+    }
+
+    @Bean
+    public HuddleRepository huddleRepository() {
+        return new InMemoryHuddleRepository();
     }
 
     @Bean
