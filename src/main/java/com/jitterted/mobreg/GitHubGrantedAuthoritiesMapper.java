@@ -35,8 +35,14 @@ public class GitHubGrantedAuthoritiesMapper implements GrantedAuthoritiesMapper 
             if (authority instanceof OAuth2UserAuthority oauth2UserAuthority) {
                 Map<String, Object> userAttributes = oauth2UserAuthority.getAttributes();
                 requireFromGitHub(userAttributes);
+                // need to add the default role, even though we get this from GitHub by default
+                mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
                 String githubLoginUsername = (String) userAttributes.get("login");
-                LOGGER.info("Checking Membership for '{}'", githubLoginUsername);
+
+                LOGGER.info("Checking Membership for login='{}'", githubLoginUsername);
+                LOGGER.info("Other user attributes: {}", userAttributes);
+
                 if (githubLoginUsername.equals("tedyoung")) {
                     LOGGER.info("Ted is an ADMIN");
                     mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));

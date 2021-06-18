@@ -6,8 +6,8 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
 
 * Member Registration
     + Collect info for participants
-    + Limit registration to 5 per huddle
     + "Integrate" with MobTi.me -- via WebSocket
+    - Limit registration to 5 per huddle
     - Provide calendar invites using links
         - Provide WorldTimeBuddy.com links for huddles (maybe not needed if calendar links are sufficient)
     - Integrate with GitHub for adding collaborators to the repo
