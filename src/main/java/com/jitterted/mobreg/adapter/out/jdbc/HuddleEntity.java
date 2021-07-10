@@ -3,6 +3,7 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -11,16 +12,16 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// DTO for Huddle to be stored in the database
+// Database Entity for Huddle to be stored in the database
 public class HuddleEntity {
     @Id
-    private long id;
+    private Long id;
 
     private String name;
-    private LocalDateTime localDateTime;
-    private String zoneId;
+    private LocalDateTime dateTimeUtc;
 
-    private Set<ParticipantEntity> participants = new HashSet<>();
+    @MappedCollection(idColumn = "HUDDLE_ID")
+    private Set<MemberEntityId> registeredMembers = new HashSet<>();
 
     public static HuddleEntity from(Huddle huddle) {
         HuddleEntity huddleEntity = new HuddleEntity();
@@ -28,34 +29,33 @@ public class HuddleEntity {
             huddleEntity.setId(huddle.getId().id());
         }
         huddleEntity.setName(huddle.name());
-        huddleEntity.setLocalDateTime(huddle.startDateTime().toLocalDateTime());
-        huddleEntity.setZoneId(huddle.startDateTime().getZone().getId());
-
-        huddleEntity.setParticipants(huddle.participants()
-                                           .stream()
-                                           .map(ParticipantEntity::from)
-                                           .collect(Collectors.toSet()));
+        huddleEntity.setDateTimeUtc(huddle.startDateTime().toLocalDateTime());
+        huddleEntity.setRegisteredMembers(
+                huddle.participants()
+                      .stream()
+                      .map(MemberEntityId::toEntityId)
+                      .collect(Collectors.toSet()));
 
         return huddleEntity;
     }
 
     public Huddle asHuddle() {
-        ZonedDateTime startDateTime = ZonedDateTime.of(localDateTime, ZoneId.of(zoneId));
+        ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneId.systemDefault());
         Huddle huddle = new Huddle(name, startDateTime);
         huddle.setId(HuddleId.of(id));
 
-        participants.stream()
-                    .map(ParticipantEntity::asParticipant)
-                    .forEach(huddle::register);
+//        memberIds.stream()
+//                 .map(MemberEntity::asMember)
+//                 .forEach(huddle::register);
 
         return huddle;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -67,27 +67,19 @@ public class HuddleEntity {
         this.name = name;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public LocalDateTime getDateTimeUtc() {
+        return dateTimeUtc;
     }
 
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
+    public void setDateTimeUtc(LocalDateTime dateTimeUtc) {
+        this.dateTimeUtc = dateTimeUtc;
     }
 
-    public String getZoneId() {
-        return zoneId;
+    public Set<MemberEntityId> getRegisteredMembers() {
+        return registeredMembers;
     }
 
-    public void setZoneId(String zoneId) {
-        this.zoneId = zoneId;
-    }
-
-    public Set<ParticipantEntity> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(Set<ParticipantEntity> participants) {
-        this.participants = participants;
+    public void setRegisteredMembers(Set<MemberEntityId> registeredMembers) {
+        this.registeredMembers = registeredMembers;
     }
 }

@@ -8,6 +8,7 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
     + Collect info for participants
     + "Integrate" with MobTi.me -- via WebSocket
     - Limit registration to 5 per huddle
+    - Store a link to the video recording, only available to those who were participants of that Huddle
     - Provide calendar invites using links
         - Provide WorldTimeBuddy.com links for huddles (maybe not needed if calendar links are sufficient)
     - Integrate with GitHub for adding collaborators to the repo
@@ -18,9 +19,10 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
     - Integrate with Discord
       - As a bot, helping with self-service sign-up
 
-Huddle knows when/what, participants = member that registered
+Huddle knows when/what, participants = members that registered
 
-Member (User) knows display name, GitHub username
+Member (User) knows display name, GitHub username, Discord name
+
 
 
 
@@ -37,6 +39,11 @@ Member (User) knows display name, GitHub username
    
     * GitHub username (not editable)
     * Display Name (how do you want to appear in the Mob membership list)
+    * Discord username (optional)
+    * ✅ toggle for notification of:
+        * New huddles
+        * Zoom recording
+        * (other?)
     * Update button to save
 
 

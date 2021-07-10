@@ -25,6 +25,12 @@ or update the `application.properties` file directly.
 
 Requires Java 16 (or later) and uses Maven for building.
 
-Since it uses GitHub OAuth2 for authentication, you'll need to register this with your GitHub account if you want to run it yourself.
+Since it uses GitHub OAuth2 for authentication, you'll need to register this application with your GitHub account if you want to run it yourself.
+
+## Development
+
+Using Tailwind simple generation with the new "jit" processor:
+
+npx tailwindcss -o ./src/main/resources/static/tailwind.css --watch --jit --purge="./src/main/resources/**/*.html"
 
 (more details to come)

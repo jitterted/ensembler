@@ -56,34 +56,34 @@
 
 <div th:unless="${huddles.isEmpty}" class="flex flex-col">
     <div class="overflow-x-auto">
-        <div class="align-middle inline-block min-w-full px-4 sm:px-6 lg:px-8 flex items-center font-sans">
+        <div class="align-middle inline-block min-w-full px-4 sm:px-6 lg:px-8 font-sans">
             <div class="bg-white shadow-md rounded my-6">
                 <table class="min-w-full divide-y">
                     <thead>
                     <tr class="bg-gray-200 text-black uppercase text-med leading-normal">
-                        <th class="py-3 px-6 text-left">Huddle</th>
-                        <th class="py-3 px-6 text-center">Date/Time</th>
-                        <th class="py-3 px-6 text-center">Participants</th>
-                        <th class="py-3 px-6 text-center">Status</th>
-                        <th class="py-3 px-6 text-center">Actions</th>
+                        <th scope="col" class="py-3 px-10 text-left">Huddle</th>
+                        <th scope="col" class="py-3 px-10 text-center">Date/Time</th>
+                        <th scope="col" class="py-3 px-10 text-center">Participants</th>
+                        <th scope="col" class="py-3 px-10 text-center">Status</th>
+                        <th scope="col" class="py-3 px-10 text-center">Actions</th>
                     </tr>
                     </thead>
                     <tbody class="text-gray-800 text-med font-light">
                     <tr th:each="huddle: ${huddles}"
                         class="border-b border-gray-200 hover:bg-gray-100">
-                        <td class="py-3 px-6 text-left whitespace-nowrap">
+                        <td class="py-3 px-10 text-left whitespace-nowrap">
                             <div class="flex items-center">
                                 <a href="#" class="font-medium text-blue-800 hover:text-blue-600"
                                    th:href="@{/admin/huddle/__${huddle.id}__}"
                                    th:text="${huddle.name}">Mob #14</a>
                             </div>
                         </td>
-                        <td class="py-3 px-6 text-center">
-                            <div class="flex flex-row justify-between font-medium">
+                        <td class="py-3 px-10 text-center">
+                            <div class="flex items-center justify-center font-medium">
                                 <span th:text="${huddle.dateTime}">Fri 06/18/2021 9:00AM PDT</span>
                             </div>
                         </td>
-                        <td class="py-3 px-6 text-center">
+                        <td class="py-3 px-10 text-center">
                             <div class="flex items-center justify-center">
                                 <span class="text-3xl font-bold text-purple-600"
                                       th:text="${huddle.numberRegistered}">4</span>
@@ -95,13 +95,13 @@
                                 <!-- <img class="w-6 h-6 rounded-full border-gray-200 border -m-1 transform hover:scale-150 hover:z-50" src="https://randomuser.me/api/portraits/men/3.jpg"/> -->
                             </div>
                         </td>
-                        <td class="py-3 px-6 text-center">
-                        <span th:if="${huddle.numberRegistered} < 5"
-                              class="bg-green-100 text-green-800 py-1 px-3 rounded-lg text-xs font-bold">Available</span>
+                        <td class="py-3 px-10 text-center">
+                            <span th:if="${huddle.numberRegistered} < 5"
+                                  class="bg-green-100 text-green-800 py-1 px-3 rounded-lg text-xs font-bold">Available</span>
                             <span th:if="${huddle.numberRegistered} >= 5"
                                   class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">Full</span>
                         </td>
-                        <td class="py-3 px-6 text-center">
+                        <td class="py-3 px-10 text-center">
                             <div class="flex item-center justify-center">
                                 <button type="button"
                                         class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

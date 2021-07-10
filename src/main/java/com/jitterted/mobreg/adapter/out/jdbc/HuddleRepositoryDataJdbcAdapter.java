@@ -11,33 +11,33 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Repository
-public class DataJdbcHuddleRepositoryAdapter implements HuddleRepository {
+public class HuddleRepositoryDataJdbcAdapter implements HuddleRepository {
 
-    private final JdbcHuddleRepository jdbcHuddleRepository;
+    private final HuddleJdbcRepository huddleJdbcRepository;
 
     @Autowired
-    public DataJdbcHuddleRepositoryAdapter(JdbcHuddleRepository jdbcHuddleRepository) {
-        this.jdbcHuddleRepository = jdbcHuddleRepository;
+    public HuddleRepositoryDataJdbcAdapter(HuddleJdbcRepository huddleJdbcRepository) {
+        this.huddleJdbcRepository = huddleJdbcRepository;
     }
 
     @Override
     public Huddle save(Huddle huddle) {
         HuddleEntity huddleEntity = HuddleEntity.from(huddle);
-        HuddleEntity savedHuddleEntity = jdbcHuddleRepository.save(huddleEntity);
+        HuddleEntity savedHuddleEntity = huddleJdbcRepository.save(huddleEntity);
         return savedHuddleEntity.asHuddle();
     }
 
     @Override
     public List<Huddle> findAll() {
         return StreamSupport.stream(
-                jdbcHuddleRepository.findAll().spliterator(), false)
+                huddleJdbcRepository.findAll().spliterator(), false)
                             .map(HuddleEntity::asHuddle)
                             .toList();
     }
 
     @Override
     public Optional<Huddle> findById(HuddleId huddleId) {
-        Optional<HuddleEntity> found = jdbcHuddleRepository.findById(huddleId.id());
+        Optional<HuddleEntity> found = huddleJdbcRepository.findById(huddleId.id());
         return found.map(HuddleEntity::asHuddle);
     }
 }

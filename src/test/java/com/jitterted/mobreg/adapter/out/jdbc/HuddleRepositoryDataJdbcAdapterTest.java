@@ -21,10 +21,10 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Tag("integration")
-class DataJdbcHuddleRepositoryAdapterTest {
+class HuddleRepositoryDataJdbcAdapterTest {
 
     @Autowired
-    DataJdbcHuddleRepositoryAdapter huddleRepositoryAdapter;
+    HuddleRepositoryDataJdbcAdapter huddleRepositoryAdapter;
 
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
@@ -34,7 +34,7 @@ class DataJdbcHuddleRepositoryAdapterTest {
 
     @Test
     public void savedHuddleCanBeFoundByItsId() throws Exception {
-        Huddle huddle = createHuddleNamed("test huddle");
+        Huddle huddle = createHuddleWithRegisteredMemberNamed("test huddle");
 
         Huddle savedHuddle = huddleRepositoryAdapter.save(huddle);
 
@@ -57,8 +57,8 @@ class DataJdbcHuddleRepositoryAdapterTest {
 
     @Test
     public void twoSavedHuddlesBothReturnedByFindAll() throws Exception {
-        Huddle one = createHuddleNamed("one");
-        Huddle two = createHuddleNamed("two");
+        Huddle one = createHuddleWithRegisteredMemberNamed("one");
+        Huddle two = createHuddleWithRegisteredMemberNamed("two");
 
         huddleRepositoryAdapter.save(one);
         huddleRepositoryAdapter.save(two);
@@ -68,7 +68,7 @@ class DataJdbcHuddleRepositoryAdapterTest {
     }
 
     @NotNull
-    private Huddle createHuddleNamed(String huddleName) {
+    private Huddle createHuddleWithRegisteredMemberNamed(String huddleName) {
         Huddle huddle = new Huddle(huddleName, ZonedDateTime.now());
         huddle.register(
                 new Member(

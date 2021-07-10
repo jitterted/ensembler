@@ -1,6 +1,8 @@
 package com.jitterted.mobreg.domain;
 
 public class Member {
+    private MemberId id;
+
     private final String firstName;
     private final String githubUsername; // could be a Value Object
 
@@ -15,6 +17,14 @@ public class Member {
 
     public String githubUsername() {
         return githubUsername;
+    }
+
+    public MemberId getId() {
+        return id;
+    }
+
+    public void setId(MemberId id) {
+        this.id = id;
     }
 
     @Override

@@ -18,13 +18,13 @@
 
 <h2>Participants</h2>
 <div th:each="participantView : ${huddle.participantViews}">
-    <span th:text="${participantView.name}">Participant Name</span>
+    <span th:text="${participantView.firstName}">Participant Name</span>
     <span th:text="${participantView.githubUsername}">GitHub Username</span>
 </div>
 
 <h2>Register Participant</h2>
 <form th:action="@{/admin/register}" action="#" method="post" th:object="${registration}">
-    <div>Name: <input type="text" th:field="*{name}"></div>
+    <div>First Name: <input type="text" th:field="*{name}" autofocus></div>
     <div>GitHub Username: <input type="text" th:field="*{githubUsername}"></div>
     <input hidden="hidden" type="number" th:field="*{huddleId}">
     <div class="mt-3">
