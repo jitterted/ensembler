@@ -27,13 +27,16 @@ public class MemberController {
     @GetMapping("/member/register")
     public String showHuddlesForUser(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         MemberRegisterForm memberRegisterForm;
+        // GOAL: replace username here with a lookup in MemberRepository for the Member
         String username;
         if (principal instanceof OAuth2User oAuth2User) {
             username = oAuth2User.getAttribute("login");
-            model.addAttribute("username", username);
-            model.addAttribute("name", oAuth2User.getAttribute("name"));
+            // GOAL: replace with Member.firstName
+            final String displayName = oAuth2User.getAttribute("name");
+            model.addAttribute("username", username); // Member.githubUsername
+            model.addAttribute("name", displayName);
             memberRegisterForm = new MemberRegisterForm();
-            memberRegisterForm.setName(oAuth2User.getAttribute("name"));
+            memberRegisterForm.setName(displayName);
             memberRegisterForm.setUsername(username);
         } else {
             throw new IllegalStateException("Not an OAuth2User");

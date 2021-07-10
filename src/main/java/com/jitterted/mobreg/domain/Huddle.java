@@ -11,7 +11,9 @@ public class Huddle {
     private final String name;
     private final ZonedDateTime startDateTime;
     private URI zoomMeetingLink;
+    // GOAL: remove Set<Member> members, only use Set<MemberId>
     private final Set<Member> members = new HashSet<>();
+    private final Set<MemberId> memberIds = new HashSet<>();
 
     public Huddle(String name, ZonedDateTime startDateTime) {
         this.name = name;
@@ -30,10 +32,12 @@ public class Huddle {
         return members.size();
     }
 
+    // GOAL: replace with registeredMembers()
     public Set<Member> participants() {
         return Set.copyOf(members);
     }
 
+    // GOAL: replace with registerById
     public void register(Member member) {
         members.add(member);
     }
@@ -46,9 +50,21 @@ public class Huddle {
         this.id = id;
     }
 
+    // GOAL: use isRegisteredById instead
     public boolean isRegisteredByUsername(String username) {
-        return participants()
-                .stream()
-                .anyMatch(p -> p.githubUsername().equalsIgnoreCase(username));
+        return members.stream()
+                      .anyMatch(p -> p.githubUsername().equalsIgnoreCase(username));
+    }
+
+    public Set<MemberId> registeredMembers() {
+        return memberIds;
+    }
+
+    public void registerById(MemberId memberId) {
+        memberIds.add(memberId);
+    }
+
+    public boolean isRegisteredById(MemberId memberId) {
+        return memberIds.contains(memberId);
     }
 }

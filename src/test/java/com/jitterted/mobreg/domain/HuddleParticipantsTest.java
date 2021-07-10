@@ -20,16 +20,17 @@ public class HuddleParticipantsTest {
     }
 
     @Test
-    public void addOneParticipantToHuddleRemembersTheParticipant() throws Exception {
+    public void registerMemberByIdWithHuddleRemembersTheMember() throws Exception {
         Huddle huddle = new Huddle("huddle", ZonedDateTime.now());
 
         Member member = new Member("name", "github");
-        huddle.register(member);
+        MemberId memberId = MemberId.of(1L);
+        member.setId(memberId);
 
-        assertThat(huddle.numberRegistered())
-                .isEqualTo(1);
-        assertThat(huddle.participants())
-                .containsOnly(member);
+        huddle.registerById(memberId);
+
+        assertThat(huddle.registeredMembers())
+                .containsOnly(memberId);
     }
 
     @Test
@@ -38,6 +39,26 @@ public class HuddleParticipantsTest {
 
         assertThat(huddle.isRegisteredByUsername("participant_username"))
                 .isTrue();
+    }
+
+    @Test
+    public void registeredMemberIsFoundAsRegisteredByMemberId() throws Exception {
+        Huddle huddle = new Huddle("huddle", ZonedDateTime.now());
+        Member member = new Member("reg", "github");
+        MemberId memberId = MemberId.of(3L);
+        member.setId(memberId);
+        huddle.registerById(memberId);
+
+        assertThat(huddle.isRegisteredById(memberId))
+                .isTrue();
+    }
+
+    @Test
+    public void nonExistentMemberIsNotFoundAsRegisteredByMemberId() throws Exception {
+        Huddle huddle = new Huddle("huddle", ZonedDateTime.now());
+
+        assertThat(huddle.isRegisteredById(MemberId.of(73L)))
+                .isFalse();
     }
 
     @Test

@@ -9,19 +9,21 @@ import static org.assertj.core.api.Assertions.*;
 class HuddleServiceMemberTest {
 
     @Test
-    public void givenParticipantRegistersForHuddleThenWillBeFoundInHuddle() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+    public void existingMemberRegistersForHuddleThenIsRegisteredMember() throws Exception {
+        HuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
         HuddleId huddleId = huddleRepository.save(huddle).getId();
 
-        huddleService.registerParticipant(huddleId, "Participant J. Name", "pjname");
+        MemberRepository memberRepository = new InMemoryMemberRepository();
+        Member member = new Member("memberFirstName", "memberGithubUsername");
+        MemberId memberId = memberRepository.save(member).getId();
 
-        assertThat(huddle.numberRegistered())
-                .isEqualTo(1);
+        huddleService.registerParticipant(huddleId, memberId);
 
-        assertThat(huddle.participants())
-                .extracting(Member::githubUsername)
-                .containsOnly("pjname");
+        assertThat(huddle.registeredMembers())
+                .containsOnly(memberId);
     }
+
+
 }
