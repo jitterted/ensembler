@@ -34,11 +34,17 @@ public class Huddle {
     }
 
     // GOAL: replace with registeredMembers()
+    @Deprecated
     public Set<Member> participants() {
         return Set.copyOf(members);
     }
 
+    public Set<MemberId> registeredMembers() {
+        return memberIds;
+    }
+
     // GOAL: replace with registerById
+    @Deprecated
     public void register(Member member) {
         members.add(member);
     }
@@ -52,13 +58,10 @@ public class Huddle {
     }
 
     // GOAL: use isRegisteredById instead
+    @Deprecated
     public boolean isRegisteredByUsername(String username) {
         return members.stream()
                       .anyMatch(p -> p.githubUsername().equalsIgnoreCase(username));
-    }
-
-    public Set<MemberId> registeredMembers() {
-        return memberIds;
     }
 
     public void registerById(MemberId memberId) {

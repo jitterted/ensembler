@@ -3,7 +3,9 @@ package com.jitterted.mobreg.adapter.in.web;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
+import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.ConcurrentModel;
@@ -18,10 +20,11 @@ public class DashboardHuddleViewTest {
 
     @Test
     public void detailViewOfExistingHuddleByItsIdIsReturned() throws Exception {
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
         Huddle savedHuddle = huddleRepository.save(new Huddle("Huddle #1", ZonedDateTime.now()));
-        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberRepository);
 
         Model model = new ConcurrentModel();
         adminDashboardController.huddleDetailView(model, 0L);
@@ -34,15 +37,19 @@ public class DashboardHuddleViewTest {
 
     @Test
     public void detailViewOfExistingHuddleWithOneParticipantReturnsHuddleWithParticipantView() throws Exception {
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
+        Member member = MemberFactory.createMember(11, "name", "github");
+        memberRepository.save(member);
+
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
         Huddle huddle = new Huddle("Huddle #1", ZonedDateTime.now());
-        huddle.register(new Member("name", "github"));
+        huddle.registerById(member.getId());
         huddleRepository.save(huddle);
-        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberRepository);
 
         Model model = new ConcurrentModel();
-        adminDashboardController.huddleDetailView(model, 0L);
+        adminDashboardController.huddleDetailView(model, huddle.getId().id());
 
         HuddleDetailView huddleView = (HuddleDetailView) model.getAttribute("huddle");
 
@@ -52,9 +59,10 @@ public class DashboardHuddleViewTest {
 
     @Test
     public void detailViewOfNonExistentHuddleReturns404NotFound() throws Exception {
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
-        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberRepository);
         Model model = new ConcurrentModel();
 
         assertThatThrownBy(() -> {

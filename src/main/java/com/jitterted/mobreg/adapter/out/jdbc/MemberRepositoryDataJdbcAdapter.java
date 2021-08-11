@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -28,5 +29,10 @@ public class MemberRepositoryDataJdbcAdapter implements MemberRepository {
     public Optional<Member> findByGithubUsername(String githubUsername) {
         Optional<MemberEntity> memberEntity = memberJdbcRepository.findByGithubUsername(githubUsername);
         return memberEntity.map(MemberEntity::asMember);
+    }
+
+    @Override
+    public Member findById(MemberId memberId) {
+        throw new UnsupportedOperationException();
     }
 }

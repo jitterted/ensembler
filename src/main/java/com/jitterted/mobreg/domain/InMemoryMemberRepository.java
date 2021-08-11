@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemoryMemberRepository implements MemberRepository {
     private final Map<String, Member> usernameToMemberMap = new ConcurrentHashMap<>();
+    private final Map<MemberId, Member> idToMemberMap = new ConcurrentHashMap<>();
     private final AtomicLong sequence = new AtomicLong(0);
 
     @Override
@@ -17,6 +18,7 @@ public class InMemoryMemberRepository implements MemberRepository {
             member.setId(MemberId.of(sequence.getAndIncrement()));
         }
         usernameToMemberMap.put(member.githubUsername(), member);
+        idToMemberMap.put(member.getId(), member);
         return member;
     }
 
@@ -24,5 +26,10 @@ public class InMemoryMemberRepository implements MemberRepository {
     public Optional<Member> findByGithubUsername(String githubUsername) {
         return Optional.ofNullable(
                 usernameToMemberMap.get(githubUsername));
+    }
+
+    @Override
+    public Member findById(MemberId memberId) {
+        return idToMemberMap.get(memberId);
     }
 }

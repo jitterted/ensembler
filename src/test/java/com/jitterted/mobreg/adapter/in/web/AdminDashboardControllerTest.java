@@ -3,6 +3,7 @@ package com.jitterted.mobreg.adapter.in.web;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
+import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.ui.ConcurrentModel;
@@ -11,7 +12,7 @@ import org.springframework.ui.Model;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 @SuppressWarnings({"ConstantConditions", "unchecked"})
@@ -19,10 +20,11 @@ class AdminDashboardControllerTest {
 
     @Test
     public void givenOneHuddleResultsInHuddleInViewModel() throws Exception {
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
         huddleRepository.save(new Huddle("Name", ZonedDateTime.now()));
-        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberRepository);
 
         Model model = new ConcurrentModel();
         adminDashboardController.dashboardView(model, mock(AuthenticatedPrincipal.class));
@@ -35,8 +37,9 @@ class AdminDashboardControllerTest {
     @Test
     public void scheduleNewHuddleResultsInHuddleCreatedInRepository() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
-        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberRepository);
 
         String pageName = adminDashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "2021-04-30", "09:00"));
 
