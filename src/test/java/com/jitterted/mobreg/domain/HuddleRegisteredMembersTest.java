@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class HuddleParticipantsTest {
+public class HuddleRegisteredMembersTest {
 
     @Test
     public void newHuddleHasZeroParticipants() throws Exception {
