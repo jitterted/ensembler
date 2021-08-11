@@ -1,4 +1,7 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.domain.port;
+
+import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.HuddleId;
 
 import java.util.List;
 import java.util.Optional;

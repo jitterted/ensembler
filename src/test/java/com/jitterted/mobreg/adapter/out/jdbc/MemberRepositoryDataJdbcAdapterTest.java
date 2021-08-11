@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberService;
+import com.jitterted.mobreg.domain.port.MembershipValidator;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ class MemberRepositoryDataJdbcAdapterTest {
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
     @MockBean
-    MemberService memberService;
+    MembershipValidator membershipValidator;
 
     @Test
     public void newlyCreatedAndSavedMemberGetsIdAssigned() throws Exception {

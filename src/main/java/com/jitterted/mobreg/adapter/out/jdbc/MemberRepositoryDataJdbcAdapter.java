@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberRepository;
+import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package com.jitterted.mobreg;
 
-import com.jitterted.mobreg.domain.MemberService;
+import com.jitterted.mobreg.domain.port.MembershipValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,11 @@ public class GitHubGrantedAuthoritiesMapper implements GrantedAuthoritiesMapper 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubGrantedAuthoritiesMapper.class);
 
-    private final MemberService memberService;
+    private final MembershipValidator membershipValidator;
 
     @Autowired
-    public GitHubGrantedAuthoritiesMapper(MemberService memberService) {
-        this.memberService = memberService;
+    public GitHubGrantedAuthoritiesMapper(MembershipValidator membershipValidator) {
+        this.membershipValidator = membershipValidator;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class GitHubGrantedAuthoritiesMapper implements GrantedAuthoritiesMapper 
                     LOGGER.info("Ted is an ADMIN");
                     mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
                     mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
-                } else if (memberService.isMember(githubLoginUsername)) {
+                } else if (membershipValidator.isMember(githubLoginUsername)) {
                     LOGGER.info("'{}' IS a Member", githubLoginUsername);
                     mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
                 } else {

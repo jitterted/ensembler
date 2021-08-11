@@ -1,4 +1,6 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.domain.port;
+
+import com.jitterted.mobreg.domain.Member;
 
 import java.util.Optional;
 

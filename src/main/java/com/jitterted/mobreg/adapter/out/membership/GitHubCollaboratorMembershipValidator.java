@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.out.membership;
 
-import com.jitterted.mobreg.domain.MemberService;
+import com.jitterted.mobreg.domain.port.MembershipValidator;
 import com.spotify.github.v3.clients.GitHubClient;
 import com.spotify.github.v3.clients.RepositoryClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,7 @@ import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
 @Service
-public class GitHubCollaboratorMemberService implements MemberService {
+public class GitHubCollaboratorMembershipValidator implements MembershipValidator {
     @Value("${github.personal.access.token}")
     private String personalAccessToken;
 

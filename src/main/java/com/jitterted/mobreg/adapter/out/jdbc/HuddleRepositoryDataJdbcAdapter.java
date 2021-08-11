@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
-import com.jitterted.mobreg.domain.HuddleRepository;
+import com.jitterted.mobreg.domain.port.HuddleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -13,9 +13,10 @@ public record HuddleDetailView(long id,
                                List<ParticipantView> participantViews) {
 
     static HuddleDetailView from(Huddle huddle) {
-        List<ParticipantView> participantViews = huddle.participants().stream()
-                                                       .map(ParticipantView::from)
-                                                       .toList();
+        List<ParticipantView> participantViews =
+                huddle.participants().stream()
+                      .map(ParticipantView::from)
+                      .toList();
         return new HuddleDetailView(huddle.getId().id(),
                                     huddle.name(),
                                     DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),

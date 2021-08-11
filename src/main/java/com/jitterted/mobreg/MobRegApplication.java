@@ -1,8 +1,8 @@
 package com.jitterted.mobreg;
 
-import com.jitterted.mobreg.domain.HuddleRepository;
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
+import com.jitterted.mobreg.domain.port.HuddleRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

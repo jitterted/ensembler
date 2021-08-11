@@ -1,5 +1,7 @@
 package com.jitterted.mobreg.domain;
 
+import com.jitterted.mobreg.domain.port.MemberRepository;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,5 +1,7 @@
 package com.jitterted.mobreg.domain;
 
+import com.jitterted.mobreg.domain.port.HuddleRepository;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
