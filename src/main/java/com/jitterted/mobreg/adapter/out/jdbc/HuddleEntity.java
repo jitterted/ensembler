@@ -35,7 +35,6 @@ public class HuddleEntity {
                       .stream()
                       .map(MemberEntityId::toEntityId)
                       .collect(Collectors.toSet()));
-
         return huddleEntity;
     }
 

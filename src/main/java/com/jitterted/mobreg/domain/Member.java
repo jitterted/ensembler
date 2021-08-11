@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.domain;
 
+// This is the Aggregate Root for Member
 public class Member {
     private MemberId id;
 

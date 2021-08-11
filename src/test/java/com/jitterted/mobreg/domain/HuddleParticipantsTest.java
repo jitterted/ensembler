@@ -15,7 +15,7 @@ public class HuddleParticipantsTest {
 
         assertThat(huddle.numberRegistered())
                 .isZero();
-        assertThat(huddle.participants())
+        assertThat(huddle.registeredMembers())
                 .isEmpty();
     }
 

@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+// This is the Aggregate Root for Huddles
 public class Huddle {
     private HuddleId id;
 
