@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Unit Tests" type="JUnit" factoryName="JUnit">
+  <configuration default="false" name="MVC Tests" type="JUnit" factoryName="JUnit">
     <module name="mobreg" />
     <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="tags" />
-    <tag value="!manual &amp; !integration &amp; !mvc" />
+    <tag value="mvc" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
-@Tag("integration")
+@Tag("mvc")
 @WithMockUser(username = "username", authorities = {"ROLE_MEMBER","ROLE_ADMIN"})
 public class AdminEndpointConfigurationTest {
 

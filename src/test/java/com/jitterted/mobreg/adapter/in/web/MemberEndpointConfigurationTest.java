@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
-@Tag("integration")
+@Tag("mvc")
 @WithMockUser(username = "username", authorities = {"ROLE_MEMBER"})
 public class MemberEndpointConfigurationTest {
 
@@ -47,7 +47,8 @@ public class MemberEndpointConfigurationTest {
     @Test
     public void postToRegisterRedirects() throws Exception {
         mockMvc.perform(post("/member/register")
-                                .param("id", "1")
+                                .param("huddleId", "1")
+                                .param("memberId", "2")
                                 .with(oAuth2User())
                                 .with(csrf()))
                .andExpect(status().is3xxRedirection());

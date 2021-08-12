@@ -50,6 +50,8 @@ public class MemberController {
         MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
         memberRegisterForm.setName(displayName);
         memberRegisterForm.setUsername(username);
+        // TODO: add MemberId (via lookup in MemberService)
+        // TODO: remove name/username from this form
         return memberRegisterForm;
     }
 
