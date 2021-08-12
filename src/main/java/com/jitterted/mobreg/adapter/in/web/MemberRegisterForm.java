@@ -1,16 +1,17 @@
 package com.jitterted.mobreg.adapter.in.web;
 
 public class MemberRegisterForm {
-    private Long id;
+    private Long huddleId;
     private String username;
     private String name;
+    private Long memberId;
 
-    public Long getId() {
-        return id;
+    public Long getHuddleId() {
+        return huddleId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setHuddleId(Long huddleId) {
+        this.huddleId = huddleId;
     }
 
     public void setUsername(String username) {
@@ -27,5 +28,13 @@ public class MemberRegisterForm {
 
     public String getName() {
         return name;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 }

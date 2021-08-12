@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.*;
 class MemberControllerTest {
 
     @Test
-    public void memberRegistersForHuddleWillBeParticipantOfThatHuddle() throws Exception {
+    public void memberRegistersForHuddleWillBeRegisteredForThatHuddle() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         Huddle huddle = huddleRepository.save(new Huddle("Test", ZonedDateTime.now()));
         HuddleService huddleService = new HuddleService(huddleRepository);
@@ -36,7 +36,7 @@ class MemberControllerTest {
         MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
         memberRegisterForm.setUsername("username");
         memberRegisterForm.setName("participant");
-        memberRegisterForm.setId(huddle.getId().id());
+        memberRegisterForm.setHuddleId(huddle.getId().id());
         return memberRegisterForm;
     }
 

@@ -60,7 +60,7 @@ public class AdminDashboardController {
 
         HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle, memberRepository);
         model.addAttribute("huddle", huddleDetailView);
-        model.addAttribute("registration", new RegistrationForm(huddle.getId()));
+        model.addAttribute("registration", new AdminRegistrationForm(huddle.getId()));
 
         return "huddle-detail";
     }
@@ -75,11 +75,11 @@ public class AdminDashboardController {
     }
 
     @PostMapping("/register")
-    public String registerParticipant(RegistrationForm registrationForm) {
-        HuddleId huddleId = HuddleId.of(registrationForm.getHuddleId());
+    public String registerParticipant(AdminRegistrationForm adminRegistrationForm) {
+        HuddleId huddleId = HuddleId.of(adminRegistrationForm.getHuddleId());
         huddleService.registerParticipant(huddleId,
-                                          registrationForm.getName(),
-                                          registrationForm.getGithubUsername()
+                                          adminRegistrationForm.getName(),
+                                          adminRegistrationForm.getGithubUsername()
         );
 
         return "redirect:/admin/huddle/" + huddleId.id();

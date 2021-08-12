@@ -2,18 +2,18 @@ package com.jitterted.mobreg.adapter.in.web;
 
 import com.jitterted.mobreg.domain.HuddleId;
 
-public class RegistrationForm {
+public class AdminRegistrationForm {
     private String name;
     private String githubUsername;
     private String discordUsername;
     private long huddleId;
 
     // used by Spring to create the incoming form
-    public RegistrationForm() {
+    public AdminRegistrationForm() {
     }
 
     // used by code to pre-populate ID
-    public RegistrationForm(HuddleId huddleId) {
+    public AdminRegistrationForm(HuddleId huddleId) {
         this.huddleId = huddleId.id();
     }
 

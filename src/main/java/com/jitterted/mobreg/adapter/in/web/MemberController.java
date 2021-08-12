@@ -35,9 +35,7 @@ public class MemberController {
             final String displayName = oAuth2User.getAttribute("name");
             model.addAttribute("username", username); // Member.githubUsername
             model.addAttribute("name", displayName);
-            memberRegisterForm = new MemberRegisterForm();
-            memberRegisterForm.setName(displayName);
-            memberRegisterForm.setUsername(username);
+            memberRegisterForm = createRegistrationForm(username, displayName);
         } else {
             throw new IllegalStateException("Not an OAuth2User");
         }
@@ -48,9 +46,16 @@ public class MemberController {
         return "member-register";
     }
 
+    private MemberRegisterForm createRegistrationForm(String username, String displayName) {
+        MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
+        memberRegisterForm.setName(displayName);
+        memberRegisterForm.setUsername(username);
+        return memberRegisterForm;
+    }
+
     @PostMapping("/member/register")
     public String register(MemberRegisterForm memberRegisterForm) {
-        HuddleId huddleId = HuddleId.of(memberRegisterForm.getId());
+        HuddleId huddleId = HuddleId.of(memberRegisterForm.getHuddleId());
 
         huddleService.registerParticipant(huddleId,
                                           memberRegisterForm.getName(),

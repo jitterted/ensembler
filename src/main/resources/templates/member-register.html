@@ -58,7 +58,9 @@
                 <form action="#" th:action="@{/member/register}" th:object="${register}" method="post">
                     <input hidden="hidden" type="text" th:field="*{name}">
                     <input hidden="hidden" type="text" th:field="*{username}">
-                    <input hidden="hidden" type="number" th:value="${huddle.id}" name="id">
+
+                    <input hidden="hidden" type="number" th:field="*{memberId}">
+                    <input hidden="hidden" type="number" th:value="${huddle.id}" name="huddleId">
                     <button type="submit" value="register">Register</button>
                 </form>
         </td>
