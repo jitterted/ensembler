@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.in.web;
 
 import com.jitterted.mobreg.adapter.DateTimeFormatting;
 import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.port.MemberRepository;
+import com.jitterted.mobreg.domain.MemberService;
 
 import java.util.List;
 
@@ -14,10 +14,10 @@ public record HuddleDetailView(long id,
                                // TODO: rename to MemberView
                                List<ParticipantView> participantViews) {
 
-    static HuddleDetailView from(Huddle huddle, MemberRepository memberRepository) {
+    static HuddleDetailView from(Huddle huddle, MemberService memberService) {
         List<ParticipantView> participantViews =
                 huddle.registeredMembers().stream()
-                      .map(memberRepository::findById)
+                      .map(memberService::findById)
                       .map(ParticipantView::from)
                       .toList();
         return new HuddleDetailView(huddle.getId().id(),

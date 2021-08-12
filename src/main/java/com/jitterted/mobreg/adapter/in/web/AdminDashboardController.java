@@ -4,7 +4,7 @@ import com.jitterted.mobreg.adapter.DateTimeFormatting;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
-import com.jitterted.mobreg.domain.port.MemberRepository;
+import com.jitterted.mobreg.domain.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticatedPrincipal;
@@ -26,13 +26,13 @@ import java.util.List;
 public class AdminDashboardController {
 
     private final HuddleService huddleService;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @Autowired
     public AdminDashboardController(HuddleService huddleService,
-                                    MemberRepository memberRepository) {
+                                    MemberService memberService) {
         this.huddleService = huddleService;
-        this.memberRepository = memberRepository;
+        this.memberService = memberService;
     }
 
     @GetMapping("/dashboard")
@@ -58,7 +58,7 @@ public class AdminDashboardController {
                                          throw new ResponseStatusException(HttpStatus.NOT_FOUND);
                                      });
 
-        HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle, memberRepository);
+        HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle, memberService);
         model.addAttribute("huddle", huddleDetailView);
         model.addAttribute("registration", new AdminRegistrationForm(huddle.getId()));
 

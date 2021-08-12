@@ -16,7 +16,7 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member findById(MemberId memberId) {
-        return null;
+    public Optional<Member> findById(MemberId memberId) {
+        return Optional.empty();
     }
 }

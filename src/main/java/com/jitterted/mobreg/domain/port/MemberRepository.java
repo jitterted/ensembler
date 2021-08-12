@@ -10,6 +10,5 @@ public interface MemberRepository {
 
     Optional<Member> findByGithubUsername(String githubUsername);
 
-    // TODO: this should be Optional<Member>
-    Member findById(MemberId memberId);
+    Optional<Member> findById(MemberId memberId);
 }

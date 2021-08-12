@@ -32,7 +32,7 @@ public class MemberRepositoryDataJdbcAdapter implements MemberRepository {
     }
 
     @Override
-    public Member findById(MemberId memberId) {
+    public Optional<Member> findById(MemberId memberId) {
         throw new UnsupportedOperationException();
     }
 }

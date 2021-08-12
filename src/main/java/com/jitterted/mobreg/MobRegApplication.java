@@ -2,6 +2,8 @@ package com.jitterted.mobreg;
 
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
+import com.jitterted.mobreg.domain.InMemoryMemberRepository;
+import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.port.HuddleRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,6 +25,11 @@ public class MobRegApplication {
     @Bean
     public HuddleRepository huddleRepository() {
         return new InMemoryHuddleRepository();
+    }
+
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(new InMemoryMemberRepository());
     }
 
     @Bean

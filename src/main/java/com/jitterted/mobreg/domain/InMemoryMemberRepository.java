@@ -29,7 +29,8 @@ public class InMemoryMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member findById(MemberId memberId) {
-        return idToMemberMap.get(memberId);
+    public Optional<Member> findById(MemberId memberId) {
+        return Optional.ofNullable(
+                idToMemberMap.get(memberId));
     }
 }

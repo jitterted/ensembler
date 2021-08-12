@@ -6,6 +6,7 @@ import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberFactory;
+import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +18,10 @@ class HuddleDetailViewTest {
 
     @Test
     public void huddleIdIsTranslatedFromDomainIntoView() throws Exception {
+        MemberService memberService = new MemberService(new FakeMemberRepository());
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
         huddle.setId(HuddleId.of(23));
-        HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle, new FakeMemberRepository());
+        HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle, memberService);
 
         assertThat(huddleDetailView.id())
                 .isEqualTo(23);
@@ -30,11 +32,12 @@ class HuddleDetailViewTest {
         Huddle huddle = new Huddle("view", ZonedDateTime.now());
         huddle.setId(HuddleId.of(73));
         MemberRepository memberRepository = new InMemoryMemberRepository();
+        MemberService memberService = new MemberService(memberRepository);
         Member member = MemberFactory.createMember(7, "name", "ghusername");
         memberRepository.save(member);
         huddle.registerById(member.getId());
 
-        HuddleDetailView view = HuddleDetailView.from(huddle, memberRepository);
+        HuddleDetailView view = HuddleDetailView.from(huddle, memberService);
 
         ParticipantView expectedView = new ParticipantView("name", "ghusername");
         assertThat(view.participantViews())
