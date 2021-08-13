@@ -43,12 +43,6 @@ public class Huddle {
         return memberIds;
     }
 
-    // GOAL: replace with registerById
-    @Deprecated
-    public void register(Member member) {
-        members.add(member);
-    }
-
     public HuddleId getId() {
         return id;
     }
