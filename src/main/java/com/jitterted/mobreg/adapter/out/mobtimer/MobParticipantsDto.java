@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.out.mobtimer;
 
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberService;
 
 import java.util.List;
 
@@ -13,12 +14,13 @@ class MobParticipantsDto {
         mob = personDtoList;
     }
 
-    public static MobParticipantsDto from(Huddle huddle) {
-        List<PersonDto> personDtos = huddle.participants()
-                                           .stream()
-                                           .map(Member::firstName)
-                                           .map(PersonDto::new)
-                                           .toList();
+    public static MobParticipantsDto from(Huddle huddle, MemberService memberService) {
+        List<PersonDto> personDtos =
+                huddle.registeredMembers().stream()
+                      .map(memberService::findById)
+                      .map(Member::firstName)
+                      .map(PersonDto::new)
+                      .toList();
         return new MobParticipantsDto(personDtos);
     }
 

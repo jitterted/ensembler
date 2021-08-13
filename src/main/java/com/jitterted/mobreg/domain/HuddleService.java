@@ -26,14 +26,6 @@ public class HuddleService {
         return huddleRepository.findById(huddleId);
     }
 
-    public void registerParticipant(HuddleId huddleId, String name, String githubUsername) {
-        Huddle huddle = findById(huddleId)
-                .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));
-        Member member = new Member(name, githubUsername);
-        huddle.register(member);
-        huddleRepository.save(huddle);
-    }
-
     public void registerMember(HuddleId huddleId, MemberId memberId) {
         Huddle huddle = findById(huddleId)
                 .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));

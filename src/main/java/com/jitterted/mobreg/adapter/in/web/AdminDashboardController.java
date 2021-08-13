@@ -77,10 +77,7 @@ public class AdminDashboardController {
     @PostMapping("/register")
     public String registerParticipant(AdminRegistrationForm adminRegistrationForm) {
         HuddleId huddleId = HuddleId.of(adminRegistrationForm.getHuddleId());
-        huddleService.registerParticipant(huddleId,
-                                          adminRegistrationForm.getName(),
-                                          adminRegistrationForm.getGithubUsername()
-        );
+        // TODO: register on behalf of user -- requires lookup
 
         return "redirect:/admin/huddle/" + huddleId.id();
     }
