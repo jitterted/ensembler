@@ -12,7 +12,7 @@ public class HuddleRegisteredMembersTest {
     public void newHuddleHasZeroParticipants() throws Exception {
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
 
-        assertThat(huddle.numberRegistered())
+        assertThat(huddle.registeredMemberCount())
                 .isZero();
         assertThat(huddle.registeredMembers())
                 .isEmpty();
@@ -25,6 +25,9 @@ public class HuddleRegisteredMembersTest {
         MemberId memberId = MemberFactory.createMemberById(1L, "name", "github");
 
         huddle.registerById(memberId);
+
+        assertThat(huddle.registeredMemberCount())
+                .isEqualTo(1);
 
         assertThat(huddle.registeredMembers())
                 .containsOnly(memberId);

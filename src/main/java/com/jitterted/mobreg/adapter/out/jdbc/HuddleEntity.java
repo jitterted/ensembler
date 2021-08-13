@@ -10,7 +10,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 // Database Entity for Huddle to be stored in the database
 public class HuddleEntity {
@@ -30,11 +29,11 @@ public class HuddleEntity {
         }
         huddleEntity.setName(huddle.name());
         huddleEntity.setDateTimeUtc(huddle.startDateTime().toLocalDateTime());
-        huddleEntity.setRegisteredMembers(
-                huddle.participants()
-                      .stream()
-                      .map(MemberEntityId::toEntityId)
-                      .collect(Collectors.toSet()));
+//        huddleEntity.setRegisteredMembers(
+//                huddle.participants() // replace with registeredMembers
+//                      .stream()
+//                      .map(MemberEntityId::toEntityId)
+//                      .collect(Collectors.toSet()));
         return huddleEntity;
     }
 

@@ -29,14 +29,14 @@ public class Huddle {
         return startDateTime;
     }
 
+    // TODO: remove in favor of registeredMemberCount
+    @Deprecated
     public int numberRegistered() {
         return members.size();
     }
 
-    // GOAL: replace with registeredMembers()
-    @Deprecated
-    public Set<Member> participants() {
-        return Set.copyOf(members);
+    public int registeredMemberCount() {
+        return memberIds.size();
     }
 
     public Set<MemberId> registeredMembers() {

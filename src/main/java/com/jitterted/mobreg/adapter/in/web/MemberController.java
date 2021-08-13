@@ -3,6 +3,7 @@ package com.jitterted.mobreg.adapter.in.web;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,27 +32,26 @@ public class MemberController {
     @GetMapping("/member/register")
     public String showHuddlesForUser(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         MemberRegisterForm memberRegisterForm;
-        String username;
+        MemberId memberId;
         if (principal instanceof OAuth2User oAuth2User) {
-            username = oAuth2User.getAttribute("login");
-            // GOAL: replace with Member.firstName
-            final String displayName = oAuth2User.getAttribute("name");
+            String username = oAuth2User.getAttribute("login");
+            Member member = memberService.findByGithubUsername(username);
+            memberId = member.getId();
             model.addAttribute("username", username); // Member.githubUsername
-            model.addAttribute("name", displayName);
-            memberRegisterForm = createRegistrationForm(username);
+            model.addAttribute("name", member.firstName());
+            memberRegisterForm = createRegistrationForm(memberId);
         } else {
             throw new IllegalStateException("Not an OAuth2User");
         }
         List<Huddle> huddles = huddleService.allHuddles();
-        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, username);
+        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, memberId);
         model.addAttribute("register", memberRegisterForm);
         model.addAttribute("huddles", huddleSummaryViews);
         return "member-register";
     }
 
-    private MemberRegisterForm createRegistrationForm(String username) {
+    private MemberRegisterForm createRegistrationForm(MemberId memberId) {
         MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
-        MemberId memberId = memberService.findByGithubUsername(username).getId();
         memberRegisterForm.setMemberId(memberId.id());
         return memberRegisterForm;
     }
