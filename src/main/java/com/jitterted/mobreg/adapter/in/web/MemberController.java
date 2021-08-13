@@ -3,6 +3,8 @@ package com.jitterted.mobreg.adapter.in.web;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.MemberId;
+import com.jitterted.mobreg.domain.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,16 +20,17 @@ import java.util.List;
 public class MemberController {
 
     private final HuddleService huddleService;
+    private final MemberService memberService;
 
     @Autowired
-    public MemberController(HuddleService huddleService) {
+    public MemberController(HuddleService huddleService, MemberService memberService) {
         this.huddleService = huddleService;
+        this.memberService = memberService;
     }
 
     @GetMapping("/member/register")
     public String showHuddlesForUser(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         MemberRegisterForm memberRegisterForm;
-        // GOAL: replace username here with a lookup in MemberRepository for the Member
         String username;
         if (principal instanceof OAuth2User oAuth2User) {
             username = oAuth2User.getAttribute("login");
@@ -35,7 +38,7 @@ public class MemberController {
             final String displayName = oAuth2User.getAttribute("name");
             model.addAttribute("username", username); // Member.githubUsername
             model.addAttribute("name", displayName);
-            memberRegisterForm = createRegistrationForm(username, displayName);
+            memberRegisterForm = createRegistrationForm(username);
         } else {
             throw new IllegalStateException("Not an OAuth2User");
         }
@@ -46,23 +49,19 @@ public class MemberController {
         return "member-register";
     }
 
-    private MemberRegisterForm createRegistrationForm(String username, String displayName) {
+    private MemberRegisterForm createRegistrationForm(String username) {
         MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
-        memberRegisterForm.setName(displayName);
-        memberRegisterForm.setUsername(username);
-        // TODO: add MemberId (via lookup in MemberService)
-        // TODO: remove name/username from this form
+        MemberId memberId = memberService.findByGithubUsername(username).getId();
+        memberRegisterForm.setMemberId(memberId.id());
         return memberRegisterForm;
     }
 
     @PostMapping("/member/register")
     public String register(MemberRegisterForm memberRegisterForm) {
         HuddleId huddleId = HuddleId.of(memberRegisterForm.getHuddleId());
+        MemberId memberId = MemberId.of(memberRegisterForm.getMemberId());
 
-        huddleService.registerParticipant(huddleId,
-                                          memberRegisterForm.getName(),
-                                          memberRegisterForm.getUsername()
-        );
+        huddleService.registerMember(huddleId, memberId);
 
         return "redirect:/member/register";
     }

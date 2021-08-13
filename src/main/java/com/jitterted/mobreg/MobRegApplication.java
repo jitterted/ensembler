@@ -3,8 +3,10 @@ package com.jitterted.mobreg;
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
 import com.jitterted.mobreg.domain.InMemoryMemberRepository;
+import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.port.HuddleRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +46,12 @@ public class MobRegApplication {
                 standardWebSocketClient.doHandshake(new TextWebSocketHandler(),
                                                     "wss://mobti.me/jitterted");
         return webSocketSessionListenableFuture.completable().get();
+    }
+
+    // TODO: remove this once member registration works
+    @Bean
+    public CommandLineRunner commandLineRunner(MemberService memberService) {
+        return args -> memberService.save(new Member("Ted", "tedyoung"));
     }
 
 }

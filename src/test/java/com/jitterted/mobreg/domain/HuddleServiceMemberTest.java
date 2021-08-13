@@ -21,7 +21,7 @@ class HuddleServiceMemberTest {
         Member member = new Member("memberFirstName", "memberGithubUsername");
         MemberId memberId = memberRepository.save(member).getId();
 
-        huddleService.registerParticipant(huddleId, memberId);
+        huddleService.registerMember(huddleId, memberId);
 
         assertThat(huddle.registeredMembers())
                 .containsOnly(memberId);

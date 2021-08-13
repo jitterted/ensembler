@@ -10,8 +10,15 @@ public class MemberService {
     }
 
     public Member findById(MemberId memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository
+                .findById(memberId)
                 .orElseThrow(MemberNotFoundByIdException::new);
+    }
+
+    public Member findByGithubUsername(String username) {
+        return memberRepository
+                .findByGithubUsername(username)
+                .orElseThrow(() -> new MemberNotFoundByGitHubUsernameException(username));
     }
 
     public Member save(Member member) {

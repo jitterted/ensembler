@@ -23,7 +23,7 @@ public class HuddleRegisteredMembersTest {
     public void registerMemberByIdWithHuddleRemembersTheMember() throws Exception {
         Huddle huddle = new Huddle("huddle", ZonedDateTime.now());
 
-        MemberId memberId = MemberFactory.create(1L, "name", "github");
+        MemberId memberId = MemberFactory.createMemberById(1L, "name", "github");
 
         huddle.registerById(memberId);
 
@@ -42,7 +42,7 @@ public class HuddleRegisteredMembersTest {
     @Test
     public void registeredMemberIsFoundAsRegisteredByMemberId() throws Exception {
         Huddle huddle = new Huddle("huddle", ZonedDateTime.now());
-        MemberId memberId = MemberFactory.create(3L, "reg", "github");
+        MemberId memberId = MemberFactory.createMemberById(3L, "reg", "github");
         huddle.registerById(memberId);
 
         assertThat(huddle.isRegisteredById(memberId))
