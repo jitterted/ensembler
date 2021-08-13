@@ -35,6 +35,9 @@ class HuddleSummaryViewTest {
         HuddleSummaryView huddleSummaryView = HuddleSummaryView
                 .toView(huddle, MemberId.of(5L));
 
+        assertThat(huddleSummaryView.numberRegistered())
+                .isEqualTo(1);
+
         assertThat(huddleSummaryView.memberRegistered())
                 .isFalse();
     }

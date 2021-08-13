@@ -32,7 +32,7 @@ public record HuddleSummaryView(long id,
         return new HuddleSummaryView(huddle.getId().id(),
                                      huddle.name(),
                                      DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
-                                     huddle.registeredMemberCount(),
+                                     huddle.numberRegistered(),
                                      huddle.isRegisteredByUsername(username));
     }
 
@@ -40,7 +40,7 @@ public record HuddleSummaryView(long id,
         return new HuddleSummaryView(huddle.getId().id(),
                                      huddle.name(),
                                      DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
-                                     huddle.numberRegistered(),
+                                     huddle.registeredMemberCount(),
                                      huddle.isRegisteredById(memberId));
     }
 }
