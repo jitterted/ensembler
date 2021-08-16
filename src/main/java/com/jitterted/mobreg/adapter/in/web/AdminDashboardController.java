@@ -4,6 +4,8 @@ import com.jitterted.mobreg.adapter.DateTimeFormatting;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,15 +39,19 @@ public class AdminDashboardController {
 
     @GetMapping("/dashboard")
     public String dashboardView(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
-        String username = null;
+        MemberId memberId;
         if (principal instanceof OAuth2User oAuth2User) {
-            username = oAuth2User.getAttribute("login");
-            model.addAttribute("username", username);
-            model.addAttribute("name", oAuth2User.getAttribute("name"));
+            String username = oAuth2User.getAttribute("login");
+            Member member = memberService.findByGithubUsername(username);
+            memberId = member.getId();
+            model.addAttribute("username", username); // Member.githubUsername
+            model.addAttribute("name", member.firstName());
             model.addAttribute("github_id", oAuth2User.getAttribute("id"));
+        } else {
+            throw new IllegalStateException("Not an OAuth2User");
         }
         List<Huddle> huddles = huddleService.allHuddles();
-        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, username);
+        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, memberId);
         model.addAttribute("huddles", huddleSummaryViews);
         model.addAttribute("scheduleHuddleForm", new ScheduleHuddleForm());
         return "dashboard";

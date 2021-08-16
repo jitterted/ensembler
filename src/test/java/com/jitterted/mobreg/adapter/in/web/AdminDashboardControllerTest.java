@@ -4,9 +4,11 @@ import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
 import com.jitterted.mobreg.domain.InMemoryMemberRepository;
+import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberService;
+import com.jitterted.mobreg.domain.OAuth2UserFactory;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
@@ -14,21 +16,23 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 @SuppressWarnings({"ConstantConditions", "unchecked"})
 class AdminDashboardControllerTest {
 
     @Test
     public void givenOneHuddleResultsInHuddleInViewModel() throws Exception {
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
+        Member member = MemberFactory.createMember(0, "ted", "tedyoung");
+        memberRepository.save(member);
+        MemberService memberService = new MemberService(memberRepository);
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = new HuddleService(huddleRepository);
         huddleRepository.save(new Huddle("Name", ZonedDateTime.now()));
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
 
         Model model = new ConcurrentModel();
-        adminDashboardController.dashboardView(model, mock(AuthenticatedPrincipal.class));
+        adminDashboardController.dashboardView(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("tedyoung"));
 
         List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("huddles");
         assertThat(huddleSummaryViews)
