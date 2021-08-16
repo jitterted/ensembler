@@ -36,7 +36,7 @@ class MemberControllerTest {
         MemberController memberController = new MemberController(huddleService, memberService);
 
         Model model = new ConcurrentModel();
-        memberController.showHuddlesForUser(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("ghuser"));
+        memberController.showHuddlesForUser(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("ghuser", "ROLE_MEMBER"));
 
         MemberRegisterForm memberRegisterForm = (MemberRegisterForm) model.getAttribute("register");
 

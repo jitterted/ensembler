@@ -3,6 +3,7 @@ package com.jitterted.mobreg.adapter.in.web;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.OAuth2UserFactory;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public class AdminEndpointConfigurationTest {
 
     @Test
     public void getOfDashboardEndpointReturns200Ok() throws Exception {
-        mockMvc.perform(get("/admin/dashboard"))
+        mockMvc.perform(get("/admin/dashboard")
+                                .with(OAuth2UserFactory.oAuth2User("ROLE_ADMIN")))
                .andExpect(status().isOk());
     }
 

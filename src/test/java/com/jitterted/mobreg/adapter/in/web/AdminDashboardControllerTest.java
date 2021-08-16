@@ -32,7 +32,7 @@ class AdminDashboardControllerTest {
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
 
         Model model = new ConcurrentModel();
-        adminDashboardController.dashboardView(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("tedyoung"));
+        adminDashboardController.dashboardView(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("tedyoung", "ROLE_MEMBER"));
 
         List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("huddles");
         assertThat(huddleSummaryViews)
