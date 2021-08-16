@@ -12,8 +12,6 @@ public class Huddle {
     private final String name;
     private final ZonedDateTime startDateTime;
     private URI zoomMeetingLink;
-    // GOAL: remove Set<Member> members, only use Set<MemberId>
-    private final Set<Member> members = new HashSet<>();
     private final Set<MemberId> memberIds = new HashSet<>();
 
     public Huddle(String name, ZonedDateTime startDateTime) {
@@ -27,12 +25,6 @@ public class Huddle {
 
     public ZonedDateTime startDateTime() {
         return startDateTime;
-    }
-
-    // TODO: remove in favor of registeredMemberCount
-    @Deprecated
-    public int numberRegistered() {
-        return members.size();
     }
 
     public int registeredMemberCount() {
@@ -49,13 +41,6 @@ public class Huddle {
 
     public void setId(HuddleId id) {
         this.id = id;
-    }
-
-    // GOAL: use isRegisteredById instead
-    @Deprecated
-    public boolean isRegisteredByUsername(String username) {
-        return members.stream()
-                      .anyMatch(p -> p.githubUsername().equalsIgnoreCase(username));
     }
 
     public void registerById(MemberId memberId) {

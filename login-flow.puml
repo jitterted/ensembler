@@ -12,6 +12,8 @@ fork again
 end fork
 :__May__ show GitHub authentication;
 if (AUTHENTICATED) then (yes)
+    :Find member (via MemberService)
+    by GitHub Username;
     if (ROLE_MEMBER) then (yes)
         :Show Member Home;
         note left
