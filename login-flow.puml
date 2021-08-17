@@ -32,6 +32,7 @@ if (AUTHENTICATED) then (yes)
             They thought they
             were a member
         end note
+        :Deal with "invite code";
         :Show available projects;
         :Create invite for repo;
         :etc.;

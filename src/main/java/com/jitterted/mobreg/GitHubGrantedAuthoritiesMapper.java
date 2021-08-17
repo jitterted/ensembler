@@ -1,6 +1,7 @@
 package com.jitterted.mobreg;
 
-import com.jitterted.mobreg.domain.port.MembershipValidator;
+import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +14,20 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+// TODO: what package should this go in? adapter.in.security or .oauth?
 @Component
 public class GitHubGrantedAuthoritiesMapper implements GrantedAuthoritiesMapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubGrantedAuthoritiesMapper.class);
 
-    private final MembershipValidator membershipValidator;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public GitHubGrantedAuthoritiesMapper(MembershipValidator membershipValidator) {
-        this.membershipValidator = membershipValidator;
+    public GitHubGrantedAuthoritiesMapper(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -35,28 +38,25 @@ public class GitHubGrantedAuthoritiesMapper implements GrantedAuthoritiesMapper 
             if (authority instanceof OAuth2UserAuthority oauth2UserAuthority) {
                 Map<String, Object> userAttributes = oauth2UserAuthority.getAttributes();
                 requireFromGitHub(userAttributes);
-                // need to add the default role, even though we get this from GitHub by default
-                mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
                 String githubLoginUsername = (String) userAttributes.get("login");
 
-                LOGGER.info("Checking Membership for login='{}'", githubLoginUsername);
-                LOGGER.info("Other user attributes: {}", userAttributes);
-
-                if (githubLoginUsername.equals("tedyoung")) {
-                    LOGGER.info("Ted is an ADMIN");
-                    mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                    mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
-                } else if (membershipValidator.isMember(githubLoginUsername)) {
-                    LOGGER.info("'{}' IS a Member", githubLoginUsername);
-                    mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
+                Optional<Member> memberOpt = memberRepository.findByGithubUsername(githubLoginUsername);
+                if (memberOpt.isPresent()) {
+                    mapToRoleSet(mappedAuthorities, memberOpt.get());
                 } else {
-                    LOGGER.info("'{}' is NOT a Member.", githubLoginUsername);
+                    mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 }
             }
+
         });
 
         return mappedAuthorities;
+    }
+
+    private void mapToRoleSet(Set<GrantedAuthority> mappedAuthorities, Member member) {
+        member.roles().stream()
+              .map(SimpleGrantedAuthority::new)
+              .forEach(mappedAuthorities::add);
     }
 
     private void requireFromGitHub(Map<String, Object> userAttributes) {

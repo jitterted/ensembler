@@ -1,23 +1,25 @@
 package com.jitterted.mobreg.domain;
 
 import com.jitterted.mobreg.GitHubGrantedAuthoritiesMapper;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 
 class GitHubAuthorityMapperTest {
 
     @Test
-    public void gitHubCollaboratorIsMember() throws Exception {
+    public void usernameFoundInMemberRepositoryGetsRolesFromMember() throws Exception {
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
+        Member member = new Member("Member", "member_username", "ROLE_MEMBER", "ROLE_USER");
+        memberRepository.save(member);
+
         GitHubGrantedAuthoritiesMapper gitHubGrantedAuthoritiesMapper =
-                new GitHubGrantedAuthoritiesMapper(username -> username.equals("collaborator"));
-        OAuth2UserAuthority oauth2UserAuthority = createGitHubUserWithLogin("collaborator");
+                new GitHubGrantedAuthoritiesMapper(memberRepository);
+        OAuth2UserAuthority oauth2UserAuthority = OAuth2UserFactory.createGitHubUserWithLogin("member_username");
 
         var grantedAuthorities =
                 gitHubGrantedAuthoritiesMapper.mapAuthorities(List.of(oauth2UserAuthority));
@@ -28,23 +30,18 @@ class GitHubAuthorityMapperTest {
     }
 
     @Test
-    public void notGitHubCollaboratorHasNoGrantedAuthorities() throws Exception {
-        GitHubGrantedAuthoritiesMapper gitHubCollaboratorMapper =
-                new GitHubGrantedAuthoritiesMapper(username -> username.equals("collaborator"));
+    public void usernameNotInMemberRepositoryHasOnlyUserRole() throws Exception {
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
 
-        var grantedAuthorities = gitHubCollaboratorMapper
-                .mapAuthorities(List.of(createGitHubUserWithLogin("noncollaborator")));
+        GitHubGrantedAuthoritiesMapper gitHubGrantedAuthoritiesMapper =
+                new GitHubGrantedAuthoritiesMapper(memberRepository);
+
+        var grantedAuthorities = gitHubGrantedAuthoritiesMapper
+                .mapAuthorities(List.of(OAuth2UserFactory.createGitHubUserWithLogin("non_member")));
 
         assertThat(grantedAuthorities)
                 .extracting(GrantedAuthority::getAuthority)
                 .containsOnly("ROLE_USER");
-    }
-
-    @NotNull
-    private OAuth2UserAuthority createGitHubUserWithLogin(String loginUsername) {
-        return new OAuth2UserAuthority(
-                Map.of("url", "https://api.github.com/",
-                       "login", loginUsername));
     }
 
 }

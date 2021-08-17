@@ -1,15 +1,21 @@
 package com.jitterted.mobreg.domain;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 // This is the Aggregate Root for Member
 public class Member {
     private MemberId id;
 
     private final String firstName;
     private final String githubUsername; // could be a Value Object
+    private final Set<String> roles;
 
-    public Member(String firstName, String githubUsername) {
+    public Member(String firstName, String githubUsername, String... roles) {
         this.firstName = firstName;
         this.githubUsername = githubUsername;
+        this.roles = Arrays.stream(roles).collect(Collectors.toUnmodifiableSet());
     }
 
     public String firstName() {
@@ -18,6 +24,10 @@ public class Member {
 
     public String githubUsername() {
         return githubUsername;
+    }
+
+    public Set<String> roles() {
+        return roles;
     }
 
     public MemberId getId() {

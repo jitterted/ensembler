@@ -6,6 +6,7 @@ import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.port.HuddleRepository;
+import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,7 +32,12 @@ public class MobRegApplication {
 
     @Bean
     public MemberService memberService() {
-        return new MemberService(new InMemoryMemberRepository());
+        return new MemberService(memberRepository());
+    }
+
+    @Bean
+    public MemberRepository memberRepository() {
+        return new InMemoryMemberRepository();
     }
 
     @Bean
@@ -51,7 +57,7 @@ public class MobRegApplication {
     // TODO: remove this once member registration works
     @Bean
     public CommandLineRunner commandLineRunner(MemberService memberService) {
-        return args -> memberService.save(new Member("Ted", "tedyoung"));
+        return args -> memberService.save(new Member("Ted", "tedyoung", "ROLE_USER", "ROLE_MEMBER", "ROLE_ADMIN"));
     }
 
 }
