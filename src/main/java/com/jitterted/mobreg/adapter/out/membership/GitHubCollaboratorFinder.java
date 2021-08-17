@@ -1,22 +1,20 @@
 package com.jitterted.mobreg.adapter.out.membership;
 
-import com.jitterted.mobreg.domain.port.MembershipValidator;
 import com.spotify.github.v3.clients.GitHubClient;
 import com.spotify.github.v3.clients.RepositoryClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
-@Service
-public class GitHubCollaboratorMembershipValidator implements MembershipValidator {
+// TODO: use when new user is signing up
+public class GitHubCollaboratorFinder {
     @Value("${github.personal.access.token}")
     private String personalAccessToken;
 
+    // TODO: pull from app properties
     private static final String GITHUB_API_URI = "https://api.github.com/";
 
-    @Override
     public boolean isMember(String username) {
         URI gitHubUri = URI.create(GITHUB_API_URI);
         GitHubClient github = GitHubClient.create(gitHubUri, personalAccessToken);

@@ -1,7 +1,6 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.port.MembershipValidator;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -27,9 +26,6 @@ class HuddleRepositoryDataJdbcAdapterTest {
 
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
-
-    @MockBean
-    MembershipValidator membershipValidator;
 
     @Test
     public void savedHuddleCanBeFoundByItsId() throws Exception {

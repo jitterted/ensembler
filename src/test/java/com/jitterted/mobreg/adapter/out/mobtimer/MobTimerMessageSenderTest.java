@@ -1,7 +1,6 @@
 package com.jitterted.mobreg.adapter.out.mobtimer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jitterted.mobreg.adapter.out.membership.GitHubCollaboratorMembershipValidator;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.ZonedDateTime;
 
@@ -22,9 +20,6 @@ class MobTimerMessageSenderTest {
 
     @Autowired
     ObjectMapper objectMapper;
-
-    @MockBean
-    GitHubCollaboratorMembershipValidator gitHubCollaboratorMembershipValidator;
 
     @Autowired
     MemberService memberService;
