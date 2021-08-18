@@ -4,7 +4,7 @@ import com.jitterted.mobreg.domain.MemberId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("REGISTERED_MEMBERS") // WARNING: Case-sensitive
+@Table("registered_members") // WARNING: Case-sensitive
 public class MemberEntityId {
     @Id
     public Long memberId;

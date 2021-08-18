@@ -1,6 +1,8 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
+import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -12,9 +14,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -47,28 +48,26 @@ class PostgresqlEntityTest {
     }
 
     @Test
-    public void huddleEntityStoredViaJdbcIsRetrievedAsOriginal() throws Exception {
-//        Huddle original = new Huddle("entity", ZonedDateTime.now());
-//        HuddleEntity originalEntity = HuddleEntity.from(original);
-        HuddleEntity rawHuddleEntity = new HuddleEntity();
-        rawHuddleEntity.setDateTimeUtc(LocalDateTime.now());
-        rawHuddleEntity.setName("raw entity");
-        rawHuddleEntity.setRegisteredMembers(Set.of(new MemberEntityId(1L), new MemberEntityId(2L)));
+    public void huddleEntityStoredViaJdbcIsRetrievedWithMembers() throws Exception {
+        Huddle original = new Huddle("entity", ZonedDateTime.now());
+        original.registerById(MemberId.of(4L));
+        original.registerById(MemberId.of(5L));
+        HuddleEntity originalEntity = HuddleEntity.from(original);
 
-//        HuddleEntity savedEntity = huddleJdbcRepository.save(originalEntity);
-        HuddleEntity savedEntity = huddleJdbcRepository.save(rawHuddleEntity);
+        HuddleEntity savedEntity = huddleJdbcRepository.save(originalEntity);
 
         Optional<HuddleEntity> retrievedEntity = huddleJdbcRepository.findById(savedEntity.getId());
-
-        assertThat(retrievedEntity.get().getRegisteredMembers())
-                .hasSize(2);
 
         assertThat(retrievedEntity)
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
-                .isEqualTo(rawHuddleEntity);
-//                .isEqualTo(originalEntity);
+                .isEqualTo(originalEntity);
+
+        assertThat(retrievedEntity.get().getRegisteredMembers())
+                .extracting(MemberEntityId::asMemberId)
+                .extracting(MemberId::id)
+                .containsOnly(4L, 5L);
 
     }
 

@@ -4,6 +4,7 @@ import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
+@Disabled // TODO: moving to just PostgreSQL??
 @SpringBootTest(properties = {"GITHUB_OAUTH=dummy"})
 @AutoConfigureTestDatabase
 @Tag("integration")

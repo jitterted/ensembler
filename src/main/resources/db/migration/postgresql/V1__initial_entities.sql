@@ -7,8 +7,8 @@ create table huddle_entity
 
 create table registered_members
 (
-    id BIGINT NOT NULL,
-    huddle_entity BIGINT NOT NULL
+    member_id BIGINT NOT NULL,
+    huddle_id BIGINT NOT NULL
 );
 
 create table member_entity

@@ -20,7 +20,7 @@ public class HuddleEntity {
     private String name;
     private LocalDateTime dateTimeUtc;
 
-    @MappedCollection(idColumn = "HUDDLE_ID")
+    @MappedCollection(idColumn = "huddle_id")
     private Set<MemberEntityId> registeredMembers = new HashSet<>();
 
     public static HuddleEntity from(Huddle huddle) {
