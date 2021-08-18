@@ -3,7 +3,7 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.Member;
-import org.junit.jupiter.api.Disabled;
+import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Disabled
 @SpringBootTest(properties = {"GITHUB_OAUTH=dummy"})
 @AutoConfigureTestDatabase
 @Tag("integration")
@@ -30,8 +29,8 @@ class HuddleEntityH2Test {
     public void huddleEntityStoredViaJdbcIsRetrievedAsOriginal() throws Exception {
         Huddle huddle = new Huddle("entity", ZonedDateTime.now());
         Member member = new Member("name", "github");
-        // TODO: use the registerById instead
-//        huddle.register(member);
+        member.setId(MemberId.of(3L));
+        huddle.registerById(member.getId());
 
         HuddleEntity originalEntity = HuddleEntity.from(huddle);
 
@@ -45,11 +44,15 @@ class HuddleEntityH2Test {
                 .usingRecursiveComparison()
                 .isEqualTo(originalEntity);
 
-        // TODO: check the member ID
+        assertThat(retrievedEntity.get().getRegisteredMembers())
+                .extracting(MemberEntityId::asMemberId)
+                .extracting(MemberId::id)
+                .containsOnly(3L);
+
         assertThat(retrievedEntity.get().asHuddle().registeredMembers())
-                .isNotEmpty();
-//                .extracting(Member::firstName)
-//                .containsOnly("name");
+                .isNotEmpty()
+                .extracting(MemberId::id)
+                .containsOnly(3L);
     }
 
     @Test
