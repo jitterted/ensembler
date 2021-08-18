@@ -29,8 +29,10 @@ Since it uses GitHub OAuth2 for authentication, you'll need to register this app
 
 ## Development
 
-Using Tailwind simple generation with the new "jit" processor:
+Using Tailwind's simple CSS generation with the new "jit" processor:
 
+```
 npx tailwindcss -o ./src/main/resources/static/tailwind.css --watch --jit --purge="./src/main/resources/**/*.html"
+```
 
 (more details to come)
