@@ -3,7 +3,6 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Disabled
 @Testcontainers(disabledWithoutDocker = true)
 @SpringBootTest(properties = {"GITHUB_OAUTH=dummy"})
 @Tag("container")
