@@ -1,8 +1,6 @@
 package com.jitterted.mobreg;
 
 import com.jitterted.mobreg.domain.HuddleService;
-import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
-import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.port.HuddleRepository;
@@ -25,20 +23,21 @@ public class MobRegApplication {
         SpringApplication.run(MobRegApplication.class, args);
     }
 
-    @Bean
-    public HuddleRepository huddleRepository() {
-        return new InMemoryHuddleRepository();
-    }
+//    @Bean
+//    public HuddleRepository huddleRepository() {
+//        return new InMemoryHuddleRepository();
+//    }
+
+//    @Bean
+//    public MemberRepository memberRepository() {
+//        return new InMemoryMemberRepository();
+//    }
 
     @Bean
-    public MemberService memberService() {
-        return new MemberService(memberRepository());
+    public MemberService memberService(MemberRepository memberRepository) {
+        return new MemberService(memberRepository);
     }
 
-    @Bean
-    public MemberRepository memberRepository() {
-        return new InMemoryMemberRepository();
-    }
 
     @Bean
     public HuddleService createHuddleService(HuddleRepository huddleRepository) {
@@ -56,8 +55,12 @@ public class MobRegApplication {
 
     // TODO: remove this once member registration works
     @Bean
-    public CommandLineRunner commandLineRunner(MemberService memberService) {
-        return args -> memberService.save(new Member("Ted", "tedyoung", "ROLE_USER", "ROLE_MEMBER", "ROLE_ADMIN"));
+    public CommandLineRunner commandLineRunner(MemberService memberService, MemberRepository memberRepository) {
+        return args -> {
+            if (memberRepository.findByGithubUsername("tedyoung").isEmpty()) {
+                memberService.save(new Member("Ted", "tedyoung", "ROLE_USER", "ROLE_MEMBER", "ROLE_ADMIN"));
+            }
+        };
     }
 
 }

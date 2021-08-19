@@ -30,5 +30,6 @@ public class HuddleService {
         Huddle huddle = findById(huddleId)
                 .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));
         huddle.registerById(memberId);
+        huddleRepository.save(huddle);
     }
 }
