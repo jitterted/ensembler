@@ -54,7 +54,7 @@ public class DashboardHuddleViewTest {
 
         HuddleDetailView huddleView = (HuddleDetailView) model.getAttribute("huddle");
 
-        assertThat(huddleView.participantViews())
+        assertThat(huddleView.memberViews())
                 .hasSize(1);
     }
 

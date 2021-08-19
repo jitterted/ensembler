@@ -39,8 +39,8 @@ class HuddleDetailViewTest {
 
         HuddleDetailView view = HuddleDetailView.from(huddle, memberService);
 
-        ParticipantView expectedView = new ParticipantView("name", "ghusername");
-        assertThat(view.participantViews())
+        MemberView expectedView = new MemberView("name", "ghusername");
+        assertThat(view.memberViews())
                 .first()
                 .usingRecursiveComparison()
                 .isEqualTo(expectedView);

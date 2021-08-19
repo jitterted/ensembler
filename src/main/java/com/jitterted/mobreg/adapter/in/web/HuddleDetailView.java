@@ -12,22 +12,22 @@ public record HuddleDetailView(long id,
                                String duration,
                                String topic,
                                // TODO: rename to MemberView
-                               List<ParticipantView> participantViews) {
+                               List<MemberView> memberViews) {
 
     static HuddleDetailView from(Huddle huddle, MemberService memberService) {
-        List<ParticipantView> participantViews =
+        List<MemberView> memberViews =
                 huddle.registeredMembers().stream()
                       .map(memberService::findById)
-                      .map(ParticipantView::from)
+                      .map(MemberView::from)
                       .toList();
         return new HuddleDetailView(huddle.getId().id(),
                                     huddle.name(),
                                     DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
                                     "90m", "topic",
-                                    participantViews);
+                                    memberViews);
     }
 
     public int size() {
-        return participantViews.size();
+        return memberViews.size();
     }
 }

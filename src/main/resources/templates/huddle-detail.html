@@ -17,9 +17,9 @@
 <p>Current Size: <span th:text="${huddle.size}">4</span> of 5</p>
 
 <h2>Participants</h2>
-<div th:each="participantView : ${huddle.participantViews}">
-    <span th:text="${participantView.firstName}">Participant Name</span>
-    <span th:text="${participantView.githubUsername}">GitHub Username</span>
+<div th:each="memberView : ${huddle.memberViews}">
+    <span th:text="${memberView.firstName}">Participant Name</span>
+    <span th:text="${memberView.githubUsername}">GitHub Username</span>
 </div>
 
 <h2>Register Participant</h2>

@@ -33,11 +33,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser(username = "username", authorities = {"ROLE_MEMBER","ROLE_ADMIN"})
 public class AdminEndpointConfigurationTest {
 
-    @MockBean
-    HuddleService huddleService;
-
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    HuddleService huddleService;
 
     @MockBean
     HuddleRepository huddleRepository;
