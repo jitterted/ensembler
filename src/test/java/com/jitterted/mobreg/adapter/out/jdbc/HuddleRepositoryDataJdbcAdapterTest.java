@@ -3,18 +3,10 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.MemberId;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -22,33 +14,13 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Testcontainers(disabledWithoutDocker = true)
-@SpringBootTest
-@Transactional
-@Tag("integration")
-class HuddleRepositoryDataJdbcAdapterTest {
+class HuddleRepositoryDataJdbcAdapterTest extends TestContainerBase {
 
     @Autowired
     HuddleRepositoryDataJdbcAdapter huddleRepositoryAdapter;
 
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
-
-    // create shared container with a container image name "postgres" and latest major release of PostgreSQL "13"
-    @Container
-    public static PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres")
-            .withDatabaseName("posttest")
-            .withUsername("test")
-            .withPassword("test");
-
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
-        registry.add("spring.datasource.username", POSTGRESQL_CONTAINER::getUsername);
-        registry.add("spring.datasource.password", POSTGRESQL_CONTAINER::getPassword);
-        registry.add("spring.sql.init.platform", () -> "postgresql");
-    }
-
 
     @Test
     public void savedHuddleCanBeFoundByItsId() throws Exception {
@@ -81,8 +53,16 @@ class HuddleRepositoryDataJdbcAdapterTest {
         huddleRepositoryAdapter.save(one);
         huddleRepositoryAdapter.save(two);
 
-        assertThat(huddleRepositoryAdapter.findAll())
+        List<Huddle> allHuddles = huddleRepositoryAdapter.findAll();
+        assertThat(allHuddles)
                 .hasSize(2);
+
+        assertThat(allHuddles.get(0).registeredMembers())
+                .hasSize(1)
+                .containsOnly(MemberId.of(7L));
+        assertThat(allHuddles.get(1).registeredMembers())
+                .hasSize(1)
+                .containsOnly(MemberId.of(7L));
     }
 
     @NotNull
