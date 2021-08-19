@@ -33,6 +33,7 @@ public class MemberRepositoryDataJdbcAdapter implements MemberRepository {
 
     @Override
     public Optional<Member> findById(MemberId memberId) {
-        throw new UnsupportedOperationException();
+        Optional<MemberEntity> memberEntity = memberJdbcRepository.findById(memberId.id());
+        return memberEntity.map(MemberEntity::asMember);
     }
 }

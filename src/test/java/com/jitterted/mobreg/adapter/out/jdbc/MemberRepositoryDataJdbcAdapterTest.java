@@ -29,6 +29,21 @@ class MemberRepositoryDataJdbcAdapterTest extends TestContainerBase {
     }
 
     @Test
+    public void memberWithRolesAreStoredThenRetrieved() throws Exception {
+        Member member = new Member("first", "githubuser", "ROLE_USER", "ROLE_MEMBER");
+
+        Member savedMember = memberRepositoryAdapter.save(member);
+
+        Optional<Member> foundMember = memberRepositoryAdapter.findById(savedMember.getId());
+
+        assertThat(foundMember)
+                .isPresent();
+
+        assertThat(foundMember.get().roles())
+                .containsOnly("ROLE_USER", "ROLE_MEMBER");
+    }
+
+    @Test
     public void savedMemberCanBeFoundByItsGithubUsername() throws Exception {
         Member member = new Member("first", "ghuser");
 
