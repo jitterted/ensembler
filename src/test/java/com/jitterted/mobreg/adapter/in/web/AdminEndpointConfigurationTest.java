@@ -3,7 +3,11 @@ package com.jitterted.mobreg.adapter.in.web;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.OAuth2UserFactory;
+import com.jitterted.mobreg.domain.port.HuddleRepository;
+import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +26,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+// TODO: create test configuration that uses Fake repositories
 @WebMvcTest
 @Tag("mvc")
+// TODO: roles aren't needed here anymore
 @WithMockUser(username = "username", authorities = {"ROLE_MEMBER","ROLE_ADMIN"})
 public class AdminEndpointConfigurationTest {
 
@@ -34,10 +40,19 @@ public class AdminEndpointConfigurationTest {
     private MockMvc mockMvc;
 
     @MockBean
+    HuddleRepository huddleRepository;
+
+    @MockBean
+    MemberRepository memberRepository;
+
+    @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
     @Test
     public void getOfDashboardEndpointReturns200Ok() throws Exception {
+        Member member = new Member("Ted", "tedyoung", "ROLE_MEMBER", "ROLE_ADMIN");
+        member.setId(MemberId.of(1L));
+        when(memberRepository.findByGithubUsername("tedyoung")).thenReturn(Optional.of(member));
         mockMvc.perform(get("/admin/dashboard")
                                 .with(OAuth2UserFactory.oAuth2User("ROLE_ADMIN")))
                .andExpect(status().isOk());
