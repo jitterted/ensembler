@@ -11,7 +11,6 @@ public record HuddleDetailView(long id,
                                String startDateTime,
                                String duration,
                                String topic,
-                               // TODO: rename to MemberView
                                List<MemberView> memberViews) {
 
     static HuddleDetailView from(Huddle huddle, MemberService memberService) {

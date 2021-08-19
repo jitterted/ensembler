@@ -2,10 +2,14 @@ package com.jitterted.mobreg.adapter.in.web;
 
 import com.jitterted.mobreg.domain.Member;
 
-public record MemberView(String firstName,
-                         String githubUsername) {
+public record MemberView(Long id,
+                         String firstName,
+                         String githubUsername,
+                         String roles) {
     public static MemberView from(Member member) {
-        return new MemberView(member.firstName(),
-                              member.githubUsername());
+        return new MemberView(member.getId().id(),
+                              member.firstName(),
+                              member.githubUsername(),
+                              String.join(",", member.roles()));
     }
 }

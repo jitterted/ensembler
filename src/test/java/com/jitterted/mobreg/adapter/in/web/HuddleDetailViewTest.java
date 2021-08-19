@@ -39,7 +39,7 @@ class HuddleDetailViewTest {
 
         HuddleDetailView view = HuddleDetailView.from(huddle, memberService);
 
-        MemberView expectedView = new MemberView("name", "ghusername");
+        MemberView expectedView = new MemberView(7L, "name", "ghusername", "");
         assertThat(view.memberViews())
                 .first()
                 .usingRecursiveComparison()
