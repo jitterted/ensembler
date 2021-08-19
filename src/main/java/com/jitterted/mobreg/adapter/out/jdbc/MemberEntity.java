@@ -3,6 +3,9 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.MappedCollection;
+
+import java.util.Set;
 
 public class MemberEntity {
     @Id
@@ -10,6 +13,8 @@ public class MemberEntity {
 
     private String firstName;
     private String githubUsername;
+    @MappedCollection
+    private Set<String> roles;
 
     public static MemberEntity from(Member member) {
         MemberEntity memberEntity = new MemberEntity();
@@ -18,11 +23,12 @@ public class MemberEntity {
         }
         memberEntity.setFirstName(member.firstName());
         memberEntity.setGithubUsername(member.githubUsername());
+        memberEntity.setRoles(member.roles());
         return memberEntity;
     }
 
     public Member asMember() {
-        Member member = new Member(firstName, githubUsername);
+        Member member = new Member(firstName, githubUsername, roles.toArray(new String[0]));
         member.setId(MemberId.of(id));
         return member;
     }
@@ -49,5 +55,13 @@ public class MemberEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 }

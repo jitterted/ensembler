@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("registered_members") // WARNING: Case-sensitive
-public class MemberEntityId {
+public class MemberEntityId { // TODO: rename RegisteredMemberEntity ?
     @Id
     public Long memberId;
 

@@ -20,7 +20,7 @@ class MemberRepositoryDataJdbcAdapterTest extends TestContainerBase {
 
     @Test
     public void newlyCreatedAndSavedMemberGetsIdAssigned() throws Exception {
-        Member member = new Member("first", "githubuser");
+        Member member = new Member("first", "githubuser", "ROLE_USER", "ROLE_MEMBER");
 
         Member savedMember = memberRepositoryAdapter.save(member);
 
