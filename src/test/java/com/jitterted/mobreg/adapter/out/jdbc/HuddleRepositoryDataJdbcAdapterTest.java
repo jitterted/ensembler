@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.MemberId;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Tag;
@@ -16,6 +17,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -90,6 +92,21 @@ class HuddleRepositoryDataJdbcAdapterTest {
         assertThat(allHuddles.get(1).registeredMembers())
                 .hasSize(1)
                 .containsOnly(MemberId.of(7L));
+    }
+
+    @Test
+    public void whenHuddleMeetingLinkIsStoredThenIsRetrievedByFind() throws Exception {
+        Huddle zoom = new Huddle("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
+
+        HuddleId savedId = huddleRepositoryAdapter.save(zoom).getId();
+
+        Optional<Huddle> found = huddleRepositoryAdapter.findById(savedId);
+        assertThat(found)
+                .isPresent()
+                .get()
+                .extracting(Huddle::zoomMeetingLink)
+                .extracting(URI::toString)
+                .isEqualTo("https://zoom.us/j/123456?pwd=12345");
     }
 
     @NotNull

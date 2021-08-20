@@ -15,7 +15,12 @@ public class Huddle {
     private final Set<MemberId> memberIds = new HashSet<>();
 
     public Huddle(String name, ZonedDateTime startDateTime) {
+        this(name, URI.create("https://zoom.us"), startDateTime);
+    }
+
+    public Huddle(String name, URI zoomMeetingLink, ZonedDateTime startDateTime) {
         this.name = name;
+        this.zoomMeetingLink = zoomMeetingLink;
         this.startDateTime = startDateTime;
     }
 
@@ -49,5 +54,9 @@ public class Huddle {
 
     public boolean isRegisteredById(MemberId memberId) {
         return memberIds.contains(memberId);
+    }
+
+    public URI zoomMeetingLink() {
+        return zoomMeetingLink;
     }
 }

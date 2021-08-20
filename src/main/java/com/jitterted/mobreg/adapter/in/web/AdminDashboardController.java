@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -76,7 +77,11 @@ public class AdminDashboardController {
         ZonedDateTime dateTime = DateTimeFormatting.fromBrowserDateAndTime(
                 scheduleHuddleForm.getDate(),
                 scheduleHuddleForm.getTime());
-        huddleService.scheduleHuddle(scheduleHuddleForm.getName(), dateTime);
+        if (scheduleHuddleForm.getZoomMeetingLink().isBlank()) {
+            huddleService.scheduleHuddle(scheduleHuddleForm.getName(), dateTime);
+        } else {
+            huddleService.scheduleHuddle(scheduleHuddleForm.getName(), URI.create(scheduleHuddleForm.getZoomMeetingLink()), dateTime);
+        }
         return "redirect:/admin/dashboard";
     }
 

@@ -70,6 +70,7 @@ public class AdminEndpointConfigurationTest {
     public void postToScheduleHuddleEndpointRedirects() throws Exception {
         mockMvc.perform(post("/admin/schedule")
                                 .param("name", "test")
+                                .param("zoomMeetingLink", "https://zoom.us/j/test?pwd=testy")
                                 .param("date", "2021-04-30")
                                 .param("time", "09:00")
                                 .with(csrf()))

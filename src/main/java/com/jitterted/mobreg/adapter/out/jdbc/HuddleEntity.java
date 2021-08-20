@@ -5,6 +5,7 @@ import com.jitterted.mobreg.domain.HuddleId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -18,6 +19,7 @@ public class HuddleEntity {
     private Long id;
 
     private String name;
+    private String zoomMeetingLink;
     private LocalDateTime dateTimeUtc;
 
     @MappedCollection(idColumn = "huddle_id")
@@ -30,6 +32,7 @@ public class HuddleEntity {
         }
         huddleEntity.setName(huddle.name());
         huddleEntity.setDateTimeUtc(huddle.startDateTime().toLocalDateTime());
+        huddleEntity.setZoomMeetingLink(huddle.zoomMeetingLink().toString());
         huddleEntity.setRegisteredMembers(
                 huddle.registeredMembers()
                       .stream()
@@ -40,7 +43,7 @@ public class HuddleEntity {
 
     public Huddle asHuddle() {
         ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneId.systemDefault());
-        Huddle huddle = new Huddle(name, startDateTime);
+        Huddle huddle = new Huddle(name, URI.create(zoomMeetingLink), startDateTime);
         huddle.setId(HuddleId.of(id));
 
         registeredMembers.stream()
@@ -80,5 +83,13 @@ public class HuddleEntity {
 
     public void setRegisteredMembers(Set<MemberEntityId> registeredMembers) {
         this.registeredMembers = registeredMembers;
+    }
+
+    public String getZoomMeetingLink() {
+        return zoomMeetingLink;
+    }
+
+    public void setZoomMeetingLink(String zoomMeetingLink) {
+        this.zoomMeetingLink = zoomMeetingLink;
     }
 }

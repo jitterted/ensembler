@@ -180,6 +180,16 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-4 gap-4 items-start pt-6">
+                <label th:for="name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Zoom link
+                </label>
+                <div class="mt-1 sm:mt-0 sm:col-span-2">
+                    <input type="url" th:field="*{zoomMeetingLink}"
+                           class="max-w-xs text-sm block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md">
+                </div>
+            </div>
+
             <div class="grid grid-cols-4 gap-4 items-start border-gray-200 pt-5">
                 <label th:for="date" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                     Mob Date
