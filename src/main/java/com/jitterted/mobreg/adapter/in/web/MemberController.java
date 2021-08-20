@@ -31,23 +31,28 @@ public class MemberController {
 
     @GetMapping("/member/register")
     public String showHuddlesForUser(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
-        MemberRegisterForm memberRegisterForm;
-        MemberId memberId;
+        Member member = findMemberBy(principal);
+        model.addAttribute("username", member.githubUsername());
+        model.addAttribute("name", member.firstName());
+
+        MemberRegisterForm memberRegisterForm = createRegistrationForm(member.getId());
+        model.addAttribute("register", memberRegisterForm);
+
+        List<Huddle> huddles = huddleService.allHuddles();
+        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, member.getId());
+        model.addAttribute("huddles", huddleSummaryViews);
+        return "member-register";
+    }
+
+    private Member findMemberBy(AuthenticatedPrincipal principal) {
+        Member member;
         if (principal instanceof OAuth2User oAuth2User) {
             String username = oAuth2User.getAttribute("login");
-            Member member = memberService.findByGithubUsername(username);
-            memberId = member.getId();
-            model.addAttribute("username", username); // Member.githubUsername
-            model.addAttribute("name", member.firstName());
-            memberRegisterForm = createRegistrationForm(memberId);
+            member = memberService.findByGithubUsername(username);
         } else {
             throw new IllegalStateException("Not an OAuth2User");
         }
-        List<Huddle> huddles = huddleService.allHuddles();
-        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, memberId);
-        model.addAttribute("register", memberRegisterForm);
-        model.addAttribute("huddles", huddleSummaryViews);
-        return "member-register";
+        return member;
     }
 
     private MemberRegisterForm createRegistrationForm(MemberId memberId) {
