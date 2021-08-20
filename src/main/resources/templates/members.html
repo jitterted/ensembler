@@ -21,17 +21,17 @@
         <td th:text="${member.id}">ID</td>
         <td th:text="${member.firstName}">Participant Name</td>
         <td th:text="${member.githubUsername}">GitHub Username</td>
-        <td th:text="${member.roles}">GitHub Username</td>
+        <td th:text="${member.roles}">Role, Role, Role</td>
     </tr>
     </tbody>
 </table>
 
 <h2>Add Member</h2>
-<!--<form th:action="@{/admin/add-member}" action="#" method="post" th:object="${memberForm}">-->
-<!--    <div>First Name: <input type="text" th:field="*{name}" autofocus></div>-->
-<!--    <div>GitHub Username: <input type="text" th:field="*{githubUsername}"></div>-->
-<!--    <div class="mt-3">-->
-<!--        <button type="submit">Add Member</button>-->
-<!--    </div>-->
-<!--</form>-->
+<form th:action="@{/admin/add-member}" action="#" method="post" th:object="${addMemberForm}">
+    <div>First Name: <input type="text" th:field="*{firstName}" autofocus></div>
+    <div>GitHub Username: <input type="text" th:field="*{githubUsername}"></div>
+    <div class="mt-3">
+        <button type="submit">Add Member</button>
+    </div>
+</form>
 </body>

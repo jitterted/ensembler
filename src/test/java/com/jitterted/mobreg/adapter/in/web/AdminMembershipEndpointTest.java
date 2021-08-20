@@ -12,12 +12,14 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AdminMembershipController.class)
 @Tag("mvc")
-@WithMockUser(username = "admin", authorities = {"ROLE_MEMBER","ROLE_ADMIN"})
+@WithMockUser(username = "tedyoung", authorities = {"ROLE_MEMBER","ROLE_ADMIN"})
 public class AdminMembershipEndpointTest {
 
     @Autowired
@@ -36,6 +38,13 @@ public class AdminMembershipEndpointTest {
     public void getOfMemberAdminPageIsStatus200Ok() throws Exception {
         mockMvc.perform(get("/admin/members"))
                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void postToAddMemberRedirects() throws Exception {
+        mockMvc.perform(post("/admin/add-member")
+                                .with(csrf()))
+               .andExpect(status().is3xxRedirection());
     }
 
 }
