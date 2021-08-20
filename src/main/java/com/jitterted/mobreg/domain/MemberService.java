@@ -17,7 +17,7 @@ public class MemberService {
 
     public Member findByGithubUsername(String username) {
         return memberRepository
-                .findByGithubUsername(username)
+                .findByGithubUsername(username.toLowerCase())
                 .orElseThrow(() -> new MemberNotFoundByGitHubUsernameException(username));
     }
 
