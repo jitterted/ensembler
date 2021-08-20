@@ -2,6 +2,7 @@ package com.jitterted.mobreg.domain;
 
 import com.jitterted.mobreg.domain.port.MemberRepository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,5 +33,10 @@ public class InMemoryMemberRepository implements MemberRepository {
     public Optional<Member> findById(MemberId memberId) {
         return Optional.ofNullable(
                 idToMemberMap.get(memberId));
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return idToMemberMap.values().stream().toList();
     }
 }

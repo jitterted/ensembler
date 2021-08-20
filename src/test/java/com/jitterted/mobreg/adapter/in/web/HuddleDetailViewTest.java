@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web;
 
-import com.jitterted.mobreg.domain.FakeMemberRepository;
+import com.jitterted.mobreg.domain.DummyMemberRepository;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.InMemoryMemberRepository;
@@ -18,7 +18,7 @@ class HuddleDetailViewTest {
 
     @Test
     public void huddleIdIsTranslatedFromDomainIntoView() throws Exception {
-        MemberService memberService = new MemberService(new FakeMemberRepository());
+        MemberService memberService = new MemberService(new DummyMemberRepository());
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
         huddle.setId(HuddleId.of(23));
         HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle, memberService);

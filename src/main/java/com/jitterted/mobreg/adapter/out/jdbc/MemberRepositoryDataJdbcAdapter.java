@@ -6,7 +6,9 @@ import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Repository
 public class MemberRepositoryDataJdbcAdapter implements MemberRepository {
@@ -35,5 +37,13 @@ public class MemberRepositoryDataJdbcAdapter implements MemberRepository {
     public Optional<Member> findById(MemberId memberId) {
         Optional<MemberEntity> memberEntity = memberJdbcRepository.findById(memberId.id());
         return memberEntity.map(MemberEntity::asMember);
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return StreamSupport.stream(
+                memberJdbcRepository.findAll().spliterator(), false)
+                            .map(MemberEntity::asMember)
+                            .toList();
     }
 }

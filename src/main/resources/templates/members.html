@@ -7,11 +7,24 @@
 <a href="#" th:href="@{/admin/dashboard}"><h1>MobReg: Ensemble Programming Registration System</h1></a>
 <h2 class="text-3xl mb-6">Members</h2>
 
-<!--<div th:each="member : ${members}">-->
-<!--    <span th:text="${member.firstName}">Participant Name</span>-->
-<!--    <span th:text="${member.githubUsername}">GitHub Username</span>-->
-<!--    <span th:text="${member.roles}">GitHub Username</span>-->
-<!--</div>-->
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>GitHub Username</th>
+        <th>Roles</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${members}">
+        <td th:text="${member.id}">ID</td>
+        <td th:text="${member.firstName}">Participant Name</td>
+        <td th:text="${member.githubUsername}">GitHub Username</td>
+        <td th:text="${member.roles}">GitHub Username</td>
+    </tr>
+    </tbody>
+</table>
 
 <h2>Add Member</h2>
 <!--<form th:action="@{/admin/add-member}" action="#" method="post" th:object="${memberForm}">-->
