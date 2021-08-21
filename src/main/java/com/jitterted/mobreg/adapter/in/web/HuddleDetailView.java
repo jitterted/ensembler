@@ -10,7 +10,7 @@ public record HuddleDetailView(long id,
                                String name,
                                String startDateTime,
                                String duration,
-                               String topic,
+                               String zoomMeetingLink,
                                List<MemberView> memberViews) {
 
     static HuddleDetailView from(Huddle huddle, MemberService memberService) {
@@ -22,7 +22,8 @@ public record HuddleDetailView(long id,
         return new HuddleDetailView(huddle.getId().id(),
                                     huddle.name(),
                                     DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
-                                    "90m", "topic",
+                                    "90m",
+                                    huddle.zoomMeetingLink().toString(),
                                     memberViews);
     }
 

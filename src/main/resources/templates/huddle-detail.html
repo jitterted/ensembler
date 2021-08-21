@@ -10,7 +10,7 @@
 <p>Name: <span th:text="${huddle.name}">Name</span></p>
 <p>Date/time: <span th:text="${huddle.startDateTime}">04/24/2021 10:00am PDT</span></p>
 <p>Duration: <span th:text="${huddle.duration}">90 minutes</span></p>
-<p>Topic: <span th:text="${huddle.topic}">Blackjack</span></p>
+<p>Zoom Meeting Link: <a href="#" th:href="${huddle.zoomMeetingLink}" th:text="${huddle.zoomMeetingLink}">https://zoom.us/j/123456?pwd=12345</a></p>
 <p>Current Size: <span th:text="${huddle.size}">4</span> of 5</p>
 
 <h2>Participants</h2>
