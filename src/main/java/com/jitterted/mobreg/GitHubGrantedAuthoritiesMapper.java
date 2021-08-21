@@ -39,11 +39,13 @@ public class GitHubGrantedAuthoritiesMapper implements GrantedAuthoritiesMapper 
                 Map<String, Object> userAttributes = oauth2UserAuthority.getAttributes();
                 requireFromGitHub(userAttributes);
                 String githubLoginUsername = (String) userAttributes.get("login");
-
-                Optional<Member> memberOpt = memberRepository.findByGithubUsername(githubLoginUsername);
+                LOGGER.debug("Looking up GitHub Username `{}` in Member Repository as {}", githubLoginUsername, githubLoginUsername.toLowerCase());
+                Optional<Member> memberOpt = memberRepository.findByGithubUsername(githubLoginUsername.toLowerCase());
                 if (memberOpt.isPresent()) {
+                    LOGGER.debug("{} found: assigning {} roles", githubLoginUsername, memberOpt.get().roles());
                     mapToRoleSet(mappedAuthorities, memberOpt.get());
                 } else {
+                    LOGGER.debug("{} not found in database, assigning ROLE_USER only", githubLoginUsername);
                     mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 }
             }

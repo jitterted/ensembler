@@ -7,12 +7,14 @@ import static org.assertj.core.api.Assertions.*;
 class MemberServiceLookupByUsernameTest {
 
     @Test
-    public void githubUsernameWithUppercaseLettersFoundInAllLowercaseDatabase() throws Exception {
+    public void findingGithubUsernameWithUppercaseLettersFoundInAllLowercaseDatabase() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
         memberService.save(new Member("Mixed", "mixedcase", "ROLE_USER", "ROLE_MEMBER"));
 
         assertThat(memberService.findByGithubUsername("mIxEdCASE"))
-                .isNotNull();
+                .isNotNull()
+                .extracting(Member::githubUsername)
+                .isEqualTo("mixedcase");
     }
 
 }
