@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.adapter.in.web;
+package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;

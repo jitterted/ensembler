@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.adapter.in.web;
+package com.jitterted.mobreg.adapter.in.web.member;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

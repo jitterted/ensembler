@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.adapter.in.web;
+package com.jitterted.mobreg.adapter.in.web.admin;
 
 public class AddMemberForm {
     private String firstName;

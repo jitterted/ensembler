@@ -1,6 +1,6 @@
 package com.jitterted.mobreg;
 
-import com.jitterted.mobreg.adapter.in.web.MemberDeniedRedirectToUserOnboardingHandler;
+import com.jitterted.mobreg.adapter.in.web.member.MemberDeniedRedirectToUserOnboardingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

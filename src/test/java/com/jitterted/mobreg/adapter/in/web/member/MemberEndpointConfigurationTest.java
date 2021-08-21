@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.adapter.in.web;
+package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.Member;

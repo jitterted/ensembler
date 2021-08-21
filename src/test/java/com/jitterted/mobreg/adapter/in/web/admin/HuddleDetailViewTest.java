@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.adapter.in.web;
+package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.domain.DummyMemberRepository;
 import com.jitterted.mobreg.domain.Huddle;
