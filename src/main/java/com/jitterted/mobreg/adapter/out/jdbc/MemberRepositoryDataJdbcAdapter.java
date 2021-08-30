@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Repository
@@ -44,6 +45,6 @@ public class MemberRepositoryDataJdbcAdapter implements MemberRepository {
         return StreamSupport.stream(
                 memberJdbcRepository.findAll().spliterator(), false)
                             .map(MemberEntity::asMember)
-                            .toList();
+                            .collect(Collectors.toList());
     }
 }

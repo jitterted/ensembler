@@ -2,6 +2,7 @@ package com.jitterted.mobreg.domain;
 
 import com.jitterted.mobreg.domain.port.MemberRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,6 +38,6 @@ public class InMemoryMemberRepository implements MemberRepository {
 
     @Override
     public List<Member> findAll() {
-        return idToMemberMap.values().stream().toList();
+        return new ArrayList<>(idToMemberMap.values());
     }
 }

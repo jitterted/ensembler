@@ -38,15 +38,13 @@ public class MobTimerMessageSender {
     }
 
     public void sendStandardTimerSettings() {
-        String contents = """
-                          {
-                              "type": "settings:update",
-                              "settings": {
-                                "mobOrder": "Typist,Navigator",
-                                "duration": 300000
-                              }
-                          }
-                          """;
+        String contents = "{\n" +
+                "    \"type\": \"settings:update\",\n" +
+                "    \"settings\": {\n" +
+                "      \"mobOrder\": \"Typist,Navigator\",\n" +
+                "      \"duration\": 300000\n" +
+                "    }\n" +
+                "}\n";
         send(contents);
     }
 

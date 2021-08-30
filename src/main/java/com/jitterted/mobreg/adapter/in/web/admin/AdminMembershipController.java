@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdminMembershipController {
@@ -23,7 +24,7 @@ public class AdminMembershipController {
         List<MemberView> memberViews = memberRepository.findAll()
                                                        .stream()
                                                        .map(MemberView::from)
-                                                       .toList();
+                                                       .collect(Collectors.toList());
         model.addAttribute("members", memberViews);
         model.addAttribute("addMemberForm", new AddMemberForm());
         return "members";

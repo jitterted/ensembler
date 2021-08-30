@@ -5,6 +5,7 @@ import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 class MobParticipantsDto {
     private final String type = "mob:update";
@@ -20,7 +21,7 @@ class MobParticipantsDto {
                       .map(memberService::findById)
                       .map(Member::firstName)
                       .map(PersonDto::new)
-                      .toList();
+                      .collect(Collectors.toList());
         return new MobParticipantsDto(personDtos);
     }
 

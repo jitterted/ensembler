@@ -42,7 +42,8 @@ public class AdminDashboardController {
     @GetMapping("/dashboard")
     public String dashboardView(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         MemberId memberId;
-        if (principal instanceof OAuth2User oAuth2User) {
+        if (principal instanceof OAuth2User) {
+            OAuth2User oAuth2User = (OAuth2User) principal;
             String username = oAuth2User.getAttribute("login");
             Member member = memberService.findByGithubUsername(username);
             memberId = member.getId();

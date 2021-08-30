@@ -35,7 +35,8 @@ public class GitHubGrantedAuthoritiesMapper implements GrantedAuthoritiesMapper 
         Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
 
         authorities.forEach(authority -> {
-            if (authority instanceof OAuth2UserAuthority oauth2UserAuthority) {
+            if (authority instanceof OAuth2UserAuthority) {
+                OAuth2UserAuthority oauth2UserAuthority = (OAuth2UserAuthority) authority;
                 Map<String, Object> userAttributes = oauth2UserAuthority.getAttributes();
                 requireFromGitHub(userAttributes);
                 String githubLoginUsername = (String) userAttributes.get("login");

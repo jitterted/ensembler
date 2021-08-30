@@ -27,7 +27,8 @@ public class MemberDeniedRedirectToUserOnboardingHandler extends AccessDeniedHan
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null &&
             auth.isAuthenticated()) {
-            if (auth.getPrincipal() instanceof OAuth2User oAuth2User) {
+            if (auth.getPrincipal() instanceof OAuth2User) {
+                OAuth2User oAuth2User = (OAuth2User) auth.getPrincipal();
                 LOGGER.info("Authenticated, but not authorized: {}", oAuth2User.getAuthorities().toString());
                 if (request.getRequestURI().contains("/member")) {
                     response.sendRedirect("/user");

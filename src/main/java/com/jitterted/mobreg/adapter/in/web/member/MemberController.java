@@ -47,7 +47,8 @@ public class MemberController {
 
     private Member findMemberBy(AuthenticatedPrincipal principal) {
         Member member;
-        if (principal instanceof OAuth2User oAuth2User) {
+        if (principal instanceof OAuth2User) {
+            OAuth2User oAuth2User = (OAuth2User) principal;
             String username = oAuth2User.getAttribute("login");
             member = memberService.findByGithubUsername(username);
         } else {
