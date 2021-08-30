@@ -5,6 +5,7 @@ import com.spotify.github.v3.User;
 import com.spotify.github.v3.clients.GitHubClient;
 import com.spotify.github.v3.clients.RepositoryClient;
 import com.spotify.github.v3.repos.Repository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,8 +14,9 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.net.URI;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
+@Disabled
 @Tag("manual")
 @SpringBootTest
 // pull in the GitHub Personal Access Token property
