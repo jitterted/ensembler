@@ -11,6 +11,8 @@ public record HuddleSummaryView(long id,
                                 String zoomMeetingLink,
                                 String dateTime,
                                 int numberRegistered,
+                                boolean isCompleted,
+                                String recordingLink,
                                 boolean memberRegistered) {
 
     public static List<HuddleSummaryView> from(List<Huddle> huddles, MemberId memberId) {
@@ -25,6 +27,8 @@ public record HuddleSummaryView(long id,
                                      huddle.zoomMeetingLink().toString(),
                                      DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
                                      huddle.registeredMemberCount(),
+                                     true,
+                                     "https://recording.link/1234",
                                      huddle.isRegisteredById(memberId));
     }
 }

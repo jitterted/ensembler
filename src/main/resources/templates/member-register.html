@@ -62,7 +62,9 @@
                 </form>
         </td>
         <td th:if="${huddle.memberRegistered}">
-            Registered! <a href="#" th:href="${huddle.zoomMeetingLink}">Zoom Link</a>
+            Registered!
+                <a th:unless="${huddle.isCompleted}" href="#" th:href="${huddle.zoomMeetingLink}">Zoom Link</a>
+                <a th:if="${huddle.isCompleted}" href="#" th:href="${huddle.recordingLink}">Recording Link</a>
         </td>
         <td th:text="${huddle.name}">Name</td>
         <td th:text="${huddle.dateTime}">Date/Time</td>
