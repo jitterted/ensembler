@@ -1,6 +1,8 @@
 package com.jitterted.mobreg;
 
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
+import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.port.HuddleRepository;
@@ -8,6 +10,7 @@ import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.WebSocketSession;
@@ -23,15 +26,17 @@ public class MobRegApplication {
         SpringApplication.run(MobRegApplication.class, args);
     }
 
-//    @Bean
-//    public HuddleRepository huddleRepository() {
-//        return new InMemoryHuddleRepository();
-//    }
+    @Bean
+    @ConditionalOnProperty("mobreg.repository.inmemory")
+    public HuddleRepository huddleRepository() {
+        return new InMemoryHuddleRepository();
+    }
 
-//    @Bean
-//    public MemberRepository memberRepository() {
-//        return new InMemoryMemberRepository();
-//    }
+    @Bean
+    @ConditionalOnProperty("mobreg.repository.inmemory")
+    public MemberRepository memberRepository() {
+        return new InMemoryMemberRepository();
+    }
 
     @Bean
     public MemberService memberService(MemberRepository memberRepository) {
