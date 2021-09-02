@@ -58,6 +58,23 @@ class HuddleSummaryViewTest {
                 .isTrue();
     }
 
+    @Test
+    public void viewIncludesCompletedFlag() throws Exception {
+        Huddle huddle = createTestHuddle();
+
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+
+        assertThat(huddleSummaryView.isCompleted())
+                .isFalse();
+
+        huddle.complete();
+
+        huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+
+        assertThat(huddleSummaryView.isCompleted())
+                .isTrue();
+    }
+
     @NotNull
     private Huddle createTestHuddle() {
         Huddle huddle = new Huddle("test", ZonedDateTime.now());

@@ -27,7 +27,7 @@ public record HuddleSummaryView(long id,
                                      huddle.zoomMeetingLink().toString(),
                                      DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
                                      huddle.registeredMemberCount(),
-                                     true,
+                                     huddle.isCompleted(),
                                      "https://recording.link/1234",
                                      huddle.isRegisteredById(memberId));
     }
