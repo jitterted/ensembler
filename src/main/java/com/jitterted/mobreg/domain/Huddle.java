@@ -13,6 +13,7 @@ public class Huddle {
     private final ZonedDateTime startDateTime;
     private URI zoomMeetingLink;
     private final Set<MemberId> memberIds = new HashSet<>();
+    private boolean isCompleted = false;
 
     public Huddle(String name, ZonedDateTime startDateTime) {
         this(name, URI.create("https://zoom.us"), startDateTime);
@@ -22,6 +23,14 @@ public class Huddle {
         this.name = name;
         this.zoomMeetingLink = zoomMeetingLink;
         this.startDateTime = startDateTime;
+    }
+
+    public HuddleId getId() {
+        return id;
+    }
+
+    public void setId(HuddleId id) {
+        this.id = id;
     }
 
     public String name() {
@@ -40,15 +49,8 @@ public class Huddle {
         return memberIds;
     }
 
-    public HuddleId getId() {
-        return id;
-    }
-
-    public void setId(HuddleId id) {
-        this.id = id;
-    }
-
     public void registerById(MemberId memberId) {
+        requireNotCompleted();
         memberIds.add(memberId);
     }
 
@@ -58,5 +60,19 @@ public class Huddle {
 
     public URI zoomMeetingLink() {
         return zoomMeetingLink;
+    }
+
+    public void complete() {
+        isCompleted = true;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    private void requireNotCompleted() {
+        if (isCompleted) {
+            throw new HuddleAlreadyCompletedException();
+        }
     }
 }
