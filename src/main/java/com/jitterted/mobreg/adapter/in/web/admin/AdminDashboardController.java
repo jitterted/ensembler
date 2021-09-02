@@ -1,7 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.adapter.DateTimeFormatting;
-import com.jitterted.mobreg.adapter.in.web.HuddleSummaryView;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
