@@ -5,7 +5,6 @@ import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,11 +39,9 @@ public class AdminDashboardController {
 
     @GetMapping("/dashboard")
     public String dashboardView(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
-        MemberId memberId;
         if (principal instanceof OAuth2User oAuth2User) {
             String username = oAuth2User.getAttribute("login");
             Member member = memberService.findByGithubUsername(username);
-            memberId = member.getId();
             model.addAttribute("username", username); // Member.githubUsername
             model.addAttribute("name", member.firstName());
             model.addAttribute("github_id", oAuth2User.getAttribute("id"));
@@ -52,7 +49,7 @@ public class AdminDashboardController {
             throw new IllegalStateException("Not an OAuth2User");
         }
         List<Huddle> huddles = huddleService.allHuddles();
-        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, memberId);
+        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
         model.addAttribute("huddles", huddleSummaryViews);
         model.addAttribute("scheduleHuddleForm", new ScheduleHuddleForm());
         return "dashboard";
