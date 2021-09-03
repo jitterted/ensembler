@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Huddle Details</title>
+<!--    <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">-->
 </head>
 <body class="p-4">
 <a href="#" th:href="@{/admin/dashboard}"><h1>MobReg: Ensemble Programming Registration System</h1></a>
@@ -10,8 +13,18 @@
 <p>Name: <span th:text="${huddle.name}">Name</span></p>
 <p>Date/time: <span th:text="${huddle.startDateTime}">04/24/2021 10:00am PDT</span></p>
 <p>Duration: <span th:text="${huddle.duration}">90 minutes</span></p>
-<p>Zoom Meeting Link: <a href="#" th:href="${huddle.zoomMeetingLink}" th:text="${huddle.zoomMeetingLink}">https://zoom.us/j/123456?pwd=12345</a></p>
+<p th:unless="${huddle.isCompleted}">Zoom Meeting Link: <a href="#" th:href="${huddle.zoomMeetingLink}" th:text="${huddle.zoomMeetingLink}">https://zoom.us/j/123456?pwd=12345</a></p>
+<p th:if="${huddle.isCompleted}">Recording Link: <a href="#" th:href="${huddle.recordingLink}" th:text="${huddle.recordingLink}">https://recording.link/qrs987</a></p>
 <p>Current Size: <span th:text="${huddle.size}">4</span> of 5</p>
+
+<div th:unless="${huddle.isCompleted}" class="mt-3">
+    <form th:action="@{/admin/huddle/__${huddle.id}__/complete}" action="#" method="post" th:object="${completeHuddle}">
+        <label>Recording Link: <input type="text" th:field="*{recordingLink}"></label>
+        <div class="mt-2">
+            <button type="submit">Complete Huddle</button>
+        </div>
+    </form>
+</div>
 
 <h2>Participants</h2>
 <div th:each="memberView : ${huddle.memberViews}">

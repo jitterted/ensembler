@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 @Tag("mvc")
 // TODO: roles aren't needed here anymore
-@WithMockUser(username = "username", authorities = {"ROLE_MEMBER","ROLE_ADMIN"})
+@WithMockUser(username = "username", authorities = {"ROLE_MEMBER", "ROLE_ADMIN"})
 public class AdminEndpointConfigurationTest {
 
     @Autowired
@@ -87,6 +87,15 @@ public class AdminEndpointConfigurationTest {
                                 .with(csrf()))
                .andExpect(status().is3xxRedirection());
     }
+
+    @Test
+    public void postToCompleteEndpointRedirects() throws Exception {
+        createStubServiceReturningHuddleWithIdOf(13);
+        mockMvc.perform(post("/admin/huddle/13/complete")
+                                .with(csrf()))
+               .andExpect(status().is3xxRedirection());
+    }
+
 
     private void createStubServiceReturningHuddleWithIdOf(long id) {
         Huddle dummyHuddle = new Huddle("dummy", ZonedDateTime.now());

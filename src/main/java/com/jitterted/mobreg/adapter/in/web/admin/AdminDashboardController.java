@@ -64,6 +64,7 @@ public class AdminDashboardController {
 
         HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle, memberService);
         model.addAttribute("huddle", huddleDetailView);
+        model.addAttribute("completeHuddle", new CompleteHuddleForm(""));
         model.addAttribute("registration", new AdminRegistrationForm(huddle.getId()));
 
         return "huddle-detail";
@@ -87,6 +88,19 @@ public class AdminDashboardController {
         HuddleId huddleId = HuddleId.of(adminRegistrationForm.getHuddleId());
         // TODO: register on behalf of user -- requires lookup
 
+        return redirectToDetailViewFor(huddleId);
+    }
+
+    @PostMapping("/huddle/{huddleId}/complete")
+    public String completeHuddle(@PathVariable("huddleId") long id, CompleteHuddleForm completeHuddleForm) {
+        HuddleId huddleId = HuddleId.of(id);
+        huddleService.completeWith(huddleId, completeHuddleForm.recordingLink());
+
+        return redirectToDetailViewFor(huddleId);
+    }
+
+    private String redirectToDetailViewFor(HuddleId huddleId) {
         return "redirect:/admin/huddle/" + huddleId.id();
     }
+
 }

@@ -38,4 +38,12 @@ public class HuddleService {
         huddle.registerById(memberId);
         huddleRepository.save(huddle);
     }
+
+    public void completeWith(HuddleId huddleId, String recordingLink) {
+        Huddle huddle = findById(huddleId)
+                .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));
+
+        huddle.complete();
+        huddle.linkToRecordingAt(URI.create(recordingLink));
+    }
 }

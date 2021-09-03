@@ -11,6 +11,8 @@ public record HuddleDetailView(long id,
                                String startDateTime,
                                String duration,
                                String zoomMeetingLink,
+                               boolean isCompleted,
+                               String recordingLink,
                                List<MemberView> memberViews) {
 
     static HuddleDetailView from(Huddle huddle, MemberService memberService) {
@@ -24,6 +26,8 @@ public record HuddleDetailView(long id,
                                     DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
                                     "90m",
                                     huddle.zoomMeetingLink().toString(),
+                                    huddle.isCompleted(),
+                                    huddle.recordingLink().toString(),
                                     memberViews);
     }
 
