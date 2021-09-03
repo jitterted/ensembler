@@ -14,6 +14,7 @@ public class Huddle {
     private URI zoomMeetingLink;
     private final Set<MemberId> memberIds = new HashSet<>();
     private boolean isCompleted = false;
+    private URI recordingLink = URI.create("");
 
     public Huddle(String name, ZonedDateTime startDateTime) {
         this(name, URI.create("https://zoom.us"), startDateTime);
@@ -68,6 +69,14 @@ public class Huddle {
 
     public boolean isCompleted() {
         return isCompleted;
+    }
+
+    public void linkToRecordingAt(URI recordingLink) {
+        this.recordingLink = recordingLink;
+    }
+
+    public URI recordingLink() {
+        return recordingLink;
     }
 
     private void requireNotCompleted() {

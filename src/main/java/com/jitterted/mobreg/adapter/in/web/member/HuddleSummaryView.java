@@ -28,7 +28,7 @@ public record HuddleSummaryView(long id,
                                      DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
                                      huddle.registeredMemberCount(),
                                      huddle.isCompleted(),
-                                     "https://recording.link/1234",
+                                     huddle.recordingLink().toString(),
                                      huddle.isRegisteredById(memberId));
     }
 }

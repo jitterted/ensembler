@@ -7,6 +7,7 @@ import com.jitterted.mobreg.domain.MemberId;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
+import java.net.URI;
 import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
@@ -59,20 +60,24 @@ class HuddleSummaryViewTest {
     }
 
     @Test
-    public void viewIncludesCompletedFlag() throws Exception {
+    public void noRecordingHuddleThenViewIncludesEmptyLink() throws Exception {
         Huddle huddle = createTestHuddle();
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
 
-        assertThat(huddleSummaryView.isCompleted())
-                .isFalse();
+        assertThat(huddleSummaryView.recordingLink())
+                .isEmpty();
+    }
 
-        huddle.complete();
+    @Test
+    public void huddleWithRecordingThenViewIncludesStringOfLink() throws Exception {
+        Huddle huddle = createTestHuddle();
+        huddle.linkToRecordingAt(URI.create("https://recording.link/abc123"));
 
-        huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
 
-        assertThat(huddleSummaryView.isCompleted())
-                .isTrue();
+        assertThat(huddleSummaryView.recordingLink())
+                .isEqualTo("https://recording.link/abc123");
     }
 
     @NotNull
