@@ -38,7 +38,7 @@ public class MemberController {
         MemberRegisterForm memberRegisterForm = createRegistrationForm(member.getId());
         model.addAttribute("register", memberRegisterForm);
 
-        List<Huddle> huddles = huddleService.allHuddles();
+        List<Huddle> huddles = huddleService.allHuddlesByDateTimeDescending();
         List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, member.getId());
         model.addAttribute("huddles", huddleSummaryViews);
         return "member-register";

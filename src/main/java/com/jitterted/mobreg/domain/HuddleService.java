@@ -4,6 +4,7 @@ import com.jitterted.mobreg.domain.port.HuddleRepository;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,12 @@ public class HuddleService {
 
     public List<Huddle> allHuddles() {
         return huddleRepository.findAll();
+    }
+
+    public List<Huddle> allHuddlesByDateTimeDescending() {
+        return allHuddles().stream()
+                           .sorted(Comparator.comparing(Huddle::startDateTime).reversed())
+                           .toList();
     }
 
     public Optional<Huddle> findById(HuddleId huddleId) {

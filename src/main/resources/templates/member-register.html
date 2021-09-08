@@ -32,7 +32,7 @@
 </head>
 <body class="p-4">
 <div>
-    <div sec:authorize="hasRole('ADMIN')">You are ADMIN</div>
+    <div sec:authorize="hasRole('ADMIN')">You are <a href="#" th:href="@{/admin/dashboard}">ADMIN</a></div>
     <div sec:authorize="hasRole('MEMBER')">You are MEMBER</div>
     <div sec:authorize="!hasAnyRole('ADMIN','MEMBER')">You are authenticated, but are neither Admin nor Member.</div>
 
