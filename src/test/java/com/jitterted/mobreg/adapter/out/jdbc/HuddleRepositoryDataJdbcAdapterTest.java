@@ -111,7 +111,18 @@ class HuddleRepositoryDataJdbcAdapterTest {
 
     @Test
     public void whenHuddleCompletedWithRecordingLinkThenIsStoredSuccessfully() throws Exception {
+        Huddle huddle = new Huddle("Completed", ZonedDateTime.now());
+        huddle.complete();
+        huddle.linkToRecordingAt(URI.create("https://recording.link/database"));
 
+        HuddleId savedId = huddleRepositoryAdapter.save(huddle).getId();
+
+        Huddle found = huddleRepositoryAdapter.findById(savedId).get();
+
+        assertThat(found.isCompleted())
+                .isTrue();
+        assertThat(found.recordingLink().toString())
+                .isEqualTo("https://recording.link/database");
     }
 
     @NotNull

@@ -21,6 +21,8 @@ public class HuddleEntity {
     private String name;
     private String zoomMeetingLink;
     private LocalDateTime dateTimeUtc;
+    private boolean isCompleted;
+    private String recordingLink;
 
     @MappedCollection(idColumn = "huddle_id")
     private Set<MemberEntityId> registeredMembers = new HashSet<>();
@@ -33,6 +35,8 @@ public class HuddleEntity {
         huddleEntity.setName(huddle.name());
         huddleEntity.setDateTimeUtc(huddle.startDateTime().toLocalDateTime());
         huddleEntity.setZoomMeetingLink(huddle.zoomMeetingLink().toString());
+        huddleEntity.setCompleted(huddle.isCompleted());
+        huddleEntity.setRecordingLink(huddle.recordingLink().toString());
         huddleEntity.setRegisteredMembers(
                 huddle.registeredMembers()
                       .stream()
@@ -45,10 +49,15 @@ public class HuddleEntity {
         ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneId.systemDefault());
         Huddle huddle = new Huddle(name, URI.create(zoomMeetingLink), startDateTime);
         huddle.setId(HuddleId.of(id));
+        huddle.linkToRecordingAt(URI.create(recordingLink));
 
         registeredMembers.stream()
                          .map(MemberEntityId::asMemberId)
                          .forEach(huddle::registerById);
+
+        if (isCompleted) {
+            huddle.complete();
+        }
 
         return huddle;
     }
@@ -91,5 +100,21 @@ public class HuddleEntity {
 
     public void setZoomMeetingLink(String zoomMeetingLink) {
         this.zoomMeetingLink = zoomMeetingLink;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public String getRecordingLink() {
+        return recordingLink;
+    }
+
+    public void setRecordingLink(String recordingLink) {
+        this.recordingLink = recordingLink;
     }
 }
