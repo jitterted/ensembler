@@ -9,6 +9,7 @@ public record HuddleSummaryView(long id,
                                 String name,
                                 String zoomMeetingLink,
                                 String dateTime,
+                                boolean isCompleted,
                                 int numberRegistered) {
 
     public static List<HuddleSummaryView> from(List<Huddle> huddles) {
@@ -22,6 +23,7 @@ public record HuddleSummaryView(long id,
                                      huddle.name(),
                                      huddle.zoomMeetingLink().toString(),
                                      DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
+                                     huddle.isCompleted(),
                                      huddle.registeredMemberCount());
     }
 }
