@@ -109,6 +109,11 @@ class HuddleRepositoryDataJdbcAdapterTest {
                 .isEqualTo("https://zoom.us/j/123456?pwd=12345");
     }
 
+    @Test
+    public void whenHuddleCompletedWithRecordingLinkThenIsStoredSuccessfully() throws Exception {
+
+    }
+
     @NotNull
     private Huddle createWithRegisteredMemberHuddleNamed(String huddleName) {
         Huddle huddle = new Huddle(huddleName, ZonedDateTime.now());

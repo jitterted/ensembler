@@ -45,5 +45,6 @@ public class HuddleService {
 
         huddle.complete();
         huddle.linkToRecordingAt(URI.create(recordingLink));
+        huddleRepository.save(huddle);
     }
 }
