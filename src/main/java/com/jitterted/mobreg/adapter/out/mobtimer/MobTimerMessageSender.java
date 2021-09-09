@@ -29,6 +29,8 @@ public class MobTimerMessageSender {
         MobParticipantsDto mobParticipantsDto = MobParticipantsDto.from(huddle, memberService);
 
         try {
+//            sendNewTimer();
+//            sendTakeOwnershipOfTimer();
             String contents = objectMapper.writeValueAsString(mobParticipantsDto);
             send(contents);
         } catch (JsonProcessingException e) {
@@ -45,6 +47,26 @@ public class MobTimerMessageSender {
                                 "mobOrder": "Typist,Navigator",
                                 "duration": 300000
                               }
+                          }
+                          """;
+        send(contents);
+    }
+
+    public void sendTakeOwnershipOfTimer() {
+        String contents = """
+                          {
+                              "type": "timer:ownership",
+                              "isOwner": true
+                          }
+                          """;
+        send(contents);
+    }
+
+    public void sendNewTimer() {
+        String contents = """
+                          {
+                              "type": "client:new",
+                              "isOwner": true
                           }
                           """;
         send(contents);

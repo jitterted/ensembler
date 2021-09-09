@@ -54,7 +54,7 @@ public class MobRegApplication {
         StandardWebSocketClient standardWebSocketClient = new StandardWebSocketClient();
         ListenableFuture<WebSocketSession> webSocketSessionListenableFuture =
                 standardWebSocketClient.doHandshake(new TextWebSocketHandler(),
-                                                    "wss://mobti.me/jitterted");
+                                                    "wss://mobti.me/jitterted00");
         return webSocketSessionListenableFuture.completable().get();
     }
 
