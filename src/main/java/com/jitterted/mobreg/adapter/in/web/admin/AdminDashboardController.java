@@ -48,7 +48,7 @@ public class AdminDashboardController {
         } else {
             throw new IllegalStateException("Not an OAuth2User");
         }
-        List<Huddle> huddles = huddleService.allHuddles();
+        List<Huddle> huddles = huddleService.allHuddlesByDateTimeDescending();
         List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
         model.addAttribute("huddles", huddleSummaryViews);
         model.addAttribute("scheduleHuddleForm", new ScheduleHuddleForm());

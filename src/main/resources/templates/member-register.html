@@ -30,7 +30,7 @@
         }
     </style>
     <script>
-        // convert UTC Date Time to browser's time zone
+        // convert UTC Date Time to browser's time zone, only for <td> elements with .datetimeutc class
         window.onload = () => {
             document.querySelectorAll("td.datetimeutc").forEach(function (datetimeutc) {
                 const datetime = new Date(datetimeutc.innerText)

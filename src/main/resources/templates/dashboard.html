@@ -8,6 +8,15 @@
     <title>Admin Dashboard - MobReg</title>
     <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/3ae2c56324.js" crossorigin="anonymous"></script>
+    <script>
+        // convert UTC Date Time to browser's time zone, only for <span> elements with .datetimeutc class
+        window.onload = () => {
+            document.querySelectorAll("span.datetimeutc").forEach(function (datetimeutc) {
+                const datetime = new Date(datetimeutc.innerText)
+                datetimeutc.innerText = datetime.toLocaleString()
+            })
+        };
+    </script>
 </head>
 <body class="p-4">
 
@@ -84,7 +93,7 @@
                         </td>
                         <td class="py-3 px-10 text-center">
                             <div class="flex items-center justify-center font-medium">
-                                <span th:text="${huddle.dateTime}">Fri 06/18/2021 9:00AM PDT</span>
+                                <span class="datetimeutc" th:text="${huddle.dateTime}">Fri 06/18/2021 9:00AM PDT</span>
                             </div>
                         </td>
                         <td class="py-3 px-10 text-center">
