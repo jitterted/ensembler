@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
-import com.jitterted.mobreg.adapter.DateTimeFormatting;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Controller
@@ -72,13 +70,13 @@ public class AdminDashboardController {
 
     @PostMapping("/schedule")
     public String scheduleHuddle(ScheduleHuddleForm scheduleHuddleForm) {
-        ZonedDateTime dateTime = DateTimeFormatting.fromBrowserDateAndTime(
-                scheduleHuddleForm.getDate(),
-                scheduleHuddleForm.getTime());
         if (scheduleHuddleForm.getZoomMeetingLink().isBlank()) {
-            huddleService.scheduleHuddle(scheduleHuddleForm.getName(), dateTime);
+            huddleService.scheduleHuddle(scheduleHuddleForm.getName(),
+                                         scheduleHuddleForm.getDateTimeInUtc());
         } else {
-            huddleService.scheduleHuddle(scheduleHuddleForm.getName(), URI.create(scheduleHuddleForm.getZoomMeetingLink()), dateTime);
+            huddleService.scheduleHuddle(scheduleHuddleForm.getName(),
+                                         URI.create(scheduleHuddleForm.getZoomMeetingLink()),
+                                         scheduleHuddleForm.getDateTimeInUtc());
         }
         return "redirect:/admin/dashboard";
     }

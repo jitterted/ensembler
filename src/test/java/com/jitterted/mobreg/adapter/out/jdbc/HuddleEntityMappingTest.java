@@ -5,6 +5,7 @@ import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
@@ -42,8 +43,9 @@ class HuddleEntityMappingTest {
 
     @Test
     public void domainToDatabaseEntityIsMappedCorrectly() throws Exception {
-        ZonedDateTime now = ZonedDateTime.now();
-        Huddle huddle = new Huddle("Domain", URI.create("https://zoom.us/"), now);
+        ZoneId utcZoneId = ZoneId.of("Z");
+        ZonedDateTime utc2021091316000 = ZonedDateTime.of(2021, 9, 13, 16, 0, 0, 0, utcZoneId);
+        Huddle huddle = new Huddle("Domain", URI.create("https://zoom.us/"), utc2021091316000);
         huddle.linkToRecordingAt(URI.create("https://recording.link/domain"));
         huddle.registerById(MemberId.of(11L));
         huddle.complete();
@@ -53,7 +55,7 @@ class HuddleEntityMappingTest {
         assertThat(entity.getName())
                 .isEqualTo("Domain");
         assertThat(entity.getDateTimeUtc())
-                .isEqualTo(now.toLocalDateTime());
+                .isEqualTo(utc2021091316000.toLocalDateTime());
         assertThat(entity.isCompleted())
                 .isTrue();
         assertThat(entity.getRecordingLink())

@@ -73,6 +73,7 @@ public class AdminEndpointConfigurationTest {
                                 .param("zoomMeetingLink", "https://zoom.us/j/test?pwd=testy")
                                 .param("date", "2021-04-30")
                                 .param("time", "09:00")
+                                .param("timezone", "America/Los_Angeles")
                                 .with(csrf()))
                .andExpect(status().is3xxRedirection());
     }

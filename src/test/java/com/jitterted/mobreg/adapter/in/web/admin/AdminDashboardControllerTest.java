@@ -46,7 +46,7 @@ class AdminDashboardControllerTest {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
 
-        String pageName = adminDashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "https://zoom.us/j/123456?pwd=12345", "2021-04-30", "09:00"));
+        String pageName = adminDashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "https://zoom.us/j/123456?pwd=12345", "2021-04-30", "09:00", "America/Los_Angeles"));
 
         assertThat(pageName)
                 .isEqualTo("redirect:/admin/dashboard");
