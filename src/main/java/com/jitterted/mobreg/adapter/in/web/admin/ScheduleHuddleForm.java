@@ -65,7 +65,16 @@ public final class ScheduleHuddleForm {
     }
 
     ZonedDateTime getDateTimeInUtc() {
-        LocalDateTime localDateTime = LocalDateTime.parse(getDate() + " " + getTime(), DateTimeFormatting.YYYY_MM_DD_HH_MM_FORMATTER);
-        return ZonedDateTime.of(localDateTime, ZoneId.of(timezone)).withZoneSameInstant(ZoneId.of("Z"));
+        LocalDateTime localDateTime = browserDateInputToLocalDateTime();
+        ZonedDateTime zonedDateTimeInOriginalTimeZone = ZonedDateTime.of(localDateTime, ZoneId.of(timezone));
+        return convertToUtcTimeZone(zonedDateTimeInOriginalTimeZone);
+    }
+
+    private LocalDateTime browserDateInputToLocalDateTime() {
+        return LocalDateTime.parse(date + " " + time, DateTimeFormatting.YYYY_MM_DD_HH_MM_FORMATTER);
+    }
+
+    private ZonedDateTime convertToUtcTimeZone(ZonedDateTime zonedDateTimeInOriginalTimeZone) {
+        return zonedDateTimeInOriginalTimeZone.withZoneSameInstant(ZoneId.of("Z"));
     }
 }

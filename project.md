@@ -2,29 +2,45 @@
 
 This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles are a specific, scheduled learning session).
 
-# Features
+# Features To-Do
+
+* Rename domain term: Huddle -> Ensemble
+
+* Groups
+    + Ensembles belong to a group
+
+* Members
+    + Members can belong to Zero or more groups
+    + Tiers
+
+* User Profile
+    + Add/edit email
+    + Add/edit discord username
+    + Add/edit pushover
+
+* Notifications
+    + Pushover https://pushover.net/
+    + Email
+    + Discord: direct message
+
+* Provide calendar invites using links
+    - Provide WorldTimeBuddy.com links for huddles (maybe not needed if calendar links are sufficient)
+  
+* Integrate with Zoom to create a meeting each time a Huddle is scheduled
+    - See https://marketplace.zoom.us/docs/sdk/native-sdks/developer-accounts and https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
+
+
+
+    - Integrate with GitHub for adding collaborators to the repo
+    - Integrate with Calendars (both theirs and mine) via Google API and then ?? based on demand
+        + Until then, provide a field to be manually entered so that it can be added as part of the calendar invites, messages to participants, as well as serving as a reminder to create the meeting in Zoom
+    - As a bot, helping with self-service sign-up
+    v "Integrate" with MobTi.me -- via WebSocket [blocked]
 
 * Member Registration
     + Collect info for participants
-    + "Integrate" with MobTi.me -- via WebSocket
-    - Limit registration to 5 per huddle
-    - Store a link to the video recording, only available to those who were participants of that Huddle
-    - Provide calendar invites using links
-        - Provide WorldTimeBuddy.com links for huddles (maybe not needed if calendar links are sufficient)
-    - Integrate with GitHub for adding collaborators to the repo
-    - Integrate with Calendars (both theirs and mine) via Google API and then ?? based on demand
-    - Integrate with Zoom to create a meeting each time a Huddle is scheduled
-        - See https://marketplace.zoom.us/docs/sdk/native-sdks/developer-accounts and https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
-        - Until then, provide a field to be manually entered so that it can be added as part of the calendar invites, messages to participants, as well as serving as a reminder to create the meeting in Zoom
-    - Integrate with Discord
-      - As a bot, helping with self-service sign-up
-
-Huddle knows when/what, participants = members that registered
-
-Member (User) knows display name, GitHub username, Discord name
-
-
-
+    + Store a link to the video recording, only available to those who were participants of that Huddle
+    + Limit registration to 5 per huddle in UI
 
 
 # Registration Scenarios
