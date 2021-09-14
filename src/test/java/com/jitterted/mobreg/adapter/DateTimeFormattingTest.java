@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -21,23 +22,42 @@ class DateTimeFormattingTest {
     }
 
     @Test
-    public void givenPdtTimeZoneDateTimeFormattedAsMonthDayYear12HourTimeWithPdtTimeZone() throws Exception {
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(2021, 4, 30, 9, 0, 0, 0, ZoneId.of("America/Los_Angeles"));
+    public void givenDateTimeInUtcFormattedAsIso8601WithSuffixOfZ() throws Exception {
+        LocalDateTime localDateTime = LocalDateTime.of(2021, 4, 30, 9, 0, 0, 0);
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("Z"));
 
-        String formattedDateTime = DateTimeFormatting.formatAsDateTime(zonedDateTime);
+        String formattedDateTime = DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(zonedDateTime);
 
         assertThat(formattedDateTime)
-                .isEqualTo("04/30/2021 09:00 AM PDT");
+                .isEqualTo("2021-04-30T09:00:00Z");
     }
 
     @Test
-    public void givenUtcDateTimeFormattedAsMonthDayYear12HourTimeInPdt() throws Exception {
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(2021, 4, 30, 11, 0, 0, 0, ZoneId.of("Z"));
+    public void dateTimeDuringStandardTimeConvertedToUtcCorrectly() throws Exception {
+        int hourInLocalTime = 11;
+        LocalDateTime dateTimeDuringStandardTime = LocalDateTime.of(2021, 11, 8, hourInLocalTime, 0, 0, 0);
+        ZonedDateTime zonedDateTimeDuringStandardTime =
+                dateTimeDuringStandardTime.atZone(ZoneId.of("America/Los_Angeles"));
 
-        String formattedDateTime = DateTimeFormatting.formatAsDateTime(zonedDateTime);
+        ZonedDateTime utcDateTime = zonedDateTimeDuringStandardTime.withZoneSameInstant(ZoneId.of("Z"));
 
-        assertThat(formattedDateTime)
-                .isEqualTo("04/30/2021 04:00 AM PDT");
+        int hoursPacificTimeZoneIsBehindUtcDuringStandardTime = 8;
+        assertThat(utcDateTime)
+                .isEqualTo(ZonedDateTime.of(2021, 11, 8, hourInLocalTime + hoursPacificTimeZoneIsBehindUtcDuringStandardTime, 0, 0, 0, ZoneId.of("Z")));
+    }
+
+    @Test
+    public void dateTimeDuringDaylightSavingsConvertedToUtcCorrectly() throws Exception {
+        int hourInLocalTime = 9;
+        LocalDateTime dateTimeDuringDaylightSavingsTime = LocalDateTime.of(2021, 11, 1, hourInLocalTime, 0, 0, 0);
+        ZonedDateTime zonedDateTimeDuringDaylightSavingsTime =
+                dateTimeDuringDaylightSavingsTime.atZone(ZoneId.of("America/Los_Angeles"));
+
+        ZonedDateTime utcDateTime = zonedDateTimeDuringDaylightSavingsTime.withZoneSameInstant(ZoneId.of("Z"));
+
+        int hoursPacificTimeZoneIsBehindUtcDuringDaylightSavingsTime = 7;
+        assertThat(utcDateTime)
+                .isEqualTo(ZonedDateTime.of(2021, 11, 1, hourInLocalTime + hoursPacificTimeZoneIsBehindUtcDuringDaylightSavingsTime, 0, 0, 0, ZoneId.of("Z")));
     }
 
 }

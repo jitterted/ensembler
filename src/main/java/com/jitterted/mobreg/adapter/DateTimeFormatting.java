@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.adapter;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -17,9 +18,13 @@ public class DateTimeFormatting {
         return ZonedDateTime.of(localDateTime, PACIFIC_TIME_ZONE_ID);
     }
 
-    public static String formatAsDateTime(ZonedDateTime zonedDateTime) {
-        // ensure the time zone for formatting is in PT (really should come from the browser)
-        zonedDateTime = zonedDateTime.withZoneSameInstant(PACIFIC_TIME_ZONE_ID);
-        return DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm a z").format(zonedDateTime);
+    /**
+     * Format Zoned date time as used by browser's Date parsing function Date.parse()
+     * @param zonedDateTime date time, usually in UTC (time zone "Z")
+     * @return String formatted for use in JavaScript
+     */
+    @NotNull
+    public static String formatAsDateTimeForJavaScriptDateIso8601(ZonedDateTime zonedDateTime) {
+        return DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(zonedDateTime);
     }
 }

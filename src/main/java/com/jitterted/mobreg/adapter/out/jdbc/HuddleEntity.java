@@ -46,7 +46,7 @@ public class HuddleEntity {
     }
 
     public Huddle asHuddle() {
-        ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneId.systemDefault());
+        ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneId.of("Z"));
         Huddle huddle = new Huddle(name, URI.create(zoomMeetingLink), startDateTime);
         huddle.setId(HuddleId.of(id));
         huddle.linkToRecordingAt(URI.create(recordingLink));

@@ -23,7 +23,7 @@ public record HuddleDetailView(long id,
                       .toList();
         return new HuddleDetailView(huddle.getId().id(),
                                     huddle.name(),
-                                    DateTimeFormatting.formatAsDateTime(huddle.startDateTime()),
+                                    DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(huddle.startDateTime()),
                                     "90m",
                                     huddle.zoomMeetingLink().toString(),
                                     huddle.isCompleted(),

@@ -29,6 +29,15 @@
             text-align: left;
         }
     </style>
+    <script>
+        // convert UTC Date Time to browser's time zone
+        window.onload = () => {
+            document.querySelectorAll("td.datetimeutc").forEach(function (datetimeutc) {
+                const datetime = new Date(datetimeutc.innerText)
+                datetimeutc.innerText = datetime.toLocaleString()
+            })
+        };
+    </script>
 </head>
 <body class="p-4">
 <div>
@@ -68,7 +77,7 @@
                 <a th:if="${huddle.isCompleted}" href="#" th:href="${huddle.recordingLink}">Recording Link</a>
         </td>
         <td th:text="${huddle.name}">Name</td>
-        <td th:text="${huddle.dateTime}">Date/Time</td>
+        <td class="datetimeutc" th:text="${huddle.dateTime}">Date/Time</td>
         <td th:text="${huddle.numberRegistered}">9</td>
     </tr>
     <!-- TODO: display "none found" when there are none  -->
