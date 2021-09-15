@@ -28,10 +28,10 @@
 
 <div class="md:flex md:items-center md:justify-between pb-5 border-b border-gray-300">
     <div class="flex-1 min-w-0">
-        <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
-            <span th:text="${name}">Name</span>
+        <h2 class="flex text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <span th:text="${name}" class="pr-4">Name</span>
             <span th:text="${username}"
-                  class="inline-flex items-start px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                  class="inline-flex self-center items-start px-3 py-0.5 rounded-md text-sm font-medium bg-green-100 text-green-800">
                 username
             </span>
         </h2>
@@ -99,7 +99,7 @@
                         </td>
                         <td class="py-3 px-10 text-center">
                             <div class="flex items-center justify-center font-medium">
-                                <span class="datetimeutc" th:text="${huddle.dateTime}">Fri 06/18/2021 9:00AM PDT</span>
+                                <span class="datetimeutc" th:text="${huddle.dateTime}">2021-09-17T16:00:00Z</span>
                             </div>
                         </td>
                         <td class="py-3 px-10 text-center">
