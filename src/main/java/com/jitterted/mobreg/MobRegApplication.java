@@ -7,10 +7,12 @@ import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.port.HuddleRepository;
 import com.jitterted.mobreg.domain.port.MemberRepository;
+import com.jitterted.mobreg.domain.port.Notifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.WebSocketSession;
@@ -20,6 +22,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.concurrent.ExecutionException;
 
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class MobRegApplication {
 
     public static void main(String[] args) {
@@ -45,8 +48,8 @@ public class MobRegApplication {
 
 
     @Bean
-    public HuddleService createHuddleService(HuddleRepository huddleRepository) {
-        return new HuddleService(huddleRepository);
+    public HuddleService createHuddleService(HuddleRepository huddleRepository, Notifier notifier) {
+        return new HuddleService(huddleRepository, notifier);
     }
 
     @Bean

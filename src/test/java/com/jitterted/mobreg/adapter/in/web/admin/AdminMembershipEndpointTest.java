@@ -3,6 +3,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.domain.port.HuddleRepository;
 import com.jitterted.mobreg.domain.port.MemberRepository;
+import com.jitterted.mobreg.domain.port.Notifier;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class AdminMembershipEndpointTest {
 
     @MockBean
     HuddleRepository huddleRepository;
+
+    @MockBean
+    Notifier notifier;
 
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;

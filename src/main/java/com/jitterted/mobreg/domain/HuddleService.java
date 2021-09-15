@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.domain;
 
 import com.jitterted.mobreg.domain.port.HuddleRepository;
+import com.jitterted.mobreg.domain.port.Notifier;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -10,19 +11,31 @@ import java.util.Optional;
 
 public class HuddleService {
     private final HuddleRepository huddleRepository;
+    private final Notifier notifier;
 
     public HuddleService(HuddleRepository huddleRepository) {
         this.huddleRepository = huddleRepository;
+        this.notifier = (description, registrationLink) -> 1;
+    }
+
+    public HuddleService(HuddleRepository huddleRepository, Notifier notifier) {
+        this.huddleRepository = huddleRepository;
+        this.notifier = notifier;
     }
 
     public void scheduleHuddle(String name, URI zoomMeetingLink, ZonedDateTime zonedDateTime) {
         Huddle huddle = new Huddle(name, zoomMeetingLink, zonedDateTime);
-        huddleRepository.save(huddle);
+        saveAndNotify(huddle);
     }
 
     public void scheduleHuddle(String name, ZonedDateTime zonedDateTime) {
         Huddle huddle = new Huddle(name, zonedDateTime);
+        saveAndNotify(huddle);
+    }
+
+    private void saveAndNotify(Huddle huddle) {
         huddleRepository.save(huddle);
+        notifier.newHuddleOpened(huddle.name(), URI.create("https://mobreg.herokuapp.com/"));
     }
 
     public List<Huddle> allHuddles() {
