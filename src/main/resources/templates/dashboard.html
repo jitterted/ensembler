@@ -11,15 +11,19 @@
     <script>
         // convert UTC Date Time to browser's time zone, only for <span> elements with .datetimeutc class
         window.onload = () => {
+            let dateFormatOptions = { weekday: 'short', timeZoneName: 'short', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'}
+            let dateTimeFormatter = new Intl.DateTimeFormat('default', dateFormatOptions);
+            let timezoneString = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
             document.querySelectorAll("span.datetimeutc").forEach(function (datetimeutc) {
                 const datetime = new Date(datetimeutc.innerText)
-                datetimeutc.innerText = datetime.toLocaleString()
+                datetimeutc.innerText = dateTimeFormatter.format(datetime) // datetime.toLocaleString()
             })
-            document.querySelectorAll("span#timezone").forEach(function (timezone) {
-                timezone.innerText = Intl.DateTimeFormat().resolvedOptions().timeZone
+            document.querySelectorAll("span#timezone").forEach(function (timezoneElement) {
+                timezoneElement.innerText = timezoneString
             })
-            document.querySelectorAll("input#timezone").forEach(function (timezone) {
-                timezone.setAttribute("value", Intl.DateTimeFormat().resolvedOptions().timeZone)
+            document.querySelectorAll("input#timezone").forEach(function (timezoneElement) {
+                timezoneElement.setAttribute("value", timezoneString)
             })
         };
     </script>
