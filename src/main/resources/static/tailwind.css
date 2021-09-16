@@ -1110,6 +1110,11 @@ select {
   background-color: rgba(79, 70, 229, var(--tw-bg-opacity));
 }
 
+.bg-green-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(6, 95, 70, var(--tw-bg-opacity));
+}
+
 .p-4 {
   padding: 1rem;
 }
@@ -1382,6 +1387,11 @@ select {
 .text-blue-500 {
   --tw-text-opacity: 1;
   color: rgba(59, 130, 246, var(--tw-text-opacity));
+}
+
+.text-green-100 {
+  --tw-text-opacity: 1;
+  color: rgba(209, 250, 229, var(--tw-text-opacity));
 }
 
 .underline {

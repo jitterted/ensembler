@@ -107,16 +107,26 @@
                                 <!-- <img class="w-6 h-6 rounded-full border-gray-200 border -m-1 transform hover:scale-150 hover:z-50" src="https://randomuser.me/api/portraits/men/3.jpg"/> -->
                             </div>
                         </td>
+                        <!-- Status -->
                         <td class="py-3 px-6 text-center">
                             <span th:if="${huddle.isCompleted}"
                                   class="bg-blue-100 text-blue-800 py-1 px-3 rounded-lg text-xs font-bold">Completed <i class="fal fa-badge-check text-blue-600"></i></span>
                             <span th:unless="${huddle.isCompleted}">
-                                <span th:if="${huddle.numberRegistered} < 5"
-                                      class="bg-green-100 text-green-800 py-1 px-3 rounded-lg text-xs font-bold">Available <i class="fal fa-calendar-plus text-green-600"></i></span>
-                                <span th:if="${huddle.numberRegistered} >= 5"
-                                      class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">Full <i class="fal fa-times-hexagon text-red-600"></i></span>
+                                <span th:if="${huddle.memberRegistered}"
+                                      class="text-white bg-indigo-600 py-1 px-3 rounded-lg text-xs font-bold">
+                                    Registered
+                                </span>
+                                <span th:unless="${huddle.memberRegistered}">
+                                    <span th:if="${huddle.numberRegistered} < 5"
+                                            class="bg-green-100 text-green-800 py-1 px-3 rounded-lg text-xs font-bold">Available <i
+                                        class="fal fa-calendar-plus text-green-600"></i></span>
+                                    <span th:if="${huddle.numberRegistered} >= 5"
+                                          class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">Full <i
+                                        class="fal fa-times-hexagon text-red-600"></i></span>
+                                </span>
                             </span>
                         </td>
+                        <!-- Actions -->
                         <td class="py-3 px-6 text-center">
                             <div th:unless="${huddle.memberRegistered}" class="flex item-center justify-center">
                                 <form th:unless="${huddle.isCompleted}" action="#" th:action="@{/member/register}" th:object="${register}" method="post">
@@ -134,7 +144,6 @@
                                 <span th:if="${huddle.isCompleted}">Huddle is Completed.</span>
                             </div>
                             <div th:if="${huddle.memberRegistered}">
-                                Registered!
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
                                    th:unless="${huddle.isCompleted}" href="#" th:href="${huddle.zoomMeetingLink}">Zoom Link</a>
                                 <a href="#"
