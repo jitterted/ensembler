@@ -80,6 +80,17 @@ class HuddleSummaryViewTest {
                 .isEqualTo("https://recording.link/abc123");
     }
 
+    @Test
+    public void viewContainsGoogleCalendarLink() throws Exception {
+        Huddle huddle = createTestHuddle();
+
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+
+        String expectedLink = new GoogleCalendarLinkCreator().createFor(huddle);
+        assertThat(huddleSummaryView.googleCalendarLink())
+                .isEqualTo(expectedLink);
+    }
+
     @NotNull
     private Huddle createTestHuddle() {
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
