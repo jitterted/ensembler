@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.MappedCollection;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,7 +46,7 @@ public class HuddleEntity {
     }
 
     public Huddle asHuddle() {
-        ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneId.of("Z"));
+        ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneOffset.UTC);
         Huddle huddle = new Huddle(name, URI.create(zoomMeetingLink), startDateTime);
         huddle.setId(HuddleId.of(id));
         huddle.linkToRecordingAt(URI.create(recordingLink));

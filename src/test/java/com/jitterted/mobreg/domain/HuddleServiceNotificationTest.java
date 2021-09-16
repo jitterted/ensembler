@@ -4,7 +4,7 @@ import com.jitterted.mobreg.domain.port.Notifier;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
@@ -17,7 +17,7 @@ class HuddleServiceNotificationTest {
         HuddleService huddleService = new HuddleService(new InMemoryHuddleRepository(),
                                                         mockNotifier);
 
-        huddleService.scheduleHuddle("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneId.of("Z")));
+        huddleService.scheduleHuddle("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
 
         mockNotifier.verify();
     }
@@ -30,7 +30,7 @@ class HuddleServiceNotificationTest {
 
         huddleService.scheduleHuddle("Notifying Ensemble",
                                      URI.create("https://zoom.us"),
-                                     ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneId.of("Z")));
+                                     ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
 
         mockNotifier.verify();
     }

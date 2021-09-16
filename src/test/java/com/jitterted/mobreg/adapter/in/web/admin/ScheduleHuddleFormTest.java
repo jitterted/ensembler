@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
@@ -16,7 +16,7 @@ class ScheduleHuddleFormTest {
         ZonedDateTime dateTimeInUtc = form.getDateTimeInUtc();
 
         assertThat(dateTimeInUtc.getZone())
-                .isEqualTo(ZoneId.of("Z"));
+                .isEqualTo(ZoneOffset.UTC);
         assertThat(dateTimeInUtc.getHour())
                 .isEqualTo(20 + 7 - 24);
     }

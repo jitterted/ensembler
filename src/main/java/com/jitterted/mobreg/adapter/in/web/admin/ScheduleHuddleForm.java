@@ -4,6 +4,7 @@ import com.jitterted.mobreg.adapter.DateTimeFormatting;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 public final class ScheduleHuddleForm {
@@ -75,6 +76,6 @@ public final class ScheduleHuddleForm {
     }
 
     private ZonedDateTime convertToUtcTimeZone(ZonedDateTime zonedDateTimeInOriginalTimeZone) {
-        return zonedDateTimeInOriginalTimeZone.withZoneSameInstant(ZoneId.of("Z"));
+        return zonedDateTimeInOriginalTimeZone.withZoneSameInstant(ZoneOffset.UTC);
     }
 }
