@@ -14,11 +14,38 @@ public class GoogleCalendarLinkCreator {
 
     @NotNull
     String createFor(Huddle huddle) {
-        String huddleName = URLEncoder.encode(huddle.name(), Charset.defaultCharset());
+        String huddleName = encodedNameOf(huddle);
+        String startDateTime = formattedStartDateTimeOf(huddle);
+        String endDateTime = formattedEndDateTimeOf(huddle);
+        String zoomDetails = encodedZoomLinkOf(huddle);
 
-        String startDateTime = huddle.startDateTime().format(GOOGLE_DATE_TIME_FORMATTER); // "20210917T160000Z"
-        String endDateTime = huddle.startDateTime().plusHours(2).format(GOOGLE_DATE_TIME_FORMATTER); // "20210917T180000Z"
-        String googleCalendarLink = GOOGLE_CALENDAR_LINK_BASE_URL + "&text=" + huddleName + "&dates=" + startDateTime + "/" + endDateTime;
-        return googleCalendarLink;
+        return "%s&text=%s&dates=%s/%s&details=%s"
+                .formatted(
+                        GOOGLE_CALENDAR_LINK_BASE_URL,
+                        huddleName,
+                        startDateTime,
+                        endDateTime,
+                        zoomDetails);
+    }
+
+    private String formattedEndDateTimeOf(Huddle huddle) {
+        return huddle.startDateTime().plusHours(2).format(GOOGLE_DATE_TIME_FORMATTER);
+    }
+
+    private String formattedStartDateTimeOf(Huddle huddle) {
+        return huddle.startDateTime().format(GOOGLE_DATE_TIME_FORMATTER);
+    }
+
+    private String encodedZoomLinkOf(Huddle huddle) {
+        String zoomLinkString = huddle.zoomMeetingLink().toString();
+        return encode("Zoom link is: <a href='" + zoomLinkString + "'>" + zoomLinkString + "</a>");
+    }
+
+    private String encodedNameOf(Huddle huddle) {
+        return encode(huddle.name());
+    }
+
+    private String encode(String unencoded) {
+        return URLEncoder.encode(unencoded, Charset.defaultCharset());
     }
 }

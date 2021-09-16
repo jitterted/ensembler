@@ -137,7 +137,10 @@
                                 Registered!
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
                                    th:unless="${huddle.isCompleted}" href="#" th:href="${huddle.zoomMeetingLink}">Zoom Link</a>
-                                <a href="#" th:href="${huddle.googleCalendarLink}" target="_blank"
+                                <a href="#"
+                                   th:href="${huddle.googleCalendarLink}"
+                                   th:unless="${huddle.isCompleted}"
+                                   target="_blank"
                                    class="font-medium text-blue-500 hover:text-blue-700 ">
                                     <span class="sr-only">Add to Google Calendar</span>
                                     <i class="fas fa-calendar-plus"></i>
