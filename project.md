@@ -14,7 +14,10 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
     + Tiers
 
 * User Profile
-    + Add/edit email
+    + Click on Name to go to page: need a page template
+    + Display name, GitHub username: need a form object
+    + Add/edit email: from the form object
+
     + Add/edit discord username
     + Add/edit pushover
 

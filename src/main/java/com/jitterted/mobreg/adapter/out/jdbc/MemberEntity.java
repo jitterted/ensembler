@@ -13,6 +13,7 @@ public class MemberEntity {
 
     private String firstName;
     private String githubUsername;
+    private String email;
     @MappedCollection
     private Set<String> roles;
 
@@ -23,12 +24,14 @@ public class MemberEntity {
         }
         memberEntity.setFirstName(member.firstName());
         memberEntity.setGithubUsername(member.githubUsername());
+        memberEntity.setEmail(member.email());
         memberEntity.setRoles(member.roles());
         return memberEntity;
     }
 
     public Member asMember() {
         Member member = new Member(firstName, githubUsername, roles.toArray(new String[0]));
+        member.changeEmailTo(email);
         member.setId(MemberId.of(id));
         return member;
     }
@@ -63,5 +66,13 @@ public class MemberEntity {
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

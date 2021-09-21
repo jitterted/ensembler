@@ -67,4 +67,8 @@ public class HuddleService {
         huddle.linkToRecordingAt(URI.create(recordingLink));
         huddleRepository.save(huddle);
     }
+
+    public List<Huddle> findAllForMember(MemberId memberId) {
+        return null;
+    }
 }

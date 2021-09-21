@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 
 @Testcontainers(disabledWithoutDocker = true)
-@SpringBootTest(properties = {"GITHUB_OAUTH=dummy"})
+@SpringBootTest()
 @Tag("container")
 @Tag("integration")
 class PostgresqlEntityTest {

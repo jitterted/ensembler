@@ -11,6 +11,7 @@ public class Member {
     private final String firstName;
     private final String githubUsername; // could be a Value Object
     private final Set<String> roles;
+    private String email = "";
 
     public Member(String firstName, String githubUsername, String... roles) {
         this.firstName = firstName;
@@ -51,5 +52,13 @@ public class Member {
     @Override
     public int hashCode() {
         return githubUsername.hashCode();
+    }
+
+    public void changeEmailTo(String email) {
+        this.email = email;
+    }
+
+    public String email() {
+        return email;
     }
 }
