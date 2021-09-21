@@ -67,4 +67,14 @@ public class MemberEndpointConfigurationTest {
                .andExpect(status().is3xxRedirection());
     }
 
+    @Test
+    public void getOfMemberProfileEndpointReturns200Ok() throws Exception {
+        Member member = new Member("Ted", "tedyoung", "ROLE_MEMBER");
+        member.setId(MemberId.of(1L));
+        when(memberService.findByGithubUsername("tedyoung")).thenReturn(member);
+        mockMvc.perform(get("/member/profile")
+                                .with(OAuth2UserFactory.oAuth2User("ROLE_MEMBER")))
+               .andExpect(status().isOk());
+    }
+
 }
