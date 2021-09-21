@@ -1,10 +1,18 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
+import com.jitterted.mobreg.domain.Member;
+
 public class MemberProfileForm {
 
     private String firstName;
     private String githubUsername;
     private String email;
+
+    public MemberProfileForm(Member member) {
+        firstName = member.firstName();
+        githubUsername = member.githubUsername();
+        email = member.email();
+    }
 
     public String getFirstName() {
         return firstName;

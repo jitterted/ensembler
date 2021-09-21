@@ -38,6 +38,11 @@ class MemberControllerTest {
         Model model = new ConcurrentModel();
         memberController.showHuddlesForUser(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("ghuser", "ROLE_MEMBER"));
 
+        assertThat((String) model.getAttribute("firstName"))
+                .isEqualTo("name");
+        assertThat((String) model.getAttribute("githubUsername"))
+                .isEqualTo("ghuser");
+
         MemberRegisterForm memberRegisterForm = (MemberRegisterForm) model.getAttribute("register");
 
         assertThat(memberRegisterForm.getMemberId())
@@ -67,7 +72,7 @@ class MemberControllerTest {
         MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
         memberRegisterForm.setHuddleId(huddle.getId().id());
 
-        MemberId memberId = MemberFactory.createMemberById(8, "name", "username");
+        MemberId memberId = MemberFactory.createMemberReturningId(8, "name", "username");
         memberRegisterForm.setMemberId(memberId.id());
 
         return memberRegisterForm;

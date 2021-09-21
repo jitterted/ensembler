@@ -9,7 +9,6 @@ import com.jitterted.mobreg.domain.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,19 +20,19 @@ import java.util.List;
 public class MemberController {
 
     private final HuddleService huddleService;
-    private final MemberService memberService;
+    private final MemberLookup memberLookup;
 
     @Autowired
     public MemberController(HuddleService huddleService, MemberService memberService) {
         this.huddleService = huddleService;
-        this.memberService = memberService;
+        this.memberLookup = new MemberLookup(memberService);
     }
 
     @GetMapping("/member/register")
     public String showHuddlesForUser(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
-        Member member = findMemberBy(principal);
-        model.addAttribute("username", member.githubUsername());
-        model.addAttribute("name", member.firstName());
+        Member member = memberLookup.findMemberBy(principal);
+        model.addAttribute("githubUsername", member.githubUsername());
+        model.addAttribute("firstName", member.firstName());
 
         MemberRegisterForm memberRegisterForm = createRegistrationForm(member.getId());
         model.addAttribute("register", memberRegisterForm);
@@ -42,17 +41,6 @@ public class MemberController {
         List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, member.getId());
         model.addAttribute("huddles", huddleSummaryViews);
         return "member-register";
-    }
-
-    private Member findMemberBy(AuthenticatedPrincipal principal) {
-        Member member;
-        if (principal instanceof OAuth2User oAuth2User) {
-            String username = oAuth2User.getAttribute("login");
-            member = memberService.findByGithubUsername(username);
-        } else {
-            throw new IllegalStateException("Not an OAuth2User");
-        }
-        return member;
     }
 
     private MemberRegisterForm createRegistrationForm(MemberId memberId) {

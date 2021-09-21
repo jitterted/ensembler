@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class MemberFactory {
     @NotNull
-    public static MemberId createMemberById(long id, String name, String githubUsername) {
+    public static MemberId createMemberReturningId(long id, String name, String githubUsername) {
         Member member = createMember(id, name, githubUsername);
         return member.getId();
     }
