@@ -31,6 +31,14 @@ public class Member {
         return roles;
     }
 
+    public void changeEmailTo(String email) {
+        this.email = email;
+    }
+
+    public String email() {
+        return email;
+    }
+
     public MemberId getId() {
         return id;
     }
@@ -52,13 +60,5 @@ public class Member {
     @Override
     public int hashCode() {
         return githubUsername.hashCode();
-    }
-
-    public void changeEmailTo(String email) {
-        this.email = email;
-    }
-
-    public String email() {
-        return email;
     }
 }

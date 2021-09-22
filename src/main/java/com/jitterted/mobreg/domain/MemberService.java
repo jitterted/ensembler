@@ -27,6 +27,11 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
+    public void changeEmail(Member member, String newEmail) {
+        member.changeEmailTo(newEmail);
+        save(member);
+    }
+
     public Member save(Member member) {
         return memberRepository.save(member);
     }

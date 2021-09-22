@@ -8,6 +8,15 @@ public class MemberProfileForm {
     private String githubUsername;
     private String email;
 
+    public MemberProfileForm() {
+    }
+
+    public MemberProfileForm(String firstName, String githubUsername, String email) {
+        this.firstName = firstName;
+        this.githubUsername = githubUsername;
+        this.email = email;
+    }
+
     public MemberProfileForm(Member member) {
         firstName = member.firstName();
         githubUsername = member.githubUsername();

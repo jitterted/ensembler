@@ -77,4 +77,16 @@ public class MemberEndpointConfigurationTest {
                .andExpect(status().isOk());
     }
 
+    @Test
+    public void postToMemberProfileEndpointRedirects() throws Exception {
+        mockMvc.perform(post("/member/profile")
+                                .param("firstName", "1st")
+                                .param("githubUsername", "abc")
+                                .param("email", "me@example.co")
+                                // TODO: roles aren't needed here anymore
+                                .with(OAuth2UserFactory.oAuth2User("ROLE_MEMBER"))
+                                .with(csrf()))
+               .andExpect(status().is3xxRedirection());
+    }
+
 }
