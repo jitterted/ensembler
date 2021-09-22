@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -52,7 +53,7 @@ public class MemberProfileControllerTest {
         MemberProfileController memberProfileController = new MemberProfileController(memberService);
 
         MemberProfileForm memberProfileForm = new MemberProfileForm(member.firstName(), member.githubUsername(), "new@example.com");
-        String redirectPage = memberProfileController.updateProfileFromForm(memberProfileForm, USER_WITH_MEMBER_ROLE);
+        String redirectPage = memberProfileController.updateProfileFromForm(memberProfileForm, USER_WITH_MEMBER_ROLE, new RedirectAttributesModelMap());
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/member/profile");

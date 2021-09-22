@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -38,9 +39,11 @@ public class MemberProfileController {
 
     @PostMapping
     public String updateProfileFromForm(@Valid MemberProfileForm memberProfileForm,
-                                        @AuthenticationPrincipal AuthenticatedPrincipal principal) {
+                                        @AuthenticationPrincipal AuthenticatedPrincipal principal,
+                                        RedirectAttributes redirectAttrs) {
         Member member = memberLookup.findMemberBy(principal);
         memberService.changeEmail(member, memberProfileForm.getEmail());
+        redirectAttrs.addFlashAttribute("updated", true);
         return "redirect:/member/profile";
     }
 

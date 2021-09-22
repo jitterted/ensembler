@@ -8,8 +8,25 @@
     <title>Profile - MobReg</title>
     <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/3ae2c56324.js" crossorigin="anonymous"></script>
+    <script>
+        window.onload = () => {
+            const notifyElement = document.getElementById('notify');
+            if (notifyElement) {
+                setTimeout(function () {
+                    const classes = notifyElement.classList;
+                    classes.remove('h-12')
+                    classes.remove('pt-2')
+                    classes.add('h-0')
+                }, 1500)
+            }
+        }
+    </script>
 </head>
 <body class="p-4">
+
+<div id="notify"
+     th:if="${updated}"
+     class="absolute top-0 h-12 bg-opacity-80 bg-green-700 text-white text-center pt-2 text-2xl w-full">Profile Updated</div>
 
 <div class="md:flex md:items-center md:justify-between pb-5 border-b border-gray-300">
     <div class="flex-1 min-w-0">
