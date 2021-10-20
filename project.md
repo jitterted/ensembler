@@ -22,9 +22,9 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
     + Add/edit pushover
 
 * Notifications
-    + Pushover https://pushover.net/
     + Email
     + Discord: direct message
+    + Pushover https://pushover.net/
 
 * Provide calendar invites using links
     - Provide WorldTimeBuddy.com links for huddles (maybe not needed if calendar links are sufficient)

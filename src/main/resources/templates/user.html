@@ -8,7 +8,7 @@
     <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
 </head>
 <body class="p-4">
-<h1 class="text-3xl mb-6">Welcome</h1>
+<h1 class="text-3xl mb-6">Welcome <span th:text="${username}">username</span></h1>
 <div>
 
     <div sec:authorize="hasRole('USER') && !hasRole('MEMBER')">You are a USER</div>
