@@ -3,6 +3,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.HuddleServiceFactory;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
 import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
@@ -29,7 +30,7 @@ class AdminDashboardControllerTest {
         memberRepository.save(member);
         MemberService memberService = new MemberService(memberRepository);
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         huddleRepository.save(new Huddle("Name", ZonedDateTime.now()));
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
 
@@ -76,7 +77,7 @@ class AdminDashboardControllerTest {
     @NotNull
     private AdminDashboardController createAdminDashboardController(InMemoryHuddleRepository huddleRepository) {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         return new AdminDashboardController(huddleService, memberService);
     }
 

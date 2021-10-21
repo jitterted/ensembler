@@ -9,12 +9,13 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-class HuddleServiceNotificationTest {
+class HuddleServiceEnsembleScheduledNotificationTest {
 
     @Test
     public void whenHuddleScheduledEnsembleOpenNotificationIsSent() throws Exception {
         MockNotifier mockNotifier = new MockNotifier();
         HuddleService huddleService = new HuddleService(new InMemoryHuddleRepository(),
+                                                        new InMemoryMemberRepository(),
                                                         mockNotifier);
 
         huddleService.scheduleHuddle("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
@@ -26,6 +27,7 @@ class HuddleServiceNotificationTest {
     public void whenHuddleScheduledWithZoomLinkEnsembleOpenNotificationIsSent() throws Exception {
         MockNotifier mockNotifier = new MockNotifier();
         HuddleService huddleService = new HuddleService(new InMemoryHuddleRepository(),
+                                                        new InMemoryMemberRepository(),
                                                         mockNotifier);
 
         huddleService.scheduleHuddle("Notifying Ensemble",
@@ -42,6 +44,11 @@ class HuddleServiceNotificationTest {
         public int newHuddleOpened(String description, URI registrationLink) {
             statusValue = 1;
             return statusValue;
+        }
+
+        @Override
+        public void memberRegistered(Huddle huddle, Member member) {
+            throw new UnsupportedOperationException();
         }
 
         public void verify() {

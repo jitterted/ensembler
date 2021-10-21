@@ -12,7 +12,7 @@ class HuddleServiceCompletedTest {
     @Test
     public void completedHuddleIsCompletedWithLinkAndSavedInRepository() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         Huddle huddle = new Huddle("Completed", ZonedDateTime.now());
         HuddleId huddleId = huddleRepository.save(huddle).getId();
         huddleRepository.resetSaveCount();

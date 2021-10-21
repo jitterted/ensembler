@@ -48,8 +48,8 @@ public class MobRegApplication {
 
 
     @Bean
-    public HuddleService createHuddleService(HuddleRepository huddleRepository, Notifier notifier) {
-        return new HuddleService(huddleRepository, notifier);
+    public HuddleService createHuddleService(HuddleRepository huddleRepository, MemberRepository memberRepository, Notifier notifier) {
+        return new HuddleService(huddleRepository, memberRepository, notifier);
     }
 
     @Bean

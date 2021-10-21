@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.domain;
 
 import com.jitterted.mobreg.domain.port.HuddleRepository;
+import com.jitterted.mobreg.domain.port.MemberRepository;
 import com.jitterted.mobreg.domain.port.Notifier;
 
 import java.net.URI;
@@ -12,28 +13,25 @@ import java.util.Optional;
 public class HuddleService {
     private final HuddleRepository huddleRepository;
     private final Notifier notifier;
+    private final MemberRepository memberRepository;
 
-    public HuddleService(HuddleRepository huddleRepository) {
-        this.huddleRepository = huddleRepository;
-        this.notifier = (description, registrationLink) -> 1;
-    }
-
-    public HuddleService(HuddleRepository huddleRepository, Notifier notifier) {
+    public HuddleService(HuddleRepository huddleRepository, MemberRepository memberRepository, Notifier notifier) {
         this.huddleRepository = huddleRepository;
         this.notifier = notifier;
+        this.memberRepository = memberRepository;
     }
 
     public void scheduleHuddle(String name, URI zoomMeetingLink, ZonedDateTime zonedDateTime) {
         Huddle huddle = new Huddle(name, zoomMeetingLink, zonedDateTime);
-        saveAndNotify(huddle);
+        saveAndNotifyHuddleOpened(huddle);
     }
 
     public void scheduleHuddle(String name, ZonedDateTime zonedDateTime) {
         Huddle huddle = new Huddle(name, zonedDateTime);
-        saveAndNotify(huddle);
+        saveAndNotifyHuddleOpened(huddle);
     }
 
-    private void saveAndNotify(Huddle huddle) {
+    private void saveAndNotifyHuddleOpened(Huddle huddle) {
         huddleRepository.save(huddle);
         notifier.newHuddleOpened(huddle.name(), URI.create("https://mobreg.herokuapp.com/"));
     }
@@ -57,6 +55,10 @@ public class HuddleService {
                 .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));
         huddle.registerById(memberId);
         huddleRepository.save(huddle);
+
+        Member member = memberRepository.findById(memberId)
+                                        .orElseThrow(() -> new MemberNotFoundByIdException("Member ID: " + memberId.id()));
+        notifier.memberRegistered(huddle, member);
     }
 
     public void completeWith(HuddleId huddleId, String recordingLink) {

@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.adapter.out.email;
 
+import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.port.Notifier;
@@ -39,5 +40,10 @@ public class EmailNotifier implements Notifier {
                 .formatted(description, registrationLink.toString());
         emailer.send("Ensembler Notification: New Ensemble Scheduled", messageBody, emails);
         return 0;
+    }
+
+    @Override
+    public void memberRegistered(Huddle huddle, Member member) {
+        throw new UnsupportedOperationException();
     }
 }

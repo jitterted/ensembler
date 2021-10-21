@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.HuddleServiceFactory;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
 import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
@@ -23,7 +24,7 @@ public class DashboardHuddleViewTest {
     public void detailViewOfExistingHuddleByItsIdIsReturned() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         Huddle savedHuddle = huddleRepository.save(new Huddle("Huddle #1", ZonedDateTime.now()));
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
 
@@ -43,7 +44,7 @@ public class DashboardHuddleViewTest {
         memberService.save(member);
 
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         Huddle huddle = new Huddle("Huddle #1", ZonedDateTime.now());
         huddle.registerById(member.getId());
         huddleRepository.save(huddle);
@@ -62,7 +63,7 @@ public class DashboardHuddleViewTest {
     public void detailViewOfNonExistentHuddleReturns404NotFound() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
         Model model = new ConcurrentModel();
 

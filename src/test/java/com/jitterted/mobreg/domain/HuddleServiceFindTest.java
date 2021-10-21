@@ -16,7 +16,7 @@ public class HuddleServiceFindTest {
 
     @Test
     public void whenRepositoryIsEmptyFindReturnsEmptyOptional() throws Exception {
-        HuddleService huddleService = new HuddleService(new InMemoryHuddleRepository());
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(new InMemoryHuddleRepository());
 
         assertThat(huddleService.findById(HuddleId.of(9999)))
                 .isEmpty();
@@ -26,7 +26,7 @@ public class HuddleServiceFindTest {
     public void whenRepositoryHasHuddleFindByItsIdReturnsItInAnOptional() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         Huddle savedHuddle = huddleRepository.save(new Huddle("test", ZonedDateTime.now()));
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
 
         Optional<Huddle> foundHuddle = huddleService.findById(savedHuddle.getId());
 
@@ -37,7 +37,7 @@ public class HuddleServiceFindTest {
     @Test
     public void allHuddlesOrderedByDateTimeDescendingIsInCorrectOrder() throws Exception {
         HuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         huddleService.scheduleHuddle("two", ZonedDateTime.of(2021, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()));
         huddleService.scheduleHuddle("one", ZonedDateTime.of(2021, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
         huddleService.scheduleHuddle("three", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
@@ -55,7 +55,7 @@ public class HuddleServiceFindTest {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         MemberId memberId = memberRepository.save(new Member("member", "ghuser")).getId();
         HuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         Huddle huddle1 = new Huddle("completed-member", ZonedDateTime.of(2021, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()));
         huddle1.registerById(memberId);
         huddle1.complete();

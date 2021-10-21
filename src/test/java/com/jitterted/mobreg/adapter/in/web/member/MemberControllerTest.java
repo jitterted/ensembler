@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.HuddleServiceFactory;
 import com.jitterted.mobreg.domain.InMemoryHuddleRepository;
 import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
@@ -9,6 +10,7 @@ import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.OAuth2UserFactory;
+import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -26,7 +28,7 @@ class MemberControllerTest {
     public void huddleFormContainsMemberIdForOAuth2User() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         huddleRepository.save(new Huddle("GET Test", ZonedDateTime.now()));
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
 
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member = MemberFactory.createMember(11, "name", "ghuser");
@@ -53,10 +55,11 @@ class MemberControllerTest {
     public void memberRegistersForHuddleWillBeRegisteredForThatHuddle() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         Huddle huddle = huddleRepository.save(new Huddle("Test", ZonedDateTime.now()));
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
+        HuddleService huddleService = new HuddleService(huddleRepository, memberRepository, new DummyNotifier());
         MemberController memberController = new MemberController(huddleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
 
-        MemberRegisterForm memberRegisterForm = createMemberFormFor(huddle);
+        MemberRegisterForm memberRegisterForm = createMemberFormFor(huddle, memberRepository);
         String redirectPage = memberController.register(memberRegisterForm);
 
         assertThat(redirectPage)
@@ -68,12 +71,13 @@ class MemberControllerTest {
     }
 
     @NotNull
-    private MemberRegisterForm createMemberFormFor(Huddle huddle) {
+    private MemberRegisterForm createMemberFormFor(Huddle huddle, MemberRepository memberRepository) {
         MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
         memberRegisterForm.setHuddleId(huddle.getId().id());
 
-        MemberId memberId = MemberFactory.createMemberReturningId(8, "name", "username");
-        memberRegisterForm.setMemberId(memberId.id());
+        Member member = MemberFactory.createMember(8, "name", "username");
+        memberRepository.save(member);
+        memberRegisterForm.setMemberId(member.getId().id());
 
         return memberRegisterForm;
     }

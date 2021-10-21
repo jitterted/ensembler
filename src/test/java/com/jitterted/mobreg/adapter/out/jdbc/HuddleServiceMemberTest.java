@@ -3,6 +3,7 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.domain.HuddleServiceFactory;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.port.HuddleRepository;
@@ -52,7 +53,7 @@ class HuddleServiceMemberTest {
 
     @Test
     public void existingMemberRegistersForHuddleThenIsRegisteredMember() throws Exception {
-        HuddleService huddleService = new HuddleService(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
         HuddleId huddleId = huddleRepository.save(huddle).getId();
 

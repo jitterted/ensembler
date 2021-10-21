@@ -11,7 +11,7 @@ class HuddleServiceScheduleTest {
 
     @Test
     public void singleScheduledHuddleIsReturnedForAllHuddles() throws Exception {
-        HuddleService huddleService = new HuddleService(new InMemoryHuddleRepository());
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(new InMemoryHuddleRepository());
 
         huddleService.scheduleHuddle("Name", ZonedDateTime.now());
 
@@ -21,7 +21,7 @@ class HuddleServiceScheduleTest {
 
     @Test
     public void huddleScheduledWithZoomLinkThenHasZoomLink() throws Exception {
-        HuddleService huddleService = new HuddleService(new InMemoryHuddleRepository());
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(new InMemoryHuddleRepository());
 
         huddleService.scheduleHuddle("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
 
