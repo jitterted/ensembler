@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
+import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.Member;

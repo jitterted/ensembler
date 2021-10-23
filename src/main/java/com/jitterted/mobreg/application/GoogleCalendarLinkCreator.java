@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.adapter.in.web.member;
+package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.domain.Huddle;
 
@@ -13,7 +13,7 @@ public class GoogleCalendarLinkCreator {
     private static final DateTimeFormatter GOOGLE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX");
 
     @NotNull
-    String createFor(Huddle huddle) {
+    public String createFor(Huddle huddle) {
         String huddleName = encodedNameOf(huddle);
         String startDateTime = formattedStartDateTimeOf(huddle);
         String endDateTime = formattedEndDateTimeOf(huddle);

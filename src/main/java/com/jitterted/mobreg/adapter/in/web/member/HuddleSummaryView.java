@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.DateTimeFormatting;
+import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.MemberId;
 

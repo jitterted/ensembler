@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.adapter.in.web.member;
+package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.domain.Huddle;
 import org.assertj.core.api.Assertions;
