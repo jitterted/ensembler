@@ -4,6 +4,8 @@ import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.port.Notifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,8 @@ import static java.util.function.Predicate.not;
 @Primary
 @Component
 public class EmailNotifier implements Notifier {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailNotifier.class);
 
     private final MemberService memberService;
     private final Emailer emailer;
@@ -44,6 +48,24 @@ public class EmailNotifier implements Notifier {
 
     @Override
     public void memberRegistered(Huddle huddle, Member member) {
-        throw new UnsupportedOperationException();
+        if (!member.hasEmail()) {
+            LOGGER.info("Member does not have email: {}", member.firstName());
+            return;
+        }
+        String body = """
+                Hi %s,
+                                           
+                You have registered for the '%s', which happens on %s.
+                The Zoom link is %s and you can add this event to your Google Calendar
+                by clicking on this link: %s.
+                """.formatted(member.firstName(),
+                              huddle.name(),
+                              huddle.startDateTime().toString(),
+                              huddle.zoomMeetingLink().toString(),
+                              "https://calendar.google.com/calendar/render");
+        emailer.send("Ensembler Notification: Registration Confirmation",
+                     body,
+                     Set.of(member.email()));
     }
+
 }

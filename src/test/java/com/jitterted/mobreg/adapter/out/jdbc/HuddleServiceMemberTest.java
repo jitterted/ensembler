@@ -53,7 +53,7 @@ class HuddleServiceMemberTest {
 
     @Test
     public void existingMemberRegistersForHuddleThenIsRegisteredMember() throws Exception {
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository, memberRepository);
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
         HuddleId huddleId = huddleRepository.save(huddle).getId();
 

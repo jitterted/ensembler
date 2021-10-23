@@ -61,4 +61,8 @@ public class Member {
     public int hashCode() {
         return githubUsername.hashCode();
     }
+
+    public boolean hasEmail() {
+        return !email().isEmpty();
+    }
 }

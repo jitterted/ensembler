@@ -20,25 +20,25 @@ class HuddleServiceMemberRegistrationNotificationTest {
         HuddleId huddleId = HuddleId.of(7L);
         huddle.setId(huddleId);
         huddleRepository.save(huddle);
-        FakeEmailNotifier fakeEmailNotifier = new FakeEmailNotifier();
+        SpyEmailNotifier spyEmailNotifier = new SpyEmailNotifier();
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository, memberRepository, fakeEmailNotifier);
+        HuddleService huddleService = new HuddleService(huddleRepository, memberRepository, spyEmailNotifier);
         MemberId memberId = new MemberFactory(memberRepository).createMemberInRepositoryReturningId(99L, "Fake", "fakegithubusername", "fake@example.com");
 
         huddleService.registerMember(huddleId, memberId);
 
-        assertThat(fakeEmailNotifier.emailBody())
+        assertThat(spyEmailNotifier.emailBody())
                 .contains("https://zoom.us",
                           "scheduled",
                           "2021-10-20T16:00Z",
                           "https://calendar.google.com",
                           "Fake");
 
-        assertThat(fakeEmailNotifier.emailAddress())
+        assertThat(spyEmailNotifier.emailAddress())
                 .isEqualTo("fake@example.com");
     }
 
-    private class FakeEmailNotifier implements Notifier {
+    private class SpyEmailNotifier implements Notifier {
         private String emailBody;
         private String emailAddress;
 
