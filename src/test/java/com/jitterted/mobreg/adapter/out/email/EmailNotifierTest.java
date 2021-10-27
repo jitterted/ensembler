@@ -27,7 +27,7 @@ class EmailNotifierTest {
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(memberService, spyEmailer);
 
-        notifier.newHuddleOpened("New Huddle", URI.create("https://example.com"));
+        notifier.newHuddleOpened("New Huddle", URI.create("https://mobreg.herokuapp.com/"));
 
         assertThat(spyEmailer.emailRecipients())
                 .containsExactly("name@example.com");
@@ -36,7 +36,7 @@ class EmailNotifierTest {
         assertThat(spyEmailer.body())
                 .isEqualTo("""
                                    New Ensemble 'New Huddle' has been scheduled.
-                                   Visit https://example.com to register.
+                                   Visit <a href="https://mobreg.herokuapp.com/">MobReg</a> to register.
                                    """);
     }
 
@@ -57,8 +57,8 @@ class EmailNotifierTest {
                            Hi FirstName,
                            
                            You have registered for the 'Ensemble #123', which happens on 2021-10-20T16:00Z.
-                           The Zoom link is https://zoom.us and you can add this event to your Google Calendar
-                           by clicking on this link: https://calendar.google.com/calendar/render.
+                           Click <a href="https://zoom.us">here</a> to join the Zoom. You can add this event to your Google Calendar
+                           by clicking <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ensemble+%23123&dates=20211020T160000Z/20211020T180000Z&details=Zoom+link+is%3A+%3Ca+href%3D%27https%3A%2F%2Fzoom.us%27%3Ehttps%3A%2F%2Fzoom.us%3C%2Fa%3E">here</a>.
                            """);
     }
 
