@@ -1,9 +1,9 @@
 package com.jitterted.mobreg.adapter.out.mobtimer;
 
 import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
+import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;

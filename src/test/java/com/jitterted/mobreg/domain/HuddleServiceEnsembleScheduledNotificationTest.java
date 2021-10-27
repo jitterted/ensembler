@@ -1,5 +1,7 @@
 package com.jitterted.mobreg.domain;
 
+import com.jitterted.mobreg.domain.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.port.Notifier;
 import org.junit.jupiter.api.Test;
 

@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.domain;
 
+import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.jetbrains.annotations.NotNull;
 

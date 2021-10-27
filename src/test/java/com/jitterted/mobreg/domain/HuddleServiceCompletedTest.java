@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.domain;
 
+import com.jitterted.mobreg.domain.port.InMemoryHuddleRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;

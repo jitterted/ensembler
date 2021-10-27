@@ -7,6 +7,7 @@ import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.port.HuddleRepository;
 import com.jitterted.mobreg.domain.port.MemberRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.time.ZonedDateTime;
 @AutoConfigureMockMvc
 @ActiveProfiles("local")
 @Tag("manual") // excluded from test run configuration
+@Disabled // so it doesn't run when Maven runs tests
 class MobTimerMessageSenderTest {
 
     @Autowired

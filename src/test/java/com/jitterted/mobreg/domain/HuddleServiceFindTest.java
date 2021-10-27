@@ -1,6 +1,8 @@
 package com.jitterted.mobreg.domain;
 
 import com.jitterted.mobreg.domain.port.HuddleRepository;
+import com.jitterted.mobreg.domain.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

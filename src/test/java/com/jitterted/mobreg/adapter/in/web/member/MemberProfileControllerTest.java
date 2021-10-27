@@ -1,11 +1,11 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
-import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.OAuth2UserFactory;
+import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;

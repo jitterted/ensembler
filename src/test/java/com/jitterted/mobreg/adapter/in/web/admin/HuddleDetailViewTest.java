@@ -3,10 +3,10 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 import com.jitterted.mobreg.domain.DummyMemberRepository;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
-import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberService;
+import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.junit.jupiter.api.Test;
 

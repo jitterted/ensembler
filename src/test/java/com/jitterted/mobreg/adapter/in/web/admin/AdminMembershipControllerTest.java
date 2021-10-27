@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
-import com.jitterted.mobreg.domain.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.port.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
