@@ -67,7 +67,7 @@ public class HuddleRegisteredMembersTest {
 
     @ParameterizedTest
     @ValueSource(ints = {6, 7})
-    public void registeringMoreThanFiveMembersThrowsException(int count) throws Exception {
+    public void attemptingToRegisterMoreThanFiveMembersThrowsException(int count) throws Exception {
         Huddle huddle = createDefaultHuddleStartTimeNow();
 
         assertThatThrownBy(() -> {
