@@ -17,21 +17,27 @@ public class MemberFactory {
     }
 
     @NotNull
-    public static Member createMember(long id, String name, String githubUsername) {
-        Member member = new Member(name, githubUsername);
+    public static Member createMember(long id, String firstName, String githubUsername) {
+        Member member = new Member(firstName, githubUsername);
+        member.setId(MemberId.of(id));
+        return member;
+    }
+
+    public static Member createMember(long id, String firstName, String githubUsername, String... roles) {
+        Member member = new Member(firstName, githubUsername, roles);
         member.setId(MemberId.of(id));
         return member;
     }
 
     @NotNull
-    public MemberId createMemberInRepositoryReturningId(long id, String name, String githubUsername) {
-        Member member = createMember(id, name, githubUsername);
+    public MemberId createMemberInRepositoryReturningId(long id, String firstName, String githubUsername) {
+        Member member = createMember(id, firstName, githubUsername);
         memberRepository.save(member);
         return member.getId();
     }
 
-    public MemberId createMemberInRepositoryReturningId(long id, String name, String githubUsername, String email) {
-        Member member = createMember(id, name, githubUsername);
+    public MemberId createMemberInRepositoryReturningId(long id, String firstName, String githubUsername, String email) {
+        Member member = createMember(id, firstName, githubUsername);
         member.changeEmailTo(email);
         memberRepository.save(member);
         return member.getId();

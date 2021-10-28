@@ -4,7 +4,7 @@ import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
 import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberId;
+import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.OAuth2UserFactory;
 import com.jitterted.mobreg.domain.port.HuddleRepository;
 import com.jitterted.mobreg.domain.port.MemberRepository;
@@ -50,9 +50,7 @@ public class AdminEndpointConfigurationTest {
 
     @Test
     public void getOfDashboardEndpointReturns200Ok() throws Exception {
-        Member member = new Member("Ted", "tedyoung", "ROLE_MEMBER", "ROLE_ADMIN");
-        member.setId(MemberId.of(1L));
-        when(memberRepository.findByGithubUsername("tedyoung")).thenReturn(Optional.of(member));
+        createStubMemberRepositoryWithMember(1L, "Ted", "tedyoung", "ROLE_MEMBER", "ROLE_ADMIN");
         mockMvc.perform(get("/admin/dashboard")
                                 .with(OAuth2UserFactory.oAuth2User("ROLE_ADMIN")))
                .andExpect(status().isOk());
@@ -60,7 +58,7 @@ public class AdminEndpointConfigurationTest {
 
     @Test
     public void getOfHuddleDetailEndpointReturns200Ok() throws Exception {
-        createStubServiceReturningHuddleWithIdOf(13L);
+        createStubHuddleServiceReturningHuddleWithIdOf(13L);
 
         mockMvc.perform(get("/admin/huddle/13"))
                .andExpect(status().isOk());
@@ -80,7 +78,8 @@ public class AdminEndpointConfigurationTest {
 
     @Test
     public void postToRegisterParticipantEndpointRedirects() throws Exception {
-        createStubServiceReturningHuddleWithIdOf(23L);
+        createStubHuddleServiceReturningHuddleWithIdOf(23L);
+        createStubMemberRepositoryWithMember(1L, "participant", "mygithub", new String[]{"ROLE_USER", "ROLE_MEMBER"});
         mockMvc.perform(post("/admin/register")
                                 .param("huddleId", "23")
                                 .param("name", "participant")
@@ -89,16 +88,22 @@ public class AdminEndpointConfigurationTest {
                .andExpect(status().is3xxRedirection());
     }
 
+    private void createStubMemberRepositoryWithMember(long id, String firstName, String githubUsername, String... roles) {
+        Member member = MemberFactory.createMember(id, firstName, githubUsername, roles);
+        when(memberRepository.findByGithubUsername(githubUsername))
+                .thenReturn(Optional.of(member));
+    }
+
     @Test
     public void postToCompleteEndpointRedirects() throws Exception {
-        createStubServiceReturningHuddleWithIdOf(13);
+        createStubHuddleServiceReturningHuddleWithIdOf(13);
         mockMvc.perform(post("/admin/huddle/13/complete")
                                 .with(csrf()))
                .andExpect(status().is3xxRedirection());
     }
 
 
-    private void createStubServiceReturningHuddleWithIdOf(long id) {
+    private void createStubHuddleServiceReturningHuddleWithIdOf(long id) {
         Huddle dummyHuddle = new Huddle("dummy", ZonedDateTime.now());
         HuddleId huddleId = HuddleId.of(id);
         dummyHuddle.setId(huddleId);
