@@ -53,7 +53,7 @@ public class HuddleService {
     public void registerMember(HuddleId huddleId, MemberId memberId) {
         Huddle huddle = findById(huddleId)
                 .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));
-        huddle.registerById(memberId);
+        huddle.register(memberId);
         huddleRepository.save(huddle);
 
         Member member = memberRepository.findById(memberId)

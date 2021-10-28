@@ -32,6 +32,6 @@ public record HuddleSummaryView(long id,
                                      huddle.registeredMemberCount(),
                                      huddle.isCompleted(),
                                      huddle.recordingLink().toString(),
-                                     huddle.isRegisteredById(memberId));
+                                     huddle.isRegistered(memberId));
     }
 }

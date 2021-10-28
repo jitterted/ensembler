@@ -46,7 +46,7 @@ class HuddleEntityMappingTest {
         ZonedDateTime utc2021091316000 = ZonedDateTime.of(2021, 9, 13, 16, 0, 0, 0, ZoneOffset.UTC);
         Huddle huddle = new Huddle("Domain", URI.create("https://zoom.us/"), utc2021091316000);
         huddle.linkToRecordingAt(URI.create("https://recording.link/domain"));
-        huddle.registerById(MemberId.of(11L));
+        huddle.register(MemberId.of(11L));
         huddle.complete();
 
         HuddleEntity entity = HuddleEntity.from(huddle);

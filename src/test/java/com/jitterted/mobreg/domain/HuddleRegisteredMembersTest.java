@@ -24,7 +24,7 @@ public class HuddleRegisteredMembersTest {
 
         MemberId memberId = new MemberFactory().createMemberInRepositoryReturningId(1L, "name", "github");
 
-        huddle.registerById(memberId);
+        huddle.register(memberId);
 
         assertThat(huddle.registeredMemberCount())
                 .isEqualTo(1);
@@ -37,9 +37,9 @@ public class HuddleRegisteredMembersTest {
     public void registeredMemberIsFoundAsRegisteredByMemberId() throws Exception {
         Huddle huddle = new Huddle("huddle", ZonedDateTime.now());
         MemberId memberId = new MemberFactory().createMemberInRepositoryReturningId(3L, "reg", "github");
-        huddle.registerById(memberId);
+        huddle.register(memberId);
 
-        assertThat(huddle.isRegisteredById(memberId))
+        assertThat(huddle.isRegistered(memberId))
                 .isTrue();
     }
 
@@ -47,7 +47,7 @@ public class HuddleRegisteredMembersTest {
     public void nonExistentMemberIsNotFoundAsRegisteredByMemberId() throws Exception {
         Huddle huddle = new Huddle("huddle", ZonedDateTime.now());
 
-        assertThat(huddle.isRegisteredById(MemberId.of(73L)))
+        assertThat(huddle.isRegistered(MemberId.of(73L)))
                 .isFalse();
     }
 

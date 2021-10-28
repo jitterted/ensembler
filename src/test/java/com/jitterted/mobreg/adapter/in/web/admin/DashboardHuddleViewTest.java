@@ -46,7 +46,7 @@ public class DashboardHuddleViewTest {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         Huddle huddle = new Huddle("Huddle #1", ZonedDateTime.now());
-        huddle.registerById(member.getId());
+        huddle.register(member.getId());
         huddleRepository.save(huddle);
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
 

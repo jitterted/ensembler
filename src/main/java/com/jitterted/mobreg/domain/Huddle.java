@@ -50,12 +50,12 @@ public class Huddle {
         return memberIds;
     }
 
-    public void registerById(MemberId memberId) {
+    public void register(MemberId memberId) {
         requireNotCompleted();
         memberIds.add(memberId);
     }
 
-    public boolean isRegisteredById(MemberId memberId) {
+    public boolean isRegistered(MemberId memberId) {
         return memberIds.contains(memberId);
     }
 

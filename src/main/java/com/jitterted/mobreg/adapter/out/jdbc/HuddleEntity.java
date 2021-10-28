@@ -53,7 +53,7 @@ public class HuddleEntity {
 
         registeredMembers.stream()
                          .map(MemberEntityId::asMemberId)
-                         .forEach(huddle::registerById);
+                         .forEach(huddle::register);
 
         if (isCompleted) {
             huddle.complete();
