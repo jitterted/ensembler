@@ -13,6 +13,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -47,7 +48,7 @@ class PostgresqlEntityTest {
 
     @Test
     public void huddleEntityStoredViaJdbcIsRetrievedWithMembers() throws Exception {
-        Huddle original = new Huddle("entity", ZonedDateTime.now());
+        Huddle original = new Huddle("entity", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
         original.registerById(MemberId.of(4L));
         original.registerById(MemberId.of(5L));
         HuddleEntity originalEntity = HuddleEntity.from(original);
