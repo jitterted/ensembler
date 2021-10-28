@@ -6,6 +6,7 @@ import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.HuddleServiceFactory;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberFactory;
+import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.OAuth2UserFactory;
 import com.jitterted.mobreg.domain.port.InMemoryHuddleRepository;
@@ -72,6 +73,29 @@ class AdminDashboardControllerTest {
                 .isTrue();
         assertThat(huddle.recordingLink().toString())
                 .isEqualTo("https://recording.link/19");
+    }
+
+    @Test
+    public void manuallyRegisterExistingMemberForHuddle() throws Exception {
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
+        Member member1 = MemberFactory.createMember(0, "ted", "tedyoung");
+        memberRepository.save(member1);
+        Member member2 = MemberFactory.createMember(1, "two", "githubtwo");
+        memberRepository.save(member2);
+        MemberService memberService = new MemberService(memberRepository);
+        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository, memberRepository);
+        Huddle huddle = new Huddle("Manual Registered Huddle", ZonedDateTime.now());
+        huddle.setId(HuddleId.of(23));
+        huddleRepository.save(huddle);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
+
+        AdminRegistrationForm form = new AdminRegistrationForm(huddle.getId());
+        form.setGithubUsername("githubtwo");
+        adminDashboardController.registerParticipant(form);
+
+        assertThat(huddle.registeredMembers())
+                .containsExactly(MemberId.of(1));
     }
 
     @NotNull
