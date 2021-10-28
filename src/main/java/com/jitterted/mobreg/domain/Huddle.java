@@ -7,6 +7,7 @@ import java.util.Set;
 
 // This is the Aggregate Root for Huddles
 public class Huddle {
+    private static final int MAX_REGISTERED_MEMBERS = 5;
     private HuddleId id;
 
     private final String name;
@@ -52,7 +53,14 @@ public class Huddle {
 
     public void register(MemberId memberId) {
         requireNotCompleted();
+        requireHasSpace();
         memberIds.add(memberId);
+    }
+
+    private void requireHasSpace() {
+        if (registeredMemberCount() == MAX_REGISTERED_MEMBERS) {
+            throw new HuddleIsAlreadyFullException("Currently have " + registeredMemberCount() + " registered.");
+        }
     }
 
     public boolean isRegistered(MemberId memberId) {
