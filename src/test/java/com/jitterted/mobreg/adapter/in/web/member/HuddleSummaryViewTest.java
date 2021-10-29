@@ -2,14 +2,13 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.HuddleFactory;
 import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberId;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -17,7 +16,7 @@ class HuddleSummaryViewTest {
 
     @Test
     public void memberRegisteredIsFalseWhenHuddleIsEmpty() throws Exception {
-        Huddle huddle = createTestHuddle();
+        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
 
         HuddleSummaryView huddleSummaryView =
                 HuddleSummaryView.toView(huddle, MemberId.of(97L));
@@ -28,7 +27,7 @@ class HuddleSummaryViewTest {
 
     @Test
     public void withAnotherRegisteredMemberThenMemberRegisteredIsFalse() throws Exception {
-        Huddle huddle = createTestHuddle();
+        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
         Member member = new Member("name", "seven");
         MemberId memberId = MemberId.of(7L);
         member.setId(memberId);
@@ -46,7 +45,7 @@ class HuddleSummaryViewTest {
 
     @Test
     public void memberRegisteredIsTrueWhenMemberHuddleParticipant() throws Exception {
-        Huddle huddle = createTestHuddle();
+        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
         Member member = new Member("name",
                                    "participant_username");
         MemberId memberId = MemberId.of(3L);
@@ -62,7 +61,7 @@ class HuddleSummaryViewTest {
 
     @Test
     public void noRecordingHuddleThenViewIncludesEmptyLink() throws Exception {
-        Huddle huddle = createTestHuddle();
+        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
 
@@ -72,7 +71,7 @@ class HuddleSummaryViewTest {
 
     @Test
     public void huddleWithRecordingThenViewIncludesStringOfLink() throws Exception {
-        Huddle huddle = createTestHuddle();
+        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
         huddle.linkToRecordingAt(URI.create("https://recording.link/abc123"));
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
@@ -83,7 +82,7 @@ class HuddleSummaryViewTest {
 
     @Test
     public void viewContainsGoogleCalendarLink() throws Exception {
-        Huddle huddle = createTestHuddle();
+        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
 
@@ -92,10 +91,26 @@ class HuddleSummaryViewTest {
                 .isEqualTo(expectedLink);
     }
 
-    @NotNull
-    private Huddle createTestHuddle() {
-        Huddle huddle = new Huddle("test", ZonedDateTime.now());
-        huddle.setId(HuddleId.of(1L));
-        return huddle;
+    @Test
+    public void viewIndicatesNotAbleToRegisterIfHuddleIsFull() throws Exception {
+        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
+        MemberFactory.registerCountMembersWithHuddle(huddle, 5);
+
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+
+        assertThat(huddleSummaryView.canRegister())
+                .isFalse();
     }
+    
+    @Test
+    public void viewIndicatesCanRegisterIfHuddleIsNotFull() throws Exception {
+        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
+        MemberFactory.registerCountMembersWithHuddle(huddle, 2);
+
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+
+        assertThat(huddleSummaryView.canRegister())
+                .isTrue();
+    }
+
 }

@@ -27,14 +27,6 @@ public class Huddle {
         this.startDateTime = startDateTime;
     }
 
-    public HuddleId getId() {
-        return id;
-    }
-
-    public void setId(HuddleId id) {
-        this.id = id;
-    }
-
     public String name() {
         return name;
     }
@@ -58,9 +50,17 @@ public class Huddle {
     }
 
     private void requireHasSpace() {
-        if (registeredMemberCount() == MAX_REGISTERED_MEMBERS) {
+        if (isFull()) {
             throw new HuddleIsAlreadyFullException("Currently have " + registeredMemberCount() + " registered.");
         }
+    }
+
+    public boolean canRegister() {
+        return !isFull();
+    }
+
+    private boolean isFull() {
+        return registeredMemberCount() == MAX_REGISTERED_MEMBERS;
     }
 
     public boolean isRegistered(MemberId memberId) {
@@ -91,5 +91,13 @@ public class Huddle {
         if (isCompleted) {
             throw new HuddleAlreadyCompletedException();
         }
+    }
+
+    public HuddleId getId() {
+        return id;
+    }
+
+    public void setId(HuddleId id) {
+        this.id = id;
     }
 }

@@ -15,7 +15,8 @@ public record HuddleSummaryView(long id,
                                 int numberRegistered,
                                 boolean isCompleted,
                                 String recordingLink,
-                                boolean memberRegistered) {
+                                boolean memberRegistered,
+                                boolean canRegister) {
 
     public static List<HuddleSummaryView> from(List<Huddle> huddles, MemberId memberId) {
         return huddles.stream()
@@ -32,6 +33,8 @@ public record HuddleSummaryView(long id,
                                      huddle.registeredMemberCount(),
                                      huddle.isCompleted(),
                                      huddle.recordingLink().toString(),
-                                     huddle.isRegistered(memberId));
+                                     huddle.isRegistered(memberId),
+                                     huddle.canRegister());
     }
+
 }

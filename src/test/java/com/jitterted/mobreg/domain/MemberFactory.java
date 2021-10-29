@@ -29,6 +29,15 @@ public class MemberFactory {
         return member;
     }
 
+    public static void registerCountMembersWithHuddle(Huddle huddle, int count) {
+        MemberFactory memberFactory = new MemberFactory();
+        for (int i = 0; i < count; i++) {
+            MemberId memberId = memberFactory.createMemberInRepositoryReturningId(
+                    i, "name" + i, "github" + i);
+            huddle.register(memberId);
+        }
+    }
+
     @NotNull
     public MemberId createMemberInRepositoryReturningId(long id, String firstName, String githubUsername) {
         Member member = createMember(id, firstName, githubUsername);
