@@ -1,7 +1,6 @@
 package com.jitterted.mobreg.domain;
 
 import com.jitterted.mobreg.domain.port.InMemoryHuddleRepository;
-import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.port.Notifier;
 import org.junit.jupiter.api.Test;
 
@@ -22,10 +21,13 @@ class HuddleServiceMemberRegistrationNotificationTest {
         HuddleId huddleId = HuddleId.of(7L);
         huddle.setId(huddleId);
         huddleRepository.save(huddle);
+        MemberBuilder memberBuilder = new MemberBuilder();
+        MemberId memberId = memberBuilder.withFirstName("Fake")
+                                         .withEmail("fake@example.com")
+                                         .build()
+                                         .getId();
         SpyEmailNotifier spyEmailNotifier = new SpyEmailNotifier();
-        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository, memberRepository, spyEmailNotifier);
-        MemberId memberId = new MemberFactory(memberRepository).createMemberInRepositoryReturningId(99L, "Fake", "fakegithubusername", "fake@example.com");
+        HuddleService huddleService = new HuddleService(huddleRepository, memberBuilder.memberRepository(), spyEmailNotifier);
 
         huddleService.registerMember(huddleId, memberId);
 
@@ -40,7 +42,7 @@ class HuddleServiceMemberRegistrationNotificationTest {
                 .isEqualTo("fake@example.com");
     }
 
-    private class SpyEmailNotifier implements Notifier {
+    private static class SpyEmailNotifier implements Notifier {
         private String emailBody;
         private String emailAddress;
 

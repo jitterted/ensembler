@@ -21,8 +21,7 @@ public class HuddleRegisteredMembersTest {
     @Test
     public void registerMemberByIdWithHuddleRemembersTheMember() throws Exception {
         Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
-
-        MemberId memberId = new MemberFactory().createMemberInRepositoryReturningId(1L, "name", "github");
+        MemberId memberId = new MemberBuilder().build().getId();
 
         huddle.register(memberId);
 
@@ -36,7 +35,8 @@ public class HuddleRegisteredMembersTest {
     @Test
     public void registeredMemberIsFoundAsRegisteredByMemberId() throws Exception {
         Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
-        MemberId memberId = new MemberFactory().createMemberInRepositoryReturningId(3L, "reg", "github");
+        MemberId memberId = new MemberBuilder().build().getId();
+
         huddle.register(memberId);
 
         assertThat(huddle.isRegistered(memberId))

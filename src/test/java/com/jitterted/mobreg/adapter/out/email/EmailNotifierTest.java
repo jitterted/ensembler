@@ -2,9 +2,7 @@ package com.jitterted.mobreg.adapter.out.email;
 
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberService;
-import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
-import com.jitterted.mobreg.domain.port.MemberRepository;
+import com.jitterted.mobreg.domain.MemberBuilder;
 import com.jitterted.mobreg.domain.port.Notifier;
 import org.junit.jupiter.api.Test;
 
@@ -18,14 +16,11 @@ class EmailNotifierTest {
 
     @Test
     public void memberWithEmailWhenNotificationOccursThenEmailSentToMember() throws Exception {
-        MemberRepository memberRepository = new InMemoryMemberRepository();
-        Member member = new Member("hasEmail", "githubusername", "ROLE_MEMBER");
-        member.changeEmailTo("name@example.com");
-        memberRepository.save(member);
-        memberRepository.save(new Member("noEmail", "noemailuser", "ROLE_MEMBER"));
-        MemberService memberService = new MemberService(memberRepository);
+        MemberBuilder memberBuilder = new MemberBuilder();
+        memberBuilder.withEmail("name@example.com")
+                     .build();
         SpyEmailer spyEmailer = new SpyEmailer();
-        Notifier notifier = new EmailNotifier(memberService, spyEmailer);
+        Notifier notifier = new EmailNotifier(memberBuilder.memberService(), spyEmailer);
 
         notifier.newHuddleOpened("New Huddle", URI.create("https://mobreg.herokuapp.com/"));
 
@@ -42,8 +37,9 @@ class EmailNotifierTest {
 
     @Test
     public void memberWithEmailRegistersThenEmailSentToMemberWithHuddleDetails() throws Exception {
-        Member member = new Member("FirstName", "githubusername", "ROLE_MEMBER");
-        member.changeEmailTo("name@example.com");
+        Member member = new MemberBuilder().withFirstName("FirstName")
+                                           .withEmail("name@example.com")
+                                           .build();
         Huddle huddle = new Huddle("Ensemble #123", URI.create("https://zoom.us"), ZonedDateTime.of(2021, 10, 20, 16, 0, 0, 0, ZoneOffset.UTC));
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(null, spyEmailer);
@@ -64,7 +60,7 @@ class EmailNotifierTest {
 
     @Test
     public void memberWithoutEmailRegistersThenNoEmailIsSent() throws Exception {
-        Member member = new Member("NoEmail", "githubusername", "ROLE_MEMBER");
+        Member member = new MemberBuilder().withNoEmail().build();
         Huddle huddle = new Huddle("Doesn't matter", URI.create("https://whocar.es"), ZonedDateTime.now());
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(null, spyEmailer);
