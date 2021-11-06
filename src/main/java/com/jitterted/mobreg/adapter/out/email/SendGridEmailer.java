@@ -22,18 +22,18 @@ public class SendGridEmailer implements Emailer {
 
     @Override
     public void send(String subject, String body, Set<String> recipients) {
-        Email from = new Email("ted@tedmyoung.com");
+        Email from = new Email("mobreg@tedmyoung.com"); // TODO: pull this into configuration
         Content content = new Content("text/html", body);
 
         Personalization personalization = new Personalization();
-        recipients.forEach(recipient -> personalization.addTo(new Email(recipient)));
+        personalization.addTo(from); // same as "To:" as the rest will be BCC'd
+        recipients.forEach(recipient -> personalization.addBcc(new Email(recipient)));
 
         Mail mail = new Mail();
         mail.setFrom(from);
         mail.setSubject(subject);
         mail.addPersonalization(personalization);
         mail.addContent(content);
-
 
         SendGrid sg = new SendGrid(sendgridApiKey);
         Request request = new Request();
