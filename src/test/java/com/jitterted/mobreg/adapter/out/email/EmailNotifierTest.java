@@ -31,6 +31,7 @@ class EmailNotifierTest {
         assertThat(spyEmailer.body())
                 .isEqualTo("""
                                    New Ensemble 'New Huddle' has been scheduled.
+                                   <br/>
                                    Visit <a href="https://mobreg.herokuapp.com/">MobReg</a> to register.
                                    """);
     }
