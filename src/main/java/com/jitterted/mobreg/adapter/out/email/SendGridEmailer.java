@@ -22,7 +22,7 @@ public class SendGridEmailer implements Emailer {
 
     @Override
     public void send(String subject, String body, Set<String> recipients) {
-        Email from = new Email("mobreg@tedmyoung.com"); // TODO: pull this into configuration
+        Email from = new Email("mobreg@tedmyoung.com", "Mob Registration System (MobReg)"); // TODO: pull this into configuration
         Content content = new Content("text/html", body);
 
         Personalization personalization = new Personalization();
