@@ -81,6 +81,16 @@ public class AdminDashboardController {
         return "redirect:/admin/dashboard";
     }
 
+    @PostMapping("/notify/{huddleId}")
+    public String notifyHuddleScheduled(@PathVariable("huddleId") Long huddleId) {
+        Huddle huddle = huddleService.findById(HuddleId.of(huddleId))
+                .orElseThrow(() -> {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                });
+        huddleService.triggerHuddleOpenedNotification(huddle);
+        return "redirect:/admin/dashboard";
+    }
+
     @PostMapping("/register")
     public String registerParticipant(AdminRegistrationForm adminRegistrationForm) {
         HuddleId huddleId = HuddleId.of(adminRegistrationForm.getHuddleId());

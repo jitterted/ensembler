@@ -36,6 +36,10 @@ public class HuddleService {
         notifier.newHuddleOpened(huddle.name(), URI.create("https://mobreg.herokuapp.com/"));
     }
 
+    public void triggerHuddleOpenedNotification(Huddle huddle) {
+        notifier.newHuddleOpened(huddle.name(), URI.create("https://mobreg.herokuapp.com/"));
+    }
+
     public List<Huddle> allHuddles() {
         return huddleRepository.findAll();
     }

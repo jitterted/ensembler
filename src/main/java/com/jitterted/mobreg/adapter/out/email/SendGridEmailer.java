@@ -8,6 +8,8 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,7 @@ import java.util.Set;
 
 @Component
 public class SendGridEmailer implements Emailer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SendGridEmailer.class);
 
     @Value("${sendgrid.api.key}")
     private String sendgridApiKey;
@@ -42,7 +45,9 @@ public class SendGridEmailer implements Emailer {
         try {
             request.setBody(mail.build());
             Response response = sg.api(request);
+            LOGGER.info("Emails sent via SendGrid, response={}, personalization={}", response.getStatusCode(), personalization.getTos());
         } catch (IOException e) {
+            LOGGER.warn("Exception when trying to send email via SendGrid. Request={}. Exception: {}", request.getBody(), e);
         }
     }
 }

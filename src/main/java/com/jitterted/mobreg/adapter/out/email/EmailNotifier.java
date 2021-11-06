@@ -41,9 +41,11 @@ public class EmailNotifier implements Notifier {
                                           .collect(Collectors.toSet());
         String messageBody = """
                 New Ensemble '%s' has been scheduled.
+                <br/>
                 Visit <a href="%s">MobReg</a> to register.
                 """
                 .formatted(description, registrationLink.toString());
+        LOGGER.info("Sending New Huddle '{}' emails to: {}", description, emails);
         emailer.send("Ensembler Notification: New Ensemble Scheduled", messageBody, emails);
         return 0;
     }
