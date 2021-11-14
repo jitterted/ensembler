@@ -18,7 +18,7 @@
     <testcontainers.version>1.16.2</testcontainers.version>
     <spotify.github-client.version>0.1.23</spotify.github-client.version>
     <htmlunit.version>2.54.0</htmlunit.version>
-    <jetbrains.annotations.version>22.0.0</jetbrains.annotations.version>
+    <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
   </properties>
   <dependencies>
     <dependency>
