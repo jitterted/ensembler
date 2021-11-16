@@ -17,7 +17,7 @@
     <java.version>16</java.version>
     <testcontainers.version>1.16.2</testcontainers.version>
     <spotify.github-client.version>0.1.24</spotify.github-client.version>
-    <htmlunit.version>2.54.0</htmlunit.version>
+    <htmlunit.version>2.55.0</htmlunit.version>
     <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
   </properties>
   <dependencies>
