@@ -10,7 +10,7 @@ public class Huddle {
     private static final int MAX_REGISTERED_MEMBERS = 5;
     private HuddleId id;
 
-    private final String name;
+    private String name;
     private final ZonedDateTime startDateTime;
     private URI zoomMeetingLink;
     private final Set<MemberId> memberIds = new HashSet<>();
@@ -99,5 +99,9 @@ public class Huddle {
 
     public void setId(HuddleId id) {
         this.id = id;
+    }
+
+    public void changeNameTo(String newName) {
+        name = newName;
     }
 }
