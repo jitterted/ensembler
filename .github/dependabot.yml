@@ -1,0 +1,8 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      # check at 9am UTC
+      time: "09:00"
