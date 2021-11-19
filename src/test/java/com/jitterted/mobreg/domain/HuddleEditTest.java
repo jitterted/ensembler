@@ -37,4 +37,15 @@ class HuddleEditTest {
                 .isEqualTo("before");
     }
 
+    @Test
+    public void canChangeNameAfterCompleted() throws Exception {
+        Huddle huddle = new Huddle("before", ZonedDateTime.now());
+        huddle.complete();
+
+        huddle.changeNameTo("after");
+
+        assertThat(huddle.name())
+                .isEqualTo("after");
+    }
+
 }
