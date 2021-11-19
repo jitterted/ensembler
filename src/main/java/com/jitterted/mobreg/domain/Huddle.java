@@ -11,7 +11,7 @@ public class Huddle {
     private HuddleId id;
 
     private String name;
-    private final ZonedDateTime startDateTime;
+    private ZonedDateTime startDateTime;
     private URI zoomMeetingLink;
     private final Set<MemberId> memberIds = new HashSet<>();
     private boolean isCompleted = false;
@@ -106,9 +106,14 @@ public class Huddle {
         name = newName;
     }
 
-    private void requireNotNull(String newName) {
-        if (newName == null) {
+    private void requireNotNull(Object value) {
+        if (value == null) {
             throw new IllegalArgumentException();
         }
+    }
+
+    public void changeStartDateTimeTo(ZonedDateTime newStartDateTime) {
+        requireNotNull(newStartDateTime);
+        startDateTime = newStartDateTime;
     }
 }
