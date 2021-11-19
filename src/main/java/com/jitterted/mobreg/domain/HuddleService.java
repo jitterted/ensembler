@@ -77,4 +77,12 @@ public class HuddleService {
     public List<Huddle> findAllForMember(MemberId memberId) {
         return null;
     }
+
+    public void changeDateTimeNameTo(HuddleId huddleId, String newName, ZonedDateTime newZoneDateTimeUtc) {
+        Huddle huddle = findById(huddleId)
+                .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));
+        huddle.changeNameTo(newName);
+        huddle.changeStartDateTimeTo(newZoneDateTimeUtc);
+        huddleRepository.save(huddle);
+    }
 }
