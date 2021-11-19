@@ -18,4 +18,23 @@ class HuddleEditTest {
                 .isEqualTo("after");
     }
 
+    @Test
+    public void changeNameToNullNotAllowed() throws Exception {
+        Huddle huddle = new Huddle("before", ZonedDateTime.now());
+
+        assertThatThrownBy(() -> {
+            huddle.changeNameTo(null);
+        }).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void canChangeToExistingName() throws Exception {
+        Huddle before = new Huddle("before", ZonedDateTime.now());
+
+        before.changeNameTo("before");
+
+        assertThat(before.name())
+                .isEqualTo("before");
+    }
+
 }

@@ -102,6 +102,13 @@ public class Huddle {
     }
 
     public void changeNameTo(String newName) {
+        requireNotNull(newName);
         name = newName;
+    }
+
+    private void requireNotNull(String newName) {
+        if (newName == null) {
+            throw new IllegalArgumentException();
+        }
     }
 }
