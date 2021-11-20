@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.adapter.DateTimeFormatting;
+import com.jitterted.mobreg.domain.Huddle;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,6 +24,10 @@ public final class ScheduleHuddleForm {
         this.date = date;
         this.time = time;
         this.timezone = timezone;
+    }
+
+    public static ScheduleHuddleForm from(Huddle huddle) {
+        return new ScheduleHuddleForm(huddle.name(), huddle.zoomMeetingLink().toString(), "", "", "");
     }
 
     public String getName() {

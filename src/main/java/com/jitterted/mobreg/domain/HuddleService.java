@@ -78,7 +78,7 @@ public class HuddleService {
         return null;
     }
 
-    public void changeDateTimeNameTo(HuddleId huddleId, String newName, ZonedDateTime newZoneDateTimeUtc) {
+    public void changeNameDateTimeTo(HuddleId huddleId, String newName, ZonedDateTime newZoneDateTimeUtc) {
         Huddle huddle = findById(huddleId)
                 .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));
         huddle.changeNameTo(newName);

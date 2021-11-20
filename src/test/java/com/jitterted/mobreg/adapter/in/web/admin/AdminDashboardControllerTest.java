@@ -9,6 +9,7 @@ import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberService;
 import com.jitterted.mobreg.domain.OAuth2UserFactory;
+import com.jitterted.mobreg.domain.ZonedDateTimeFactory;
 import com.jitterted.mobreg.domain.port.InMemoryHuddleRepository;
 import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -48,13 +51,35 @@ class AdminDashboardControllerTest {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
 
-        String pageName = adminDashboardController.scheduleHuddle(new ScheduleHuddleForm("Name", "https://zoom.us/j/123456?pwd=12345", "2021-04-30", "09:00", "America/Los_Angeles"));
+        String pageName = adminDashboardController.scheduleHuddle(new ScheduleHuddleForm(
+                "Name", "https://zoom.us/j/123456?pwd=12345", "2021-04-30", "09:00", "America/Los_Angeles"));
 
         assertThat(pageName)
                 .isEqualTo("redirect:/admin/dashboard");
         assertThat(huddleRepository.findAll())
                 .hasSize(1);
     }
+
+    @Test
+    public void changeExistingHuddleResultsInChangesSaved() throws Exception {
+        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        Huddle huddle = new Huddle("Old Name", ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 30, 9));
+        huddleRepository.save(huddle);
+        AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
+
+        ScheduleHuddleForm scheduleHuddleForm = new ScheduleHuddleForm("New Name", null, "2021-12-01", "10:00", "America/Los_Angeles");
+        HuddleId huddleId = huddle.getId();
+        String pageName = adminDashboardController.changeHuddle(scheduleHuddleForm, huddleId.id());
+
+        assertThat(pageName)
+                .isEqualTo("redirect:/admin/huddle/" + huddleId.id());
+        Huddle expectedHuddle = new Huddle("New Name", ZonedDateTime.of(2021, 12, 1, 10, 0, 0, 0, ZoneId.of("America/Los_Angeles")).withZoneSameInstant(ZoneOffset.UTC));
+        expectedHuddle.setId(huddleId);
+        assertThat(huddleRepository.findById(huddleId).get())
+                .usingRecursiveComparison()
+                .isEqualTo(expectedHuddle);
+    }
+
 
     @Test
     public void completeHuddleCompletesTheHuddleWithRecordingLinkAndRedirects() throws Exception {

@@ -4,11 +4,92 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Huddle Details</title>
-<!--    <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">-->
+    <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
+    <script>
+        // convert UTC Date Time to browser's time zone, only for <span> elements with .datetimeutc class
+        window.onload = () => {
+            let dateFormatOptions = { weekday: 'short', timeZoneName: 'short', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'}
+            let dateTimeFormatter = new Intl.DateTimeFormat('default', dateFormatOptions);
+            let timezoneString = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+            document.querySelectorAll("span.datetimeutc").forEach(function (datetimeutc) {
+                const datetime = new Date(datetimeutc.innerText)
+                datetimeutc.innerText = dateTimeFormatter.format(datetime) // datetime.toLocaleString()
+            })
+            document.querySelectorAll("span#timezone").forEach(function (timezoneElement) {
+                timezoneElement.innerText = timezoneString
+            })
+            document.querySelectorAll("input#timezone").forEach(function (timezoneElement) {
+                timezoneElement.setAttribute("value", timezoneString)
+            })
+        };
+    </script>
 </head>
 <body class="p-4">
 <a href="#" th:href="@{/admin/dashboard}"><h1>MobReg: Ensemble Programming Registration System</h1></a>
 <h2 class="text-3xl mb-6">Detail</h2>
+
+<div class="max-w-2xl">
+    <form th:action="@{/admin/huddle/__${huddle.id}__}" action="#" method="post" th:object="${scheduleHuddleForm}"
+          class="flex flex-col justify-center py-10 sm:px-6 lg:px-8">
+
+        <div>
+            <h3 class="text-xl sm:text-2xl sm:truncate leading-6 font-medium text-gray-900">
+                Update Huddle
+            </h3>
+        </div>
+        <div>
+            <div class="grid grid-cols-4 gap-4 items-start pt-6">
+                <label th:for="name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 pl-4">
+                    Name
+                </label>
+                <div class="mt-0 col-span-2">
+                    <input type="text" th:field="*{name}" required
+                           class="max-w-xs text-sm block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-4 items-start border-gray-200 pt-5">
+                <label th:for="date" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 pl-4">
+                    Date
+                </label>
+                <div class="mt-0 col-span-2">
+                    <input type="date" th:field="*{date}" required
+                           class="max-w-xs text-sm block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-4 items-start border-gray-200 pt-5">
+                <label th:for="time"
+                       class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 pl-4">
+                    Start Time
+                </label>
+                <div class="mt-0 col-span-2">
+                    <input type="time" th:field="*{time}" required
+                           class="max-w-xs text-sm block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md">
+                    <input id="timezone" type="text" hidden th:field="*{timezone}">
+                </div>
+                <div class="block text-sm font-medium text-gray-500 sm:pt-2">
+                    (<span id="timezone">tbd</span>)
+                </div>
+            </div>
+
+        </div>
+
+        <div class="pt-10">
+            <div class="flex justify-center">
+                <button type="reset"
+                        class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Reset
+                </button>
+                <button type="submit"
+                        class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Update
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
 
 <p>Name: <span th:text="${huddle.name}">Name</span></p>
 <p>Date/time: <span th:text="${huddle.startDateTime}">04/24/2021 10:00am PDT</span></p>
@@ -21,7 +102,9 @@
     <form th:action="@{/admin/huddle/__${huddle.id}__/complete}" action="#" method="post" th:object="${completeHuddle}">
         <label>Recording Link: <input type="text" th:field="*{recordingLink}"></label>
         <div class="mt-2">
-            <button type="submit">Complete Huddle</button>
+            <button type="submit"
+                    class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Complete Huddle</button>
         </div>
     </form>
 </div>

@@ -62,10 +62,18 @@ public class AdminDashboardController {
 
         HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle, memberService);
         model.addAttribute("huddle", huddleDetailView);
+        model.addAttribute("scheduleHuddleForm", ScheduleHuddleForm.from(huddle));
         model.addAttribute("completeHuddle", new CompleteHuddleForm(""));
         model.addAttribute("registration", new AdminRegistrationForm(huddle.getId()));
 
         return "huddle-detail";
+    }
+
+    @PostMapping("/huddle/{huddleId}")
+    public String changeHuddle(ScheduleHuddleForm scheduleHuddleForm, @PathVariable("huddleId") Long id) {
+        HuddleId huddleId = HuddleId.of(id);
+        huddleService.changeNameDateTimeTo(huddleId, scheduleHuddleForm.getName(), scheduleHuddleForm.getDateTimeInUtc());
+        return "redirect:/admin/huddle/" + id;
     }
 
     @PostMapping("/schedule")

@@ -18,7 +18,7 @@ class HuddleServiceEditExistingTest {
         HuddleId huddleId = huddleRepository.save(huddle).getId();
 
         ZonedDateTime afterZonedDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 20, 18);
-        huddleService.changeDateTimeNameTo(huddleId, "After", afterZonedDateTime);
+        huddleService.changeNameDateTimeTo(huddleId, "After", afterZonedDateTime);
 
         Huddle found = huddleRepository.findById(huddleId).orElseThrow();
         assertThat(found.name())

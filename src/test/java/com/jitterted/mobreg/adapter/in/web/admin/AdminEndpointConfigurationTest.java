@@ -77,6 +77,17 @@ public class AdminEndpointConfigurationTest {
     }
 
     @Test
+    public void postToChangeHuddleEndpointRedirects() throws Exception {
+        mockMvc.perform(post("/admin/huddle/17")
+                                .param("name", "New Name")
+                                .param("date", "2021-11-30")
+                                .param("time", "10:00")
+                                .param("timezone", "America/Los_Angeles")
+                                .with(csrf()))
+               .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
     public void postToRegisterParticipantEndpointRedirects() throws Exception {
         createStubHuddleServiceReturningHuddleWithIdOf(23L);
         createStubMemberRepositoryWithMember(1L, "participant", "mygithub", new String[]{"ROLE_USER", "ROLE_MEMBER"});
