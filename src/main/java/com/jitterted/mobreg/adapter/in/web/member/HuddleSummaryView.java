@@ -33,7 +33,7 @@ public record HuddleSummaryView(long id,
                                      huddle.registeredMemberCount(),
                                      huddle.isCompleted(),
                                      huddle.recordingLink().toString(),
-                                     huddle.isRegistered(memberId),
+                                     huddle.isAccepted(memberId),
                                      huddle.canRegister());
     }
 

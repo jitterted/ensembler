@@ -39,7 +39,7 @@ public class HuddleRegisteredMembersTest {
 
         huddle.acceptedBy(memberId);
 
-        assertThat(huddle.isRegistered(memberId))
+        assertThat(huddle.isAccepted(memberId))
                 .isTrue();
     }
 
@@ -47,7 +47,7 @@ public class HuddleRegisteredMembersTest {
     public void nonExistentMemberIsNotFoundAsRegisteredByMemberId() throws Exception {
         Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
 
-        assertThat(huddle.isRegistered(MemberId.of(73L)))
+        assertThat(huddle.isAccepted(MemberId.of(73L)))
                 .isFalse();
     }
 

@@ -66,11 +66,7 @@ public class Huddle {
         return registeredMemberCount() == MAX_REGISTERED_MEMBERS;
     }
 
-    /**
-     * @deprecated Use the rsvpOf() == Rsvp.ACCEPTED method instead
-     */
-    @Deprecated
-    public boolean isRegistered(MemberId memberId) {
+    public boolean isAccepted(MemberId memberId) {
         return membersWhoAccepted.contains(memberId);
     }
 
@@ -126,7 +122,15 @@ public class Huddle {
 
     public MemberStatus statusFor(MemberId memberId, ZonedDateTime now) {
         if (inThePast(now)) {
-            return MemberStatus.HIDDEN;
+            if (isAccepted(memberId)) {
+                if (isCompleted()) {
+                    return MemberStatus.COMPLETED;
+                } else {
+                    return MemberStatus.PENDING_COMPLETED;
+                }
+            } else {
+                return MemberStatus.HIDDEN;
+            }
         } else {
             if (isFull()) {
                 if (isDeclined(memberId)) {
@@ -138,11 +142,14 @@ public class Huddle {
                 if (isDeclined(memberId)) {
                     return MemberStatus.DECLINED;
                 } else {
-                    return MemberStatus.UNKNOWN;
+                    if (isAccepted(memberId)) {
+                        return MemberStatus.ACCEPTED;
+                    } else {
+                        return MemberStatus.UNKNOWN;
+                    }
                 }
             }
         }
-
     }
 
     private boolean inThePast(ZonedDateTime now) {
@@ -153,7 +160,7 @@ public class Huddle {
         if (isDeclined(memberId)) {
             return Rsvp.DECLINED;
         }
-        if (isRegistered(memberId)) {
+        if (isAccepted(memberId)) {
             return Rsvp.ACCEPTED;
         }
         return Rsvp.UNKNOWN;

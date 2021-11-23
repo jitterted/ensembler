@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.domain;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
@@ -30,7 +29,7 @@ class HuddleMemberStatusTest {
 
     @Test
     public void unknownMemberAndFutureHuddleAndIsFullThenStatusFull() throws Exception {
-        Huddle futureHuddle = fullHuddleWithStartTime(2022, 1, 3, 9);
+        Huddle futureHuddle = HuddleFactory.fullHuddleWithStartTime(2022, 1, 3, 9);
         MemberId memberIdIsUnknown = MemberFactory.createMember(33L, "UnKnown", "unknown").getId();
 
         assertThat(futureHuddle.statusFor(memberIdIsUnknown, UTC_2021_11_22_15))
@@ -49,7 +48,7 @@ class HuddleMemberStatusTest {
 
     @Test
     public void declinedMemberAndFutureHuddleIsFullThenStatusDeclinedFull() throws Exception {
-        Huddle futureFullHuddle = fullHuddleWithStartTime(2022, 1, 3, 9);
+        Huddle futureFullHuddle = HuddleFactory.fullHuddleWithStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberFactory.createMember(31L, "Declined", "declined").getId();
         futureFullHuddle.declinedBy(memberId);
 
@@ -57,10 +56,35 @@ class HuddleMemberStatusTest {
                 .isEqualByComparingTo(MemberStatus.DECLINED_FULL);
     }
 
-    @NotNull
-    public Huddle fullHuddleWithStartTime(int year, int month, int dayOfMonth, int hour) {
-        Huddle futureHuddle = HuddleFactory.withStartTime(year, month, dayOfMonth, hour);
-        MemberFactory.registerCountMembersWithHuddle(futureHuddle, 5);
-        return futureHuddle;
+    @Test
+    public void acceptedMemberAndPastUncompletedHuddleThenStatusPendingCompleted() throws Exception {
+        Huddle pastHuddle = HuddleFactory.withStartTime(2021, 11, 21, 11);
+        MemberId memberId = MemberFactory.createMember(41L, "Accepted", "accepted").getId();
+        pastHuddle.acceptedBy(memberId);
+
+        assertThat(pastHuddle.statusFor(memberId, UTC_2021_11_22_15))
+                .isEqualByComparingTo(MemberStatus.PENDING_COMPLETED);
     }
+    
+    @Test
+    public void acceptedMemberAndCompletedHuddleThenStatusCompleted() throws Exception {
+        Huddle completedHuddle = HuddleFactory.withStartTime(2021, 11, 21, 11);
+        MemberId memberId = MemberFactory.createMember(41L, "Accepted", "accepted").getId();
+        completedHuddle.acceptedBy(memberId);
+        completedHuddle.complete();
+
+        assertThat(completedHuddle.statusFor(memberId, UTC_2021_11_22_15))
+                .isEqualByComparingTo(MemberStatus.COMPLETED);
+    }
+
+    @Test
+    public void acceptedMemberAndFutureHuddleThenStatusAccepted() throws Exception {
+        Huddle futureHuddle = HuddleFactory.withStartTime(2022, 1, 3, 9);
+        MemberId memberId = MemberFactory.createMember(41L, "Accepted", "accepted").getId();
+        futureHuddle.acceptedBy(memberId);
+
+        assertThat(futureHuddle.statusFor(memberId, UTC_2021_11_22_15))
+                .isEqualByComparingTo(MemberStatus.ACCEPTED);
+    }
+
 }
