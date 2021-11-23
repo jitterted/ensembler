@@ -11,6 +11,11 @@ public class HuddleFactory {
     }
 
     @NotNull
+    public static Huddle withStartTime(int year, int month, int dayOfMonth, int hour) {
+        return new Huddle("huddle", ZonedDateTimeFactory.zoneDateTimeUtc(year, month, dayOfMonth, hour));
+    }
+
+    @NotNull
     public static Huddle createDefaultHuddleWithIdOf1() {
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
         huddle.setId(HuddleId.of(1L));

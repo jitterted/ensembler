@@ -13,7 +13,8 @@ public class Huddle {
     private String name;
     private ZonedDateTime startDateTime;
     private URI zoomMeetingLink;
-    private final Set<MemberId> memberIds = new HashSet<>();
+    private final Set<MemberId> membersWhoAccepted = new HashSet<>(); // Accepted members
+    private final Set<MemberId> membersWhoDeclined = new HashSet<>();
     private boolean isCompleted = false;
     private URI recordingLink = URI.create("");
 
@@ -36,17 +37,17 @@ public class Huddle {
     }
 
     public int registeredMemberCount() {
-        return memberIds.size();
+        return membersWhoAccepted.size();
     }
 
     public Set<MemberId> registeredMembers() {
-        return memberIds;
+        return membersWhoAccepted;
     }
 
     public void register(MemberId memberId) {
         requireNotCompleted();
         requireHasSpace();
-        memberIds.add(memberId);
+        membersWhoAccepted.add(memberId);
     }
 
     private void requireHasSpace() {
@@ -64,7 +65,7 @@ public class Huddle {
     }
 
     public boolean isRegistered(MemberId memberId) {
-        return memberIds.contains(memberId);
+        return membersWhoAccepted.contains(memberId);
     }
 
     public URI zoomMeetingLink() {
@@ -115,5 +116,22 @@ public class Huddle {
     public void changeStartDateTimeTo(ZonedDateTime newStartDateTime) {
         requireNotNull(newStartDateTime);
         startDateTime = newStartDateTime;
+    }
+
+    public MemberStatus statusFor(MemberId memberId, ZonedDateTime now) {
+        if (inThePast(now)) {
+            return MemberStatus.HIDDEN;
+        } else {
+            if (isFull()) {
+                return MemberStatus.FULL;
+            } else {
+                return MemberStatus.UNKNOWN;
+            }
+        }
+
+    }
+
+    private boolean inThePast(ZonedDateTime now) {
+        return now.isAfter(startDateTime);
     }
 }
