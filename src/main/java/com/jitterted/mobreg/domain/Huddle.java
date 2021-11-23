@@ -41,9 +41,14 @@ public class Huddle {
     }
 
     public Set<MemberId> registeredMembers() {
+        // TODO: provide Stream<> or ImmutableSet<>
         return membersWhoAccepted;
     }
 
+    /**
+     * @deprecated use acceptedBy() instead
+     */
+    @Deprecated
     public void register(MemberId memberId) {
         requireNotCompleted();
         requireHasSpace();
@@ -64,6 +69,10 @@ public class Huddle {
         return registeredMemberCount() == MAX_REGISTERED_MEMBERS;
     }
 
+    /**
+     * @deprecated Use the rsvpOf() == Rsvp.ACCEPTED method instead
+     */
+    @Deprecated
     public boolean isRegistered(MemberId memberId) {
         return membersWhoAccepted.contains(memberId);
     }
@@ -133,5 +142,24 @@ public class Huddle {
 
     private boolean inThePast(ZonedDateTime now) {
         return now.isAfter(startDateTime);
+    }
+
+    public Rsvp rsvpOf(MemberId memberId) {
+        if (isDeclined(memberId)) {
+            return Rsvp.DECLINED;
+        }
+        if (isRegistered(memberId)) {
+            return Rsvp.ACCEPTED;
+        }
+        return Rsvp.UNKNOWN;
+    }
+
+    private boolean isDeclined(MemberId memberId) {
+        return membersWhoDeclined.contains(memberId);
+    }
+
+    public void declinedBy(MemberId memberId) {
+        membersWhoAccepted.remove(memberId);
+        membersWhoDeclined.add(memberId);
     }
 }
