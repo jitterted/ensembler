@@ -34,7 +34,7 @@ public class MemberFactory {
         for (int i = 0; i < count; i++) {
             MemberId memberId = memberFactory.createMemberInRepositoryReturningId(
                     i, "name" + i, "github" + i);
-            huddle.register(memberId);
+            huddle.acceptedBy(memberId);
         }
     }
 

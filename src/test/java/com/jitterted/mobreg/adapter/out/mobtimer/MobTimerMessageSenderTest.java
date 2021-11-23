@@ -58,10 +58,10 @@ class MobTimerMessageSenderTest {
         Huddle huddle = new Huddle("test", ZonedDateTime.now());
         Member member = new Member("Jane", "janeuser");
         Member savedMember = memberService.save(member);
-        huddle.register(savedMember.getId());
+        huddle.acceptedBy(savedMember.getId());
         member = new Member("Jack", "jackuser");
         savedMember = memberService.save(member);
-        huddle.register(savedMember.getId());
+        huddle.acceptedBy(savedMember.getId());
 
         mobTimerMessageSender.updateParticipantsTo(huddle);
     }

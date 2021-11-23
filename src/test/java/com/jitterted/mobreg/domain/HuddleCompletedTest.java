@@ -31,7 +31,7 @@ class HuddleCompletedTest {
         Huddle huddle = new Huddle("completed", ZonedDateTime.now());
         huddle.complete();
 
-        assertThatThrownBy(() -> huddle.register(null))
+        assertThatThrownBy(() -> huddle.acceptedBy(null))
           .isInstanceOf(HuddleAlreadyCompletedException.class);
     }
 

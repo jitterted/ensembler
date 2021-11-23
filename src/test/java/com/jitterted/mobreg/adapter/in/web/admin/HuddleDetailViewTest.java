@@ -35,7 +35,7 @@ class HuddleDetailViewTest {
         MemberService memberService = new MemberService(memberRepository);
         Member member = MemberFactory.createMember(7, "name", "ghusername");
         memberRepository.save(member);
-        huddle.register(member.getId());
+        huddle.acceptedBy(member.getId());
 
         HuddleDetailView view = HuddleDetailView.from(huddle, memberService);
 

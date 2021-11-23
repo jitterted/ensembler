@@ -45,11 +45,7 @@ public class Huddle {
         return membersWhoAccepted;
     }
 
-    /**
-     * @deprecated use acceptedBy() instead
-     */
-    @Deprecated
-    public void register(MemberId memberId) {
+    public void acceptedBy(MemberId memberId) {
         requireNotCompleted();
         requireHasSpace();
         membersWhoAccepted.add(memberId);

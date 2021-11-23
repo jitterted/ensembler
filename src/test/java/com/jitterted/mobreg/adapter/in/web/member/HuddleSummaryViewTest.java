@@ -31,7 +31,7 @@ class HuddleSummaryViewTest {
         Member member = new Member("name", "seven");
         MemberId memberId = MemberId.of(7L);
         member.setId(memberId);
-        huddle.register(memberId);
+        huddle.acceptedBy(memberId);
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView
                 .toView(huddle, MemberId.of(5L));
@@ -50,7 +50,7 @@ class HuddleSummaryViewTest {
                                    "participant_username");
         MemberId memberId = MemberId.of(3L);
         member.setId(memberId);
-        huddle.register(memberId);
+        huddle.acceptedBy(memberId);
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView
                 .toView(huddle, memberId);

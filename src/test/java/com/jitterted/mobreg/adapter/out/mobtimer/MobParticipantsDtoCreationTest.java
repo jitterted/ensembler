@@ -18,7 +18,7 @@ class MobParticipantsDtoCreationTest {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
         Member member = new Member("Participant", "");
         Member savedMember = memberService.save(member);
-        huddle.register(savedMember.getId());
+        huddle.acceptedBy(savedMember.getId());
 
         MobParticipantsDto dto = MobParticipantsDto.from(huddle, memberService);
 

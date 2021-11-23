@@ -49,8 +49,8 @@ class PostgresqlEntityTest {
     @Test
     public void huddleEntityStoredViaJdbcIsRetrievedWithMembers() throws Exception {
         Huddle original = new Huddle("entity", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
-        original.register(MemberId.of(4L));
-        original.register(MemberId.of(5L));
+        original.acceptedBy(MemberId.of(4L));
+        original.acceptedBy(MemberId.of(5L));
         HuddleEntity originalEntity = HuddleEntity.from(original);
 
         HuddleEntity savedEntity = huddleJdbcRepository.save(originalEntity);

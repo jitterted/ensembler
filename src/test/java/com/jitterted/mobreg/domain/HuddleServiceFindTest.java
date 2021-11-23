@@ -59,7 +59,7 @@ public class HuddleServiceFindTest {
         HuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
         Huddle huddle1 = new Huddle("completed-member", ZonedDateTime.of(2021, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()));
-        huddle1.register(memberId);
+        huddle1.acceptedBy(memberId);
         huddle1.complete();
         huddle1 = huddleRepository.save(huddle1);
 

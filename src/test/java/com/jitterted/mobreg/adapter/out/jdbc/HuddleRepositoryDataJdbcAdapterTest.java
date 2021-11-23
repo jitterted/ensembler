@@ -128,7 +128,7 @@ class HuddleRepositoryDataJdbcAdapterTest {
     @NotNull
     private Huddle createWithRegisteredMemberHuddleNamed(String huddleName) {
         Huddle huddle = new Huddle(huddleName, ZonedDateTime.now());
-        huddle.register(MemberId.of(7L));
+        huddle.acceptedBy(MemberId.of(7L));
         return huddle;
     }
 }

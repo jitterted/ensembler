@@ -23,7 +23,7 @@ public class HuddleRegisteredMembersTest {
         Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
         MemberId memberId = new MemberBuilder().build().getId();
 
-        huddle.register(memberId);
+        huddle.acceptedBy(memberId);
 
         assertThat(huddle.registeredMemberCount())
                 .isEqualTo(1);
@@ -37,7 +37,7 @@ public class HuddleRegisteredMembersTest {
         Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
         MemberId memberId = new MemberBuilder().build().getId();
 
-        huddle.register(memberId);
+        huddle.acceptedBy(memberId);
 
         assertThat(huddle.isRegistered(memberId))
                 .isTrue();

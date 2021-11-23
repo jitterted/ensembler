@@ -20,7 +20,7 @@ class HuddleMemberRsvpTest {
         Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
         MemberId memberId = MemberFactory.createMember(73L, "Seventy3", "73").getId();
 
-        huddle.register(memberId);
+        huddle.acceptedBy(memberId);
 
         assertThat(huddle.rsvpOf(memberId))
                 .isEqualByComparingTo(Rsvp.ACCEPTED);
@@ -41,12 +41,26 @@ class HuddleMemberRsvpTest {
     public void acceptedMemberWhenDeclinesIsRsvpDeclined() throws Exception {
         Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
         MemberId memberId = MemberFactory.createMember(97L, "Ninety7", "97").getId();
-        huddle.register(memberId);
+        huddle.acceptedBy(memberId);
 
         huddle.declinedBy(memberId);
 
         assertThat(huddle.rsvpOf(memberId))
                 .isEqualByComparingTo(Rsvp.DECLINED);
+    }
+
+    @Test
+    public void declinedMemberWhenAcceptsAndSpaceAvailableIsRsvpAccepted() throws Exception {
+        Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
+        MemberId memberId = MemberFactory.createMember(97L, "Ninety7", "97").getId();
+        huddle.declinedBy(memberId);
+
+        huddle.acceptedBy(memberId);
+    }
+
+    @Test
+    public void declinedMemberAndNoSpaceAvailableWhenAcceptsThrowsException() throws Exception {
+
     }
 
 }
