@@ -123,21 +123,7 @@ public class Huddle {
     }
 
     public MemberStatus statusFor(MemberId memberId, ZonedDateTime now) {
-        When when = when(now);
-        Space space = space();
-        Rsvp rsvp = rsvpOf(memberId);
-        return STATE_TO_STATUS.get(new WhenSpaceRsvp(when, space, rsvp));
-    }
-
-    private Space space() {
-        return isFull() ? Space.FULL : Space.AVAILABLE;
-    }
-
-    private When when(ZonedDateTime now) {
-        if (isCompleted()) {
-            return When.COMPLETED;
-        }
-        return inThePast(now) ? When.PAST : When.FUTURE;
+        return WhenSpaceRsvp.memberStatus(this, memberId, now);
     }
 
     private boolean inThePast(ZonedDateTime now) {
@@ -163,33 +149,52 @@ public class Huddle {
         membersWhoDeclined.add(memberId);
     }
 
-    enum When {
-        PAST,
-        COMPLETED,
-        FUTURE
+    record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
+        private static final Map<WhenSpaceRsvp, MemberStatus> STATE_TO_STATUS = Map.ofEntries(
+                Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.UNKNOWN), MemberStatus.UNKNOWN),
+                Map.entry(new WhenSpaceRsvp(When.PAST, Space.FULL, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.UNKNOWN), MemberStatus.FULL),
+                Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.DECLINED), MemberStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.DECLINED), MemberStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.DECLINED), MemberStatus.DECLINED),
+                Map.entry(new WhenSpaceRsvp(When.PAST, Space.FULL, Rsvp.DECLINED), MemberStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.DECLINED), MemberStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.DECLINED), MemberStatus.DECLINED_FULL),
+                Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.PENDING_COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.ACCEPTED));
+
+        private static When when(Huddle huddle, ZonedDateTime now) {
+            if (huddle.isCompleted()) {
+                return When.COMPLETED;
+            }
+            return huddle.inThePast(now) ? When.PAST : When.FUTURE;
+        }
+
+        private static Space space(Huddle huddle) {
+            return huddle.isFull() ? Space.FULL : Space.AVAILABLE;
+        }
+
+        private static MemberStatus memberStatus(Huddle huddle, MemberId memberId, ZonedDateTime now) {
+            When when = when(huddle, now);
+            Space space = space(huddle);
+            Rsvp rsvp = huddle.rsvpOf(memberId);
+            return STATE_TO_STATUS.get(new WhenSpaceRsvp(when, space, rsvp));
+        }
+
+        enum When {
+            PAST,
+            COMPLETED,
+            FUTURE
+        }
+
+        enum Space {
+            FULL,
+            AVAILABLE
+        }
     }
 
-    enum Space {
-        FULL,
-        AVAILABLE
-    }
-
-    record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) { }
-
-    private static final Map<WhenSpaceRsvp, MemberStatus> STATE_TO_STATUS = Map.ofEntries(
-            Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
-            Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
-            Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.UNKNOWN), MemberStatus.UNKNOWN),
-            Map.entry(new WhenSpaceRsvp(When.PAST, Space.FULL, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
-            Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
-            Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.UNKNOWN), MemberStatus.FULL),
-            Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.DECLINED), MemberStatus.HIDDEN),
-            Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.DECLINED), MemberStatus.HIDDEN),
-            Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.DECLINED), MemberStatus.DECLINED),
-            Map.entry(new WhenSpaceRsvp(When.PAST, Space.FULL, Rsvp.DECLINED), MemberStatus.HIDDEN),
-            Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.DECLINED), MemberStatus.HIDDEN),
-            Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.DECLINED), MemberStatus.DECLINED_FULL),
-            Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.PENDING_COMPLETED),
-            Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.COMPLETED),
-            Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.ACCEPTED));
 }
