@@ -49,6 +49,7 @@ public class Huddle {
         requireNotCompleted();
         requireHasSpace();
         membersWhoAccepted.add(memberId);
+        membersWhoDeclined.remove(memberId);
     }
 
     private void requireHasSpace() {

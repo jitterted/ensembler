@@ -56,11 +56,9 @@ class HuddleMemberRsvpTest {
         huddle.declinedBy(memberId);
 
         huddle.acceptedBy(memberId);
-    }
 
-    @Test
-    public void declinedMemberAndNoSpaceAvailableWhenAcceptsThrowsException() throws Exception {
-
+        assertThat(huddle.rsvpOf(memberId))
+                .isEqualByComparingTo(Rsvp.ACCEPTED);
     }
 
 }
