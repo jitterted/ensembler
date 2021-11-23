@@ -43,7 +43,7 @@ public class Huddle {
     }
 
     public Set<MemberId> registeredMembers() {
-        // TODO: provide Stream<> or ImmutableSet<>
+        // #28 TODO: provide Stream<> or ImmutableSet<>
         return membersWhoAccepted;
     }
 
