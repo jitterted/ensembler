@@ -3,11 +3,13 @@ package com.jitterted.mobreg.domain;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 // This is the Aggregate Root for Huddles
 public class Huddle {
     private static final int MAX_REGISTERED_MEMBERS = 5;
+
     private HuddleId id;
 
     private String name;
@@ -121,35 +123,21 @@ public class Huddle {
     }
 
     public MemberStatus statusFor(MemberId memberId, ZonedDateTime now) {
-        if (inThePast(now)) {
-            if (isAccepted(memberId)) {
-                if (isCompleted()) {
-                    return MemberStatus.COMPLETED;
-                } else {
-                    return MemberStatus.PENDING_COMPLETED;
-                }
-            } else {
-                return MemberStatus.HIDDEN;
-            }
-        } else {
-            if (isFull()) {
-                if (isDeclined(memberId)) {
-                    return MemberStatus.DECLINED_FULL;
-                } else {
-                    return MemberStatus.FULL;
-                }
-            } else {
-                if (isDeclined(memberId)) {
-                    return MemberStatus.DECLINED;
-                } else {
-                    if (isAccepted(memberId)) {
-                        return MemberStatus.ACCEPTED;
-                    } else {
-                        return MemberStatus.UNKNOWN;
-                    }
-                }
-            }
+        When when = when(now);
+        Space space = space();
+        Rsvp rsvp = rsvpOf(memberId);
+        return STATE_TO_STATUS.get(new WhenSpaceRsvp(when, space, rsvp));
+    }
+
+    private Space space() {
+        return isFull() ? Space.FULL : Space.AVAILABLE;
+    }
+
+    private When when(ZonedDateTime now) {
+        if (isCompleted()) {
+            return When.COMPLETED;
         }
+        return inThePast(now) ? When.PAST : When.FUTURE;
     }
 
     private boolean inThePast(ZonedDateTime now) {
@@ -174,4 +162,34 @@ public class Huddle {
         membersWhoAccepted.remove(memberId);
         membersWhoDeclined.add(memberId);
     }
+
+    enum When {
+        PAST,
+        COMPLETED,
+        FUTURE
+    }
+
+    enum Space {
+        FULL,
+        AVAILABLE
+    }
+
+    record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) { }
+
+    private static final Map<WhenSpaceRsvp, MemberStatus> STATE_TO_STATUS = Map.ofEntries(
+            Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
+            Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
+            Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.UNKNOWN), MemberStatus.UNKNOWN),
+            Map.entry(new WhenSpaceRsvp(When.PAST, Space.FULL, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
+            Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.UNKNOWN), MemberStatus.HIDDEN),
+            Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.UNKNOWN), MemberStatus.FULL),
+            Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.DECLINED), MemberStatus.HIDDEN),
+            Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.DECLINED), MemberStatus.HIDDEN),
+            Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.DECLINED), MemberStatus.DECLINED),
+            Map.entry(new WhenSpaceRsvp(When.PAST, Space.FULL, Rsvp.DECLINED), MemberStatus.HIDDEN),
+            Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.DECLINED), MemberStatus.HIDDEN),
+            Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.DECLINED), MemberStatus.DECLINED_FULL),
+            Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.PENDING_COMPLETED),
+            Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.COMPLETED),
+            Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.ACCEPTED));
 }
