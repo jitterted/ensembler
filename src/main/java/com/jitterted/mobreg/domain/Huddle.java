@@ -129,9 +129,17 @@ public class Huddle {
             return MemberStatus.HIDDEN;
         } else {
             if (isFull()) {
-                return MemberStatus.FULL;
+                if (isDeclined(memberId)) {
+                    return MemberStatus.DECLINED_FULL;
+                } else {
+                    return MemberStatus.FULL;
+                }
             } else {
-                return MemberStatus.UNKNOWN;
+                if (isDeclined(memberId)) {
+                    return MemberStatus.DECLINED;
+                } else {
+                    return MemberStatus.UNKNOWN;
+                }
             }
         }
 

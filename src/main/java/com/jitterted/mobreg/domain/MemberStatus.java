@@ -1,5 +1,5 @@
 package com.jitterted.mobreg.domain;
 
 public enum MemberStatus {
-    UNKNOWN, FULL, HIDDEN
+    UNKNOWN, FULL, DECLINED, DECLINED_FULL, HIDDEN
 }

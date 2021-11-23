@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.domain;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
@@ -29,11 +30,37 @@ class HuddleMemberStatusTest {
 
     @Test
     public void unknownMemberAndFutureHuddleAndIsFullThenStatusFull() throws Exception {
-        Huddle futureHuddle = HuddleFactory.withStartTime(2022, 1, 3, 9);
-        MemberFactory.registerCountMembersWithHuddle(futureHuddle, 5);
+        Huddle futureHuddle = fullHuddleWithStartTime(2022, 1, 3, 9);
         MemberId memberIdIsUnknown = MemberFactory.createMember(33L, "UnKnown", "unknown").getId();
 
         assertThat(futureHuddle.statusFor(memberIdIsUnknown, UTC_2021_11_22_15))
                 .isEqualByComparingTo(MemberStatus.FULL);
+    }
+
+    @Test
+    public void declinedMemberAndFutureHuddleAndHasSpaceThenStatusDeclined() throws Exception {
+        Huddle futureHuddle = HuddleFactory.withStartTime(2022, 1, 3, 9);
+        MemberId memberId = MemberFactory.createMember(31L, "Declined", "declined").getId();
+        futureHuddle.declinedBy(memberId);
+
+        assertThat(futureHuddle.statusFor(memberId, UTC_2021_11_22_15))
+                .isEqualByComparingTo(MemberStatus.DECLINED);
+    }
+
+    @Test
+    public void declinedMemberAndFutureHuddleIsFullThenStatusDeclinedFull() throws Exception {
+        Huddle futureFullHuddle = fullHuddleWithStartTime(2022, 1, 3, 9);
+        MemberId memberId = MemberFactory.createMember(31L, "Declined", "declined").getId();
+        futureFullHuddle.declinedBy(memberId);
+
+        assertThat(futureFullHuddle.statusFor(memberId, UTC_2021_11_22_15))
+                .isEqualByComparingTo(MemberStatus.DECLINED_FULL);
+    }
+
+    @NotNull
+    public Huddle fullHuddleWithStartTime(int year, int month, int dayOfMonth, int hour) {
+        Huddle futureHuddle = HuddleFactory.withStartTime(year, month, dayOfMonth, hour);
+        MemberFactory.registerCountMembersWithHuddle(futureHuddle, 5);
+        return futureHuddle;
     }
 }
