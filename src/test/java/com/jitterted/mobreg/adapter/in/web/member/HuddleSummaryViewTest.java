@@ -15,19 +15,19 @@ import static org.assertj.core.api.Assertions.*;
 class HuddleSummaryViewTest {
 
     @Test
-    public void memberRegisteredIsFalseWhenHuddleIsEmpty() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
+    public void memberStatusUnknownWhenHuddleIsEmpty() throws Exception {
+        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
 
         HuddleSummaryView huddleSummaryView =
                 HuddleSummaryView.toView(huddle, MemberId.of(97L));
 
-        assertThat(huddleSummaryView.memberRegistered())
-                .isFalse();
+        assertThat(huddleSummaryView.memberStatus())
+                .isEqualTo("unknown");
     }
 
     @Test
-    public void withAnotherRegisteredMemberThenMemberRegisteredIsFalse() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
+    public void withAnotherAcceptedMemberThenMemberAcceptedIsFalse() throws Exception {
+        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
         Member member = new Member("name", "seven");
         MemberId memberId = MemberId.of(7L);
         member.setId(memberId);
@@ -39,13 +39,13 @@ class HuddleSummaryViewTest {
         assertThat(huddleSummaryView.numberRegistered())
                 .isEqualTo(1);
 
-        assertThat(huddleSummaryView.memberRegistered())
-                .isFalse();
+        assertThat(huddleSummaryView.memberStatus())
+                .isEqualTo("unknown");
     }
 
     @Test
-    public void memberRegisteredIsTrueWhenMemberHuddleParticipant() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
+    public void memberAcceptedIsTrueWhenMemberHuddleParticipant() throws Exception {
+        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
         Member member = new Member("name",
                                    "participant_username");
         MemberId memberId = MemberId.of(3L);
@@ -55,13 +55,13 @@ class HuddleSummaryViewTest {
         HuddleSummaryView huddleSummaryView = HuddleSummaryView
                 .toView(huddle, memberId);
 
-        assertThat(huddleSummaryView.memberRegistered())
-                .isTrue();
+        assertThat(huddleSummaryView.memberStatus())
+                .isEqualTo("accepted");
     }
 
     @Test
     public void noRecordingHuddleThenViewIncludesEmptyLink() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
+        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
 
@@ -71,7 +71,7 @@ class HuddleSummaryViewTest {
 
     @Test
     public void huddleWithRecordingThenViewIncludesStringOfLink() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
+        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
         huddle.linkToRecordingAt(URI.create("https://recording.link/abc123"));
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
@@ -82,7 +82,7 @@ class HuddleSummaryViewTest {
 
     @Test
     public void viewContainsGoogleCalendarLink() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
+        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
 
@@ -92,25 +92,26 @@ class HuddleSummaryViewTest {
     }
 
     @Test
-    public void viewIndicatesNotAbleToRegisterIfHuddleIsFull() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
+    public void viewIndicatesNotAbleToAcceptIfHuddleIsFullAndCurrentlyUnknown() throws Exception {
+        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
         MemberFactory.registerCountMembersWithHuddle(huddle, 5);
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+        MemberId memberIdOfUnknownMember = MemberId.of(99L);
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, memberIdOfUnknownMember);
 
-        assertThat(huddleSummaryView.canRegister())
-                .isFalse();
+        assertThat(huddleSummaryView.memberStatus())
+                .isEqualTo("full");
     }
     
     @Test
-    public void viewIndicatesCanRegisterIfHuddleIsNotFull() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleWithIdOf1();
+    public void viewIndicatesCanAcceptIfHuddleIsNotFull() throws Exception {
+        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
         MemberFactory.registerCountMembersWithHuddle(huddle, 2);
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
 
-        assertThat(huddleSummaryView.canRegister())
-                .isTrue();
+        assertThat(huddleSummaryView.memberStatus())
+                .isEqualTo("accepted");
     }
 
 }

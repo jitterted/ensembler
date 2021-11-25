@@ -15,7 +15,7 @@ public class Huddle {
     private String name;
     private ZonedDateTime startDateTime;
     private URI zoomMeetingLink;
-    private final Set<MemberId> membersWhoAccepted = new HashSet<>(); // Accepted members
+    private final Set<MemberId> membersWhoAccepted = new HashSet<>();
     private final Set<MemberId> membersWhoDeclined = new HashSet<>();
     private boolean isCompleted = false;
     private URI recordingLink = URI.create("");
@@ -165,7 +165,11 @@ public class Huddle {
                 Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.DECLINED), MemberStatus.DECLINED_FULL),
                 Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.PENDING_COMPLETED),
                 Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.ACCEPTED));
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.ACCEPTED), MemberStatus.ACCEPTED),
+                Map.entry(new WhenSpaceRsvp(When.PAST, Space.FULL, Rsvp.ACCEPTED), MemberStatus.PENDING_COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.ACCEPTED), MemberStatus.COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.ACCEPTED), MemberStatus.ACCEPTED))
+                ;
 
         private static When when(Huddle huddle, ZonedDateTime now) {
             if (huddle.isCompleted()) {
@@ -182,7 +186,11 @@ public class Huddle {
             When when = when(huddle, now);
             Space space = space(huddle);
             Rsvp rsvp = huddle.rsvpOf(memberId);
-            return STATE_TO_STATUS.get(new WhenSpaceRsvp(when, space, rsvp));
+            WhenSpaceRsvp key = new WhenSpaceRsvp(when, space, rsvp);
+            if (!STATE_TO_STATUS.containsKey(key)) {
+                throw new IllegalStateException("No such state: " + key);
+            }
+            return STATE_TO_STATUS.get(key);
         }
 
         enum When {

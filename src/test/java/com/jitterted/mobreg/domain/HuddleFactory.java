@@ -23,6 +23,13 @@ public class HuddleFactory {
     }
 
     @NotNull
+    public static Huddle createHuddleWithIdOf1AndOneDayInTheFuture() {
+        Huddle huddle = new Huddle("test", ZonedDateTime.now().plusDays(1));
+        huddle.setId(HuddleId.of(1L));
+        return huddle;
+    }
+
+    @NotNull
     public static Huddle fullHuddleWithStartTime(int year, int month, int dayOfMonth, int hour) {
         Huddle futureHuddle = withStartTime(year, month, dayOfMonth, hour);
         MemberFactory.registerCountMembersWithHuddle(futureHuddle, 5);
