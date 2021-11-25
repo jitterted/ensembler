@@ -111,54 +111,82 @@
                             </div>
                         </td>
                         <!-- Status -->
-                        <td class="py-3 px-6 text-center">
+                        <td class="py-3 px-6 text-center" th:switch="${huddle.memberStatus}">
 
-                            <fieldset class="mt-2 flex">
+                            <span th:text="${huddle.memberStatus}">Status</span>
+
+                            <fieldset th:case="'unknown'"
+                                    class="mt-2 flex">
                                 <legend class="sr-only">RSVP</legend>
                                 <div class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
-                                    <div class="flex items-center">
-                                        <input id="decline" name="rsvp" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
-                                        <label for="decline" class="ml-3 block text-lg font-medium text-gray-700">
-                                            Decline
-                                        </label>
-                                    </div>
+                                    <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Decline
+                                    </button>
 
-                                    <div class="flex items-center">
-                                        <input id="accept" name="rsvp" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
-                                        <label for="accept" class="ml-3 block text-lg font-medium text-gray-700">
-                                            Accept
-                                        </label>
-                                    </div>
+                                    <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Accept
+                                    </button>
                                 </div>
                             </fieldset>
 
+                            <span th:case="'full'" class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">
+                                Unavailable: Full <i class="fal fa-times-hexagon text-red-600"></i></span>
 
+                            <fieldset th:case="'accepted'"
+                                      class="mt-2 flex">
+                                <legend class="sr-only">RSVP</legend>
+                                <div class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
+                                    <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Decline
+                                    </button>
 
-<!--                            <span th:if="${huddle.isCompleted}"-->
-<!--                                  class="bg-blue-100 text-blue-800 py-1 px-3 rounded-lg text-xs font-bold">Completed <i class="fal fa-badge-check text-blue-600"></i></span>-->
-<!--                            <span th:unless="${huddle.isCompleted}">-->
-<!--                                <span th:if="${huddle.memberRegistered}"-->
-<!--                                      class="text-white bg-indigo-600 py-1 px-3 rounded-lg text-xs font-bold">-->
-<!--                                    Registered-->
-<!--                                </span>-->
-<!--                                <span th:unless="${huddle.memberRegistered}">-->
-<!--                                    <span th:if="${huddle.numberRegistered} < 5"-->
-<!--                                            class="bg-green-100 text-green-800 py-1 px-3 rounded-lg text-xs font-bold">Available <i-->
-<!--                                        class="fal fa-calendar-plus text-green-600"></i></span>-->
-<!--                                    <span th:if="${huddle.numberRegistered} >= 5"-->
-<!--                                          class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">Full <i-->
-<!--                                        class="fal fa-times-hexagon text-red-600"></i></span>-->
-<!--                                </span>-->
-<!--                            </span>-->
+                                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Accepted
+                                    </button>
+                                </div>
+                            </fieldset>
+
+                            <fieldset th:case="'declined'"
+                                      class="mt-2 flex">
+                                <legend class="sr-only">RSVP</legend>
+                                <div class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
+                                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Declined
+                                    </button>
+
+                                    <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Accept
+                                    </button>
+                                </div>
+                            </fieldset>
+
+                            <fieldset th:case="'declined_full'"
+                                      class="mt-2 flex">
+                                <legend class="sr-only">RSVP</legend>
+                                <div class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
+                                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Declined
+                                    </button>
+
+                                    <button type="button" disabled class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white disabled:cursor-not-allowed disabled:text-gray-400">
+                                        Accept
+                                    </button>
+                                </div>
+                            </fieldset>
+
+                            <span th:case="${'pending_completed'}">Recording Coming Soon...</span>
+
+                            <span th:case="${'completed'}"
+                                  class="bg-blue-100 text-blue-800 py-1 px-3 rounded-lg text-xs font-bold">
+                                Completed <i class="fal fa-badge-check text-blue-600"></i></span>
                         </td>
                         <!-- Actions -->
                         <td class="py-3 px-6 text-center">
-                            <div th:unless="${huddle.memberRegistered}" class="flex item-center justify-center">
-                                <span th:if="${huddle.isCompleted}">Huddle is Completed.</span>
+                            <div  class="flex item-center justify-center">
                                 <form action="#" th:action="@{/member/register}" th:object="${register}" method="post">
                                     <input hidden="hidden" type="number" th:field="*{memberId}">
                                     <input hidden="hidden" type="number" th:value="${huddle.id}" name="huddleId">
-                                    <button type="submit" value="register" th:disabled="${!huddle.canRegister}"
+                                    <button type="submit" value="register"
                                         class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:text-gray-400 disabled:bg-indigo-100 disabled:cursor-not-allowed">
                                         <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
@@ -168,16 +196,15 @@
                                     </button>
                                 </form>
                             </div>
-                            <div th:if="${huddle.memberRegistered}">
+                            <div>
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
-                                   th:unless="${huddle.isCompleted}" href="#" th:href="${huddle.zoomMeetingLink}">
+                                   href="#" th:href="${huddle.zoomMeetingLink}">
                                     <i class="far fa-video pr-2" aria-hidden="true"></i>
                                     Zoom Link
                                 </a>
                                 <br/>
                                 <a href="#"
                                    th:href="${huddle.googleCalendarLink}"
-                                   th:unless="${huddle.isCompleted}"
                                    target="_blank"
                                    class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500">
                                     <i class="fas fa-calendar-plus pr-2" aria-hidden="true"></i>
@@ -185,7 +212,7 @@
                                 </a>
 
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
-                                   th:if="${huddle.isCompleted}" href="#" th:href="${huddle.recordingLink}">Recording Link</a>
+                                   href="#" th:href="${huddle.recordingLink}">Recording Link</a>
                             </div>
                         </td>
                     </tr>

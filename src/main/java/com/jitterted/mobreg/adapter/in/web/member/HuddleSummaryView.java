@@ -15,7 +15,6 @@ public record HuddleSummaryView(long id,
                                 String dateTime,
                                 String googleCalendarLink,
                                 int numberRegistered,
-                                boolean isCompleted,
                                 String recordingLink,
                                 String memberStatus) {
 
@@ -33,7 +32,6 @@ public record HuddleSummaryView(long id,
                                      DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(huddle.startDateTime()),
                                      new GoogleCalendarLinkCreator().createFor(huddle),
                                      huddle.registeredMemberCount(),
-                                     huddle.isCompleted(),
                                      huddle.recordingLink().toString(),
                                      memberStatusToViewString(huddle, memberId));
     }

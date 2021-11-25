@@ -2,8 +2,6 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 public class MemberRegisterForm {
     private Long huddleId;
-    private String username;
-    private String name;
     private Long memberId;
 
     public Long getHuddleId() {
@@ -12,22 +10,6 @@ public class MemberRegisterForm {
 
     public void setHuddleId(Long huddleId) {
         this.huddleId = huddleId;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Long getMemberId() {
