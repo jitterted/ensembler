@@ -185,17 +185,17 @@
                                     </div>
                                 </fieldset>
 
-                                <span th:case="${'pending_completed'}">Recording Coming Soon...</span>
+                                <span th:case="'pending_completed'">Recording Coming Soon...</span>
 
-                                <span th:case="${'completed'}"
+                                <span th:case="'completed'"
                                       class="bg-blue-100 text-blue-800 py-1 px-3 rounded-lg text-xs font-bold">
                                     Completed <i class="fal fa-badge-check text-blue-600"></i></span>
 
                             </form>
                         </td>
                         <!-- Actions -->
-                        <td class="py-3 px-6 text-center">
-                            <div>
+                        <td class="py-3 px-6 text-center" th:switch="${huddle.memberStatus}">
+                            <div th:case="'accepted'">
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
                                    href="#" th:href="${huddle.zoomMeetingLink}">
                                     <i class="far fa-video pr-2" aria-hidden="true"></i>
@@ -209,7 +209,8 @@
                                     <i class="fas fa-calendar-plus pr-2" aria-hidden="true"></i>
                                     <span>Add to Google Calendar</span>
                                 </a>
-
+                            </div>
+                            <div th:case="'completed'">
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
                                    href="#" th:href="${huddle.recordingLink}">Recording Link</a>
                             </div>
