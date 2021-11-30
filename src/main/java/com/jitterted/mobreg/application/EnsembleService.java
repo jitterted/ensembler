@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
@@ -15,54 +15,54 @@ import java.util.List;
 import java.util.Optional;
 
 public class EnsembleService {
-    private final HuddleRepository huddleRepository;
+    private final EnsembleRepository ensembleRepository;
     private final Notifier notifier;
     private final MemberRepository memberRepository;
 
-    public EnsembleService(HuddleRepository huddleRepository, MemberRepository memberRepository, Notifier notifier) {
-        this.huddleRepository = huddleRepository;
+    public EnsembleService(EnsembleRepository ensembleRepository, MemberRepository memberRepository, Notifier notifier) {
+        this.ensembleRepository = ensembleRepository;
         this.notifier = notifier;
         this.memberRepository = memberRepository;
     }
 
-    public void scheduleHuddle(String name, URI zoomMeetingLink, ZonedDateTime zonedDateTime) {
+    public void scheduleEnsemble(String name, URI zoomMeetingLink, ZonedDateTime zonedDateTime) {
         Ensemble ensemble = new Ensemble(name, zoomMeetingLink, zonedDateTime);
-        saveAndNotifyHuddleOpened(ensemble);
+        saveAndNotifyEnsembleScheduled(ensemble);
     }
 
-    public void scheduleHuddle(String name, ZonedDateTime zonedDateTime) {
+    public void scheduleEnsemble(String name, ZonedDateTime zonedDateTime) {
         Ensemble ensemble = new Ensemble(name, zonedDateTime);
-        saveAndNotifyHuddleOpened(ensemble);
+        saveAndNotifyEnsembleScheduled(ensemble);
     }
 
-    private void saveAndNotifyHuddleOpened(Ensemble ensemble) {
-        huddleRepository.save(ensemble);
-        notifier.newHuddleOpened(ensemble.name(), URI.create("https://mobreg.herokuapp.com/"));
+    private void saveAndNotifyEnsembleScheduled(Ensemble ensemble) {
+        ensembleRepository.save(ensemble);
+        notifier.ensembleScheduled(ensemble.name(), URI.create("https://mobreg.herokuapp.com/"));
     }
 
-    public void triggerHuddleOpenedNotification(Ensemble ensemble) {
-        notifier.newHuddleOpened(ensemble.name(), URI.create("https://mobreg.herokuapp.com/"));
+    public void triggerEnsembleScheduledNotification(Ensemble ensemble) {
+        notifier.ensembleScheduled(ensemble.name(), URI.create("https://mobreg.herokuapp.com/"));
     }
 
-    public List<Ensemble> allHuddles() {
-        return huddleRepository.findAll();
+    public List<Ensemble> allEnsembles() {
+        return ensembleRepository.findAll();
     }
 
-    public List<Ensemble> allHuddlesByDateTimeDescending() {
-        return allHuddles().stream()
-                           .sorted(Comparator.comparing(Ensemble::startDateTime).reversed())
-                           .toList();
+    public List<Ensemble> allEnsemblesByDateTimeDescending() {
+        return allEnsembles().stream()
+                             .sorted(Comparator.comparing(Ensemble::startDateTime).reversed())
+                             .toList();
     }
 
     public Optional<Ensemble> findById(EnsembleId ensembleId) {
-        return huddleRepository.findById(ensembleId);
+        return ensembleRepository.findById(ensembleId);
     }
 
     public void registerMember(EnsembleId ensembleId, MemberId memberId) {
         Ensemble ensemble = findById(ensembleId)
                 .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
         ensemble.acceptedBy(memberId);
-        huddleRepository.save(ensemble);
+        ensembleRepository.save(ensemble);
 
         Member member = memberRepository.findById(memberId)
                                         .orElseThrow(() -> new MemberNotFoundByIdException("Member ID: " + memberId.id()));
@@ -75,7 +75,7 @@ public class EnsembleService {
 
         ensemble.declinedBy(memberId);
 
-        huddleRepository.save(ensemble);
+        ensembleRepository.save(ensemble);
     }
 
     public void completeWith(EnsembleId ensembleId, String recordingLink) {
@@ -84,7 +84,7 @@ public class EnsembleService {
 
         ensemble.complete();
         ensemble.linkToRecordingAt(URI.create(recordingLink));
-        huddleRepository.save(ensemble);
+        ensembleRepository.save(ensemble);
     }
 
     public List<Ensemble> findAllForMember(MemberId memberId) {
@@ -96,6 +96,6 @@ public class EnsembleService {
                 .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
         ensemble.changeNameTo(newName);
         ensemble.changeStartDateTimeTo(newZoneDateTimeUtc);
-        huddleRepository.save(ensemble);
+        ensembleRepository.save(ensemble);
     }
 }

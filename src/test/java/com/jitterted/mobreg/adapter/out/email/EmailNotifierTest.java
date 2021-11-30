@@ -22,7 +22,7 @@ class EmailNotifierTest {
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(memberBuilder.memberService(), spyEmailer);
 
-        notifier.newHuddleOpened("Ensemble #314", URI.create("https://mobreg.herokuapp.com/"));
+        notifier.ensembleScheduled("Ensemble #314", URI.create("https://mobreg.herokuapp.com/"));
 
         assertThat(spyEmailer.emailRecipients())
                 .containsExactly("name@example.com");

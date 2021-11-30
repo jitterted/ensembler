@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -18,7 +18,7 @@ class EnsembleServiceMemberRegistrationNotificationTest {
 
     @Test
     public void memberRegistersForHuddleThenReceivesEmailWithHuddleDetailInfo() throws Exception {
-        InMemoryHuddleRepository ensembleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("scheduled",
                                          URI.create("https://zoom.us"),
                                          ZonedDateTime.of(2021, 10, 20, 16, 0, 0, 0, ZoneOffset.UTC));
@@ -51,7 +51,7 @@ class EnsembleServiceMemberRegistrationNotificationTest {
         private String emailAddress;
 
         @Override
-        public int newHuddleOpened(String description, URI registrationLink) {
+        public int ensembleScheduled(String description, URI registrationLink) {
             throw new UnsupportedOperationException();
         }
 

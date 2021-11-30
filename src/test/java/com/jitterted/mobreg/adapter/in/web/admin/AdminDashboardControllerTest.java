@@ -4,7 +4,7 @@ import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -33,7 +33,7 @@ class AdminDashboardControllerTest {
         Member member = MemberFactory.createMember(0, "ted", "tedyoung");
         memberRepository.save(member);
         MemberService memberService = new MemberService(memberRepository);
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
         huddleRepository.save(new Ensemble("Name", ZonedDateTime.now()));
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
@@ -48,7 +48,7 @@ class AdminDashboardControllerTest {
 
     @Test
     public void scheduleNewHuddleResultsInHuddleCreatedInRepository() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
 
         String pageName = adminDashboardController.scheduleHuddle(new ScheduleHuddleForm(
@@ -62,7 +62,7 @@ class AdminDashboardControllerTest {
 
     @Test
     public void changeExistingHuddleResultsInChangesSaved() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("Old Name", ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 30, 9));
         huddleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
@@ -83,7 +83,7 @@ class AdminDashboardControllerTest {
 
     @Test
     public void completeHuddleCompletesTheHuddleWithRecordingLinkAndRedirects() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("to be completed", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(19));
         huddleRepository.save(ensemble);
@@ -108,7 +108,7 @@ class AdminDashboardControllerTest {
         Member member2 = MemberFactory.createMember(1, "two", "githubtwo");
         memberRepository.save(member2);
         MemberService memberService = new MemberService(memberRepository);
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository, memberRepository);
         Ensemble ensemble = new Ensemble("Manual Registered Ensemble", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(23));
@@ -124,7 +124,7 @@ class AdminDashboardControllerTest {
     }
 
     @NotNull
-    private AdminDashboardController createAdminDashboardController(InMemoryHuddleRepository huddleRepository) {
+    private AdminDashboardController createAdminDashboardController(InMemoryEnsembleRepository huddleRepository) {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
         return new AdminDashboardController(ensembleService, memberService);

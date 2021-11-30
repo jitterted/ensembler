@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 
-import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.application.port.Notifier;
 import org.junit.jupiter.api.Tag;
@@ -30,7 +30,7 @@ public class AdminMembershipEndpointTest {
     MemberRepository memberRepository;
 
     @MockBean
-    HuddleRepository huddleRepository;
+    EnsembleRepository ensembleRepository;
 
     @MockBean
     Notifier notifier;

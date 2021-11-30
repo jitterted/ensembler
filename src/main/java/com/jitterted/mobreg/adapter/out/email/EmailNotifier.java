@@ -34,7 +34,7 @@ public class EmailNotifier implements Notifier {
     }
 
     @Override
-    public int newHuddleOpened(String description, URI registrationLink) {
+    public int ensembleScheduled(String description, URI registrationLink) {
         Set<String> emails = memberService.findAll().stream()
                                           .map(Member::email)
                                           .filter(not(String::isEmpty))

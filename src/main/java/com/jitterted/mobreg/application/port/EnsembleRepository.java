@@ -6,7 +6,7 @@ import com.jitterted.mobreg.domain.EnsembleId;
 import java.util.List;
 import java.util.Optional;
 
-public interface HuddleRepository {
+public interface EnsembleRepository {
     Ensemble save(Ensemble ensemble);
 
     List<Ensemble> findAll();

@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
-import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleServiceMemberTest {
 
     @Autowired
-    HuddleRepository huddleRepository;
+    EnsembleRepository ensembleRepository;
 
     @Autowired
     MemberRepository memberRepository;
@@ -53,16 +53,16 @@ class EnsembleServiceMemberTest {
 
     @Test
     public void existingMemberRegistersForHuddleThenIsRegisteredMember() throws Exception {
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository, memberRepository);
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository, memberRepository);
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
-        EnsembleId ensembleId = huddleRepository.save(ensemble).getId();
+        EnsembleId ensembleId = ensembleRepository.save(ensemble).getId();
 
         Member member = new Member("memberFirstName", "memberGithubUsername");
         MemberId memberId = memberRepository.save(member).getId();
 
         ensembleService.registerMember(ensembleId, memberId);
 
-        Optional<Ensemble> foundHuddle = huddleRepository.findById(ensembleId);
+        Optional<Ensemble> foundHuddle = ensembleRepository.findById(ensembleId);
 
         assertThat(foundHuddle)
                 .isPresent();

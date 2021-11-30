@@ -25,7 +25,7 @@ public class PushoverNotifier implements Notifier {
     }
 
     @Override
-    public int newHuddleOpened(String description, URI registrationLink) {
+    public int ensembleScheduled(String description, URI registrationLink) {
         String messageBody = """
                    New Ensemble '%s' has been scheduled.
                    Visit %s to register.

@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberFactory;
-import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -40,7 +40,7 @@ public class AdminEndpointConfigurationTest {
     EnsembleService ensembleService;
 
     @MockBean
-    HuddleRepository huddleRepository;
+    EnsembleRepository ensembleRepository;
 
     @MockBean
     MemberRepository memberRepository;

@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ class EnsembleServiceCompletedTest {
 
     @Test
     public void completedHuddleIsCompletedWithLinkAndSavedInRepository() throws Exception {
-        InMemoryHuddleRepository ensembleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         Ensemble ensemble = new Ensemble("Completed", ZonedDateTime.now());
         EnsembleId ensembleId = ensembleRepository.save(ensemble).getId();

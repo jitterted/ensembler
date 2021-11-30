@@ -46,7 +46,7 @@ class EnsembleRepositoryDataJdbcAdapterTest {
     }
 
     @Autowired
-    HuddleRepositoryDataJdbcAdapter huddleRepositoryAdapter;
+    EnsembleRepositoryDataJdbcAdapter huddleRepositoryAdapter;
 
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;

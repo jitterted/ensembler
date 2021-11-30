@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
@@ -34,7 +34,7 @@ public class MemberEndpointConfigurationTest {
     EnsembleService ensembleService;
 
     @MockBean
-    HuddleRepository huddleRepository;
+    EnsembleRepository ensembleRepository;
 
     @MockBean
     MemberService memberService;

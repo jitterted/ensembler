@@ -6,7 +6,7 @@ import com.jitterted.mobreg.domain.Member;
 import java.net.URI;
 
 public interface Notifier {
-    int newHuddleOpened(String description, URI registrationLink);
+    int ensembleScheduled(String description, URI registrationLink);
 
     void memberRegistered(Ensemble ensemble, Member member);
 }

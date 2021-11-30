@@ -9,8 +9,8 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class InMemoryHuddleRepository implements HuddleRepository {
-    private final Map<EnsembleId, Ensemble> huddles = new ConcurrentHashMap<>();
+public class InMemoryEnsembleRepository implements EnsembleRepository {
+    private final Map<EnsembleId, Ensemble> ensembles = new ConcurrentHashMap<>();
     private final AtomicLong sequence = new AtomicLong(0);
     private int saveCount = 0;
 
@@ -19,19 +19,19 @@ public class InMemoryHuddleRepository implements HuddleRepository {
         if (ensemble.getId() == null) {
             ensemble.setId(EnsembleId.of(sequence.getAndIncrement()));
         }
-        huddles.put(ensemble.getId(), ensemble);
+        ensembles.put(ensemble.getId(), ensemble);
         saveCount++;
         return ensemble;
     }
 
     @Override
     public List<Ensemble> findAll() {
-        return List.copyOf(huddles.values());
+        return List.copyOf(ensembles.values());
     }
 
     @Override
     public Optional<Ensemble> findById(EnsembleId ensembleId) {
-        return Optional.ofNullable(huddles.get(ensembleId));
+        return Optional.ofNullable(ensembles.get(ensembleId));
     }
 
     public int saveCount() {

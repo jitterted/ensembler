@@ -46,7 +46,7 @@ public class AdminDashboardController {
         } else {
             throw new IllegalStateException("Not an OAuth2User");
         }
-        List<Ensemble> ensembles = ensembleService.allHuddlesByDateTimeDescending();
+        List<Ensemble> ensembles = ensembleService.allEnsemblesByDateTimeDescending();
         List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(ensembles);
         model.addAttribute("ensembles", huddleSummaryViews);
         model.addAttribute("scheduleHuddleForm", new ScheduleHuddleForm());
@@ -79,12 +79,12 @@ public class AdminDashboardController {
     @PostMapping("/schedule")
     public String scheduleHuddle(ScheduleHuddleForm scheduleHuddleForm) {
         if (scheduleHuddleForm.getZoomMeetingLink().isBlank()) {
-            ensembleService.scheduleHuddle(scheduleHuddleForm.getName(),
-                                           scheduleHuddleForm.getDateTimeInUtc());
+            ensembleService.scheduleEnsemble(scheduleHuddleForm.getName(),
+                                             scheduleHuddleForm.getDateTimeInUtc());
         } else {
-            ensembleService.scheduleHuddle(scheduleHuddleForm.getName(),
-                                           URI.create(scheduleHuddleForm.getZoomMeetingLink()),
-                                           scheduleHuddleForm.getDateTimeInUtc());
+            ensembleService.scheduleEnsemble(scheduleHuddleForm.getName(),
+                                             URI.create(scheduleHuddleForm.getZoomMeetingLink()),
+                                             scheduleHuddleForm.getDateTimeInUtc());
         }
         return "redirect:/admin/dashboard";
     }
@@ -95,7 +95,7 @@ public class AdminDashboardController {
                                            .orElseThrow(() -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND);
                 });
-        ensembleService.triggerHuddleOpenedNotification(ensemble);
+        ensembleService.triggerEnsembleScheduledNotification(ensemble);
         return "redirect:/admin/dashboard";
     }
 

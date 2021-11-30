@@ -8,7 +8,7 @@ import java.net.URI;
 
 public class DummyNotifier implements Notifier {
     @Override
-    public int newHuddleOpened(String description, URI registrationLink) {
+    public int ensembleScheduled(String description, URI registrationLink) {
         return 0;
     }
 

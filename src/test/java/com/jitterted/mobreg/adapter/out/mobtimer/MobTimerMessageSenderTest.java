@@ -3,7 +3,7 @@ package com.jitterted.mobreg.adapter.out.mobtimer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
@@ -51,7 +51,7 @@ class MobTimerMessageSenderTest {
     MemberRepository memberRepository;
 
     @Autowired
-    HuddleRepository huddleRepository;
+    EnsembleRepository ensembleRepository;
 
     @Test
     public void mobPeopleUpdated() throws Exception {

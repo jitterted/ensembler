@@ -2,8 +2,8 @@ package com.jitterted.mobreg;
 
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.application.port.HuddleRepository;
-import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
+import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.application.port.Notifier;
@@ -31,8 +31,8 @@ public class MobRegApplication {
 
     @Bean
     @ConditionalOnProperty("mobreg.repository.inmemory")
-    public HuddleRepository huddleRepository() {
-        return new InMemoryHuddleRepository();
+    public EnsembleRepository huddleRepository() {
+        return new InMemoryEnsembleRepository();
     }
 
     @Bean
@@ -48,8 +48,8 @@ public class MobRegApplication {
 
 
     @Bean
-    public EnsembleService createHuddleService(HuddleRepository huddleRepository, MemberRepository memberRepository, Notifier notifier) {
-        return new EnsembleService(huddleRepository, memberRepository, notifier);
+    public EnsembleService createHuddleService(EnsembleRepository ensembleRepository, MemberRepository memberRepository, Notifier notifier) {
+        return new EnsembleService(ensembleRepository, memberRepository, notifier);
     }
 
     @Bean

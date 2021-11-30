@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
@@ -18,11 +18,11 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
     @Test
     public void whenHuddleScheduledEnsembleOpenNotificationIsSent() throws Exception {
         MockNotifier mockNotifier = new MockNotifier();
-        EnsembleService ensembleService = new EnsembleService(new InMemoryHuddleRepository(),
+        EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),
                                                               mockNotifier);
 
-        ensembleService.scheduleHuddle("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
+        ensembleService.scheduleEnsemble("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
 
         mockNotifier.verify();
     }
@@ -30,13 +30,13 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
     @Test
     public void whenHuddleScheduledWithZoomLinkEnsembleOpenNotificationIsSent() throws Exception {
         MockNotifier mockNotifier = new MockNotifier();
-        EnsembleService ensembleService = new EnsembleService(new InMemoryHuddleRepository(),
+        EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),
                                                               mockNotifier);
 
-        ensembleService.scheduleHuddle("Notifying Ensemble",
-                                       URI.create("https://zoom.us"),
-                                       ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
+        ensembleService.scheduleEnsemble("Notifying Ensemble",
+                                         URI.create("https://zoom.us"),
+                                         ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
 
         mockNotifier.verify();
     }
@@ -45,7 +45,7 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
         private int statusValue = -1;
 
         @Override
-        public int newHuddleOpened(String description, URI registrationLink) {
+        public int ensembleScheduled(String description, URI registrationLink) {
             statusValue = 1;
             return statusValue;
         }

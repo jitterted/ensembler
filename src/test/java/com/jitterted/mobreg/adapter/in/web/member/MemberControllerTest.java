@@ -4,7 +4,7 @@ import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
@@ -26,7 +26,7 @@ class MemberControllerTest {
 
     @Test
     public void huddleFormContainsMemberIdForOAuth2User() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         huddleRepository.save(new Ensemble("GET Test", ZonedDateTime.now()));
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
 
@@ -53,7 +53,7 @@ class MemberControllerTest {
 
     @Test
     public void memberRegistersForHuddleWillBeRegisteredForThatHuddle() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = huddleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         EnsembleService ensembleService = new EnsembleService(huddleRepository, memberRepository, new DummyNotifier());
@@ -72,7 +72,7 @@ class MemberControllerTest {
 
     @Test
     public void memberDeclinesWillBeDeclinedForHuddle() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = huddleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         EnsembleService ensembleService = new EnsembleService(huddleRepository, memberRepository, new DummyNotifier());

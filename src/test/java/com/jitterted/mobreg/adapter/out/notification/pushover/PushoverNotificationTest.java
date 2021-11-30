@@ -3,7 +3,7 @@ package com.jitterted.mobreg.adapter.out.notification.pushover;
 import com.jitterted.mobreg.NoSecurityTestConfiguration;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
@@ -51,7 +51,7 @@ public class PushoverNotificationTest {
     MemberRepository memberRepository;
 
     @Autowired
-    HuddleRepository huddleRepository;
+    EnsembleRepository ensembleRepository;
 
     @Autowired
     PushoverApiConfig pushoverApiConfig;

@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
-import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +11,12 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Repository
-public class HuddleRepositoryDataJdbcAdapter implements HuddleRepository {
+public class EnsembleRepositoryDataJdbcAdapter implements EnsembleRepository {
 
     private final HuddleJdbcRepository huddleJdbcRepository;
 
     @Autowired
-    public HuddleRepositoryDataJdbcAdapter(HuddleJdbcRepository huddleJdbcRepository) {
+    public EnsembleRepositoryDataJdbcAdapter(HuddleJdbcRepository huddleJdbcRepository) {
         this.huddleJdbcRepository = huddleJdbcRepository;
     }
 

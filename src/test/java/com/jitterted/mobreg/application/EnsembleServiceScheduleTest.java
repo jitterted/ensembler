@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import org.junit.jupiter.api.Test;
 
@@ -13,21 +13,21 @@ class EnsembleServiceScheduleTest {
 
     @Test
     public void singleScheduledHuddleIsReturnedForAllHuddles() throws Exception {
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(new InMemoryHuddleRepository());
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(new InMemoryEnsembleRepository());
 
-        ensembleService.scheduleHuddle("Name", ZonedDateTime.now());
+        ensembleService.scheduleEnsemble("Name", ZonedDateTime.now());
 
-        assertThat(ensembleService.allHuddles())
+        assertThat(ensembleService.allEnsembles())
                 .hasSize(1);
     }
 
     @Test
     public void ensembleScheduledWithZoomLinkThenHasZoomLink() throws Exception {
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(new InMemoryHuddleRepository());
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(new InMemoryEnsembleRepository());
 
-        ensembleService.scheduleHuddle("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
+        ensembleService.scheduleEnsemble("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
 
-        assertThat(ensembleService.allHuddles())
+        assertThat(ensembleService.allEnsembles())
                 .extracting(Ensemble::zoomMeetingLink)
                 .extracting(URI::toString)
                 .containsOnly("https://zoom.us/j/123456?pwd=12345");

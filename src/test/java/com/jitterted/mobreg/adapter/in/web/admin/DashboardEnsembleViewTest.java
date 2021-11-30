@@ -4,7 +4,7 @@ import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
@@ -23,7 +23,7 @@ public class DashboardEnsembleViewTest {
     @Test
     public void detailViewOfExistingHuddleByItsIdIsReturned() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
         Ensemble savedEnsemble = huddleRepository.save(new Ensemble("Ensemble #1", ZonedDateTime.now()));
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
@@ -43,7 +43,7 @@ public class DashboardEnsembleViewTest {
         Member member = MemberFactory.createMember(11, "name", "github");
         memberService.save(member);
 
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
         Ensemble ensemble = new Ensemble("Ensemble #1", ZonedDateTime.now());
         ensemble.acceptedBy(member.getId());
@@ -62,7 +62,7 @@ public class DashboardEnsembleViewTest {
     @Test
     public void detailViewOfNonExistentHuddleReturns404NotFound() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
         Model model = new ConcurrentModel();
