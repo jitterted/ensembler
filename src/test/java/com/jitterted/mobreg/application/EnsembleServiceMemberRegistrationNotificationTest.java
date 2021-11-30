@@ -2,8 +2,8 @@ package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
 import com.jitterted.mobreg.application.port.Notifier;
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Test;
@@ -14,17 +14,17 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-class HuddleServiceMemberRegistrationNotificationTest {
+class EnsembleServiceMemberRegistrationNotificationTest {
 
     @Test
     public void memberRegistersForHuddleThenReceivesEmailWithHuddleDetailInfo() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        Huddle huddle = new Huddle("scheduled",
-                                   URI.create("https://zoom.us"),
-                                   ZonedDateTime.of(2021, 10, 20, 16, 0, 0, 0, ZoneOffset.UTC));
-        HuddleId huddleId = HuddleId.of(7L);
-        huddle.setId(huddleId);
-        huddleRepository.save(huddle);
+        Ensemble ensemble = new Ensemble("scheduled",
+                                         URI.create("https://zoom.us"),
+                                         ZonedDateTime.of(2021, 10, 20, 16, 0, 0, 0, ZoneOffset.UTC));
+        EnsembleId ensembleId = EnsembleId.of(7L);
+        ensemble.setId(ensembleId);
+        huddleRepository.save(ensemble);
         MemberBuilder memberBuilder = new MemberBuilder();
         MemberId memberId = memberBuilder.withFirstName("Fake")
                                          .withEmail("fake@example.com")
@@ -33,7 +33,7 @@ class HuddleServiceMemberRegistrationNotificationTest {
         SpyEmailNotifier spyEmailNotifier = new SpyEmailNotifier();
         HuddleService huddleService = new HuddleService(huddleRepository, memberBuilder.memberRepository(), spyEmailNotifier);
 
-        huddleService.registerMember(huddleId, memberId);
+        huddleService.registerMember(ensembleId, memberId);
 
         assertThat(spyEmailNotifier.emailBody())
                 .contains("https://zoom.us",
@@ -56,11 +56,11 @@ class HuddleServiceMemberRegistrationNotificationTest {
         }
 
         @Override
-        public void memberRegistered(Huddle huddle, Member member) {
+        public void memberRegistered(Ensemble ensemble, Member member) {
             emailBody = String.join(", ",
-                                    huddle.name(),
-                                    huddle.zoomMeetingLink().toString(),
-                                    huddle.startDateTime().toString(),
+                                    ensemble.name(),
+                                    ensemble.zoomMeetingLink().toString(),
+                                    ensemble.startDateTime().toString(),
                                     "https://calendar.google.com",
                                     member.firstName());
             emailAddress = member.email();

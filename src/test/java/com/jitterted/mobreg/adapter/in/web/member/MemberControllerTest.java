@@ -7,7 +7,7 @@ import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.OAuth2UserFactory;
@@ -27,7 +27,7 @@ class MemberControllerTest {
     @Test
     public void huddleFormContainsMemberIdForOAuth2User() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        huddleRepository.save(new Huddle("GET Test", ZonedDateTime.now()));
+        huddleRepository.save(new Ensemble("GET Test", ZonedDateTime.now()));
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
 
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
@@ -54,18 +54,18 @@ class MemberControllerTest {
     @Test
     public void memberRegistersForHuddleWillBeRegisteredForThatHuddle() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        Huddle huddle = huddleRepository.save(new Huddle("Test", ZonedDateTime.now()));
+        Ensemble ensemble = huddleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         HuddleService huddleService = new HuddleService(huddleRepository, memberRepository, new DummyNotifier());
         MemberController memberController = new MemberController(huddleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
 
-        MemberRegisterForm memberRegisterForm = createMemberFormFor(huddle, memberRepository);
+        MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
         String redirectPage = memberController.accept(memberRegisterForm);
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/member/register");
 
-        assertThat(huddle.acceptedMembers())
+        assertThat(ensemble.acceptedMembers())
                 .extracting(MemberId::id)
                 .containsOnly(memberRegisterForm.getMemberId());
     }
@@ -73,24 +73,24 @@ class MemberControllerTest {
     @Test
     public void memberDeclinesWillBeDeclinedForHuddle() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        Huddle huddle = huddleRepository.save(new Huddle("Test", ZonedDateTime.now()));
+        Ensemble ensemble = huddleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         HuddleService huddleService = new HuddleService(huddleRepository, memberRepository, new DummyNotifier());
         MemberController memberController = new MemberController(huddleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
 
-        MemberRegisterForm memberRegisterForm = createMemberFormFor(huddle, memberRepository);
+        MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
         String redirectPage = memberController.decline(memberRegisterForm);
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/member/register");
-        assertThat(huddle.isDeclined(MemberId.of(memberRegisterForm.getMemberId())))
+        assertThat(ensemble.isDeclined(MemberId.of(memberRegisterForm.getMemberId())))
                 .isTrue();
     }
 
     @NotNull
-    private MemberRegisterForm createMemberFormFor(Huddle huddle, MemberRepository memberRepository) {
+    private MemberRegisterForm createMemberFormFor(Ensemble ensemble, MemberRepository memberRepository) {
         MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
-        memberRegisterForm.setHuddleId(huddle.getId().id());
+        memberRegisterForm.setHuddleId(ensemble.getId().id());
 
         Member member = MemberFactory.createMember(8, "name", "username");
         memberRepository.save(member);

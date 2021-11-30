@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.application.MemberFactory;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.HuddleFactory;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
@@ -12,14 +12,14 @@ import java.net.URI;
 
 import static org.assertj.core.api.Assertions.*;
 
-class HuddleSummaryViewTest {
+class EnsembleSummaryViewTest {
 
     @Test
     public void memberStatusUnknownWhenHuddleIsEmpty() throws Exception {
-        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
 
         HuddleSummaryView huddleSummaryView =
-                HuddleSummaryView.toView(huddle, MemberId.of(97L));
+                HuddleSummaryView.toView(ensemble, MemberId.of(97L));
 
         assertThat(huddleSummaryView.memberStatus())
                 .isEqualTo("unknown");
@@ -27,14 +27,14 @@ class HuddleSummaryViewTest {
 
     @Test
     public void withAnotherAcceptedMemberThenMemberAcceptedIsFalse() throws Exception {
-        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
         Member member = new Member("name", "seven");
         MemberId memberId = MemberId.of(7L);
         member.setId(memberId);
-        huddle.acceptedBy(memberId);
+        ensemble.acceptedBy(memberId);
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView
-                .toView(huddle, MemberId.of(5L));
+                .toView(ensemble, MemberId.of(5L));
 
         assertThat(huddleSummaryView.numberRegistered())
                 .isEqualTo(1);
@@ -45,15 +45,15 @@ class HuddleSummaryViewTest {
 
     @Test
     public void memberAcceptedIsTrueWhenMemberHuddleParticipant() throws Exception {
-        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
         Member member = new Member("name",
                                    "participant_username");
         MemberId memberId = MemberId.of(3L);
         member.setId(memberId);
-        huddle.acceptedBy(memberId);
+        ensemble.acceptedBy(memberId);
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView
-                .toView(huddle, memberId);
+                .toView(ensemble, memberId);
 
         assertThat(huddleSummaryView.memberStatus())
                 .isEqualTo("accepted");
@@ -61,9 +61,9 @@ class HuddleSummaryViewTest {
 
     @Test
     public void noRecordingHuddleThenViewIncludesEmptyLink() throws Exception {
-        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
 
         assertThat(huddleSummaryView.recordingLink())
                 .isEmpty();
@@ -71,10 +71,10 @@ class HuddleSummaryViewTest {
 
     @Test
     public void huddleWithRecordingThenViewIncludesStringOfLink() throws Exception {
-        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
-        huddle.linkToRecordingAt(URI.create("https://recording.link/abc123"));
+        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        ensemble.linkToRecordingAt(URI.create("https://recording.link/abc123"));
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
 
         assertThat(huddleSummaryView.recordingLink())
                 .isEqualTo("https://recording.link/abc123");
@@ -82,22 +82,22 @@ class HuddleSummaryViewTest {
 
     @Test
     public void viewContainsGoogleCalendarLink() throws Exception {
-        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
 
-        String expectedLink = new GoogleCalendarLinkCreator().createFor(huddle);
+        String expectedLink = new GoogleCalendarLinkCreator().createFor(ensemble);
         assertThat(huddleSummaryView.googleCalendarLink())
                 .isEqualTo(expectedLink);
     }
 
     @Test
     public void viewIndicatesNotAbleToAcceptIfHuddleIsFullAndCurrentlyUnknown() throws Exception {
-        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
-        MemberFactory.registerCountMembersWithHuddle(huddle, 5);
+        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        MemberFactory.registerCountMembersWithHuddle(ensemble, 5);
 
         MemberId memberIdOfUnknownMember = MemberId.of(99L);
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, memberIdOfUnknownMember);
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, memberIdOfUnknownMember);
 
         assertThat(huddleSummaryView.memberStatus())
                 .isEqualTo("full");
@@ -105,10 +105,10 @@ class HuddleSummaryViewTest {
     
     @Test
     public void viewIndicatesCanAcceptIfHuddleIsNotFull() throws Exception {
-        Huddle huddle = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
-        MemberFactory.registerCountMembersWithHuddle(huddle, 2);
+        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        MemberFactory.registerCountMembersWithHuddle(ensemble, 2);
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(huddle, MemberId.of(1));
+        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
 
         assertThat(huddleSummaryView.memberStatus())
                 .isEqualTo("accepted");

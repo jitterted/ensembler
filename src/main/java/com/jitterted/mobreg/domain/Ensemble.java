@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-// This is the Aggregate Root for Huddles
-public class Huddle {
+// This is the Aggregate Root for Ensembles
+public class Ensemble {
     private static final int MAX_REGISTERED_MEMBERS = 5;
 
-    private HuddleId id;
+    private EnsembleId id;
 
     private String name;
     private ZonedDateTime startDateTime;
@@ -21,11 +21,11 @@ public class Huddle {
     private boolean isCompleted = false;
     private URI recordingLink = URI.create("");
 
-    public Huddle(String name, ZonedDateTime startDateTime) {
+    public Ensemble(String name, ZonedDateTime startDateTime) {
         this(name, URI.create("https://zoom.us"), startDateTime);
     }
 
-    public Huddle(String name, URI zoomMeetingLink, ZonedDateTime startDateTime) {
+    public Ensemble(String name, URI zoomMeetingLink, ZonedDateTime startDateTime) {
         this.name = name;
         this.zoomMeetingLink = zoomMeetingLink;
         this.startDateTime = startDateTime;
@@ -70,7 +70,7 @@ public class Huddle {
 
     private void requireHasSpace() {
         if (isFull()) {
-            throw new HuddleIsAlreadyFullException("Currently have " + acceptedCount() + " registered.");
+            throw new EnsembleFullException("Currently have " + acceptedCount() + " registered.");
         }
     }
 
@@ -108,15 +108,15 @@ public class Huddle {
 
     private void requireNotCompleted() {
         if (isCompleted) {
-            throw new HuddleAlreadyCompletedException();
+            throw new EnsembleCompletedException();
         }
     }
 
-    public HuddleId getId() {
+    public EnsembleId getId() {
         return id;
     }
 
-    public void setId(HuddleId id) {
+    public void setId(EnsembleId id) {
         this.id = id;
     }
 
@@ -176,21 +176,21 @@ public class Huddle {
                 Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.ACCEPTED), MemberStatus.ACCEPTED))
                 ;
 
-        private static When when(Huddle huddle, ZonedDateTime now) {
-            if (huddle.isCompleted()) {
+        private static When when(Ensemble ensemble, ZonedDateTime now) {
+            if (ensemble.isCompleted()) {
                 return When.COMPLETED;
             }
-            return huddle.inThePast(now) ? When.PAST : When.FUTURE;
+            return ensemble.inThePast(now) ? When.PAST : When.FUTURE;
         }
 
-        private static Space space(Huddle huddle) {
-            return huddle.isFull() ? Space.FULL : Space.AVAILABLE;
+        private static Space space(Ensemble ensemble) {
+            return ensemble.isFull() ? Space.FULL : Space.AVAILABLE;
         }
 
-        private static MemberStatus memberStatus(Huddle huddle, MemberId memberId, ZonedDateTime now) {
-            When when = when(huddle, now);
-            Space space = space(huddle);
-            Rsvp rsvp = huddle.rsvpOf(memberId);
+        private static MemberStatus memberStatus(Ensemble ensemble, MemberId memberId, ZonedDateTime now) {
+            When when = when(ensemble, now);
+            Space space = space(ensemble);
+            Rsvp rsvp = ensemble.rsvpOf(memberId);
             WhenSpaceRsvp key = new WhenSpaceRsvp(when, space, rsvp);
             if (!STATE_TO_STATUS.containsKey(key)) {
                 throw new IllegalStateException("No such state: " + key);

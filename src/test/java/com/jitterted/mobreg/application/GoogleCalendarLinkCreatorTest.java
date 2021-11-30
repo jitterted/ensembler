@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -12,9 +12,9 @@ public class GoogleCalendarLinkCreatorTest {
 
     @Test
     public void googleCalendarLinkGeneratedFromHuddleWithZoomLinkInDetails() throws Exception {
-        Huddle calendarEnsemble = new Huddle("Calendar Ensemble",
-                                             URI.create("https://zoom.us"),
-                                             ZonedDateTime.of(2021, 9, 17, 16, 0, 0, 0, ZoneOffset.UTC));
+        Ensemble calendarEnsemble = new Ensemble("Calendar Ensemble",
+                                                 URI.create("https://zoom.us"),
+                                                 ZonedDateTime.of(2021, 9, 17, 16, 0, 0, 0, ZoneOffset.UTC));
 
         String googleCalendarLink = new GoogleCalendarLinkCreator().createFor(calendarEnsemble);
 

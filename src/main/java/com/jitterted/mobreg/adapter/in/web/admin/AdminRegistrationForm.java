@@ -1,20 +1,20 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.EnsembleId;
 
 public class AdminRegistrationForm {
     private String name;
     private String githubUsername;
     private String discordUsername;
-    private long huddleId;
+    private long ensembleId;
 
     // used by Spring to create the incoming form
     public AdminRegistrationForm() {
     }
 
     // used by code to pre-populate ID
-    public AdminRegistrationForm(HuddleId huddleId) {
-        this.huddleId = huddleId.id();
+    public AdminRegistrationForm(EnsembleId ensembleId) {
+        this.ensembleId = ensembleId.id();
     }
 
     public String getName() {
@@ -33,12 +33,12 @@ public class AdminRegistrationForm {
         this.githubUsername = githubUsername;
     }
 
-    public long getHuddleId() {
-        return huddleId;
+    public long getEnsembleId() {
+        return ensembleId;
     }
 
-    public void setHuddleId(long huddleId) {
-        this.huddleId = huddleId;
+    public void setEnsembleId(long ensembleId) {
+        this.ensembleId = ensembleId;
     }
 
     public String getDiscordUsername() {

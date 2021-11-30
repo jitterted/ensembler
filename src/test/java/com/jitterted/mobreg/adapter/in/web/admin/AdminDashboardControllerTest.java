@@ -6,8 +6,8 @@ import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.OAuth2UserFactory;
@@ -35,13 +35,13 @@ class AdminDashboardControllerTest {
         MemberService memberService = new MemberService(memberRepository);
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
-        huddleRepository.save(new Huddle("Name", ZonedDateTime.now()));
+        huddleRepository.save(new Ensemble("Name", ZonedDateTime.now()));
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
 
         Model model = new ConcurrentModel();
         adminDashboardController.dashboardView(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("tedyoung", "ROLE_MEMBER"));
 
-        List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("huddles");
+        List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("ensembles");
         assertThat(huddleSummaryViews)
                 .hasSize(1);
     }
@@ -63,30 +63,30 @@ class AdminDashboardControllerTest {
     @Test
     public void changeExistingHuddleResultsInChangesSaved() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        Huddle huddle = new Huddle("Old Name", ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 30, 9));
-        huddleRepository.save(huddle);
+        Ensemble ensemble = new Ensemble("Old Name", ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 30, 9));
+        huddleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
 
         ScheduleHuddleForm scheduleHuddleForm = new ScheduleHuddleForm("New Name", null, "2021-12-01", "10:00", "America/Los_Angeles");
-        HuddleId huddleId = huddle.getId();
-        String pageName = adminDashboardController.changeHuddle(scheduleHuddleForm, huddleId.id());
+        EnsembleId ensembleId = ensemble.getId();
+        String pageName = adminDashboardController.changeHuddle(scheduleHuddleForm, ensembleId.id());
 
         assertThat(pageName)
-                .isEqualTo("redirect:/admin/huddle/" + huddleId.id());
-        Huddle expectedHuddle = new Huddle("New Name", ZonedDateTime.of(2021, 12, 1, 10, 0, 0, 0, ZoneId.of("America/Los_Angeles")).withZoneSameInstant(ZoneOffset.UTC));
-        expectedHuddle.setId(huddleId);
-        assertThat(huddleRepository.findById(huddleId).get())
+                .isEqualTo("redirect:/admin/huddle/" + ensembleId.id());
+        Ensemble expectedEnsemble = new Ensemble("New Name", ZonedDateTime.of(2021, 12, 1, 10, 0, 0, 0, ZoneId.of("America/Los_Angeles")).withZoneSameInstant(ZoneOffset.UTC));
+        expectedEnsemble.setId(ensembleId);
+        assertThat(huddleRepository.findById(ensembleId).get())
                 .usingRecursiveComparison()
-                .isEqualTo(expectedHuddle);
+                .isEqualTo(expectedEnsemble);
     }
 
 
     @Test
     public void completeHuddleCompletesTheHuddleWithRecordingLinkAndRedirects() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        Huddle huddle = new Huddle("to be completed", ZonedDateTime.now());
-        huddle.setId(HuddleId.of(19));
-        huddleRepository.save(huddle);
+        Ensemble ensemble = new Ensemble("to be completed", ZonedDateTime.now());
+        ensemble.setId(EnsembleId.of(19));
+        huddleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
 
         String pageName = adminDashboardController.completeHuddle(19, new CompleteHuddleForm("https://recording.link/19"));
@@ -94,9 +94,9 @@ class AdminDashboardControllerTest {
         assertThat(pageName)
                 .isEqualTo("redirect:/admin/huddle/19");
 
-        assertThat(huddle.isCompleted())
+        assertThat(ensemble.isCompleted())
                 .isTrue();
-        assertThat(huddle.recordingLink().toString())
+        assertThat(ensemble.recordingLink().toString())
                 .isEqualTo("https://recording.link/19");
     }
 
@@ -110,16 +110,16 @@ class AdminDashboardControllerTest {
         MemberService memberService = new MemberService(memberRepository);
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository, memberRepository);
-        Huddle huddle = new Huddle("Manual Registered Huddle", ZonedDateTime.now());
-        huddle.setId(HuddleId.of(23));
-        huddleRepository.save(huddle);
+        Ensemble ensemble = new Ensemble("Manual Registered Ensemble", ZonedDateTime.now());
+        ensemble.setId(EnsembleId.of(23));
+        huddleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
 
-        AdminRegistrationForm form = new AdminRegistrationForm(huddle.getId());
+        AdminRegistrationForm form = new AdminRegistrationForm(ensemble.getId());
         form.setGithubUsername("githubtwo");
         adminDashboardController.registerParticipant(form);
 
-        assertThat(huddle.acceptedMembers())
+        assertThat(ensemble.acceptedMembers())
                 .containsExactly(MemberId.of(1));
     }
 

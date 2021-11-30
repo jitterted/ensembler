@@ -2,8 +2,8 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.HuddleService;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,33 +46,33 @@ public class AdminDashboardController {
         } else {
             throw new IllegalStateException("Not an OAuth2User");
         }
-        List<Huddle> huddles = huddleService.allHuddlesByDateTimeDescending();
-        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles);
-        model.addAttribute("huddles", huddleSummaryViews);
+        List<Ensemble> ensembles = huddleService.allHuddlesByDateTimeDescending();
+        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(ensembles);
+        model.addAttribute("ensembles", huddleSummaryViews);
         model.addAttribute("scheduleHuddleForm", new ScheduleHuddleForm());
         return "dashboard";
     }
 
     @GetMapping("/huddle/{huddleId}")
     public String huddleDetailView(Model model, @PathVariable("huddleId") Long huddleId) {
-        Huddle huddle = huddleService.findById(HuddleId.of(huddleId))
-                                     .orElseThrow(() -> {
+        Ensemble ensemble = huddleService.findById(EnsembleId.of(huddleId))
+                                         .orElseThrow(() -> {
                                          throw new ResponseStatusException(HttpStatus.NOT_FOUND);
                                      });
 
-        HuddleDetailView huddleDetailView = HuddleDetailView.from(huddle, memberService);
-        model.addAttribute("huddle", huddleDetailView);
-        model.addAttribute("scheduleHuddleForm", ScheduleHuddleForm.from(huddle));
+        HuddleDetailView huddleDetailView = HuddleDetailView.from(ensemble, memberService);
+        model.addAttribute("ensemble", huddleDetailView);
+        model.addAttribute("scheduleHuddleForm", ScheduleHuddleForm.from(ensemble));
         model.addAttribute("completeHuddle", new CompleteHuddleForm(""));
-        model.addAttribute("registration", new AdminRegistrationForm(huddle.getId()));
+        model.addAttribute("registration", new AdminRegistrationForm(ensemble.getId()));
 
         return "huddle-detail";
     }
 
     @PostMapping("/huddle/{huddleId}")
     public String changeHuddle(ScheduleHuddleForm scheduleHuddleForm, @PathVariable("huddleId") Long id) {
-        HuddleId huddleId = HuddleId.of(id);
-        huddleService.changeNameDateTimeTo(huddleId, scheduleHuddleForm.getName(), scheduleHuddleForm.getDateTimeInUtc());
+        EnsembleId ensembleId = EnsembleId.of(id);
+        huddleService.changeNameDateTimeTo(ensembleId, scheduleHuddleForm.getName(), scheduleHuddleForm.getDateTimeInUtc());
         return "redirect:/admin/huddle/" + id;
     }
 
@@ -91,35 +91,35 @@ public class AdminDashboardController {
 
     @PostMapping("/notify/{huddleId}")
     public String notifyHuddleScheduled(@PathVariable("huddleId") Long huddleId) {
-        Huddle huddle = huddleService.findById(HuddleId.of(huddleId))
-                .orElseThrow(() -> {
+        Ensemble ensemble = huddleService.findById(EnsembleId.of(huddleId))
+                                         .orElseThrow(() -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND);
                 });
-        huddleService.triggerHuddleOpenedNotification(huddle);
+        huddleService.triggerHuddleOpenedNotification(ensemble);
         return "redirect:/admin/dashboard";
     }
 
     @PostMapping("/register")
     public String registerParticipant(AdminRegistrationForm adminRegistrationForm) {
-        HuddleId huddleId = HuddleId.of(adminRegistrationForm.getHuddleId());
+        EnsembleId ensembleId = EnsembleId.of(adminRegistrationForm.getEnsembleId());
 
         Member member = memberService.findByGithubUsername(adminRegistrationForm.getGithubUsername());
 
-        huddleService.registerMember(huddleId, member.getId());
+        huddleService.registerMember(ensembleId, member.getId());
 
-        return redirectToDetailViewFor(huddleId);
+        return redirectToDetailViewFor(ensembleId);
     }
 
     @PostMapping("/huddle/{huddleId}/complete")
     public String completeHuddle(@PathVariable("huddleId") long id, CompleteHuddleForm completeHuddleForm) {
-        HuddleId huddleId = HuddleId.of(id);
-        huddleService.completeWith(huddleId, completeHuddleForm.recordingLink());
+        EnsembleId ensembleId = EnsembleId.of(id);
+        huddleService.completeWith(ensembleId, completeHuddleForm.recordingLink());
 
-        return redirectToDetailViewFor(huddleId);
+        return redirectToDetailViewFor(ensembleId);
     }
 
-    private String redirectToDetailViewFor(HuddleId huddleId) {
-        return "redirect:/admin/huddle/" + huddleId.id();
+    private String redirectToDetailViewFor(EnsembleId ensembleId) {
+        return "redirect:/admin/huddle/" + ensembleId.id();
     }
 
 }

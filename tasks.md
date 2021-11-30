@@ -20,13 +20,13 @@
     [X] Add user as participant - where participant is only Name and GitHub-Username
     [X] Add discord username to participant info
     [ ] Remove participant
-    [ ] Filter huddles: All|Future, Filled|Have Space, Free/Public|Member|Paid
+    [ ] Filter ensembles: All|Future, Filled|Have Space, Free/Public|Member|Paid
 
 [X] Persistence with Spring Data JDBC ("lightweight ORM")
 
 # External Integration
 
-[X] MobTi.me - websocket connection to add list of names from a specific huddle
+[X] MobTi.me - websocket connection to add list of names from a specific ensemble
     Figure out protocol.
 
 # To Do Offline

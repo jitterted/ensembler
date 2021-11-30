@@ -5,7 +5,7 @@ import com.jitterted.mobreg.application.HuddleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.HuddleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
@@ -55,15 +55,15 @@ class MobTimerMessageSenderTest {
 
     @Test
     public void mobPeopleUpdated() throws Exception {
-        Huddle huddle = new Huddle("test", ZonedDateTime.now());
+        Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
         Member member = new Member("Jane", "janeuser");
         Member savedMember = memberService.save(member);
-        huddle.acceptedBy(savedMember.getId());
+        ensemble.acceptedBy(savedMember.getId());
         member = new Member("Jack", "jackuser");
         savedMember = memberService.save(member);
-        huddle.acceptedBy(savedMember.getId());
+        ensemble.acceptedBy(savedMember.getId());
 
-        mobTimerMessageSender.updateParticipantsTo(huddle);
+        mobTimerMessageSender.updateParticipantsTo(ensemble);
     }
 
 }

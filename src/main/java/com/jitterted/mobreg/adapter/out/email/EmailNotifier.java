@@ -3,7 +3,7 @@ package com.jitterted.mobreg.adapter.out.email;
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.Notifier;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,13 +45,13 @@ public class EmailNotifier implements Notifier {
                 Visit <a href="%s">MobReg</a> to register.
                 """
                 .formatted(description, registrationLink.toString());
-        LOGGER.info("Sending New Huddle '{}' emails to: {}", description, emails);
+        LOGGER.info("Sending New Ensemble '{}' emails to: {}", description, emails);
         emailer.send("Ensembler Notification: New Ensemble Scheduled", messageBody, emails);
         return 0;
     }
 
     @Override
-    public void memberRegistered(Huddle huddle, Member member) {
+    public void memberRegistered(Ensemble ensemble, Member member) {
         if (!member.hasEmail()) {
             LOGGER.info("Member does not have email: {}", member.firstName());
             return;
@@ -63,10 +63,10 @@ public class EmailNotifier implements Notifier {
                 Click <a href="%s">here</a> to join the Zoom. You can add this event to your Google Calendar
                 by clicking <a href="%s">here</a>.
                 """.formatted(member.firstName(),
-                              huddle.name(),
-                              huddle.startDateTime().toString(),
-                              huddle.zoomMeetingLink().toString(),
-                              googleCalendarLinkCreator.createFor(huddle));
+                              ensemble.name(),
+                              ensemble.startDateTime().toString(),
+                              ensemble.zoomMeetingLink().toString(),
+                              googleCalendarLinkCreator.createFor(ensemble));
         emailer.send("Ensembler Notification: Registration Confirmation",
                      body,
                      Set.of(member.email()));

@@ -1,8 +1,8 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.application.port.HuddleRepository;
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -21,14 +21,14 @@ public class HuddleRepositoryDataJdbcAdapter implements HuddleRepository {
     }
 
     @Override
-    public Huddle save(Huddle huddle) {
-        HuddleEntity huddleEntity = HuddleEntity.from(huddle);
+    public Ensemble save(Ensemble ensemble) {
+        HuddleEntity huddleEntity = HuddleEntity.from(ensemble);
         HuddleEntity savedHuddleEntity = huddleJdbcRepository.save(huddleEntity);
         return savedHuddleEntity.asHuddle();
     }
 
     @Override
-    public List<Huddle> findAll() {
+    public List<Ensemble> findAll() {
         return StreamSupport.stream(
                 huddleJdbcRepository.findAll().spliterator(), false)
                             .map(HuddleEntity::asHuddle)
@@ -36,8 +36,8 @@ public class HuddleRepositoryDataJdbcAdapter implements HuddleRepository {
     }
 
     @Override
-    public Optional<Huddle> findById(HuddleId huddleId) {
-        Optional<HuddleEntity> found = huddleJdbcRepository.findById(huddleId.id());
+    public Optional<Ensemble> findById(EnsembleId ensembleId) {
+        Optional<HuddleEntity> found = huddleJdbcRepository.findById(ensembleId.id());
         return found.map(HuddleEntity::asHuddle);
     }
 }

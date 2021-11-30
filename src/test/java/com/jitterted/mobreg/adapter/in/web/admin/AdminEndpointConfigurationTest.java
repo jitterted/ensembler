@@ -4,8 +4,8 @@ import com.jitterted.mobreg.application.HuddleService;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.port.HuddleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.OAuth2UserFactory;
 import org.junit.jupiter.api.Tag;
@@ -115,11 +115,11 @@ public class AdminEndpointConfigurationTest {
 
 
     private void createStubHuddleServiceReturningHuddleWithIdOf(long id) {
-        Huddle dummyHuddle = new Huddle("dummy", ZonedDateTime.now());
-        HuddleId huddleId = HuddleId.of(id);
-        dummyHuddle.setId(huddleId);
-        when(huddleService.findById(huddleId))
-                .thenReturn(Optional.of(dummyHuddle));
+        Ensemble dummyEnsemble = new Ensemble("dummy", ZonedDateTime.now());
+        EnsembleId ensembleId = EnsembleId.of(id);
+        dummyEnsemble.setId(ensembleId);
+        when(huddleService.findById(ensembleId))
+                .thenReturn(Optional.of(dummyEnsemble));
     }
 
 }

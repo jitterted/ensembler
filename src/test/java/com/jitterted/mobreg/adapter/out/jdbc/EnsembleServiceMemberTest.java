@@ -4,8 +4,8 @@ import com.jitterted.mobreg.application.HuddleService;
 import com.jitterted.mobreg.application.HuddleServiceFactory;
 import com.jitterted.mobreg.application.port.HuddleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Tag;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Tag("integration")
-class HuddleServiceMemberTest {
+class EnsembleServiceMemberTest {
 
     @Autowired
     HuddleRepository huddleRepository;
@@ -54,15 +54,15 @@ class HuddleServiceMemberTest {
     @Test
     public void existingMemberRegistersForHuddleThenIsRegisteredMember() throws Exception {
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository, memberRepository);
-        Huddle huddle = new Huddle("test", ZonedDateTime.now());
-        HuddleId huddleId = huddleRepository.save(huddle).getId();
+        Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
+        EnsembleId ensembleId = huddleRepository.save(ensemble).getId();
 
         Member member = new Member("memberFirstName", "memberGithubUsername");
         MemberId memberId = memberRepository.save(member).getId();
 
-        huddleService.registerMember(huddleId, memberId);
+        huddleService.registerMember(ensembleId, memberId);
 
-        Optional<Huddle> foundHuddle = huddleRepository.findById(huddleId);
+        Optional<Ensemble> foundHuddle = huddleRepository.findById(ensembleId);
 
         assertThat(foundHuddle)
                 .isPresent();

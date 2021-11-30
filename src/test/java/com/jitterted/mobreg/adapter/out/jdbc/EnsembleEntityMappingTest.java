@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
-class HuddleEntityMappingTest {
+class EnsembleEntityMappingTest {
 
     @Test
     public void databaseEntityToDomainIsMappedCorrectly() throws Exception {
@@ -27,20 +27,20 @@ class HuddleEntityMappingTest {
         huddleEntity.setAcceptedMembers(Set.of(new AcceptedMember(13L)));
         huddleEntity.setDeclinedMembers(Set.of(new DeclinedMember(29L)));
 
-        Huddle huddle = huddleEntity.asHuddle();
+        Ensemble ensemble = huddleEntity.asHuddle();
 
-        assertThat(huddle.isCompleted())
+        assertThat(ensemble.isCompleted())
                 .isTrue();
-        assertThat(huddle.name())
+        assertThat(ensemble.name())
                 .isEqualTo("Entity");
-        assertThat(huddle.recordingLink().toString())
+        assertThat(ensemble.recordingLink().toString())
                 .isEqualTo("https://recording.link/entity");
-        assertThat(huddle.zoomMeetingLink().toString())
+        assertThat(ensemble.zoomMeetingLink().toString())
                 .isEqualTo("https://zoom.us/entity");
-        assertThat(huddle.acceptedMembers())
+        assertThat(ensemble.acceptedMembers())
                 .extracting(MemberId::id)
                 .isEqualTo(List.of(13L));
-        assertThat(huddle.declinedMembers())
+        assertThat(ensemble.declinedMembers())
                 .extracting(MemberId::id)
                 .isEqualTo(List.of(29L));
     }
@@ -48,13 +48,13 @@ class HuddleEntityMappingTest {
     @Test
     public void domainToDatabaseEntityIsMappedCorrectly() throws Exception {
         ZonedDateTime utc2021091316000 = ZonedDateTime.of(2021, 9, 13, 16, 0, 0, 0, ZoneOffset.UTC);
-        Huddle huddle = new Huddle("Domain", URI.create("https://zoom.us/"), utc2021091316000);
-        huddle.linkToRecordingAt(URI.create("https://recording.link/domain"));
-        huddle.acceptedBy(MemberId.of(11L));
-        huddle.declinedBy(MemberId.of(13L));
-        huddle.complete();
+        Ensemble ensemble = new Ensemble("Domain", URI.create("https://zoom.us/"), utc2021091316000);
+        ensemble.linkToRecordingAt(URI.create("https://recording.link/domain"));
+        ensemble.acceptedBy(MemberId.of(11L));
+        ensemble.declinedBy(MemberId.of(13L));
+        ensemble.complete();
 
-        HuddleEntity entity = HuddleEntity.from(huddle);
+        HuddleEntity entity = HuddleEntity.from(ensemble);
 
         assertThat(entity.getName())
                 .isEqualTo("Domain");

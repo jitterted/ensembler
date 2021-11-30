@@ -8,70 +8,70 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class HuddleRegisteredMembersTest {
+public class EnsembleRegisteredMembersTest {
 
     @Test
     public void newHuddleHasZeroParticipants() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
 
-        assertThat(huddle.acceptedCount())
+        assertThat(ensemble.acceptedCount())
                 .isZero();
-        assertThat(huddle.acceptedMembers())
+        assertThat(ensemble.acceptedMembers())
                 .isEmpty();
     }
 
     @Test
     public void registerMemberByIdWithHuddleRemembersTheMember() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
         MemberId memberId = new MemberBuilder().build().getId();
 
-        huddle.acceptedBy(memberId);
+        ensemble.acceptedBy(memberId);
 
-        assertThat(huddle.acceptedCount())
+        assertThat(ensemble.acceptedCount())
                 .isEqualTo(1);
 
-        assertThat(huddle.acceptedMembers())
+        assertThat(ensemble.acceptedMembers())
                 .containsOnly(memberId);
     }
 
     @Test
     public void registeredMemberIsFoundAsRegisteredByMemberId() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
         MemberId memberId = new MemberBuilder().build().getId();
 
-        huddle.acceptedBy(memberId);
+        ensemble.acceptedBy(memberId);
 
-        assertThat(huddle.isAccepted(memberId))
+        assertThat(ensemble.isAccepted(memberId))
                 .isTrue();
     }
 
     @Test
     public void nonExistentMemberIsNotFoundAsRegisteredByMemberId() throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
 
-        assertThat(huddle.isAccepted(MemberId.of(73L)))
+        assertThat(ensemble.isAccepted(MemberId.of(73L)))
                 .isFalse();
     }
 
     @ParameterizedTest
     @ValueSource(ints = {2, 3, 4, 5})
     public void registeringMultipleMembersResultsInThatManyRegisteredMembers(int count) throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
 
-        MemberFactory.registerCountMembersWithHuddle(huddle, count);
+        MemberFactory.registerCountMembersWithHuddle(ensemble, count);
 
-        assertThat(huddle.acceptedCount())
+        assertThat(ensemble.acceptedCount())
                 .isEqualTo(count);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {6, 7})
     public void attemptingToRegisterMoreThanFiveMembersThrowsException(int count) throws Exception {
-        Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
 
         assertThatThrownBy(() -> {
-            MemberFactory.registerCountMembersWithHuddle(huddle, count);
-        }).isInstanceOf(HuddleIsAlreadyFullException.class);
+            MemberFactory.registerCountMembersWithHuddle(ensemble, count);
+        }).isInstanceOf(EnsembleFullException.class);
     }
 
 }

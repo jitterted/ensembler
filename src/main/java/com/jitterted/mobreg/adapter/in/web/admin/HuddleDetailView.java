@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.adapter.DateTimeFormatting;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 
 import java.util.List;
 
@@ -15,19 +15,19 @@ public record HuddleDetailView(long id,
                                String recordingLink,
                                List<MemberView> memberViews) {
 
-    static HuddleDetailView from(Huddle huddle, MemberService memberService) {
+    static HuddleDetailView from(Ensemble ensemble, MemberService memberService) {
         List<MemberView> memberViews =
-                huddle.acceptedMembers().stream()
-                      .map(memberService::findById)
-                      .map(MemberView::from)
-                      .toList();
-        return new HuddleDetailView(huddle.getId().id(),
-                                    huddle.name(),
-                                    DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(huddle.startDateTime()),
+                ensemble.acceptedMembers().stream()
+                        .map(memberService::findById)
+                        .map(MemberView::from)
+                        .toList();
+        return new HuddleDetailView(ensemble.getId().id(),
+                                    ensemble.name(),
+                                    DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(ensemble.startDateTime()),
                                     "90m",
-                                    huddle.zoomMeetingLink().toString(),
-                                    huddle.isCompleted(),
-                                    huddle.recordingLink().toString(),
+                                    ensemble.zoomMeetingLink().toString(),
+                                    ensemble.isCompleted(),
+                                    ensemble.recordingLink().toString(),
                                     memberViews);
     }
 

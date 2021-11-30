@@ -70,7 +70,7 @@
     </h2>
 </div>
 
-<div th:unless="${huddles.isEmpty}" class="flex flex-col">
+<div th:unless="${ensembles.isEmpty}" class="flex flex-col">
     <div class="overflow-x-auto">
         <div class="align-middle min-w-4/5 px-4 sm:px-6 lg:px-8 font-sans">
             <div class="bg-white shadow-md rounded my-6">
@@ -85,22 +85,22 @@
                     </tr>
                     </thead>
                     <tbody class="text-gray-800 text-med font-light">
-                    <tr th:each="huddle: ${huddles}"
+                    <tr th:each="ensemble: ${ensembles}"
                         class="border-b border-gray-200 even:bg-gray-50 hover:bg-gray-100">
                         <td class="py-3 px-6 text-left whitespace-nowrap">
                             <div class="flex items-center">
-                                <span th:text="${huddle.name}" class="font-medium">Ensemble #14</span>
+                                <span th:text="${ensemble.name}" class="font-medium">Ensemble #14</span>
                             </div>
                         </td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex flex-row justify-center font-medium">
-                                <span class="datetimeutc" th:text="${huddle.dateTime}">2021-09-17T16:00:00Z</span>
+                                <span class="datetimeutc" th:text="${ensemble.dateTime}">2021-09-17T16:00:00Z</span>
                             </div>
                         </td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex items-center justify-center">
                                 <span class="text-3xl font-bold text-purple-600"
-                                      th:text="${huddle.numberRegistered}">4</span>
+                                      th:text="${ensemble.numberRegistered}">4</span>
                                 <span class="text-xl font-bold text-purple-400">/5</span>
                                 <!-- use images to represent attendees -->
                                 <!-- <img class="w-6 h-6 rounded-full border-gray-200 border transform hover:scale-125" src="https://avatars.githubusercontent.com/u/47930468"/> -->
@@ -111,13 +111,13 @@
                             </div>
                         </td>
                         <!-- Member Status -->
-                        <td class="py-3 px-6 text-center" th:switch="${huddle.memberStatus}">
+                        <td class="py-3 px-6 text-center" th:switch="${ensemble.memberStatus}">
 
                             <form action="#" th:action="@{/member/accept}" th:object="${register}" method="post">
                                 <input hidden="hidden" type="number" th:field="*{memberId}">
-                                <input hidden="hidden" type="number" th:value="${huddle.id}" name="huddleId">
+                                <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
 
-                                <span th:text="${huddle.memberStatus}" class="text-sm">Status</span>
+                                <span th:text="${ensemble.memberStatus}" class="text-sm">Status</span>
 
                                 <fieldset th:case="'unknown'"
                                         class="mt-2 flex">
@@ -194,16 +194,16 @@
                             </form>
                         </td>
                         <!-- Actions -->
-                        <td class="py-3 px-6 text-center" th:switch="${huddle.memberStatus}">
+                        <td class="py-3 px-6 text-center" th:switch="${ensemble.memberStatus}">
                             <div th:case="'accepted'">
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
-                                   href="#" th:href="${huddle.zoomMeetingLink}">
+                                   href="#" th:href="${ensemble.zoomMeetingLink}">
                                     <i class="far fa-video pr-2" aria-hidden="true"></i>
                                     Zoom Link
                                 </a>
                                 <br/>
                                 <a href="#"
-                                   th:href="${huddle.googleCalendarLink}"
+                                   th:href="${ensemble.googleCalendarLink}"
                                    target="_blank"
                                    class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500">
                                     <i class="fas fa-calendar-plus pr-2" aria-hidden="true"></i>
@@ -212,7 +212,7 @@
                             </div>
                             <div th:case="'completed'">
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
-                                   href="#" th:href="${huddle.recordingLink}">Recording Link</a>
+                                   href="#" th:href="${ensemble.recordingLink}">Recording Link</a>
                             </div>
                         </td>
                     </tr>
@@ -223,7 +223,7 @@
     </div>
 </div>
 
-<div th:if="${huddles.isEmpty}" class="mt-4 px-4 sm:px-6 lg:px-8">
+<div th:if="${ensembles.isEmpty}" class="mt-4 px-4 sm:px-6 lg:px-8">
     <div class="rounded-md bg-yellow-50 p-4">
         <div class="flex">
             <div class="flex-shrink-0">

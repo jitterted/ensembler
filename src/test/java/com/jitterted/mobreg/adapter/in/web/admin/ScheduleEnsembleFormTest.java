@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-class ScheduleHuddleFormTest {
+class ScheduleEnsembleFormTest {
 
     @Test
     public void formConvertsDateTimeBasedOnGivenTimezone() throws Exception {

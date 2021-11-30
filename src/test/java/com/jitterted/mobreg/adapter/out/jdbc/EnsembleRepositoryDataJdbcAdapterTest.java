@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.MemberId;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Tag;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Tag("integration")
-class HuddleRepositoryDataJdbcAdapterTest {
+class EnsembleRepositoryDataJdbcAdapterTest {
 
     // create shared container with a container image name "postgres" and latest major release of PostgreSQL "13"
     @Container
@@ -53,71 +53,71 @@ class HuddleRepositoryDataJdbcAdapterTest {
 
     @Test
     public void savedHuddleCanBeFoundByItsId() throws Exception {
-        Huddle huddle = createWithRegisteredMemberHuddleNamed("test huddle");
+        Ensemble ensemble = createWithRegisteredMemberHuddleNamed("test ensemble");
 
-        Huddle savedHuddle = huddleRepositoryAdapter.save(huddle);
+        Ensemble savedEnsemble = huddleRepositoryAdapter.save(ensemble);
 
-        Optional<Huddle> found = huddleRepositoryAdapter.findById(savedHuddle.getId());
+        Optional<Ensemble> found = huddleRepositoryAdapter.findById(savedEnsemble.getId());
 
         assertThat(found)
                 .isPresent()
                 .get()
-                .extracting(Huddle::name)
-                .isEqualTo("test huddle");
+                .extracting(Ensemble::name)
+                .isEqualTo("test ensemble");
     }
 
     @Test
     public void newRepositoryReturnsEmptyForFindAll() throws Exception {
-        List<Huddle> huddles = huddleRepositoryAdapter.findAll();
+        List<Ensemble> ensembles = huddleRepositoryAdapter.findAll();
 
-        assertThat(huddles)
+        assertThat(ensembles)
                 .isEmpty();
     }
 
     @Test
     public void twoSavedHuddlesBothReturnedByFindAll() throws Exception {
-        Huddle one = createWithRegisteredMemberHuddleNamed("one");
-        Huddle two = createWithRegisteredMemberHuddleNamed("two");
+        Ensemble one = createWithRegisteredMemberHuddleNamed("one");
+        Ensemble two = createWithRegisteredMemberHuddleNamed("two");
 
         huddleRepositoryAdapter.save(one);
         huddleRepositoryAdapter.save(two);
 
-        List<Huddle> allHuddles = huddleRepositoryAdapter.findAll();
-        assertThat(allHuddles)
+        List<Ensemble> allEnsembles = huddleRepositoryAdapter.findAll();
+        assertThat(allEnsembles)
                 .hasSize(2);
 
-        assertThat(allHuddles.get(0).acceptedMembers())
+        assertThat(allEnsembles.get(0).acceptedMembers())
                 .hasSize(1)
                 .containsOnly(MemberId.of(7L));
-        assertThat(allHuddles.get(1).acceptedMembers())
+        assertThat(allEnsembles.get(1).acceptedMembers())
                 .hasSize(1)
                 .containsOnly(MemberId.of(7L));
     }
 
     @Test
     public void whenHuddleMeetingLinkIsStoredThenIsRetrievedByFind() throws Exception {
-        Huddle zoom = new Huddle("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
+        Ensemble zoom = new Ensemble("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
 
-        HuddleId savedId = huddleRepositoryAdapter.save(zoom).getId();
+        EnsembleId savedId = huddleRepositoryAdapter.save(zoom).getId();
 
-        Optional<Huddle> found = huddleRepositoryAdapter.findById(savedId);
+        Optional<Ensemble> found = huddleRepositoryAdapter.findById(savedId);
         assertThat(found)
                 .isPresent()
                 .get()
-                .extracting(Huddle::zoomMeetingLink)
+                .extracting(Ensemble::zoomMeetingLink)
                 .extracting(URI::toString)
                 .isEqualTo("https://zoom.us/j/123456?pwd=12345");
     }
 
     @Test
     public void whenHuddleCompletedWithRecordingLinkThenIsStoredSuccessfully() throws Exception {
-        Huddle huddle = new Huddle("Completed", ZonedDateTime.now());
-        huddle.complete();
-        huddle.linkToRecordingAt(URI.create("https://recording.link/database"));
+        Ensemble ensemble = new Ensemble("Completed", ZonedDateTime.now());
+        ensemble.complete();
+        ensemble.linkToRecordingAt(URI.create("https://recording.link/database"));
 
-        HuddleId savedId = huddleRepositoryAdapter.save(huddle).getId();
+        EnsembleId savedId = huddleRepositoryAdapter.save(ensemble).getId();
 
-        Huddle found = huddleRepositoryAdapter.findById(savedId).get();
+        Ensemble found = huddleRepositoryAdapter.findById(savedId).get();
 
         assertThat(found.isCompleted())
                 .isTrue();
@@ -126,9 +126,9 @@ class HuddleRepositoryDataJdbcAdapterTest {
     }
 
     @NotNull
-    private Huddle createWithRegisteredMemberHuddleNamed(String huddleName) {
-        Huddle huddle = new Huddle(huddleName, ZonedDateTime.now());
-        huddle.acceptedBy(MemberId.of(7L));
-        return huddle;
+    private Ensemble createWithRegisteredMemberHuddleNamed(String huddleName) {
+        Ensemble ensemble = new Ensemble(huddleName, ZonedDateTime.now());
+        ensemble.acceptedBy(MemberId.of(7L));
+        return ensemble;
     }
 }

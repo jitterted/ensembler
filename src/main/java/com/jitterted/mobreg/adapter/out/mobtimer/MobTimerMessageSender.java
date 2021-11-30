@@ -3,7 +3,7 @@ package com.jitterted.mobreg.adapter.out.mobtimer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -25,8 +25,8 @@ public class MobTimerMessageSender {
         this.memberService = memberService;
     }
 
-    public void updateParticipantsTo(Huddle huddle) {
-        MobParticipantsDto mobParticipantsDto = MobParticipantsDto.from(huddle, memberService);
+    public void updateParticipantsTo(Ensemble ensemble) {
+        MobParticipantsDto mobParticipantsDto = MobParticipantsDto.from(ensemble, memberService);
 
         try {
 //            sendNewTimer();

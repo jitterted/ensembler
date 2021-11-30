@@ -1,6 +1,6 @@
 # MobReg
 
-This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles are a specific, scheduled learning session).
+This project manages Remote Learning Ensemble (Mob Programming) ensembles (ensembles are a specific, scheduled learning session).
 
 # Features To-Do
 
@@ -27,7 +27,7 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
     + Pushover https://pushover.net/
 
 * Provide calendar invites using links
-    - Provide WorldTimeBuddy.com links for huddles (maybe not needed if calendar links are sufficient)
+    - Provide WorldTimeBuddy.com links for ensembles (maybe not needed if calendar links are sufficient)
   
 * Integrate with Zoom to create a meeting each time a Huddle is scheduled
     - See https://marketplace.zoom.us/docs/sdk/native-sdks/developer-accounts and https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
@@ -43,7 +43,7 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
 * Member Registration
     + Collect info for participants
     + Store a link to the video recording, only available to those who were participants of that Huddle
-    + Limit registration to 5 per huddle in UI
+    + Limit registration to 5 per ensemble in UI
 
 
 # Registration Scenarios
@@ -60,7 +60,7 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
     * Display Name (how do you want to appear in the Mob membership list)
     * Discord username (optional)
     * ✅ toggle for notification of:
-        * New huddles
+        * New ensembles
         * Zoom recording
         * (other?)
     * Update button to save
@@ -70,7 +70,7 @@ This project manages Remote Learning Ensemble (Mob Programming) huddles (huddles
 
 DONE except for optional (constraint) parts
 
-Someone who has participated in past Huddles wants to register for a future huddle.
+Someone who has participated in past Huddles wants to register for a future ensemble.
 
 1. Show sign-up/sign-in page
 
@@ -98,17 +98,17 @@ This scenario needs more analysis.
 # Stories
 
 * Dashboard
-    [X] Schedule a new huddle: date/time, duration, topic
-    [X] See huddles and how many registrations
+    [X] Schedule a new ensemble: date/time, duration, topic
+    [X] See ensembles and how many registrations
 
-* See existing huddles
+* See existing ensembles
     - Name
     - Date/time (including time zone)
     - Duration
     - Topic
     - Number of people registered
 
-* View details of a huddle
+* View details of a ensemble
    
    [X] Huddles need identifiers to be inserted into the URI
 
@@ -119,9 +119,9 @@ This scenario needs more analysis.
       - Discord username
       - New to group
 
-    - Goals (one or more) of the huddle (i.e., what's the mission)
+    - Goals (one or more) of the ensemble (i.e., what's the mission)
 
-* [X] Schedule a new huddle
+* [X] Schedule a new ensemble
 
 # Name Ideas
 

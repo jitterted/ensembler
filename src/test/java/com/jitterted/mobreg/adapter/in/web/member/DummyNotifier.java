@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.application.port.Notifier;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 
 import java.net.URI;
@@ -13,7 +13,7 @@ public class DummyNotifier implements Notifier {
     }
 
     @Override
-    public void memberRegistered(Huddle huddle, Member member) {
+    public void memberRegistered(Ensemble ensemble, Member member) {
 
     }
 }

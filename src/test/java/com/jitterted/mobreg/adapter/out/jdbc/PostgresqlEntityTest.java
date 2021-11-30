@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Tag;
@@ -48,7 +48,7 @@ class PostgresqlEntityTest {
 
     @Test
     public void huddleEntityStoredViaJdbcIsRetrievedWithMembers() throws Exception {
-        Huddle original = new Huddle("entity", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
+        Ensemble original = new Ensemble("entity", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
         original.acceptedBy(MemberId.of(4L));
         original.acceptedBy(MemberId.of(5L));
         original.declinedBy(MemberId.of(73L));

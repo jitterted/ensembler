@@ -2,8 +2,8 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.application.HuddleService;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +37,9 @@ public class MemberController {
         MemberRegisterForm memberRegisterForm = createRegistrationForm(member.getId());
         model.addAttribute("register", memberRegisterForm);
 
-        List<Huddle> huddles = huddleService.allHuddlesByDateTimeDescending();
-        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(huddles, member.getId());
-        model.addAttribute("huddles", huddleSummaryViews);
+        List<Ensemble> ensembles = huddleService.allHuddlesByDateTimeDescending();
+        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(ensembles, member.getId());
+        model.addAttribute("ensembles", huddleSummaryViews);
         return "member-register";
     }
 
@@ -51,20 +51,20 @@ public class MemberController {
 
     @PostMapping("/member/accept")
     public String accept(MemberRegisterForm memberRegisterForm) {
-        HuddleId huddleId = HuddleId.of(memberRegisterForm.getHuddleId());
+        EnsembleId ensembleId = EnsembleId.of(memberRegisterForm.getHuddleId());
         MemberId memberId = MemberId.of(memberRegisterForm.getMemberId());
 
-        huddleService.registerMember(huddleId, memberId);
+        huddleService.registerMember(ensembleId, memberId);
 
         return "redirect:/member/register";
     }
 
     @PostMapping("/member/decline")
     public String decline(MemberRegisterForm memberRegisterForm) {
-        HuddleId huddleId = HuddleId.of(memberRegisterForm.getHuddleId());
+        EnsembleId ensembleId = EnsembleId.of(memberRegisterForm.getHuddleId());
         MemberId memberId = MemberId.of(memberRegisterForm.getMemberId());
 
-        huddleService.declineMember(huddleId, memberId);
+        huddleService.declineMember(ensembleId, memberId);
 
         return "redirect:/member/register";
     }

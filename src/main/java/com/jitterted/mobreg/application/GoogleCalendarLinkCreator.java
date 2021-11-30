@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 
 import javax.validation.constraints.NotNull;
 import java.net.URLEncoder;
@@ -13,11 +13,11 @@ public class GoogleCalendarLinkCreator {
     private static final DateTimeFormatter GOOGLE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX");
 
     @NotNull
-    public String createFor(Huddle huddle) {
-        String huddleName = encodedNameOf(huddle);
-        String startDateTime = formattedStartDateTimeOf(huddle);
-        String endDateTime = formattedEndDateTimeOf(huddle);
-        String zoomDetails = encodedZoomLinkOf(huddle);
+    public String createFor(Ensemble ensemble) {
+        String huddleName = encodedNameOf(ensemble);
+        String startDateTime = formattedStartDateTimeOf(ensemble);
+        String endDateTime = formattedEndDateTimeOf(ensemble);
+        String zoomDetails = encodedZoomLinkOf(ensemble);
 
         return "%s&text=%s&dates=%s/%s&details=%s"
                 .formatted(
@@ -28,21 +28,21 @@ public class GoogleCalendarLinkCreator {
                         zoomDetails);
     }
 
-    private String formattedEndDateTimeOf(Huddle huddle) {
-        return huddle.startDateTime().plusHours(2).format(GOOGLE_DATE_TIME_FORMATTER);
+    private String formattedEndDateTimeOf(Ensemble ensemble) {
+        return ensemble.startDateTime().plusHours(2).format(GOOGLE_DATE_TIME_FORMATTER);
     }
 
-    private String formattedStartDateTimeOf(Huddle huddle) {
-        return huddle.startDateTime().format(GOOGLE_DATE_TIME_FORMATTER);
+    private String formattedStartDateTimeOf(Ensemble ensemble) {
+        return ensemble.startDateTime().format(GOOGLE_DATE_TIME_FORMATTER);
     }
 
-    private String encodedZoomLinkOf(Huddle huddle) {
-        String zoomLinkString = huddle.zoomMeetingLink().toString();
+    private String encodedZoomLinkOf(Ensemble ensemble) {
+        String zoomLinkString = ensemble.zoomMeetingLink().toString();
         return encode("Zoom link is: <a href='" + zoomLinkString + "'>" + zoomLinkString + "</a>");
     }
 
-    private String encodedNameOf(Huddle huddle) {
-        return encode(huddle.name());
+    private String encodedNameOf(Ensemble ensemble) {
+        return encode(ensemble.name());
     }
 
     private String encode(String unencoded) {

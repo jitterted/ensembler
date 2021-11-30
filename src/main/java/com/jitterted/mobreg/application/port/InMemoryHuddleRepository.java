@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.application.port;
 
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 
 import java.util.List;
 import java.util.Map;
@@ -10,28 +10,28 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemoryHuddleRepository implements HuddleRepository {
-    private final Map<HuddleId, Huddle> huddles = new ConcurrentHashMap<>();
+    private final Map<EnsembleId, Ensemble> huddles = new ConcurrentHashMap<>();
     private final AtomicLong sequence = new AtomicLong(0);
     private int saveCount = 0;
 
     @Override
-    public Huddle save(Huddle huddle) {
-        if (huddle.getId() == null) {
-            huddle.setId(HuddleId.of(sequence.getAndIncrement()));
+    public Ensemble save(Ensemble ensemble) {
+        if (ensemble.getId() == null) {
+            ensemble.setId(EnsembleId.of(sequence.getAndIncrement()));
         }
-        huddles.put(huddle.getId(), huddle);
+        huddles.put(ensemble.getId(), ensemble);
         saveCount++;
-        return huddle;
+        return ensemble;
     }
 
     @Override
-    public List<Huddle> findAll() {
+    public List<Ensemble> findAll() {
         return List.copyOf(huddles.values());
     }
 
     @Override
-    public Optional<Huddle> findById(HuddleId huddleId) {
-        return Optional.ofNullable(huddles.get(huddleId));
+    public Optional<Ensemble> findById(EnsembleId ensembleId) {
+        return Optional.ofNullable(huddles.get(ensembleId));
     }
 
     public int saveCount() {

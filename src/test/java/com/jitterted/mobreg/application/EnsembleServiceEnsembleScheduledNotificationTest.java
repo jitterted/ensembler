@@ -3,7 +3,7 @@ package com.jitterted.mobreg.application;
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.Notifier;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-class HuddleServiceEnsembleScheduledNotificationTest {
+class EnsembleServiceEnsembleScheduledNotificationTest {
 
     @Test
     public void whenHuddleScheduledEnsembleOpenNotificationIsSent() throws Exception {
@@ -51,7 +51,7 @@ class HuddleServiceEnsembleScheduledNotificationTest {
         }
 
         @Override
-        public void memberRegistered(Huddle huddle, Member member) {
+        public void memberRegistered(Ensemble ensemble, Member member) {
             throw new UnsupportedOperationException();
         }
 

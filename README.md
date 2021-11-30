@@ -2,8 +2,8 @@
 # MobReg - The Mob Programming Registrar
 
 I wrote this tool to help me manage public (and private) remote mob programming sessions, where participants are not part of an existing team, but are individuals joining to learn a skill, or to help develop a product.
-Since folks can come and go, managing who is participating in which mob programming session (known as a "huddle") can get tedious.
-Managing their access to the GitHub repository, knowing if they're new to mobbing, and making sure no more than 5 people are part of each huddle, etc., pushed me over the edge into creating this tool.
+Since folks can come and go, managing who is participating in which mob programming session (known as a "ensemble") can get tedious.
+Managing their access to the GitHub repository, knowing if they're new to mobbing, and making sure no more than 5 people are part of each ensemble, etc., pushed me over the edge into creating this tool.
 
 This is currently a Work In Progress, being built almost 100% in public, [live on Twitch](https://JitterTed.Live).
 

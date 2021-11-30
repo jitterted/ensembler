@@ -1,8 +1,8 @@
 package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
@@ -10,19 +10,19 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-class HuddleServiceCompletedTest {
+class EnsembleServiceCompletedTest {
 
     @Test
     public void completedHuddleIsCompletedWithLinkAndSavedInRepository() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
-        Huddle huddle = new Huddle("Completed", ZonedDateTime.now());
-        HuddleId huddleId = huddleRepository.save(huddle).getId();
+        Ensemble ensemble = new Ensemble("Completed", ZonedDateTime.now());
+        EnsembleId ensembleId = huddleRepository.save(ensemble).getId();
         huddleRepository.resetSaveCount();
 
-        huddleService.completeWith(huddleId, "https://recording.link/abc987");
+        huddleService.completeWith(ensembleId, "https://recording.link/abc987");
 
-        Optional<Huddle> foundHuddle = huddleRepository.findById(huddleId);
+        Optional<Ensemble> foundHuddle = huddleRepository.findById(ensembleId);
         assertThat(foundHuddle)
                 .isPresent();
         assertThat(foundHuddle.get().isCompleted())

@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.out.notification.pushover;
 
 import com.jitterted.mobreg.application.port.Notifier;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -37,7 +37,7 @@ public class PushoverNotifier implements Notifier {
     }
 
     @Override
-    public void memberRegistered(Huddle huddle, Member member) {
+    public void memberRegistered(Ensemble ensemble, Member member) {
         throw new UnsupportedOperationException();
     }
 

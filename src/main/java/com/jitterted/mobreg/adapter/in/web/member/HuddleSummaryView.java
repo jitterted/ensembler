@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.DateTimeFormatting;
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberStatus;
 
@@ -18,28 +18,28 @@ public record HuddleSummaryView(long id,
                                 String recordingLink,
                                 String memberStatus) {
 
-    public static List<HuddleSummaryView> from(List<Huddle> huddles, MemberId memberId) {
-        return huddles.stream()
-                      .filter(huddle -> huddle.statusFor(memberId, ZonedDateTime.now()) != MemberStatus.HIDDEN)
-                      .map(huddle -> toView(huddle, memberId))
-                      .toList();
+    public static List<HuddleSummaryView> from(List<Ensemble> ensembles, MemberId memberId) {
+        return ensembles.stream()
+                        .filter(huddle -> huddle.statusFor(memberId, ZonedDateTime.now()) != MemberStatus.HIDDEN)
+                        .map(huddle -> toView(huddle, memberId))
+                        .toList();
     }
 
-    public static HuddleSummaryView toView(Huddle huddle, MemberId memberId) {
-        return new HuddleSummaryView(huddle.getId().id(),
-                                     huddle.name(),
-                                     huddle.zoomMeetingLink().toString(),
-                                     DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(huddle.startDateTime()),
-                                     new GoogleCalendarLinkCreator().createFor(huddle),
-                                     huddle.acceptedCount(),
-                                     huddle.recordingLink().toString(),
-                                     memberStatusToViewString(huddle, memberId));
+    public static HuddleSummaryView toView(Ensemble ensemble, MemberId memberId) {
+        return new HuddleSummaryView(ensemble.getId().id(),
+                                     ensemble.name(),
+                                     ensemble.zoomMeetingLink().toString(),
+                                     DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(ensemble.startDateTime()),
+                                     new GoogleCalendarLinkCreator().createFor(ensemble),
+                                     ensemble.acceptedCount(),
+                                     ensemble.recordingLink().toString(),
+                                     memberStatusToViewString(ensemble, memberId));
     }
 
-    private static String memberStatusToViewString(Huddle huddle, MemberId memberId) {
-        return huddle.statusFor(memberId, ZonedDateTime.now())
-                     .toString()
-                     .toLowerCase();
+    private static String memberStatusToViewString(Ensemble ensemble, MemberId memberId) {
+        return ensemble.statusFor(memberId, ZonedDateTime.now())
+                       .toString()
+                       .toLowerCase();
     }
 
 }

@@ -6,7 +6,7 @@ import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -18,23 +18,23 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class DashboardHuddleViewTest {
+public class DashboardEnsembleViewTest {
 
     @Test
     public void detailViewOfExistingHuddleByItsIdIsReturned() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
-        Huddle savedHuddle = huddleRepository.save(new Huddle("Huddle #1", ZonedDateTime.now()));
+        Ensemble savedEnsemble = huddleRepository.save(new Ensemble("Ensemble #1", ZonedDateTime.now()));
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
 
         Model model = new ConcurrentModel();
         adminDashboardController.huddleDetailView(model, 0L);
 
-        HuddleDetailView huddle = (HuddleDetailView) model.getAttribute("huddle");
+        HuddleDetailView huddle = (HuddleDetailView) model.getAttribute("ensemble");
 
         assertThat(huddle.name())
-                .isEqualTo(savedHuddle.name());
+                .isEqualTo(savedEnsemble.name());
     }
 
     @Test
@@ -45,15 +45,15 @@ public class DashboardHuddleViewTest {
 
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
-        Huddle huddle = new Huddle("Huddle #1", ZonedDateTime.now());
-        huddle.acceptedBy(member.getId());
-        huddleRepository.save(huddle);
+        Ensemble ensemble = new Ensemble("Ensemble #1", ZonedDateTime.now());
+        ensemble.acceptedBy(member.getId());
+        huddleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
 
         Model model = new ConcurrentModel();
-        adminDashboardController.huddleDetailView(model, huddle.getId().id());
+        adminDashboardController.huddleDetailView(model, ensemble.getId().id());
 
-        HuddleDetailView huddleView = (HuddleDetailView) model.getAttribute("huddle");
+        HuddleDetailView huddleView = (HuddleDetailView) model.getAttribute("ensemble");
 
         assertThat(huddleView.memberViews())
                 .hasSize(1);

@@ -2,7 +2,7 @@ package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.jetbrains.annotations.NotNull;
@@ -32,12 +32,12 @@ public class MemberFactory {
         return member;
     }
 
-    public static void registerCountMembersWithHuddle(Huddle huddle, int count) {
+    public static void registerCountMembersWithHuddle(Ensemble ensemble, int count) {
         MemberFactory memberFactory = new MemberFactory();
         for (int i = 0; i < count; i++) {
             MemberId memberId = memberFactory.createMemberInRepositoryReturningId(
                     i, "name" + i, "github" + i);
-            huddle.acceptedBy(memberId);
+            ensemble.acceptedBy(memberId);
         }
     }
 

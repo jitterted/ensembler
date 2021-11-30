@@ -6,11 +6,11 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-class HuddleEditTest {
+class EnsembleEditTest {
 
     @Test
     public void canChangeNameForExistingHuddle() throws Exception {
-        Huddle before = new Huddle("before", ZonedDateTime.now());
+        Ensemble before = new Ensemble("before", ZonedDateTime.now());
 
         before.changeNameTo("after");
 
@@ -20,16 +20,16 @@ class HuddleEditTest {
 
     @Test
     public void changeNameToNullNotAllowed() throws Exception {
-        Huddle huddle = new Huddle("before", ZonedDateTime.now());
+        Ensemble ensemble = new Ensemble("before", ZonedDateTime.now());
 
         assertThatThrownBy(() -> {
-            huddle.changeNameTo(null);
+            ensemble.changeNameTo(null);
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void canChangeToExistingName() throws Exception {
-        Huddle before = new Huddle("before", ZonedDateTime.now());
+        Ensemble before = new Ensemble("before", ZonedDateTime.now());
 
         before.changeNameTo("before");
 
@@ -39,55 +39,55 @@ class HuddleEditTest {
 
     @Test
     public void canChangeNameAfterCompleted() throws Exception {
-        Huddle huddle = new Huddle("before", ZonedDateTime.now());
-        huddle.complete();
+        Ensemble ensemble = new Ensemble("before", ZonedDateTime.now());
+        ensemble.complete();
 
-        huddle.changeNameTo("after");
+        ensemble.changeNameTo("after");
 
-        assertThat(huddle.name())
+        assertThat(ensemble.name())
                 .isEqualTo("after");
     }
 
     @Test
     public void canChangeStartDateTime() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
-        Huddle huddle = new Huddle("before", now);
+        Ensemble ensemble = new Ensemble("before", now);
 
-        huddle.changeStartDateTimeTo(now.plusDays(7));
+        ensemble.changeStartDateTimeTo(now.plusDays(7));
 
-        assertThat(huddle.startDateTime())
+        assertThat(ensemble.startDateTime())
                 .isEqualTo(now.plusDays(7));
     }
 
     @Test
     public void changeDateTimeToNullNotAllowed() throws Exception {
-        Huddle huddle = new Huddle("before", ZonedDateTime.now());
+        Ensemble ensemble = new Ensemble("before", ZonedDateTime.now());
 
         assertThatThrownBy(() -> {
-            huddle.changeStartDateTimeTo(null);
+            ensemble.changeStartDateTimeTo(null);
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void canChangeToExistingDateTime() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
-        Huddle huddle = new Huddle("before", now);
+        Ensemble ensemble = new Ensemble("before", now);
 
-        huddle.changeStartDateTimeTo(now.plusSeconds(0)); // want a different object here, but same date/time
+        ensemble.changeStartDateTimeTo(now.plusSeconds(0)); // want a different object here, but same date/time
 
-        assertThat(huddle.startDateTime())
+        assertThat(ensemble.startDateTime())
                 .isEqualTo(now);
     }
 
     @Test
     public void canChangeDateTimeAfterCompleted() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
-        Huddle huddle = new Huddle("before", now);
-        huddle.complete();
+        Ensemble ensemble = new Ensemble("before", now);
+        ensemble.complete();
 
-        huddle.changeStartDateTimeTo(now.plusHours(1));
+        ensemble.changeStartDateTimeTo(now.plusHours(1));
 
-        assertThat(huddle.startDateTime())
+        assertThat(ensemble.startDateTime())
                 .isEqualTo(now.plusHours(1));
     }
 }

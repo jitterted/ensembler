@@ -1,15 +1,15 @@
 package com.jitterted.mobreg.application.port;
 
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface HuddleRepository {
-    Huddle save(Huddle huddle);
+    Ensemble save(Ensemble ensemble);
 
-    List<Huddle> findAll();
+    List<Ensemble> findAll();
 
-    Optional<Huddle> findById(HuddleId huddleId);
+    Optional<Ensemble> findById(EnsembleId ensembleId);
 }

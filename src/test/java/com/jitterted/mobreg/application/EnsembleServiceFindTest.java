@@ -4,8 +4,8 @@ import com.jitterted.mobreg.application.port.HuddleRepository;
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Disabled;
@@ -18,23 +18,23 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class HuddleServiceFindTest {
+public class EnsembleServiceFindTest {
 
     @Test
     public void whenRepositoryIsEmptyFindReturnsEmptyOptional() throws Exception {
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(new InMemoryHuddleRepository());
 
-        assertThat(huddleService.findById(HuddleId.of(9999)))
+        assertThat(huddleService.findById(EnsembleId.of(9999)))
                 .isEmpty();
     }
 
     @Test
     public void whenRepositoryHasHuddleFindByItsIdReturnsItInAnOptional() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        Huddle savedHuddle = huddleRepository.save(new Huddle("test", ZonedDateTime.now()));
+        Ensemble savedEnsemble = huddleRepository.save(new Ensemble("test", ZonedDateTime.now()));
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
 
-        Optional<Huddle> foundHuddle = huddleService.findById(savedHuddle.getId());
+        Optional<Ensemble> foundHuddle = huddleService.findById(savedEnsemble.getId());
 
         assertThat(foundHuddle)
                 .isNotEmpty();
@@ -48,10 +48,10 @@ public class HuddleServiceFindTest {
         huddleService.scheduleHuddle("one", ZonedDateTime.of(2021, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
         huddleService.scheduleHuddle("three", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
 
-        List<Huddle> huddles = huddleService.allHuddlesByDateTimeDescending();
+        List<Ensemble> ensembles = huddleService.allHuddlesByDateTimeDescending();
 
-        assertThat(huddles)
-                .extracting(Huddle::name)
+        assertThat(ensembles)
+                .extracting(Ensemble::name)
                 .containsExactly("three", "two", "one");
     }
 
@@ -62,21 +62,21 @@ public class HuddleServiceFindTest {
         MemberId memberId = memberRepository.save(new Member("member", "ghuser")).getId();
         HuddleRepository huddleRepository = new InMemoryHuddleRepository();
         HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
-        Huddle huddle1 = new Huddle("completed-member", ZonedDateTime.of(2021, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()));
-        huddle1.acceptedBy(memberId);
-        huddle1.complete();
-        huddle1 = huddleRepository.save(huddle1);
+        Ensemble ensemble1 = new Ensemble("completed-member", ZonedDateTime.of(2021, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()));
+        ensemble1.acceptedBy(memberId);
+        ensemble1.complete();
+        ensemble1 = huddleRepository.save(ensemble1);
 
-        List<Huddle> huddles = huddleService.findAllForMember(memberId);
+        List<Ensemble> ensembles = huddleService.findAllForMember(memberId);
 
-        assertThat(huddles)
-                .containsOnly(huddle1);
+        assertThat(ensembles)
+                .containsOnly(ensemble1);
     }
 
     /* Other test cases
-            Huddle huddle2 = new Huddle("completed-not-member", ZonedDateTime.of(2021, 9, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
+            Ensemble huddle2 = new Ensemble("completed-not-member", ZonedDateTime.of(2021, 9, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
         huddle2 = huddleRepository.save(huddle2);
-        Huddle huddle3 = new Huddle("not-completed-not-member", ZonedDateTime.of(2021, 10, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
+        Ensemble huddle3 = new Ensemble("not-completed-not-member", ZonedDateTime.of(2021, 10, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
         huddle3 = huddleRepository.save(huddle3);
         HuddleService huddleService = new HuddleService(huddleRepository);
 

@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.out.email;
 
 import com.jitterted.mobreg.application.MemberBuilder;
 import com.jitterted.mobreg.application.port.Notifier;
-import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ class EmailNotifierTest {
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(memberBuilder.memberService(), spyEmailer);
 
-        notifier.newHuddleOpened("New Huddle", URI.create("https://mobreg.herokuapp.com/"));
+        notifier.newHuddleOpened("Ensemble #314", URI.create("https://mobreg.herokuapp.com/"));
 
         assertThat(spyEmailer.emailRecipients())
                 .containsExactly("name@example.com");
@@ -30,7 +30,7 @@ class EmailNotifierTest {
                 .isEqualTo("Ensembler Notification: New Ensemble Scheduled");
         assertThat(spyEmailer.body())
                 .isEqualTo("""
-                                   New Ensemble 'New Huddle' has been scheduled.
+                                   New Ensemble 'Ensemble #314' has been scheduled.
                                    <br/>
                                    Visit <a href="https://mobreg.herokuapp.com/">MobReg</a> to register.
                                    """);
@@ -41,11 +41,11 @@ class EmailNotifierTest {
         Member member = new MemberBuilder().withFirstName("FirstName")
                                            .withEmail("name@example.com")
                                            .build();
-        Huddle huddle = new Huddle("Ensemble #123", URI.create("https://zoom.us"), ZonedDateTime.of(2021, 10, 20, 16, 0, 0, 0, ZoneOffset.UTC));
+        Ensemble ensemble = new Ensemble("Ensemble #123", URI.create("https://zoom.us"), ZonedDateTime.of(2021, 10, 20, 16, 0, 0, 0, ZoneOffset.UTC));
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(null, spyEmailer);
 
-        notifier.memberRegistered(huddle, member);
+        notifier.memberRegistered(ensemble, member);
 
         assertThat(spyEmailer.emailRecipients())
                 .containsExactly("name@example.com");
@@ -62,11 +62,11 @@ class EmailNotifierTest {
     @Test
     public void memberWithoutEmailRegistersThenNoEmailIsSent() throws Exception {
         Member member = new MemberBuilder().withNoEmail().build();
-        Huddle huddle = new Huddle("Doesn't matter", URI.create("https://whocar.es"), ZonedDateTime.now());
+        Ensemble ensemble = new Ensemble("Doesn't matter", URI.create("https://whocar.es"), ZonedDateTime.now());
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(null, spyEmailer);
 
-        notifier.memberRegistered(huddle, member);
+        notifier.memberRegistered(ensemble, member);
 
         assertThat(spyEmailer.body())
                 .isNull();

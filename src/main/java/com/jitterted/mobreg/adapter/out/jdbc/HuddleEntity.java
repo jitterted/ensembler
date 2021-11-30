@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
-import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 
@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// Database Entity for Huddle to be stored in the database
+// Database Entity for Ensemble to be stored in the database
 public class HuddleEntity {
     @Id
     private Long id;
@@ -30,47 +30,47 @@ public class HuddleEntity {
     @MappedCollection(idColumn = "huddle_id")
     private Set<DeclinedMember> declinedMembers = new HashSet<>();
 
-    public static HuddleEntity from(Huddle huddle) {
+    public static HuddleEntity from(Ensemble ensemble) {
         HuddleEntity huddleEntity = new HuddleEntity();
-        if (huddle.getId() != null) {
-            huddleEntity.setId(huddle.getId().id());
+        if (ensemble.getId() != null) {
+            huddleEntity.setId(ensemble.getId().id());
         }
-        huddleEntity.setName(huddle.name());
-        huddleEntity.setDateTimeUtc(huddle.startDateTime().toLocalDateTime());
-        huddleEntity.setZoomMeetingLink(huddle.zoomMeetingLink().toString());
-        huddleEntity.setCompleted(huddle.isCompleted());
-        huddleEntity.setRecordingLink(huddle.recordingLink().toString());
+        huddleEntity.setName(ensemble.name());
+        huddleEntity.setDateTimeUtc(ensemble.startDateTime().toLocalDateTime());
+        huddleEntity.setZoomMeetingLink(ensemble.zoomMeetingLink().toString());
+        huddleEntity.setCompleted(ensemble.isCompleted());
+        huddleEntity.setRecordingLink(ensemble.recordingLink().toString());
         huddleEntity.setAcceptedMembers(
-                huddle.acceptedMembers()
-                      .stream()
-                      .map(AcceptedMember::toEntityId)
-                      .collect(Collectors.toSet()));
+                ensemble.acceptedMembers()
+                        .stream()
+                        .map(AcceptedMember::toEntityId)
+                        .collect(Collectors.toSet()));
         huddleEntity.setDeclinedMembers(
-                huddle.declinedMembers()
-                      .map(DeclinedMember::toEntityId)
-                      .collect(Collectors.toSet()));
+                ensemble.declinedMembers()
+                        .map(DeclinedMember::toEntityId)
+                        .collect(Collectors.toSet()));
         return huddleEntity;
     }
 
-    public Huddle asHuddle() {
+    public Ensemble asHuddle() {
         ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneOffset.UTC);
-        Huddle huddle = new Huddle(name, URI.create(zoomMeetingLink), startDateTime);
-        huddle.setId(HuddleId.of(id));
-        huddle.linkToRecordingAt(URI.create(recordingLink));
+        Ensemble ensemble = new Ensemble(name, URI.create(zoomMeetingLink), startDateTime);
+        ensemble.setId(EnsembleId.of(id));
+        ensemble.linkToRecordingAt(URI.create(recordingLink));
 
         acceptedMembers.stream()
                        .map(AcceptedMember::asMemberId)
-                       .forEach(huddle::acceptedBy);
+                       .forEach(ensemble::acceptedBy);
 
         declinedMembers.stream()
                        .map(DeclinedMember::asMemberId)
-                       .forEach(huddle::declinedBy);
+                       .forEach(ensemble::declinedBy);
 
         if (isCompleted) {
-            huddle.complete();
+            ensemble.complete();
         }
 
-        return huddle;
+        return ensemble;
     }
 
     public Long getId() {
