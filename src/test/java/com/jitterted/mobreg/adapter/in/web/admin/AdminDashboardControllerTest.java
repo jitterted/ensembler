@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
-import com.jitterted.mobreg.application.HuddleService;
-import com.jitterted.mobreg.application.HuddleServiceFactory;
+import com.jitterted.mobreg.application.EnsembleService;
+import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
@@ -34,9 +34,9 @@ class AdminDashboardControllerTest {
         memberRepository.save(member);
         MemberService memberService = new MemberService(memberRepository);
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
         huddleRepository.save(new Ensemble("Name", ZonedDateTime.now()));
-        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
         adminDashboardController.dashboardView(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("tedyoung", "ROLE_MEMBER"));
@@ -109,11 +109,11 @@ class AdminDashboardControllerTest {
         memberRepository.save(member2);
         MemberService memberService = new MemberService(memberRepository);
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository, memberRepository);
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository, memberRepository);
         Ensemble ensemble = new Ensemble("Manual Registered Ensemble", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(23));
         huddleRepository.save(ensemble);
-        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         AdminRegistrationForm form = new AdminRegistrationForm(ensemble.getId());
         form.setGithubUsername("githubtwo");
@@ -126,8 +126,8 @@ class AdminDashboardControllerTest {
     @NotNull
     private AdminDashboardController createAdminDashboardController(InMemoryHuddleRepository huddleRepository) {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
-        return new AdminDashboardController(huddleService, memberService);
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
+        return new AdminDashboardController(ensembleService, memberService);
     }
 
 }

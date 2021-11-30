@@ -18,22 +18,22 @@ class EnsembleServiceMemberRegistrationNotificationTest {
 
     @Test
     public void memberRegistersForHuddleThenReceivesEmailWithHuddleDetailInfo() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        InMemoryHuddleRepository ensembleRepository = new InMemoryHuddleRepository();
         Ensemble ensemble = new Ensemble("scheduled",
                                          URI.create("https://zoom.us"),
                                          ZonedDateTime.of(2021, 10, 20, 16, 0, 0, 0, ZoneOffset.UTC));
         EnsembleId ensembleId = EnsembleId.of(7L);
         ensemble.setId(ensembleId);
-        huddleRepository.save(ensemble);
+        ensembleRepository.save(ensemble);
         MemberBuilder memberBuilder = new MemberBuilder();
         MemberId memberId = memberBuilder.withFirstName("Fake")
                                          .withEmail("fake@example.com")
                                          .build()
                                          .getId();
         SpyEmailNotifier spyEmailNotifier = new SpyEmailNotifier();
-        HuddleService huddleService = new HuddleService(huddleRepository, memberBuilder.memberRepository(), spyEmailNotifier);
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberBuilder.memberRepository(), spyEmailNotifier);
 
-        huddleService.registerMember(ensembleId, memberId);
+        ensembleService.registerMember(ensembleId, memberId);
 
         assertThat(spyEmailNotifier.emailBody())
                 .contains("https://zoom.us",

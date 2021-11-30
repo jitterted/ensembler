@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
-import com.jitterted.mobreg.application.HuddleService;
-import com.jitterted.mobreg.application.HuddleServiceFactory;
+import com.jitterted.mobreg.application.EnsembleService;
+import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.application.port.HuddleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
@@ -53,14 +53,14 @@ class EnsembleServiceMemberTest {
 
     @Test
     public void existingMemberRegistersForHuddleThenIsRegisteredMember() throws Exception {
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository, memberRepository);
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository, memberRepository);
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
         EnsembleId ensembleId = huddleRepository.save(ensemble).getId();
 
         Member member = new Member("memberFirstName", "memberGithubUsername");
         MemberId memberId = memberRepository.save(member).getId();
 
-        huddleService.registerMember(ensembleId, memberId);
+        ensembleService.registerMember(ensembleId, memberId);
 
         Optional<Ensemble> foundHuddle = huddleRepository.findById(ensembleId);
 

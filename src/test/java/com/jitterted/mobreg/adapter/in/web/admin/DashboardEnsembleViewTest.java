@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
-import com.jitterted.mobreg.application.HuddleService;
-import com.jitterted.mobreg.application.HuddleServiceFactory;
+import com.jitterted.mobreg.application.EnsembleService;
+import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
@@ -24,9 +24,9 @@ public class DashboardEnsembleViewTest {
     public void detailViewOfExistingHuddleByItsIdIsReturned() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
         Ensemble savedEnsemble = huddleRepository.save(new Ensemble("Ensemble #1", ZonedDateTime.now()));
-        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
         adminDashboardController.huddleDetailView(model, 0L);
@@ -44,11 +44,11 @@ public class DashboardEnsembleViewTest {
         memberService.save(member);
 
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
         Ensemble ensemble = new Ensemble("Ensemble #1", ZonedDateTime.now());
         ensemble.acceptedBy(member.getId());
         huddleRepository.save(ensemble);
-        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
         adminDashboardController.huddleDetailView(model, ensemble.getId().id());
@@ -63,8 +63,8 @@ public class DashboardEnsembleViewTest {
     public void detailViewOfNonExistentHuddleReturns404NotFound() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
-        AdminDashboardController adminDashboardController = new AdminDashboardController(huddleService, memberService);
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
+        AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
         Model model = new ConcurrentModel();
 
         assertThatThrownBy(() -> {

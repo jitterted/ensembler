@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.out.notification.pushover;
 
 import com.jitterted.mobreg.NoSecurityTestConfiguration;
-import com.jitterted.mobreg.application.HuddleService;
+import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.HuddleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
@@ -45,7 +45,7 @@ public class PushoverNotificationTest {
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
     @Autowired
-    HuddleService huddleService;
+    EnsembleService ensembleService;
 
     @Autowired
     MemberRepository memberRepository;

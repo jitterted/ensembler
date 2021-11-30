@@ -14,15 +14,15 @@ class EnsembleServiceCompletedTest {
 
     @Test
     public void completedHuddleIsCompletedWithLinkAndSavedInRepository() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
+        InMemoryHuddleRepository ensembleRepository = new InMemoryHuddleRepository();
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         Ensemble ensemble = new Ensemble("Completed", ZonedDateTime.now());
-        EnsembleId ensembleId = huddleRepository.save(ensemble).getId();
-        huddleRepository.resetSaveCount();
+        EnsembleId ensembleId = ensembleRepository.save(ensemble).getId();
+        ensembleRepository.resetSaveCount();
 
-        huddleService.completeWith(ensembleId, "https://recording.link/abc987");
+        ensembleService.completeWith(ensembleId, "https://recording.link/abc987");
 
-        Optional<Ensemble> foundHuddle = huddleRepository.findById(ensembleId);
+        Optional<Ensemble> foundHuddle = ensembleRepository.findById(ensembleId);
         assertThat(foundHuddle)
                 .isPresent();
         assertThat(foundHuddle.get().isCompleted())
@@ -30,7 +30,7 @@ class EnsembleServiceCompletedTest {
         assertThat(foundHuddle.get().recordingLink().toString())
                 .isEqualTo("https://recording.link/abc987");
 
-        assertThat(huddleRepository.saveCount())
+        assertThat(ensembleRepository.saveCount())
                 .isEqualTo(1);
     }
 }

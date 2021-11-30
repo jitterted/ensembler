@@ -1,6 +1,6 @@
 package com.jitterted.mobreg;
 
-import com.jitterted.mobreg.application.HuddleService;
+import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.HuddleRepository;
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
@@ -48,8 +48,8 @@ public class MobRegApplication {
 
 
     @Bean
-    public HuddleService createHuddleService(HuddleRepository huddleRepository, MemberRepository memberRepository, Notifier notifier) {
-        return new HuddleService(huddleRepository, memberRepository, notifier);
+    public EnsembleService createHuddleService(HuddleRepository huddleRepository, MemberRepository memberRepository, Notifier notifier) {
+        return new EnsembleService(huddleRepository, memberRepository, notifier);
     }
 
     @Bean

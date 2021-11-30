@@ -22,19 +22,19 @@ public class EnsembleServiceFindTest {
 
     @Test
     public void whenRepositoryIsEmptyFindReturnsEmptyOptional() throws Exception {
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(new InMemoryHuddleRepository());
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(new InMemoryHuddleRepository());
 
-        assertThat(huddleService.findById(EnsembleId.of(9999)))
+        assertThat(ensembleService.findById(EnsembleId.of(9999)))
                 .isEmpty();
     }
 
     @Test
     public void whenRepositoryHasHuddleFindByItsIdReturnsItInAnOptional() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        Ensemble savedEnsemble = huddleRepository.save(new Ensemble("test", ZonedDateTime.now()));
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
+        InMemoryHuddleRepository ensembleRepository = new InMemoryHuddleRepository();
+        Ensemble savedEnsemble = ensembleRepository.save(new Ensemble("test", ZonedDateTime.now()));
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
 
-        Optional<Ensemble> foundHuddle = huddleService.findById(savedEnsemble.getId());
+        Optional<Ensemble> foundHuddle = ensembleService.findById(savedEnsemble.getId());
 
         assertThat(foundHuddle)
                 .isNotEmpty();
@@ -42,13 +42,13 @@ public class EnsembleServiceFindTest {
 
     @Test
     public void allHuddlesOrderedByDateTimeDescendingIsInCorrectOrder() throws Exception {
-        HuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
-        huddleService.scheduleHuddle("two", ZonedDateTime.of(2021, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()));
-        huddleService.scheduleHuddle("one", ZonedDateTime.of(2021, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
-        huddleService.scheduleHuddle("three", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
+        HuddleRepository ensembleRepository = new InMemoryHuddleRepository();
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
+        ensembleService.scheduleHuddle("two", ZonedDateTime.of(2021, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()));
+        ensembleService.scheduleHuddle("one", ZonedDateTime.of(2021, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
+        ensembleService.scheduleHuddle("three", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
 
-        List<Ensemble> ensembles = huddleService.allHuddlesByDateTimeDescending();
+        List<Ensemble> ensembles = ensembleService.allHuddlesByDateTimeDescending();
 
         assertThat(ensembles)
                 .extracting(Ensemble::name)
@@ -60,25 +60,25 @@ public class EnsembleServiceFindTest {
     public void findAllHuddlesForMemberDoesNotReturnCompletedHuddlesWhereMemberIsNotRegistered() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         MemberId memberId = memberRepository.save(new Member("member", "ghuser")).getId();
-        HuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
+        HuddleRepository ensembleRepository = new InMemoryHuddleRepository();
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         Ensemble ensemble1 = new Ensemble("completed-member", ZonedDateTime.of(2021, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()));
         ensemble1.acceptedBy(memberId);
         ensemble1.complete();
-        ensemble1 = huddleRepository.save(ensemble1);
+        ensemble1 = ensembleRepository.save(ensemble1);
 
-        List<Ensemble> ensembles = huddleService.findAllForMember(memberId);
+        List<Ensemble> ensembles = ensembleService.findAllForMember(memberId);
 
         assertThat(ensembles)
                 .containsOnly(ensemble1);
     }
 
     /* Other test cases
-            Ensemble huddle2 = new Ensemble("completed-not-member", ZonedDateTime.of(2021, 9, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
-        huddle2 = huddleRepository.save(huddle2);
-        Ensemble huddle3 = new Ensemble("not-completed-not-member", ZonedDateTime.of(2021, 10, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
-        huddle3 = huddleRepository.save(huddle3);
-        HuddleService huddleService = new HuddleService(huddleRepository);
+            Ensemble ensemble2 = new Ensemble("completed-not-member", ZonedDateTime.of(2021, 9, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
+        ensemble2 = ensembleRepository.save(ensemble2);
+        Ensemble ensemble3 = new Ensemble("not-completed-not-member", ZonedDateTime.of(2021, 10, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
+        ensemble3 = ensembleRepository.save(ensemble3);
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository);
 
     */
 

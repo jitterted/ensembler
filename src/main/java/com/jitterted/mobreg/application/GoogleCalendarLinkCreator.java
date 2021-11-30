@@ -14,7 +14,7 @@ public class GoogleCalendarLinkCreator {
 
     @NotNull
     public String createFor(Ensemble ensemble) {
-        String huddleName = encodedNameOf(ensemble);
+        String ensembleName = encodedNameOf(ensemble);
         String startDateTime = formattedStartDateTimeOf(ensemble);
         String endDateTime = formattedEndDateTimeOf(ensemble);
         String zoomDetails = encodedZoomLinkOf(ensemble);
@@ -22,7 +22,7 @@ public class GoogleCalendarLinkCreator {
         return "%s&text=%s&dates=%s/%s&details=%s"
                 .formatted(
                         GOOGLE_CALENDAR_LINK_BASE_URL,
-                        huddleName,
+                        ensembleName,
                         startDateTime,
                         endDateTime,
                         zoomDetails);

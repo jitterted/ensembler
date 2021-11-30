@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
-import com.jitterted.mobreg.application.HuddleService;
+import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -25,13 +25,13 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminDashboardController {
 
-    private final HuddleService huddleService;
+    private final EnsembleService ensembleService;
     private final MemberService memberService;
 
     @Autowired
-    public AdminDashboardController(HuddleService huddleService,
+    public AdminDashboardController(EnsembleService ensembleService,
                                     MemberService memberService) {
-        this.huddleService = huddleService;
+        this.ensembleService = ensembleService;
         this.memberService = memberService;
     }
 
@@ -46,7 +46,7 @@ public class AdminDashboardController {
         } else {
             throw new IllegalStateException("Not an OAuth2User");
         }
-        List<Ensemble> ensembles = huddleService.allHuddlesByDateTimeDescending();
+        List<Ensemble> ensembles = ensembleService.allHuddlesByDateTimeDescending();
         List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(ensembles);
         model.addAttribute("ensembles", huddleSummaryViews);
         model.addAttribute("scheduleHuddleForm", new ScheduleHuddleForm());
@@ -55,8 +55,8 @@ public class AdminDashboardController {
 
     @GetMapping("/huddle/{huddleId}")
     public String huddleDetailView(Model model, @PathVariable("huddleId") Long huddleId) {
-        Ensemble ensemble = huddleService.findById(EnsembleId.of(huddleId))
-                                         .orElseThrow(() -> {
+        Ensemble ensemble = ensembleService.findById(EnsembleId.of(huddleId))
+                                           .orElseThrow(() -> {
                                          throw new ResponseStatusException(HttpStatus.NOT_FOUND);
                                      });
 
@@ -72,30 +72,30 @@ public class AdminDashboardController {
     @PostMapping("/huddle/{huddleId}")
     public String changeHuddle(ScheduleHuddleForm scheduleHuddleForm, @PathVariable("huddleId") Long id) {
         EnsembleId ensembleId = EnsembleId.of(id);
-        huddleService.changeNameDateTimeTo(ensembleId, scheduleHuddleForm.getName(), scheduleHuddleForm.getDateTimeInUtc());
+        ensembleService.changeNameDateTimeTo(ensembleId, scheduleHuddleForm.getName(), scheduleHuddleForm.getDateTimeInUtc());
         return "redirect:/admin/huddle/" + id;
     }
 
     @PostMapping("/schedule")
     public String scheduleHuddle(ScheduleHuddleForm scheduleHuddleForm) {
         if (scheduleHuddleForm.getZoomMeetingLink().isBlank()) {
-            huddleService.scheduleHuddle(scheduleHuddleForm.getName(),
-                                         scheduleHuddleForm.getDateTimeInUtc());
+            ensembleService.scheduleHuddle(scheduleHuddleForm.getName(),
+                                           scheduleHuddleForm.getDateTimeInUtc());
         } else {
-            huddleService.scheduleHuddle(scheduleHuddleForm.getName(),
-                                         URI.create(scheduleHuddleForm.getZoomMeetingLink()),
-                                         scheduleHuddleForm.getDateTimeInUtc());
+            ensembleService.scheduleHuddle(scheduleHuddleForm.getName(),
+                                           URI.create(scheduleHuddleForm.getZoomMeetingLink()),
+                                           scheduleHuddleForm.getDateTimeInUtc());
         }
         return "redirect:/admin/dashboard";
     }
 
     @PostMapping("/notify/{huddleId}")
     public String notifyHuddleScheduled(@PathVariable("huddleId") Long huddleId) {
-        Ensemble ensemble = huddleService.findById(EnsembleId.of(huddleId))
-                                         .orElseThrow(() -> {
+        Ensemble ensemble = ensembleService.findById(EnsembleId.of(huddleId))
+                                           .orElseThrow(() -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND);
                 });
-        huddleService.triggerHuddleOpenedNotification(ensemble);
+        ensembleService.triggerHuddleOpenedNotification(ensemble);
         return "redirect:/admin/dashboard";
     }
 
@@ -105,7 +105,7 @@ public class AdminDashboardController {
 
         Member member = memberService.findByGithubUsername(adminRegistrationForm.getGithubUsername());
 
-        huddleService.registerMember(ensembleId, member.getId());
+        ensembleService.registerMember(ensembleId, member.getId());
 
         return redirectToDetailViewFor(ensembleId);
     }
@@ -113,7 +113,7 @@ public class AdminDashboardController {
     @PostMapping("/huddle/{huddleId}/complete")
     public String completeHuddle(@PathVariable("huddleId") long id, CompleteHuddleForm completeHuddleForm) {
         EnsembleId ensembleId = EnsembleId.of(id);
-        huddleService.completeWith(ensembleId, completeHuddleForm.recordingLink());
+        ensembleService.completeWith(ensembleId, completeHuddleForm.recordingLink());
 
         return redirectToDetailViewFor(ensembleId);
     }

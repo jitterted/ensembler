@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
-import com.jitterted.mobreg.application.HuddleService;
+import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.HuddleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
@@ -31,7 +31,7 @@ public class MemberEndpointConfigurationTest {
     private MockMvc mockMvc;
 
     @MockBean
-    HuddleService huddleService;
+    EnsembleService ensembleService;
 
     @MockBean
     HuddleRepository huddleRepository;

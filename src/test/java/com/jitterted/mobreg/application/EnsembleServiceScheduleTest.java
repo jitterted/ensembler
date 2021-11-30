@@ -13,21 +13,21 @@ class EnsembleServiceScheduleTest {
 
     @Test
     public void singleScheduledHuddleIsReturnedForAllHuddles() throws Exception {
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(new InMemoryHuddleRepository());
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(new InMemoryHuddleRepository());
 
-        huddleService.scheduleHuddle("Name", ZonedDateTime.now());
+        ensembleService.scheduleHuddle("Name", ZonedDateTime.now());
 
-        assertThat(huddleService.allHuddles())
+        assertThat(ensembleService.allHuddles())
                 .hasSize(1);
     }
 
     @Test
-    public void huddleScheduledWithZoomLinkThenHasZoomLink() throws Exception {
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(new InMemoryHuddleRepository());
+    public void ensembleScheduledWithZoomLinkThenHasZoomLink() throws Exception {
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(new InMemoryHuddleRepository());
 
-        huddleService.scheduleHuddle("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
+        ensembleService.scheduleHuddle("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
 
-        assertThat(huddleService.allHuddles())
+        assertThat(ensembleService.allHuddles())
                 .extracting(Ensemble::zoomMeetingLink)
                 .extracting(URI::toString)
                 .containsOnly("https://zoom.us/j/123456?pwd=12345");

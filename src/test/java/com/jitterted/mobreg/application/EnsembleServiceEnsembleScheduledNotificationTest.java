@@ -18,11 +18,11 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
     @Test
     public void whenHuddleScheduledEnsembleOpenNotificationIsSent() throws Exception {
         MockNotifier mockNotifier = new MockNotifier();
-        HuddleService huddleService = new HuddleService(new InMemoryHuddleRepository(),
-                                                        new InMemoryMemberRepository(),
-                                                        mockNotifier);
+        EnsembleService ensembleService = new EnsembleService(new InMemoryHuddleRepository(),
+                                                              new InMemoryMemberRepository(),
+                                                              mockNotifier);
 
-        huddleService.scheduleHuddle("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
+        ensembleService.scheduleHuddle("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
 
         mockNotifier.verify();
     }
@@ -30,13 +30,13 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
     @Test
     public void whenHuddleScheduledWithZoomLinkEnsembleOpenNotificationIsSent() throws Exception {
         MockNotifier mockNotifier = new MockNotifier();
-        HuddleService huddleService = new HuddleService(new InMemoryHuddleRepository(),
-                                                        new InMemoryMemberRepository(),
-                                                        mockNotifier);
+        EnsembleService ensembleService = new EnsembleService(new InMemoryHuddleRepository(),
+                                                              new InMemoryMemberRepository(),
+                                                              mockNotifier);
 
-        huddleService.scheduleHuddle("Notifying Ensemble",
-                                     URI.create("https://zoom.us"),
-                                     ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
+        ensembleService.scheduleHuddle("Notifying Ensemble",
+                                       URI.create("https://zoom.us"),
+                                       ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
 
         mockNotifier.verify();
     }

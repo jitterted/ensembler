@@ -15,15 +15,15 @@ class EnsembleServiceEditExistingTest {
 
     @Test
     public void changesToExistingHuddleAreSaved() throws Exception {
-        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
+        InMemoryHuddleRepository ensembleRepository = new InMemoryHuddleRepository();
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         Ensemble ensemble = new Ensemble("Before", URI.create("https://zoom.us/before"), ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 19, 17));
-        EnsembleId ensembleId = huddleRepository.save(ensemble).getId();
+        EnsembleId ensembleId = ensembleRepository.save(ensemble).getId();
 
         ZonedDateTime afterZonedDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 20, 18);
-        huddleService.changeNameDateTimeTo(ensembleId, "After", afterZonedDateTime);
+        ensembleService.changeNameDateTimeTo(ensembleId, "After", afterZonedDateTime);
 
-        Ensemble found = huddleRepository.findById(ensembleId).orElseThrow();
+        Ensemble found = ensembleRepository.findById(ensembleId).orElseThrow();
         assertThat(found.name())
                 .isEqualTo("After");
         assertThat(found.startDateTime())

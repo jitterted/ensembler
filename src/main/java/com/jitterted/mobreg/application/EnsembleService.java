@@ -14,12 +14,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class HuddleService {
+public class EnsembleService {
     private final HuddleRepository huddleRepository;
     private final Notifier notifier;
     private final MemberRepository memberRepository;
 
-    public HuddleService(HuddleRepository huddleRepository, MemberRepository memberRepository, Notifier notifier) {
+    public EnsembleService(HuddleRepository huddleRepository, MemberRepository memberRepository, Notifier notifier) {
         this.huddleRepository = huddleRepository;
         this.notifier = notifier;
         this.memberRepository = memberRepository;
@@ -60,7 +60,7 @@ public class HuddleService {
 
     public void registerMember(EnsembleId ensembleId, MemberId memberId) {
         Ensemble ensemble = findById(ensembleId)
-                .orElseThrow(() -> new HuddleNotFoundException("Ensemble ID: " + ensembleId.id()));
+                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
         ensemble.acceptedBy(memberId);
         huddleRepository.save(ensemble);
 
@@ -71,7 +71,7 @@ public class HuddleService {
 
     public void declineMember(EnsembleId ensembleId, MemberId memberId) {
         Ensemble ensemble = findById(ensembleId)
-                .orElseThrow(() -> new HuddleNotFoundException("Ensemble ID: " + ensembleId.id()));
+                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
 
         ensemble.declinedBy(memberId);
 
@@ -80,7 +80,7 @@ public class HuddleService {
 
     public void completeWith(EnsembleId ensembleId, String recordingLink) {
         Ensemble ensemble = findById(ensembleId)
-                .orElseThrow(() -> new HuddleNotFoundException("Ensemble ID: " + ensembleId.id()));
+                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
 
         ensemble.complete();
         ensemble.linkToRecordingAt(URI.create(recordingLink));
@@ -93,7 +93,7 @@ public class HuddleService {
 
     public void changeNameDateTimeTo(EnsembleId ensembleId, String newName, ZonedDateTime newZoneDateTimeUtc) {
         Ensemble ensemble = findById(ensembleId)
-                .orElseThrow(() -> new HuddleNotFoundException("Ensemble ID: " + ensembleId.id()));
+                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
         ensemble.changeNameTo(newName);
         ensemble.changeStartDateTimeTo(newZoneDateTimeUtc);
         huddleRepository.save(ensemble);

@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
-import com.jitterted.mobreg.application.HuddleService;
-import com.jitterted.mobreg.application.HuddleServiceFactory;
+import com.jitterted.mobreg.application.EnsembleService;
+import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
@@ -28,14 +28,14 @@ class MemberControllerTest {
     public void huddleFormContainsMemberIdForOAuth2User() throws Exception {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         huddleRepository.save(new Ensemble("GET Test", ZonedDateTime.now()));
-        HuddleService huddleService = HuddleServiceFactory.createHuddleServiceForTest(huddleRepository);
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
 
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member = MemberFactory.createMember(11, "name", "ghuser");
         memberRepository.save(member);
         MemberService memberService = new MemberService(memberRepository);
 
-        MemberController memberController = new MemberController(huddleService, memberService);
+        MemberController memberController = new MemberController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
         memberController.showHuddlesForUser(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("ghuser", "ROLE_MEMBER"));
@@ -56,8 +56,8 @@ class MemberControllerTest {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         Ensemble ensemble = huddleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository, memberRepository, new DummyNotifier());
-        MemberController memberController = new MemberController(huddleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
+        EnsembleService ensembleService = new EnsembleService(huddleRepository, memberRepository, new DummyNotifier());
+        MemberController memberController = new MemberController(ensembleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
 
         MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
         String redirectPage = memberController.accept(memberRegisterForm);
@@ -75,8 +75,8 @@ class MemberControllerTest {
         InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
         Ensemble ensemble = huddleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        HuddleService huddleService = new HuddleService(huddleRepository, memberRepository, new DummyNotifier());
-        MemberController memberController = new MemberController(huddleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
+        EnsembleService ensembleService = new EnsembleService(huddleRepository, memberRepository, new DummyNotifier());
+        MemberController memberController = new MemberController(ensembleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
 
         MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
         String redirectPage = memberController.decline(memberRegisterForm);

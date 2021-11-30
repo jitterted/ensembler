@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.out.mobtimer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jitterted.mobreg.application.HuddleService;
+import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.HuddleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
@@ -45,7 +45,7 @@ class MobTimerMessageSenderTest {
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
     @Autowired
-    HuddleService huddleService;
+    EnsembleService ensembleService;
 
     @Autowired
     MemberRepository memberRepository;

@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
-import com.jitterted.mobreg.application.HuddleService;
+import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.port.HuddleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
@@ -37,7 +37,7 @@ public class AdminEndpointConfigurationTest {
     private MockMvc mockMvc;
 
     @MockBean
-    HuddleService huddleService;
+    EnsembleService ensembleService;
 
     @MockBean
     HuddleRepository huddleRepository;
@@ -118,7 +118,7 @@ public class AdminEndpointConfigurationTest {
         Ensemble dummyEnsemble = new Ensemble("dummy", ZonedDateTime.now());
         EnsembleId ensembleId = EnsembleId.of(id);
         dummyEnsemble.setId(ensembleId);
-        when(huddleService.findById(ensembleId))
+        when(ensembleService.findById(ensembleId))
                 .thenReturn(Optional.of(dummyEnsemble));
     }
 
