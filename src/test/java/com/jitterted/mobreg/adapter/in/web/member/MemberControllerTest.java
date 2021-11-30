@@ -60,7 +60,7 @@ class MemberControllerTest {
         MemberController memberController = new MemberController(huddleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
 
         MemberRegisterForm memberRegisterForm = createMemberFormFor(huddle, memberRepository);
-        String redirectPage = memberController.register(memberRegisterForm);
+        String redirectPage = memberController.accept(memberRegisterForm);
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/member/register");

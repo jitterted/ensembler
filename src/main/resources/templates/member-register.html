@@ -117,7 +117,7 @@
                                 <input hidden="hidden" type="number" th:field="*{memberId}">
                                 <input hidden="hidden" type="number" th:value="${huddle.id}" name="huddleId">
 
-                                <span th:text="${huddle.memberStatus}">Status</span>
+                                <span th:text="${huddle.memberStatus}" class="text-sm">Status</span>
 
                                 <fieldset th:case="'unknown'"
                                         class="mt-2 flex">
@@ -128,7 +128,7 @@
                                             Decline
                                         </button>
 
-                                        <button type="submit"  th:formaction="@{/member/register}"
+                                        <button type="submit"  th:formaction="@{/member/accept}"
                                                 class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             Accept
                                         </button>
@@ -158,11 +158,11 @@
                                     <legend class="sr-only">RSVP</legend>
                                     <div class="space-y-4 sm:flex sm:items-center sm:space-y-0">
                                         <button disabled
-                                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100">
+                                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 disabled:cursor-default">
                                             Declined
                                         </button>
 
-                                        <button type="submit" th:formaction="@{/member/register}"
+                                        <button type="submit" th:formaction="@{/member/accept}"
                                                 class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             Accept
                                         </button>
@@ -173,11 +173,13 @@
                                           class="mt-2 flex">
                                     <legend class="sr-only">RSVP</legend>
                                     <div class="space-y-4 sm:flex sm:items-center sm:space-y-0">
-                                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <button type="submit"
+                                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             Declined
                                         </button>
 
-                                        <button type="submit" disabled class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white disabled:cursor-not-allowed disabled:text-gray-400">
+                                        <button type="submit" disabled
+                                                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white disabled:cursor-not-allowed disabled:text-gray-400">
                                             Accept
                                         </button>
                                     </div>
@@ -193,20 +195,6 @@
                         </td>
                         <!-- Actions -->
                         <td class="py-3 px-6 text-center">
-                            <div  class="flex item-center justify-center">
-                                <form action="#" th:action="@{/member/register}" th:object="${register}" method="post">
-                                    <input hidden="hidden" type="number" th:field="*{memberId}">
-                                    <input hidden="hidden" type="number" th:value="${huddle.id}" name="huddleId">
-                                    <button type="submit" value="register"
-                                        class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:text-gray-400 disabled:bg-indigo-100 disabled:cursor-not-allowed">
-                                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                                             viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
-                                            <path d="M29,0H3A3,3,0,0,0,0,3V29a3,3,0,0,0,3,3H15V30H3a1,1,0,0,1-1-1V10H30v5h2V3A3,3,0,0,0,29,0ZM22,8H10V6H22Zm8,0H24V5a1,1,0,0,0-1-1H9A1,1,0,0,0,8,5V8H2V3A1,1,0,0,1,3,2H29a1,1,0,0,1,1,1Z"/><rect x="4" y="4" width="2" height="2"/><rect x="26" y="4" width="2" height="2"/><rect x="5" y="12" width="4" height="4" rx="1" ry="1"/><path d="M21,13a1,1,0,0,0-1-1H18a1,1,0,0,0-1,1v1h4Z"/><path d="M27,13a1,1,0,0,0-1-1H24a1,1,0,0,0-1,1v1h4Z"/><rect x="11" y="12" width="4" height="4" rx="1" ry="1"/><rect x="5" y="18" width="4" height="4" rx="1" ry="1"/><rect x="11" y="18" width="4" height="4" rx="1" ry="1"/><rect x="5" y="24" width="4" height="4" rx="1" ry="1"/><path d="M11,25v2a1,1,0,0,0,1,1h2V24H12A1,1,0,0,0,11,25Z"/><path d="M24,16a8,8,0,1,0,8,8A8,8,0,0,0,24,16Zm0,14a6,6,0,1,1,6-6A6,6,0,0,1,24,30Z"/><polygon points="25 20 23 20 23 23 20 23 20 25 23 25 23 28 25 28 25 25 28 25 28 23 25 23 25 20"/>
-                                        </svg>
-                                        Register
-                                    </button>
-                                </form>
-                            </div>
                             <div>
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
                                    href="#" th:href="${huddle.zoomMeetingLink}">

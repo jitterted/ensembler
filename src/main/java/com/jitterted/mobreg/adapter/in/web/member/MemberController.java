@@ -49,8 +49,8 @@ public class MemberController {
         return memberRegisterForm;
     }
 
-    @PostMapping("/member/register")
-    public String register(MemberRegisterForm memberRegisterForm) {
+    @PostMapping("/member/accept")
+    public String accept(MemberRegisterForm memberRegisterForm) {
         HuddleId huddleId = HuddleId.of(memberRegisterForm.getHuddleId());
         MemberId memberId = MemberId.of(memberRegisterForm.getMemberId());
 

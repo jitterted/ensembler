@@ -58,7 +58,7 @@ public class MemberEndpointConfigurationTest {
 
     @Test
     public void postToRegisterRedirects() throws Exception {
-        mockMvc.perform(post("/member/register")
+        mockMvc.perform(post("/member/accept")
                                 .param("huddleId", "1")
                                 .param("memberId", "1")
                                 // TODO: roles aren't needed here anymore
