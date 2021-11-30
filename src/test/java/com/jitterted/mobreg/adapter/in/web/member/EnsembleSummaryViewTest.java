@@ -3,7 +3,7 @@ package com.jitterted.mobreg.adapter.in.web.member;
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.HuddleFactory;
+import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ class EnsembleSummaryViewTest {
 
     @Test
     public void memberStatusUnknownWhenHuddleIsEmpty() throws Exception {
-        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
 
         HuddleSummaryView huddleSummaryView =
                 HuddleSummaryView.toView(ensemble, MemberId.of(97L));
@@ -27,7 +27,7 @@ class EnsembleSummaryViewTest {
 
     @Test
     public void withAnotherAcceptedMemberThenMemberAcceptedIsFalse() throws Exception {
-        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         Member member = new Member("name", "seven");
         MemberId memberId = MemberId.of(7L);
         member.setId(memberId);
@@ -45,7 +45,7 @@ class EnsembleSummaryViewTest {
 
     @Test
     public void memberAcceptedIsTrueWhenMemberHuddleParticipant() throws Exception {
-        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         Member member = new Member("name",
                                    "participant_username");
         MemberId memberId = MemberId.of(3L);
@@ -61,7 +61,7 @@ class EnsembleSummaryViewTest {
 
     @Test
     public void noRecordingHuddleThenViewIncludesEmptyLink() throws Exception {
-        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
 
@@ -71,7 +71,7 @@ class EnsembleSummaryViewTest {
 
     @Test
     public void huddleWithRecordingThenViewIncludesStringOfLink() throws Exception {
-        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         ensemble.linkToRecordingAt(URI.create("https://recording.link/abc123"));
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
@@ -82,7 +82,7 @@ class EnsembleSummaryViewTest {
 
     @Test
     public void viewContainsGoogleCalendarLink() throws Exception {
-        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
 
@@ -93,8 +93,8 @@ class EnsembleSummaryViewTest {
 
     @Test
     public void viewIndicatesNotAbleToAcceptIfHuddleIsFullAndCurrentlyUnknown() throws Exception {
-        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
-        MemberFactory.registerCountMembersWithHuddle(ensemble, 5);
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+        MemberFactory.registerCountMembersWith(ensemble, 5);
 
         MemberId memberIdOfUnknownMember = MemberId.of(99L);
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, memberIdOfUnknownMember);
@@ -105,8 +105,8 @@ class EnsembleSummaryViewTest {
     
     @Test
     public void viewIndicatesCanAcceptIfHuddleIsNotFull() throws Exception {
-        Ensemble ensemble = HuddleFactory.createHuddleWithIdOf1AndOneDayInTheFuture();
-        MemberFactory.registerCountMembersWithHuddle(ensemble, 2);
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+        MemberFactory.registerCountMembersWith(ensemble, 2);
 
         HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
 

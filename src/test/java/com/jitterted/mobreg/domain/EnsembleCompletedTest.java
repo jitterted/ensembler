@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleCompletedTest {
 
     @Test
-    public void newHuddleIsNotCompleted() throws Exception {
+    public void newEnsembleIsNotCompleted() throws Exception {
         Ensemble ensemble = new Ensemble("not completed", ZonedDateTime.now());
 
         assertThat(ensemble.isCompleted())
@@ -17,7 +17,7 @@ class EnsembleCompletedTest {
     }
 
     @Test
-    public void whenCompletingHuddleThenHuddleIsCompleted() throws Exception {
+    public void whenCompletingEnsembleThenEnsembleIsCompleted() throws Exception {
         Ensemble ensemble = new Ensemble("completed", ZonedDateTime.now());
 
         ensemble.complete();
@@ -27,7 +27,7 @@ class EnsembleCompletedTest {
     }
 
     @Test
-    public void completedHuddleRegisterMemberThrowsException() throws Exception {
+    public void completedEnsembleRegisterMemberThrowsException() throws Exception {
         Ensemble ensemble = new Ensemble("completed", ZonedDateTime.now());
         ensemble.complete();
 

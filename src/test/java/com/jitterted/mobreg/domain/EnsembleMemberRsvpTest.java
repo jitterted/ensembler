@@ -9,7 +9,7 @@ class EnsembleMemberRsvpTest {
 
     @Test
     public void unregisteredMemberIsRsvpUnknown() throws Exception {
-        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberFactory.createMember(73L, "Seventy3", "73").getId();
 
         assertThat(ensemble.rsvpOf(memberId))
@@ -18,7 +18,7 @@ class EnsembleMemberRsvpTest {
 
     @Test
     public void registeredMemberIsRsvpAccepted() throws Exception {
-        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberFactory.createMember(73L, "Seventy3", "73").getId();
 
         ensemble.acceptedBy(memberId);
@@ -29,7 +29,7 @@ class EnsembleMemberRsvpTest {
 
     @Test
     public void memberWhoDeclinesIsRsvpDeclined() throws Exception {
-        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberFactory.createMember(97L, "Ninety7", "97").getId();
 
         ensemble.declinedBy(memberId);
@@ -40,7 +40,7 @@ class EnsembleMemberRsvpTest {
 
     @Test
     public void acceptedMemberWhenDeclinesIsRsvpDeclined() throws Exception {
-        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberFactory.createMember(97L, "Ninety7", "97").getId();
         ensemble.acceptedBy(memberId);
 
@@ -52,7 +52,7 @@ class EnsembleMemberRsvpTest {
 
     @Test
     public void declinedMemberWhenAcceptsAndSpaceAvailableIsRsvpAccepted() throws Exception {
-        Ensemble ensemble = HuddleFactory.createDefaultHuddleStartTimeNow();
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberFactory.createMember(97L, "Ninety7", "97").getId();
         ensemble.declinedBy(memberId);
 

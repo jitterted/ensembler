@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleEditTest {
 
     @Test
-    public void canChangeNameForExistingHuddle() throws Exception {
+    public void canChangeNameForExistingEnsemble() throws Exception {
         Ensemble before = new Ensemble("before", ZonedDateTime.now());
 
         before.changeNameTo("after");

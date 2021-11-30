@@ -11,8 +11,8 @@ class EnsembleMemberStatusTest {
     private static final ZonedDateTime UTC_2021_11_22_15 = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 15);
 
     @Test
-    public void unknownMemberAndPastHuddleThenStatusHidden() throws Exception {
-        Ensemble pastEnsemble = HuddleFactory.withStartTime(2021, 11, 22, 11);
+    public void unknownMemberAndPastEnsembleThenStatusHidden() throws Exception {
+        Ensemble pastEnsemble = EnsembleFactory.withStartTime(2021, 11, 22, 11);
         MemberId memberId = MemberFactory.createMember(37L, "UnKnown", "unknown").getId();
 
         assertThat(pastEnsemble.statusFor(memberId, UTC_2021_11_22_15))
@@ -20,8 +20,8 @@ class EnsembleMemberStatusTest {
     }
 
     @Test
-    public void unknownMemberAndFutureHuddleAndHasSpaceThenStatusUnknown() throws Exception {
-        Ensemble futureEnsemble = HuddleFactory.withStartTime(2022, 1, 3, 9);
+    public void unknownMemberAndFutureEnsembleAndHasSpaceThenStatusUnknown() throws Exception {
+        Ensemble futureEnsemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberFactory.createMember(31L, "UnKnown", "unknown").getId();
 
         assertThat(futureEnsemble.statusFor(memberId, UTC_2021_11_22_15))
@@ -29,8 +29,8 @@ class EnsembleMemberStatusTest {
     }
 
     @Test
-    public void unknownMemberAndFutureHuddleAndIsFullThenStatusFull() throws Exception {
-        Ensemble futureEnsemble = HuddleFactory.fullHuddleWithStartTime(2022, 1, 3, 9);
+    public void unknownMemberAndFutureEnsembleAndIsFullThenStatusFull() throws Exception {
+        Ensemble futureEnsemble = EnsembleFactory.ensembleAtCapacityWithStartTime(2022, 1, 3, 9);
         MemberId memberIdIsUnknown = MemberFactory.createMember(33L, "UnKnown", "unknown").getId();
 
         assertThat(futureEnsemble.statusFor(memberIdIsUnknown, UTC_2021_11_22_15))
@@ -38,8 +38,8 @@ class EnsembleMemberStatusTest {
     }
 
     @Test
-    public void declinedMemberAndFutureHuddleAndHasSpaceThenStatusDeclined() throws Exception {
-        Ensemble futureEnsemble = HuddleFactory.withStartTime(2022, 1, 3, 9);
+    public void declinedMemberAndFutureEnsembleAndHasSpaceThenStatusDeclined() throws Exception {
+        Ensemble futureEnsemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberFactory.createMember(31L, "Declined", "declined").getId();
         futureEnsemble.declinedBy(memberId);
 
@@ -48,8 +48,8 @@ class EnsembleMemberStatusTest {
     }
 
     @Test
-    public void declinedMemberAndFutureHuddleIsFullThenStatusDeclinedFull() throws Exception {
-        Ensemble futureFullEnsemble = HuddleFactory.fullHuddleWithStartTime(2022, 1, 3, 9);
+    public void declinedMemberAndFutureEnsembleIsFullThenStatusDeclinedFull() throws Exception {
+        Ensemble futureFullEnsemble = EnsembleFactory.ensembleAtCapacityWithStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberFactory.createMember(31L, "Declined", "declined").getId();
         futureFullEnsemble.declinedBy(memberId);
 
@@ -58,8 +58,8 @@ class EnsembleMemberStatusTest {
     }
 
     @Test
-    public void acceptedMemberAndPastUncompletedHuddleThenStatusPendingCompleted() throws Exception {
-        Ensemble pastEnsemble = HuddleFactory.withStartTime(2021, 11, 21, 11);
+    public void acceptedMemberAndPastUncompletedEnsembleThenStatusPendingCompleted() throws Exception {
+        Ensemble pastEnsemble = EnsembleFactory.withStartTime(2021, 11, 21, 11);
         MemberId memberId = MemberFactory.createMember(41L, "Accepted", "accepted").getId();
         pastEnsemble.acceptedBy(memberId);
 
@@ -68,8 +68,8 @@ class EnsembleMemberStatusTest {
     }
     
     @Test
-    public void acceptedMemberAndCompletedHuddleThenStatusCompleted() throws Exception {
-        Ensemble completedEnsemble = HuddleFactory.withStartTime(2021, 11, 21, 11);
+    public void acceptedMemberAndCompletedEnsembleThenStatusCompleted() throws Exception {
+        Ensemble completedEnsemble = EnsembleFactory.withStartTime(2021, 11, 21, 11);
         MemberId memberId = MemberFactory.createMember(41L, "Accepted", "accepted").getId();
         completedEnsemble.acceptedBy(memberId);
         completedEnsemble.complete();
@@ -79,8 +79,8 @@ class EnsembleMemberStatusTest {
     }
 
     @Test
-    public void acceptedMemberAndFutureHuddleThenStatusAccepted() throws Exception {
-        Ensemble futureEnsemble = HuddleFactory.withStartTime(2022, 1, 3, 9);
+    public void acceptedMemberAndFutureEnsembleThenStatusAccepted() throws Exception {
+        Ensemble futureEnsemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberFactory.createMember(41L, "Accepted", "accepted").getId();
         futureEnsemble.acceptedBy(memberId);
 
