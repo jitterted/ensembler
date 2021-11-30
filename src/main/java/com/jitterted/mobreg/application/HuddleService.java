@@ -1,8 +1,12 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.domain.port.HuddleRepository;
-import com.jitterted.mobreg.domain.port.MemberRepository;
-import com.jitterted.mobreg.domain.port.Notifier;
+import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.MemberRepository;
+import com.jitterted.mobreg.application.port.Notifier;
+import com.jitterted.mobreg.domain.Huddle;
+import com.jitterted.mobreg.domain.HuddleId;
+import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberId;
 
 import java.net.URI;
 import java.time.ZonedDateTime;

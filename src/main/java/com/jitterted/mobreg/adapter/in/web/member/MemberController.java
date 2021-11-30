@@ -1,11 +1,11 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
+import com.jitterted.mobreg.application.HuddleService;
+import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;
-import com.jitterted.mobreg.domain.HuddleService;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
-import com.jitterted.mobreg.domain.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

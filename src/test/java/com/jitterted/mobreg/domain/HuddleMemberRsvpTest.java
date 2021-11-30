@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.domain;
 
+import com.jitterted.mobreg.application.MemberFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;

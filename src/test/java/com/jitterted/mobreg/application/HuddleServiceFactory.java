@@ -1,9 +1,9 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.adapter.in.web.member.DummyNotifier;
-import com.jitterted.mobreg.domain.port.HuddleRepository;
-import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
-import com.jitterted.mobreg.domain.port.MemberRepository;
+import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
+import com.jitterted.mobreg.application.port.MemberRepository;
 
 public class HuddleServiceFactory {
 

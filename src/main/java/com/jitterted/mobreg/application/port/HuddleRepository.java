@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.domain.port;
+package com.jitterted.mobreg.application.port;
 
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleId;

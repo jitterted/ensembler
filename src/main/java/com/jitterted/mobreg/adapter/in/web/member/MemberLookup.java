@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
+import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberService;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

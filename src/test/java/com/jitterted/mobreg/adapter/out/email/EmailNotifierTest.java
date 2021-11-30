@@ -1,9 +1,9 @@
 package com.jitterted.mobreg.adapter.out.email;
 
+import com.jitterted.mobreg.application.MemberBuilder;
+import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberBuilder;
-import com.jitterted.mobreg.domain.port.Notifier;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;

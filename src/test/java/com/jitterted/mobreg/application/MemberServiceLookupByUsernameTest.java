@@ -1,6 +1,7 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
+import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
+import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;

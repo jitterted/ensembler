@@ -1,10 +1,10 @@
 package com.jitterted.mobreg.adapter.out.notification.pushover;
 
 import com.jitterted.mobreg.NoSecurityTestConfiguration;
-import com.jitterted.mobreg.domain.HuddleService;
-import com.jitterted.mobreg.domain.MemberService;
-import com.jitterted.mobreg.domain.port.HuddleRepository;
-import com.jitterted.mobreg.domain.port.MemberRepository;
+import com.jitterted.mobreg.application.HuddleService;
+import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.MemberRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

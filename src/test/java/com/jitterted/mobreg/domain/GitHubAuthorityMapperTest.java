@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.domain;
 
 import com.jitterted.mobreg.GitHubGrantedAuthoritiesMapper;
-import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
+import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;

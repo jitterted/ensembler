@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.application;
 
 public class MemberNotFoundByIdException extends RuntimeException {
     public MemberNotFoundByIdException() {

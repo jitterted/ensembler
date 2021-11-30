@@ -1,8 +1,8 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
+import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.port.Notifier;
 
 import java.net.URI;
 

@@ -1,10 +1,10 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
+import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.HuddleFactory;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Test;
 

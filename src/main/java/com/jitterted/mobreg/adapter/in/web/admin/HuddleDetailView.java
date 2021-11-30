@@ -1,8 +1,8 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.adapter.DateTimeFormatting;
+import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Huddle;
-import com.jitterted.mobreg.domain.MemberService;
 
 import java.util.List;
 

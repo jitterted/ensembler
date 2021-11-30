@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.domain;
 
+import com.jitterted.mobreg.application.MemberFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.ZonedDateTime;

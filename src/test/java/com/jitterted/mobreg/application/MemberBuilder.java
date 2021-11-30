@@ -1,7 +1,8 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
-import com.jitterted.mobreg.domain.port.MemberRepository;
+import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
+import com.jitterted.mobreg.application.port.MemberRepository;
+import com.jitterted.mobreg.domain.Member;
 import org.jetbrains.annotations.NotNull;
 
 public class MemberBuilder {

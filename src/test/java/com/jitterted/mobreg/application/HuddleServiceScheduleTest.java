@@ -1,6 +1,7 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.domain.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.domain.Huddle;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;

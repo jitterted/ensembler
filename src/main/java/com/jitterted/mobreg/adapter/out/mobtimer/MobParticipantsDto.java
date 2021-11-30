@@ -1,8 +1,8 @@
 package com.jitterted.mobreg.adapter.out.mobtimer;
 
+import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberService;
 
 import java.util.List;
 

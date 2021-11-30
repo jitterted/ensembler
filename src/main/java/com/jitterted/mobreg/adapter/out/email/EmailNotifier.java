@@ -1,10 +1,10 @@
 package com.jitterted.mobreg.adapter.out.email;
 
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
+import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberService;
-import com.jitterted.mobreg.domain.port.Notifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

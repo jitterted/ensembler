@@ -1,8 +1,8 @@
 package com.jitterted.mobreg.adapter.out.notification.pushover;
 
+import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Huddle;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.port.Notifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;

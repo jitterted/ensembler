@@ -1,13 +1,13 @@
 package com.jitterted.mobreg;
 
-import com.jitterted.mobreg.domain.HuddleService;
+import com.jitterted.mobreg.application.HuddleService;
+import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryHuddleRepository;
+import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
+import com.jitterted.mobreg.application.port.MemberRepository;
+import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberService;
-import com.jitterted.mobreg.domain.port.HuddleRepository;
-import com.jitterted.mobreg.domain.port.InMemoryHuddleRepository;
-import com.jitterted.mobreg.domain.port.InMemoryMemberRepository;
-import com.jitterted.mobreg.domain.port.MemberRepository;
-import com.jitterted.mobreg.domain.port.Notifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,9 +1,9 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 
-import com.jitterted.mobreg.domain.port.HuddleRepository;
-import com.jitterted.mobreg.domain.port.MemberRepository;
-import com.jitterted.mobreg.domain.port.Notifier;
+import com.jitterted.mobreg.application.port.HuddleRepository;
+import com.jitterted.mobreg.application.port.MemberRepository;
+import com.jitterted.mobreg.application.port.Notifier;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
