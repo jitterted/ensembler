@@ -59,4 +59,14 @@ public class MemberController {
         return "redirect:/member/register";
     }
 
+    @PostMapping("/member/decline")
+    public String decline(MemberRegisterForm memberRegisterForm) {
+        HuddleId huddleId = HuddleId.of(memberRegisterForm.getHuddleId());
+        MemberId memberId = MemberId.of(memberRegisterForm.getMemberId());
+
+        huddleService.declineMember(huddleId, memberId);
+
+        return "redirect:/member/register";
+    }
+
 }

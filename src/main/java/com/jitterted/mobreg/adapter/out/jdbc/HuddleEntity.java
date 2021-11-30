@@ -38,7 +38,7 @@ public class HuddleEntity {
         huddleEntity.setCompleted(huddle.isCompleted());
         huddleEntity.setRecordingLink(huddle.recordingLink().toString());
         huddleEntity.setRegisteredMembers(
-                huddle.registeredMembers()
+                huddle.acceptedMembers()
                       .stream()
                       .map(MemberEntityId::toEntityId)
                       .collect(Collectors.toSet()));

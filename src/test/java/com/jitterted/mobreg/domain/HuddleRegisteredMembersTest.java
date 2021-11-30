@@ -12,9 +12,9 @@ public class HuddleRegisteredMembersTest {
     public void newHuddleHasZeroParticipants() throws Exception {
         Huddle huddle = HuddleFactory.createDefaultHuddleStartTimeNow();
 
-        assertThat(huddle.registeredMemberCount())
+        assertThat(huddle.acceptedCount())
                 .isZero();
-        assertThat(huddle.registeredMembers())
+        assertThat(huddle.acceptedMembers())
                 .isEmpty();
     }
 
@@ -25,10 +25,10 @@ public class HuddleRegisteredMembersTest {
 
         huddle.acceptedBy(memberId);
 
-        assertThat(huddle.registeredMemberCount())
+        assertThat(huddle.acceptedCount())
                 .isEqualTo(1);
 
-        assertThat(huddle.registeredMembers())
+        assertThat(huddle.acceptedMembers())
                 .containsOnly(memberId);
     }
 
@@ -58,7 +58,7 @@ public class HuddleRegisteredMembersTest {
 
         MemberFactory.registerCountMembersWithHuddle(huddle, count);
 
-        assertThat(huddle.registeredMemberCount())
+        assertThat(huddle.acceptedCount())
                 .isEqualTo(count);
     }
 

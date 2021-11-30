@@ -86,10 +86,10 @@ class HuddleRepositoryDataJdbcAdapterTest {
         assertThat(allHuddles)
                 .hasSize(2);
 
-        assertThat(allHuddles.get(0).registeredMembers())
+        assertThat(allHuddles.get(0).acceptedMembers())
                 .hasSize(1)
                 .containsOnly(MemberId.of(7L));
-        assertThat(allHuddles.get(1).registeredMembers())
+        assertThat(allHuddles.get(1).acceptedMembers())
                 .hasSize(1)
                 .containsOnly(MemberId.of(7L));
     }

@@ -38,11 +38,11 @@ public class Huddle {
         return startDateTime;
     }
 
-    public int registeredMemberCount() {
+    public int acceptedCount() {
         return membersWhoAccepted.size();
     }
 
-    public Set<MemberId> registeredMembers() {
+    public Set<MemberId> acceptedMembers() {
         // #28 TODO: provide Stream<> or ImmutableSet<>
         return membersWhoAccepted;
     }
@@ -56,7 +56,7 @@ public class Huddle {
 
     private void requireHasSpace() {
         if (isFull()) {
-            throw new HuddleIsAlreadyFullException("Currently have " + registeredMemberCount() + " registered.");
+            throw new HuddleIsAlreadyFullException("Currently have " + acceptedCount() + " registered.");
         }
     }
 
@@ -65,7 +65,7 @@ public class Huddle {
     }
 
     private boolean isFull() {
-        return registeredMemberCount() == MAX_REGISTERED_MEMBERS;
+        return acceptedCount() == MAX_REGISTERED_MEMBERS;
     }
 
     public boolean isAccepted(MemberId memberId) {
@@ -140,7 +140,7 @@ public class Huddle {
         return Rsvp.UNKNOWN;
     }
 
-    private boolean isDeclined(MemberId memberId) {
+    public boolean isDeclined(MemberId memberId) {
         return membersWhoDeclined.contains(memberId);
     }
 

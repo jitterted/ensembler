@@ -68,6 +68,15 @@ public class MemberEndpointConfigurationTest {
     }
 
     @Test
+    public void postToDeclineRedirects() throws Exception {
+        mockMvc.perform(post("/member/decline")
+                                .param("huddleId", "1")
+                                .param("memberId", "1")
+                                .with(csrf()))
+               .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
     public void getOfMemberProfileEndpointReturns200Ok() throws Exception {
         Member member = new Member("Ted", "tedyoung", "ROLE_MEMBER");
         member.setId(MemberId.of(1L));

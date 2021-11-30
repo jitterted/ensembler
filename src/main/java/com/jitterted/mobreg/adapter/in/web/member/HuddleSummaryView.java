@@ -31,7 +31,7 @@ public record HuddleSummaryView(long id,
                                      huddle.zoomMeetingLink().toString(),
                                      DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(huddle.startDateTime()),
                                      new GoogleCalendarLinkCreator().createFor(huddle),
-                                     huddle.registeredMemberCount(),
+                                     huddle.acceptedCount(),
                                      huddle.recordingLink().toString(),
                                      memberStatusToViewString(huddle, memberId));
     }

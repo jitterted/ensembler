@@ -119,7 +119,7 @@ class AdminDashboardControllerTest {
         form.setGithubUsername("githubtwo");
         adminDashboardController.registerParticipant(form);
 
-        assertThat(huddle.registeredMembers())
+        assertThat(huddle.acceptedMembers())
                 .containsExactly(MemberId.of(1));
     }
 

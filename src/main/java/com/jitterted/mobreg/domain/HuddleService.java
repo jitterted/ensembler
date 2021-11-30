@@ -65,6 +65,15 @@ public class HuddleService {
         notifier.memberRegistered(huddle, member);
     }
 
+    public void declineMember(HuddleId huddleId, MemberId memberId) {
+        Huddle huddle = findById(huddleId)
+                .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));
+
+        huddle.declinedBy(memberId);
+
+        huddleRepository.save(huddle);
+    }
+
     public void completeWith(HuddleId huddleId, String recordingLink) {
         Huddle huddle = findById(huddleId)
                 .orElseThrow(() -> new HuddleNotFoundException("Huddle ID: " + huddleId.id()));

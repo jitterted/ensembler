@@ -24,6 +24,6 @@ public record HuddleSummaryView(long id,
                                      huddle.zoomMeetingLink().toString(),
                                      DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(huddle.startDateTime()),
                                      huddle.isCompleted(),
-                                     huddle.registeredMemberCount());
+                                     huddle.acceptedCount());
     }
 }

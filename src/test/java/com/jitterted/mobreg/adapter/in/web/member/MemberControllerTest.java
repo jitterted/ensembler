@@ -65,9 +65,26 @@ class MemberControllerTest {
         assertThat(redirectPage)
                 .isEqualTo("redirect:/member/register");
 
-        assertThat(huddle.registeredMembers())
+        assertThat(huddle.acceptedMembers())
                 .extracting(MemberId::id)
                 .containsOnly(memberRegisterForm.getMemberId());
+    }
+
+    @Test
+    public void memberDeclinesWillBeDeclinedForHuddle() throws Exception {
+        InMemoryHuddleRepository huddleRepository = new InMemoryHuddleRepository();
+        Huddle huddle = huddleRepository.save(new Huddle("Test", ZonedDateTime.now()));
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
+        HuddleService huddleService = new HuddleService(huddleRepository, memberRepository, new DummyNotifier());
+        MemberController memberController = new MemberController(huddleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
+
+        MemberRegisterForm memberRegisterForm = createMemberFormFor(huddle, memberRepository);
+        String redirectPage = memberController.decline(memberRegisterForm);
+
+        assertThat(redirectPage)
+                .isEqualTo("redirect:/member/register");
+        assertThat(huddle.isDeclined(MemberId.of(memberRegisterForm.getMemberId())))
+                .isTrue();
     }
 
     @NotNull

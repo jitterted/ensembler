@@ -66,7 +66,7 @@ class HuddleServiceMemberTest {
 
         assertThat(foundHuddle)
                 .isPresent();
-        assertThat(foundHuddle.get().registeredMembers())
+        assertThat(foundHuddle.get().acceptedMembers())
                 .containsOnly(memberId);
     }
 

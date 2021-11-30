@@ -17,7 +17,7 @@ public record HuddleDetailView(long id,
 
     static HuddleDetailView from(Huddle huddle, MemberService memberService) {
         List<MemberView> memberViews =
-                huddle.registeredMembers().stream()
+                huddle.acceptedMembers().stream()
                       .map(memberService::findById)
                       .map(MemberView::from)
                       .toList();

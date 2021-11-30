@@ -36,7 +36,7 @@ class HuddleEntityMappingTest {
                 .isEqualTo("https://recording.link/entity");
         assertThat(huddle.zoomMeetingLink().toString())
                 .isEqualTo("https://zoom.us/entity");
-        assertThat(huddle.registeredMembers())
+        assertThat(huddle.acceptedMembers())
                 .extracting(MemberId::id)
                 .isEqualTo(List.of(13L));
     }

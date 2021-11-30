@@ -16,7 +16,7 @@ class MobParticipantsDto {
 
     public static MobParticipantsDto from(Huddle huddle, MemberService memberService) {
         List<PersonDto> personDtos =
-                huddle.registeredMembers().stream()
+                huddle.acceptedMembers().stream()
                       .map(memberService::findById)
                       .map(Member::firstName)
                       .map(PersonDto::new)
