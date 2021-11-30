@@ -51,6 +51,8 @@ class PostgresqlEntityTest {
         Huddle original = new Huddle("entity", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
         original.acceptedBy(MemberId.of(4L));
         original.acceptedBy(MemberId.of(5L));
+        original.declinedBy(MemberId.of(73L));
+        original.declinedBy(MemberId.of(79L));
         HuddleEntity originalEntity = HuddleEntity.from(original);
 
         HuddleEntity savedEntity = huddleJdbcRepository.save(originalEntity);
@@ -63,11 +65,15 @@ class PostgresqlEntityTest {
                 .usingRecursiveComparison()
                 .isEqualTo(originalEntity);
 
-        assertThat(retrievedEntity.get().getRegisteredMembers())
-                .extracting(MemberEntityId::asMemberId)
+        assertThat(retrievedEntity.get().getAcceptedMembers())
+                .extracting(AcceptedMember::asMemberId)
                 .extracting(MemberId::id)
                 .containsOnly(4L, 5L);
 
+        assertThat(retrievedEntity.get().getDeclinedMembers())
+                .extracting(DeclinedMember::asMemberId)
+                .extracting(MemberId::id)
+                .containsOnly(73L, 79L);
     }
 
     @Test

@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 // This is the Aggregate Root for Huddles
 public class Huddle {
@@ -54,13 +55,26 @@ public class Huddle {
         membersWhoDeclined.remove(memberId);
     }
 
+    public boolean isDeclined(MemberId memberId) {
+        return membersWhoDeclined.contains(memberId);
+    }
+
+    public void declinedBy(MemberId memberId) {
+        membersWhoAccepted.remove(memberId);
+        membersWhoDeclined.add(memberId);
+    }
+
+    public Stream<MemberId> declinedMembers() {
+        return membersWhoDeclined.stream();
+    }
+
     private void requireHasSpace() {
         if (isFull()) {
             throw new HuddleIsAlreadyFullException("Currently have " + acceptedCount() + " registered.");
         }
     }
 
-    public boolean canRegister() {
+    public boolean canAccept() {
         return !isFull();
     }
 
@@ -138,15 +152,6 @@ public class Huddle {
             return Rsvp.ACCEPTED;
         }
         return Rsvp.UNKNOWN;
-    }
-
-    public boolean isDeclined(MemberId memberId) {
-        return membersWhoDeclined.contains(memberId);
-    }
-
-    public void declinedBy(MemberId memberId) {
-        membersWhoAccepted.remove(memberId);
-        membersWhoDeclined.add(memberId);
     }
 
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {

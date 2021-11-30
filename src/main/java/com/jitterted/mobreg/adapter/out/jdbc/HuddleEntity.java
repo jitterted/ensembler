@@ -25,7 +25,10 @@ public class HuddleEntity {
     private String recordingLink;
 
     @MappedCollection(idColumn = "huddle_id")
-    private Set<MemberEntityId> registeredMembers = new HashSet<>();
+    private Set<AcceptedMember> acceptedMembers = new HashSet<>();
+
+    @MappedCollection(idColumn = "huddle_id")
+    private Set<DeclinedMember> declinedMembers = new HashSet<>();
 
     public static HuddleEntity from(Huddle huddle) {
         HuddleEntity huddleEntity = new HuddleEntity();
@@ -37,10 +40,14 @@ public class HuddleEntity {
         huddleEntity.setZoomMeetingLink(huddle.zoomMeetingLink().toString());
         huddleEntity.setCompleted(huddle.isCompleted());
         huddleEntity.setRecordingLink(huddle.recordingLink().toString());
-        huddleEntity.setRegisteredMembers(
+        huddleEntity.setAcceptedMembers(
                 huddle.acceptedMembers()
                       .stream()
-                      .map(MemberEntityId::toEntityId)
+                      .map(AcceptedMember::toEntityId)
+                      .collect(Collectors.toSet()));
+        huddleEntity.setDeclinedMembers(
+                huddle.declinedMembers()
+                      .map(DeclinedMember::toEntityId)
                       .collect(Collectors.toSet()));
         return huddleEntity;
     }
@@ -51,9 +58,13 @@ public class HuddleEntity {
         huddle.setId(HuddleId.of(id));
         huddle.linkToRecordingAt(URI.create(recordingLink));
 
-        registeredMembers.stream()
-                         .map(MemberEntityId::asMemberId)
-                         .forEach(memberId -> huddle.acceptedBy(memberId));
+        acceptedMembers.stream()
+                       .map(AcceptedMember::asMemberId)
+                       .forEach(huddle::acceptedBy);
+
+        declinedMembers.stream()
+                       .map(DeclinedMember::asMemberId)
+                       .forEach(huddle::declinedBy);
 
         if (isCompleted) {
             huddle.complete();
@@ -86,12 +97,20 @@ public class HuddleEntity {
         this.dateTimeUtc = dateTimeUtc;
     }
 
-    public Set<MemberEntityId> getRegisteredMembers() {
-        return registeredMembers;
+    public Set<AcceptedMember> getAcceptedMembers() {
+        return acceptedMembers;
     }
 
-    public void setRegisteredMembers(Set<MemberEntityId> registeredMembers) {
-        this.registeredMembers = registeredMembers;
+    public void setAcceptedMembers(Set<AcceptedMember> acceptedMembers) {
+        this.acceptedMembers = acceptedMembers;
+    }
+
+    public Set<DeclinedMember> getDeclinedMembers() {
+        return declinedMembers;
+    }
+
+    public void setDeclinedMembers(Set<DeclinedMember> declinedMembers) {
+        this.declinedMembers = declinedMembers;
     }
 
     public String getZoomMeetingLink() {

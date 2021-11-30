@@ -24,7 +24,8 @@ class HuddleEntityMappingTest {
         huddleEntity.setDateTimeUtc(now.toLocalDateTime());
         huddleEntity.setName("Entity");
         huddleEntity.setZoomMeetingLink("https://zoom.us/entity");
-        huddleEntity.setRegisteredMembers(Set.of(new MemberEntityId(13L)));
+        huddleEntity.setAcceptedMembers(Set.of(new AcceptedMember(13L)));
+        huddleEntity.setDeclinedMembers(Set.of(new DeclinedMember(29L)));
 
         Huddle huddle = huddleEntity.asHuddle();
 
@@ -39,6 +40,9 @@ class HuddleEntityMappingTest {
         assertThat(huddle.acceptedMembers())
                 .extracting(MemberId::id)
                 .isEqualTo(List.of(13L));
+        assertThat(huddle.declinedMembers())
+                .extracting(MemberId::id)
+                .isEqualTo(List.of(29L));
     }
 
     @Test
@@ -47,6 +51,7 @@ class HuddleEntityMappingTest {
         Huddle huddle = new Huddle("Domain", URI.create("https://zoom.us/"), utc2021091316000);
         huddle.linkToRecordingAt(URI.create("https://recording.link/domain"));
         huddle.acceptedBy(MemberId.of(11L));
+        huddle.declinedBy(MemberId.of(13L));
         huddle.complete();
 
         HuddleEntity entity = HuddleEntity.from(huddle);
@@ -59,10 +64,14 @@ class HuddleEntityMappingTest {
                 .isTrue();
         assertThat(entity.getRecordingLink())
                 .isEqualTo("https://recording.link/domain");
-        assertThat(entity.getRegisteredMembers())
-                .extracting(MemberEntityId::asMemberId)
+        assertThat(entity.getAcceptedMembers())
+                .extracting(AcceptedMember::asMemberId)
                 .extracting(MemberId::id)
                 .isEqualTo(List.of(11L));
+        assertThat(entity.getDeclinedMembers())
+                .extracting(DeclinedMember::asMemberId)
+                .extracting(MemberId::id)
+                .isEqualTo(List.of(13L));
     }
 
 }
