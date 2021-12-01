@@ -4,6 +4,7 @@ import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 
+import java.time.ZoneId;
 import java.util.List;
 
 public class MemberService {
@@ -31,6 +32,11 @@ public class MemberService {
 
     public void changeEmail(Member member, String newEmail) {
         member.changeEmailTo(newEmail);
+        save(member);
+    }
+
+    public void changeTimeZone(Member member, String timeZone) {
+        member.changeTimeZoneTo(ZoneId.of(timeZone));
         save(member);
     }
 

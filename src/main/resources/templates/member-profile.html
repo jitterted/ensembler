@@ -114,6 +114,21 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-4 gap-4 items-start border-gray-200 pt-5">
+                <label th:for="timeZone" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 pl-4">
+                    Time Zone
+                </label>
+                <div class="mt-0 col-span-2">
+                    <select th:field="*{timeZone}"
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            >
+                        <option th:each="zone : ${allTimeZones}"
+                                th:value="${zone}"
+                                th:text="${zone}">Asia/Tokyo</option>
+                    </select>
+                </div>
+            </div>
+
         </div>
 
         <div class="pt-10">

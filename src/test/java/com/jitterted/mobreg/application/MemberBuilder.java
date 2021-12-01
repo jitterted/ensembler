@@ -49,4 +49,8 @@ public class MemberBuilder {
         memberService = new MemberService(memberRepository);
         return member;
     }
+
+    public MemberBuilder withTimezone(String timeZoneId) {
+        return this;
+    }
 }

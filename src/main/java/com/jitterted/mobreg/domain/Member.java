@@ -1,5 +1,7 @@
 package com.jitterted.mobreg.domain;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,6 +14,7 @@ public class Member {
     private final String githubUsername; // could be a Value Object
     private final Set<String> roles;
     private String email = "";
+    private ZoneId timeZone = ZoneOffset.UTC;
 
     public Member(String firstName, String githubUsername, String... roles) {
         this.firstName = firstName;
@@ -39,6 +42,18 @@ public class Member {
         return email;
     }
 
+    public boolean hasEmail() {
+        return !email().isEmpty();
+    }
+
+    public ZoneId timeZone() {
+        return timeZone;
+    }
+
+    public void changeTimeZoneTo(ZoneId newTimeZone) {
+        timeZone = newTimeZone;
+    }
+
     public MemberId getId() {
         return id;
     }
@@ -60,9 +75,5 @@ public class Member {
     @Override
     public int hashCode() {
         return githubUsername.hashCode();
-    }
-
-    public boolean hasEmail() {
-        return !email().isEmpty();
     }
 }
