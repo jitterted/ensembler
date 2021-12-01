@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleDetailViewTest {
 
     @Test
-    public void huddleIdIsTranslatedFromDomainIntoView() throws Exception {
+    public void ensembleIdIsTranslatedFromDomainIntoView() throws Exception {
         MemberService memberService = new MemberService(new DummyMemberRepository());
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(23));
@@ -28,7 +28,7 @@ class EnsembleDetailViewTest {
     }
 
     @Test
-    public void viewContainsDetailsForMembersInHuddle() throws Exception {
+    public void viewContainsDetailsForMembersInEnsemble() throws Exception {
         Ensemble ensemble = new Ensemble("view", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(73));
         MemberRepository memberRepository = new InMemoryMemberRepository();

@@ -21,49 +21,49 @@ import static org.assertj.core.api.Assertions.*;
 public class DashboardEnsembleViewTest {
 
     @Test
-    public void detailViewOfExistingHuddleByItsIdIsReturned() throws Exception {
+    public void detailViewOfExistingEnsembleByItsIdIsReturned() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
-        Ensemble savedEnsemble = huddleRepository.save(new Ensemble("Ensemble #1", ZonedDateTime.now()));
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
+        Ensemble savedEnsemble = ensembleRepository.save(new Ensemble("Ensemble #1", ZonedDateTime.now()));
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
         adminDashboardController.ensembleDetailView(model, 0L);
 
-        EnsembleDetailView huddle = (EnsembleDetailView) model.getAttribute("ensemble");
+        EnsembleDetailView ensemble = (EnsembleDetailView) model.getAttribute("ensemble");
 
-        assertThat(huddle.name())
+        assertThat(ensemble.name())
                 .isEqualTo(savedEnsemble.name());
     }
 
     @Test
-    public void detailViewOfExistingHuddleWithOneParticipantReturnsHuddleWithParticipantView() throws Exception {
+    public void detailViewOfExistingEnsembleWithOneParticipantReturnsEnsembleWithParticipantView() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
         Member member = MemberFactory.createMember(11, "name", "github");
         memberService.save(member);
 
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         Ensemble ensemble = new Ensemble("Ensemble #1", ZonedDateTime.now());
         ensemble.acceptedBy(member.getId());
-        huddleRepository.save(ensemble);
+        ensembleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
         adminDashboardController.ensembleDetailView(model, ensemble.getId().id());
 
-        EnsembleDetailView huddleView = (EnsembleDetailView) model.getAttribute("ensemble");
+        EnsembleDetailView ensembleView = (EnsembleDetailView) model.getAttribute("ensemble");
 
-        assertThat(huddleView.memberViews())
+        assertThat(ensembleView.memberViews())
                 .hasSize(1);
     }
 
     @Test
-    public void detailViewOfNonExistentHuddleReturns404NotFound() throws Exception {
+    public void detailViewOfNonExistentEnsembleReturns404NotFound() throws Exception {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
         Model model = new ConcurrentModel();
 

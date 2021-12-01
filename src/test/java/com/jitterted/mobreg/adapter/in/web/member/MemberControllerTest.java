@@ -71,7 +71,7 @@ class MemberControllerTest {
     }
 
     @Test
-    public void memberDeclinesWillBeDeclinedForHuddle() throws Exception {
+    public void memberDeclinesWillBeDeclinedForEnsemble() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();

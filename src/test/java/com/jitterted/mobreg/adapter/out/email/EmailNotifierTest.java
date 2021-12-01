@@ -37,7 +37,7 @@ class EmailNotifierTest {
     }
 
     @Test
-    public void memberWithEmailRegistersThenEmailSentToMemberWithHuddleDetails() throws Exception {
+    public void memberWithEmailRegistersThenEmailSentToMemberWithEnsembleDetails() throws Exception {
         Member member = new MemberBuilder().withFirstName("FirstName")
                                            .withEmail("name@example.com")
                                            .build();

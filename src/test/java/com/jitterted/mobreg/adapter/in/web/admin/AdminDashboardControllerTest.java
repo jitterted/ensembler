@@ -28,14 +28,14 @@ import static org.assertj.core.api.Assertions.*;
 class AdminDashboardControllerTest {
 
     @Test
-    public void givenOneHuddleResultsInHuddleInViewModel() throws Exception {
+    public void givenOneEnsembleResultsInEnsembleInViewModel() throws Exception {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member = MemberFactory.createMember(0, "ted", "tedyoung");
         memberRepository.save(member);
         MemberService memberService = new MemberService(memberRepository);
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
-        huddleRepository.save(new Ensemble("Name", ZonedDateTime.now()));
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
+        ensembleRepository.save(new Ensemble("Name", ZonedDateTime.now()));
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
@@ -47,25 +47,25 @@ class AdminDashboardControllerTest {
     }
 
     @Test
-    public void scheduleNewHuddleResultsInHuddleCreatedInRepository() throws Exception {
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
-        AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
+    public void scheduleNewEnsembleResultsInEnsembleCreatedInRepository() throws Exception {
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        AdminDashboardController adminDashboardController = createAdminDashboardController(ensembleRepository);
 
         String pageName = adminDashboardController.scheduleEnsemble(new ScheduleEnsembleForm(
                 "Name", "https://zoom.us/j/123456?pwd=12345", "2021-04-30", "09:00", "America/Los_Angeles"));
 
         assertThat(pageName)
                 .isEqualTo("redirect:/admin/dashboard");
-        assertThat(huddleRepository.findAll())
+        assertThat(ensembleRepository.findAll())
                 .hasSize(1);
     }
 
     @Test
-    public void changeExistingHuddleResultsInChangesSaved() throws Exception {
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
+    public void changeExistingEnsembleResultsInChangesSaved() throws Exception {
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("Old Name", ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 30, 9));
-        huddleRepository.save(ensemble);
-        AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
+        ensembleRepository.save(ensemble);
+        AdminDashboardController adminDashboardController = createAdminDashboardController(ensembleRepository);
 
         ScheduleEnsembleForm scheduleEnsembleForm = new ScheduleEnsembleForm("New Name", null, "2021-12-01", "10:00", "America/Los_Angeles");
         EnsembleId ensembleId = ensemble.getId();
@@ -75,19 +75,19 @@ class AdminDashboardControllerTest {
                 .isEqualTo("redirect:/admin/ensemble/" + ensembleId.id());
         Ensemble expectedEnsemble = new Ensemble("New Name", ZonedDateTime.of(2021, 12, 1, 10, 0, 0, 0, ZoneId.of("America/Los_Angeles")).withZoneSameInstant(ZoneOffset.UTC));
         expectedEnsemble.setId(ensembleId);
-        assertThat(huddleRepository.findById(ensembleId).get())
+        assertThat(ensembleRepository.findById(ensembleId).get())
                 .usingRecursiveComparison()
                 .isEqualTo(expectedEnsemble);
     }
 
 
     @Test
-    public void completeHuddleCompletesTheHuddleWithRecordingLinkAndRedirects() throws Exception {
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
+    public void completeEnsembleCompletesTheEnsembleWithRecordingLinkAndRedirects() throws Exception {
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("to be completed", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(19));
-        huddleRepository.save(ensemble);
-        AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
+        ensembleRepository.save(ensemble);
+        AdminDashboardController adminDashboardController = createAdminDashboardController(ensembleRepository);
 
         String pageName = adminDashboardController.completeEnsemble(19, new CompleteEnsembleForm("https://recording.link/19"));
 
@@ -101,18 +101,18 @@ class AdminDashboardControllerTest {
     }
 
     @Test
-    public void manuallyRegisterExistingMemberForHuddle() throws Exception {
+    public void manuallyRegisterExistingMemberForEnsemble() throws Exception {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member1 = MemberFactory.createMember(0, "ted", "tedyoung");
         memberRepository.save(member1);
         Member member2 = MemberFactory.createMember(1, "two", "githubtwo");
         memberRepository.save(member2);
         MemberService memberService = new MemberService(memberRepository);
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository, memberRepository);
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository, memberRepository);
         Ensemble ensemble = new Ensemble("Manual Registered Ensemble", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(23));
-        huddleRepository.save(ensemble);
+        ensembleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         AdminRegistrationForm form = new AdminRegistrationForm(ensemble.getId());
@@ -124,9 +124,9 @@ class AdminDashboardControllerTest {
     }
 
     @NotNull
-    private AdminDashboardController createAdminDashboardController(InMemoryEnsembleRepository huddleRepository) {
+    private AdminDashboardController createAdminDashboardController(InMemoryEnsembleRepository ensembleRepository) {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         return new AdminDashboardController(ensembleService, memberService);
     }
 
