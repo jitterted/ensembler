@@ -15,13 +15,13 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleSummaryViewTest {
 
     @Test
-    public void memberStatusUnknownWhenHuddleIsEmpty() throws Exception {
+    public void memberStatusUnknownWhenEnsembleIsEmpty() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
 
-        HuddleSummaryView huddleSummaryView =
-                HuddleSummaryView.toView(ensemble, MemberId.of(97L));
+        EnsembleSummaryView ensembleSummaryView =
+                EnsembleSummaryView.toView(ensemble, MemberId.of(97L));
 
-        assertThat(huddleSummaryView.memberStatus())
+        assertThat(ensembleSummaryView.memberStatus())
                 .isEqualTo("unknown");
     }
 
@@ -33,18 +33,18 @@ class EnsembleSummaryViewTest {
         member.setId(memberId);
         ensemble.acceptedBy(memberId);
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
                 .toView(ensemble, MemberId.of(5L));
 
-        assertThat(huddleSummaryView.numberRegistered())
+        assertThat(ensembleSummaryView.numberRegistered())
                 .isEqualTo(1);
 
-        assertThat(huddleSummaryView.memberStatus())
+        assertThat(ensembleSummaryView.memberStatus())
                 .isEqualTo("unknown");
     }
 
     @Test
-    public void memberAcceptedIsTrueWhenMemberHuddleParticipant() throws Exception {
+    public void memberAcceptedIsTrueWhenMemberEnsembleParticipant() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         Member member = new Member("name",
                                    "participant_username");
@@ -52,31 +52,31 @@ class EnsembleSummaryViewTest {
         member.setId(memberId);
         ensemble.acceptedBy(memberId);
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
                 .toView(ensemble, memberId);
 
-        assertThat(huddleSummaryView.memberStatus())
+        assertThat(ensembleSummaryView.memberStatus())
                 .isEqualTo("accepted");
     }
 
     @Test
-    public void noRecordingHuddleThenViewIncludesEmptyLink() throws Exception {
+    public void noRecordingEnsembleThenViewIncludesEmptyLink() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1));
 
-        assertThat(huddleSummaryView.recordingLink())
+        assertThat(ensembleSummaryView.recordingLink())
                 .isEmpty();
     }
 
     @Test
-    public void huddleWithRecordingThenViewIncludesStringOfLink() throws Exception {
+    public void ensembleWithRecordingThenViewIncludesStringOfLink() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         ensemble.linkToRecordingAt(URI.create("https://recording.link/abc123"));
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1));
 
-        assertThat(huddleSummaryView.recordingLink())
+        assertThat(ensembleSummaryView.recordingLink())
                 .isEqualTo("https://recording.link/abc123");
     }
 
@@ -84,33 +84,33 @@ class EnsembleSummaryViewTest {
     public void viewContainsGoogleCalendarLink() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1));
 
         String expectedLink = new GoogleCalendarLinkCreator().createFor(ensemble);
-        assertThat(huddleSummaryView.googleCalendarLink())
+        assertThat(ensembleSummaryView.googleCalendarLink())
                 .isEqualTo(expectedLink);
     }
 
     @Test
-    public void viewIndicatesNotAbleToAcceptIfHuddleIsFullAndCurrentlyUnknown() throws Exception {
+    public void viewIndicatesNotAbleToAcceptIfEnsembleIsFullAndCurrentlyUnknown() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         MemberFactory.registerCountMembersWith(ensemble, 5);
 
         MemberId memberIdOfUnknownMember = MemberId.of(99L);
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, memberIdOfUnknownMember);
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberIdOfUnknownMember);
 
-        assertThat(huddleSummaryView.memberStatus())
+        assertThat(ensembleSummaryView.memberStatus())
                 .isEqualTo("full");
     }
     
     @Test
-    public void viewIndicatesCanAcceptIfHuddleIsNotFull() throws Exception {
+    public void viewIndicatesCanAcceptIfEnsembleIsNotFull() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         MemberFactory.registerCountMembersWith(ensemble, 2);
 
-        HuddleSummaryView huddleSummaryView = HuddleSummaryView.toView(ensemble, MemberId.of(1));
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1));
 
-        assertThat(huddleSummaryView.memberStatus())
+        assertThat(ensembleSummaryView.memberStatus())
                 .isEqualTo("accepted");
     }
 

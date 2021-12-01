@@ -25,10 +25,10 @@ class MemberControllerTest {
     private static final MemberService CRASH_TEST_DUMMY_MEMBER_SERVICE = null;
 
     @Test
-    public void huddleFormContainsMemberIdForOAuth2User() throws Exception {
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
-        huddleRepository.save(new Ensemble("GET Test", ZonedDateTime.now()));
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(huddleRepository);
+    public void ensembleFormContainsMemberIdForOAuth2User() throws Exception {
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        ensembleRepository.save(new Ensemble("GET Test", ZonedDateTime.now()));
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
 
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member = MemberFactory.createMember(11, "name", "ghuser");
@@ -38,7 +38,7 @@ class MemberControllerTest {
         MemberController memberController = new MemberController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
-        memberController.showHuddlesForUser(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("ghuser", "ROLE_MEMBER"));
+        memberController.showEnsemblesForUser(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("ghuser", "ROLE_MEMBER"));
 
         assertThat((String) model.getAttribute("firstName"))
                 .isEqualTo("name");
@@ -52,11 +52,11 @@ class MemberControllerTest {
     }
 
     @Test
-    public void memberRegistersForHuddleWillBeRegisteredForThatHuddle() throws Exception {
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
-        Ensemble ensemble = huddleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
+    public void memberRegistersForEnsembleWillBeRegisteredForThatEnsemble() throws Exception {
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        EnsembleService ensembleService = new EnsembleService(huddleRepository, memberRepository, new DummyNotifier());
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository, new DummyNotifier());
         MemberController memberController = new MemberController(ensembleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
 
         MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
@@ -72,10 +72,10 @@ class MemberControllerTest {
 
     @Test
     public void memberDeclinesWillBeDeclinedForHuddle() throws Exception {
-        InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
-        Ensemble ensemble = huddleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        EnsembleService ensembleService = new EnsembleService(huddleRepository, memberRepository, new DummyNotifier());
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository, new DummyNotifier());
         MemberController memberController = new MemberController(ensembleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
 
         MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
@@ -90,7 +90,7 @@ class MemberControllerTest {
     @NotNull
     private MemberRegisterForm createMemberFormFor(Ensemble ensemble, MemberRepository memberRepository) {
         MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
-        memberRegisterForm.setHuddleId(ensemble.getId().id());
+        memberRegisterForm.setEnsembleId(ensemble.getId().id());
 
         Member member = MemberFactory.createMember(8, "name", "username");
         memberRepository.save(member);

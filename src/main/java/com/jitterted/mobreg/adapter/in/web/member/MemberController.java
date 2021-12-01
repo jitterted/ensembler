@@ -29,7 +29,7 @@ public class MemberController {
     }
 
     @GetMapping("/member/register")
-    public String showHuddlesForUser(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
+    public String showEnsemblesForUser(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         Member member = memberLookup.findMemberBy(principal);
         model.addAttribute("githubUsername", member.githubUsername());
         model.addAttribute("firstName", member.firstName());
@@ -38,8 +38,8 @@ public class MemberController {
         model.addAttribute("register", memberRegisterForm);
 
         List<Ensemble> ensembles = ensembleService.allEnsemblesByDateTimeDescending();
-        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(ensembles, member.getId());
-        model.addAttribute("ensembles", huddleSummaryViews);
+        List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles, member.getId());
+        model.addAttribute("ensembles", ensembleSummaryViews);
         return "member-register";
     }
 
@@ -51,7 +51,7 @@ public class MemberController {
 
     @PostMapping("/member/accept")
     public String accept(MemberRegisterForm memberRegisterForm) {
-        EnsembleId ensembleId = EnsembleId.of(memberRegisterForm.getHuddleId());
+        EnsembleId ensembleId = EnsembleId.of(memberRegisterForm.getEnsembleId());
         MemberId memberId = MemberId.of(memberRegisterForm.getMemberId());
 
         ensembleService.registerMember(ensembleId, memberId);
@@ -61,7 +61,7 @@ public class MemberController {
 
     @PostMapping("/member/decline")
     public String decline(MemberRegisterForm memberRegisterForm) {
-        EnsembleId ensembleId = EnsembleId.of(memberRegisterForm.getHuddleId());
+        EnsembleId ensembleId = EnsembleId.of(memberRegisterForm.getEnsembleId());
         MemberId memberId = MemberId.of(memberRegisterForm.getMemberId());
 
         ensembleService.declineMember(ensembleId, memberId);

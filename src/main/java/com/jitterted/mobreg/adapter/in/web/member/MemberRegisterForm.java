@@ -1,15 +1,15 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 public class MemberRegisterForm {
-    private Long huddleId;
+    private Long ensembleId;
     private Long memberId;
 
-    public Long getHuddleId() {
-        return huddleId;
+    public Long getEnsembleId() {
+        return ensembleId;
     }
 
-    public void setHuddleId(Long huddleId) {
-        this.huddleId = huddleId;
+    public void setEnsembleId(Long ensembleId) {
+        this.ensembleId = ensembleId;
     }
 
     public Long getMemberId() {

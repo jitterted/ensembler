@@ -59,7 +59,7 @@ public class MemberEndpointConfigurationTest {
     @Test
     public void postToRegisterRedirects() throws Exception {
         mockMvc.perform(post("/member/accept")
-                                .param("huddleId", "1")
+                                .param("ensembleId", "1")
                                 .param("memberId", "1")
                                 // TODO: roles aren't needed here anymore
                                 .with(OAuth2UserFactory.oAuth2User("ROLE_MEMBER"))
@@ -70,7 +70,7 @@ public class MemberEndpointConfigurationTest {
     @Test
     public void postToDeclineRedirects() throws Exception {
         mockMvc.perform(post("/member/decline")
-                                .param("huddleId", "1")
+                                .param("ensembleId", "1")
                                 .param("memberId", "1")
                                 .with(csrf()))
                .andExpect(status().is3xxRedirection());

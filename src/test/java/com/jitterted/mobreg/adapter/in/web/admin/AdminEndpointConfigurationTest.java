@@ -57,15 +57,15 @@ public class AdminEndpointConfigurationTest {
     }
 
     @Test
-    public void getOfHuddleDetailEndpointReturns200Ok() throws Exception {
-        createStubHuddleServiceReturningHuddleWithIdOf(13L);
+    public void getOfEnsembleDetailEndpointReturns200Ok() throws Exception {
+        createStubEnsembleServiceReturningEnsembleWithIdOf(13L);
 
         mockMvc.perform(get("/admin/ensemble/13"))
                .andExpect(status().isOk());
     }
 
     @Test
-    public void postToScheduleHuddleEndpointRedirects() throws Exception {
+    public void postToScheduleEnsembleEndpointRedirects() throws Exception {
         mockMvc.perform(post("/admin/schedule")
                                 .param("name", "test")
                                 .param("zoomMeetingLink", "https://zoom.us/j/test?pwd=testy")
@@ -77,7 +77,7 @@ public class AdminEndpointConfigurationTest {
     }
 
     @Test
-    public void postToChangeHuddleEndpointRedirects() throws Exception {
+    public void postToChangeEnsembleEndpointRedirects() throws Exception {
         mockMvc.perform(post("/admin/ensemble/17")
                                 .param("name", "New Name")
                                 .param("date", "2021-11-30")
@@ -89,10 +89,10 @@ public class AdminEndpointConfigurationTest {
 
     @Test
     public void postToRegisterParticipantEndpointRedirects() throws Exception {
-        createStubHuddleServiceReturningHuddleWithIdOf(23L);
-        createStubMemberRepositoryWithMember(1L, "participant", "mygithub", new String[]{"ROLE_USER", "ROLE_MEMBER"});
+        createStubEnsembleServiceReturningEnsembleWithIdOf(23L);
+        createStubMemberRepositoryWithMember(1L, "participant", "mygithub", "ROLE_USER", "ROLE_MEMBER");
         mockMvc.perform(post("/admin/register")
-                                .param("huddleId", "23")
+                                .param("ensembleId", "23")
                                 .param("name", "participant")
                                 .param("githubUsername", "mygithub")
                                 .with(csrf()))
@@ -107,14 +107,14 @@ public class AdminEndpointConfigurationTest {
 
     @Test
     public void postToCompleteEndpointRedirects() throws Exception {
-        createStubHuddleServiceReturningHuddleWithIdOf(13);
+        createStubEnsembleServiceReturningEnsembleWithIdOf(13);
         mockMvc.perform(post("/admin/ensemble/13/complete")
                                 .with(csrf()))
                .andExpect(status().is3xxRedirection());
     }
 
 
-    private void createStubHuddleServiceReturningHuddleWithIdOf(long id) {
+    private void createStubEnsembleServiceReturningEnsembleWithIdOf(long id) {
         Ensemble dummyEnsemble = new Ensemble("dummy", ZonedDateTime.now());
         EnsembleId ensembleId = EnsembleId.of(id);
         dummyEnsemble.setId(ensembleId);
