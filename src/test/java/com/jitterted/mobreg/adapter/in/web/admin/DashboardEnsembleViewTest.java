@@ -29,9 +29,9 @@ public class DashboardEnsembleViewTest {
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
-        adminDashboardController.huddleDetailView(model, 0L);
+        adminDashboardController.ensembleDetailView(model, 0L);
 
-        HuddleDetailView huddle = (HuddleDetailView) model.getAttribute("ensemble");
+        EnsembleDetailView huddle = (EnsembleDetailView) model.getAttribute("ensemble");
 
         assertThat(huddle.name())
                 .isEqualTo(savedEnsemble.name());
@@ -51,9 +51,9 @@ public class DashboardEnsembleViewTest {
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
-        adminDashboardController.huddleDetailView(model, ensemble.getId().id());
+        adminDashboardController.ensembleDetailView(model, ensemble.getId().id());
 
-        HuddleDetailView huddleView = (HuddleDetailView) model.getAttribute("ensemble");
+        EnsembleDetailView huddleView = (EnsembleDetailView) model.getAttribute("ensemble");
 
         assertThat(huddleView.memberViews())
                 .hasSize(1);
@@ -68,7 +68,7 @@ public class DashboardEnsembleViewTest {
         Model model = new ConcurrentModel();
 
         assertThatThrownBy(() -> {
-            adminDashboardController.huddleDetailView(model, 0L);
+            adminDashboardController.ensembleDetailView(model, 0L);
         }).isInstanceOf(ResponseStatusException.class)
           .extracting("status")
           .isEqualTo(HttpStatus.NOT_FOUND);

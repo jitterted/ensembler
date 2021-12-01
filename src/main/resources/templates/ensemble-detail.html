@@ -3,7 +3,7 @@
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Huddle Details</title>
+    <title>Ensemble Details</title>
     <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
     <script>
         // convert UTC Date Time to browser's time zone, only for <span> elements with .datetimeutc class
@@ -30,12 +30,12 @@
 <h2 class="text-3xl mb-6">Detail</h2>
 
 <div class="max-w-2xl">
-    <form th:action="@{/admin/ensemble/__${ensemble.id}__}" action="#" method="post" th:object="${scheduleHuddleForm}"
+    <form th:action="@{/admin/ensemble/__${ensemble.id}__}" action="#" method="post" th:object="${scheduleEnsembleForm}"
           class="flex flex-col justify-center py-10 sm:px-6 lg:px-8">
 
         <div>
             <h3 class="text-xl sm:text-2xl sm:truncate leading-6 font-medium text-gray-900">
-                Update Huddle
+                Update Ensemble
             </h3>
         </div>
         <div>
@@ -99,12 +99,12 @@
 <p>Current Size: <span th:text="${ensemble.size}">4</span> of 5</p>
 
 <div th:unless="${ensemble.isCompleted}" class="mt-3">
-    <form th:action="@{/admin/ensemble/__${ensemble.id}__/complete}" action="#" method="post" th:object="${completeHuddle}">
+    <form th:action="@{/admin/ensemble/__${ensemble.id}__/complete}" action="#" method="post" th:object="${completeEnsemble}">
         <label>Recording Link: <input type="text" th:field="*{recordingLink}"></label>
         <div class="mt-2">
             <button type="submit"
                     class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Complete Huddle</button>
+            Complete Ensemble</button>
         </div>
     </form>
 </div>

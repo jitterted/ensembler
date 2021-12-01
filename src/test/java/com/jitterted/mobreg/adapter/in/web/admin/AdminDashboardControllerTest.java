@@ -41,8 +41,8 @@ class AdminDashboardControllerTest {
         Model model = new ConcurrentModel();
         adminDashboardController.dashboardView(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("tedyoung", "ROLE_MEMBER"));
 
-        List<HuddleSummaryView> huddleSummaryViews = (List<HuddleSummaryView>) model.getAttribute("ensembles");
-        assertThat(huddleSummaryViews)
+        List<EnsembleSummaryView> ensembleSummaryViews = (List<EnsembleSummaryView>) model.getAttribute("ensembles");
+        assertThat(ensembleSummaryViews)
                 .hasSize(1);
     }
 
@@ -51,7 +51,7 @@ class AdminDashboardControllerTest {
         InMemoryEnsembleRepository huddleRepository = new InMemoryEnsembleRepository();
         AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
 
-        String pageName = adminDashboardController.scheduleHuddle(new ScheduleHuddleForm(
+        String pageName = adminDashboardController.scheduleEnsemble(new ScheduleEnsembleForm(
                 "Name", "https://zoom.us/j/123456?pwd=12345", "2021-04-30", "09:00", "America/Los_Angeles"));
 
         assertThat(pageName)
@@ -67,12 +67,12 @@ class AdminDashboardControllerTest {
         huddleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
 
-        ScheduleHuddleForm scheduleHuddleForm = new ScheduleHuddleForm("New Name", null, "2021-12-01", "10:00", "America/Los_Angeles");
+        ScheduleEnsembleForm scheduleEnsembleForm = new ScheduleEnsembleForm("New Name", null, "2021-12-01", "10:00", "America/Los_Angeles");
         EnsembleId ensembleId = ensemble.getId();
-        String pageName = adminDashboardController.changeHuddle(scheduleHuddleForm, ensembleId.id());
+        String pageName = adminDashboardController.changeEnsemble(scheduleEnsembleForm, ensembleId.id());
 
         assertThat(pageName)
-                .isEqualTo("redirect:/admin/huddle/" + ensembleId.id());
+                .isEqualTo("redirect:/admin/ensemble/" + ensembleId.id());
         Ensemble expectedEnsemble = new Ensemble("New Name", ZonedDateTime.of(2021, 12, 1, 10, 0, 0, 0, ZoneId.of("America/Los_Angeles")).withZoneSameInstant(ZoneOffset.UTC));
         expectedEnsemble.setId(ensembleId);
         assertThat(huddleRepository.findById(ensembleId).get())
@@ -89,10 +89,10 @@ class AdminDashboardControllerTest {
         huddleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = createAdminDashboardController(huddleRepository);
 
-        String pageName = adminDashboardController.completeHuddle(19, new CompleteHuddleForm("https://recording.link/19"));
+        String pageName = adminDashboardController.completeEnsemble(19, new CompleteEnsembleForm("https://recording.link/19"));
 
         assertThat(pageName)
-                .isEqualTo("redirect:/admin/huddle/19");
+                .isEqualTo("redirect:/admin/ensemble/19");
 
         assertThat(ensemble.isCompleted())
                 .isTrue();

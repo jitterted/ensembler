@@ -21,9 +21,9 @@ class EnsembleDetailViewTest {
         MemberService memberService = new MemberService(new DummyMemberRepository());
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(23));
-        HuddleDetailView huddleDetailView = HuddleDetailView.from(ensemble, memberService);
+        EnsembleDetailView ensembleDetailView = EnsembleDetailView.from(ensemble, memberService);
 
-        assertThat(huddleDetailView.id())
+        assertThat(ensembleDetailView.id())
                 .isEqualTo(23);
     }
 
@@ -37,7 +37,7 @@ class EnsembleDetailViewTest {
         memberRepository.save(member);
         ensemble.acceptedBy(member.getId());
 
-        HuddleDetailView view = HuddleDetailView.from(ensemble, memberService);
+        EnsembleDetailView view = EnsembleDetailView.from(ensemble, memberService);
 
         MemberView expectedView = new MemberView(7L, "name", "ghusername", "");
         assertThat(view.memberViews())

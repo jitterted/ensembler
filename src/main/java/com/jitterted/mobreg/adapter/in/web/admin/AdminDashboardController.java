@@ -47,51 +47,51 @@ public class AdminDashboardController {
             throw new IllegalStateException("Not an OAuth2User");
         }
         List<Ensemble> ensembles = ensembleService.allEnsemblesByDateTimeDescending();
-        List<HuddleSummaryView> huddleSummaryViews = HuddleSummaryView.from(ensembles);
-        model.addAttribute("ensembles", huddleSummaryViews);
-        model.addAttribute("scheduleHuddleForm", new ScheduleHuddleForm());
+        List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles);
+        model.addAttribute("ensembles", ensembleSummaryViews);
+        model.addAttribute("scheduleEnsembleForm", new ScheduleEnsembleForm());
         return "dashboard";
     }
 
-    @GetMapping("/huddle/{huddleId}")
-    public String huddleDetailView(Model model, @PathVariable("huddleId") Long huddleId) {
-        Ensemble ensemble = ensembleService.findById(EnsembleId.of(huddleId))
+    @GetMapping("/ensemble/{ensembleId}")
+    public String ensembleDetailView(Model model, @PathVariable("ensembleId") Long ensembleId) {
+        Ensemble ensemble = ensembleService.findById(EnsembleId.of(ensembleId))
                                            .orElseThrow(() -> {
                                          throw new ResponseStatusException(HttpStatus.NOT_FOUND);
                                      });
 
-        HuddleDetailView huddleDetailView = HuddleDetailView.from(ensemble, memberService);
-        model.addAttribute("ensemble", huddleDetailView);
-        model.addAttribute("scheduleHuddleForm", ScheduleHuddleForm.from(ensemble));
-        model.addAttribute("completeHuddle", new CompleteHuddleForm(""));
+        EnsembleDetailView ensembleDetailView = EnsembleDetailView.from(ensemble, memberService);
+        model.addAttribute("ensemble", ensembleDetailView);
+        model.addAttribute("scheduleEnsembleForm", ScheduleEnsembleForm.from(ensemble));
+        model.addAttribute("completeEnsemble", new CompleteEnsembleForm(""));
         model.addAttribute("registration", new AdminRegistrationForm(ensemble.getId()));
 
-        return "huddle-detail";
+        return "ensemble-detail";
     }
 
-    @PostMapping("/huddle/{huddleId}")
-    public String changeHuddle(ScheduleHuddleForm scheduleHuddleForm, @PathVariable("huddleId") Long id) {
+    @PostMapping("/ensemble/{ensembleId}")
+    public String changeEnsemble(ScheduleEnsembleForm scheduleEnsembleForm, @PathVariable("ensembleId") Long id) {
         EnsembleId ensembleId = EnsembleId.of(id);
-        ensembleService.changeNameDateTimeTo(ensembleId, scheduleHuddleForm.getName(), scheduleHuddleForm.getDateTimeInUtc());
-        return "redirect:/admin/huddle/" + id;
+        ensembleService.changeNameDateTimeTo(ensembleId, scheduleEnsembleForm.getName(), scheduleEnsembleForm.getDateTimeInUtc());
+        return redirectToDetailViewFor(ensembleId);
     }
 
     @PostMapping("/schedule")
-    public String scheduleHuddle(ScheduleHuddleForm scheduleHuddleForm) {
-        if (scheduleHuddleForm.getZoomMeetingLink().isBlank()) {
-            ensembleService.scheduleEnsemble(scheduleHuddleForm.getName(),
-                                             scheduleHuddleForm.getDateTimeInUtc());
+    public String scheduleEnsemble(ScheduleEnsembleForm scheduleEnsembleForm) {
+        if (scheduleEnsembleForm.getZoomMeetingLink().isBlank()) {
+            ensembleService.scheduleEnsemble(scheduleEnsembleForm.getName(),
+                                             scheduleEnsembleForm.getDateTimeInUtc());
         } else {
-            ensembleService.scheduleEnsemble(scheduleHuddleForm.getName(),
-                                             URI.create(scheduleHuddleForm.getZoomMeetingLink()),
-                                             scheduleHuddleForm.getDateTimeInUtc());
+            ensembleService.scheduleEnsemble(scheduleEnsembleForm.getName(),
+                                             URI.create(scheduleEnsembleForm.getZoomMeetingLink()),
+                                             scheduleEnsembleForm.getDateTimeInUtc());
         }
         return "redirect:/admin/dashboard";
     }
 
-    @PostMapping("/notify/{huddleId}")
-    public String notifyHuddleScheduled(@PathVariable("huddleId") Long huddleId) {
-        Ensemble ensemble = ensembleService.findById(EnsembleId.of(huddleId))
+    @PostMapping("/notify/{ensembleId}")
+    public String notifyEnsembleScheduled(@PathVariable("ensembleId") Long ensembleId) {
+        Ensemble ensemble = ensembleService.findById(EnsembleId.of(ensembleId))
                                            .orElseThrow(() -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND);
                 });
@@ -110,16 +110,16 @@ public class AdminDashboardController {
         return redirectToDetailViewFor(ensembleId);
     }
 
-    @PostMapping("/huddle/{huddleId}/complete")
-    public String completeHuddle(@PathVariable("huddleId") long id, CompleteHuddleForm completeHuddleForm) {
+    @PostMapping("/ensemble/{ensembleId}/complete")
+    public String completeEnsemble(@PathVariable("ensembleId") long id, CompleteEnsembleForm completeEnsembleForm) {
         EnsembleId ensembleId = EnsembleId.of(id);
-        ensembleService.completeWith(ensembleId, completeHuddleForm.recordingLink());
+        ensembleService.completeWith(ensembleId, completeEnsembleForm.recordingLink());
 
         return redirectToDetailViewFor(ensembleId);
     }
 
     private String redirectToDetailViewFor(EnsembleId ensembleId) {
-        return "redirect:/admin/huddle/" + ensembleId.id();
+        return "redirect:/admin/ensemble/" + ensembleId.id();
     }
 
 }

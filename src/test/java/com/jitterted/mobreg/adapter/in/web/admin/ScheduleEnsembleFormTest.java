@@ -11,7 +11,7 @@ class ScheduleEnsembleFormTest {
 
     @Test
     public void formConvertsDateTimeBasedOnGivenTimezone() throws Exception {
-        ScheduleHuddleForm form = new ScheduleHuddleForm("test", "", "2021-09-13", "20:00", "America/Los_Angeles");
+        ScheduleEnsembleForm form = new ScheduleEnsembleForm("test", "", "2021-09-13", "20:00", "America/Los_Angeles");
 
         ZonedDateTime dateTimeInUtc = form.getDateTimeInUtc();
 

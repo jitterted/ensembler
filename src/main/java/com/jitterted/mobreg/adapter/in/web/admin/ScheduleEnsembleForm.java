@@ -8,17 +8,17 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-public final class ScheduleHuddleForm {
+public final class ScheduleEnsembleForm {
     private String name;
     private String date;
     private String time;
     private String zoomMeetingLink;
     private String timezone;
 
-    public ScheduleHuddleForm() {
+    public ScheduleEnsembleForm() {
     }
 
-    public ScheduleHuddleForm(String name, String zoomMeetingLink, String date, String time, String timezone) {
+    public ScheduleEnsembleForm(String name, String zoomMeetingLink, String date, String time, String timezone) {
         this.name = name;
         this.zoomMeetingLink = zoomMeetingLink;
         this.date = date;
@@ -26,8 +26,8 @@ public final class ScheduleHuddleForm {
         this.timezone = timezone;
     }
 
-    public static ScheduleHuddleForm from(Ensemble ensemble) {
-        return new ScheduleHuddleForm(ensemble.name(), ensemble.zoomMeetingLink().toString(), "", "", "");
+    public static ScheduleEnsembleForm from(Ensemble ensemble) {
+        return new ScheduleEnsembleForm(ensemble.name(), ensemble.zoomMeetingLink().toString(), "", "", "");
     }
 
     public String getName() {

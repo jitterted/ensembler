@@ -60,7 +60,7 @@ public class AdminEndpointConfigurationTest {
     public void getOfHuddleDetailEndpointReturns200Ok() throws Exception {
         createStubHuddleServiceReturningHuddleWithIdOf(13L);
 
-        mockMvc.perform(get("/admin/huddle/13"))
+        mockMvc.perform(get("/admin/ensemble/13"))
                .andExpect(status().isOk());
     }
 
@@ -78,7 +78,7 @@ public class AdminEndpointConfigurationTest {
 
     @Test
     public void postToChangeHuddleEndpointRedirects() throws Exception {
-        mockMvc.perform(post("/admin/huddle/17")
+        mockMvc.perform(post("/admin/ensemble/17")
                                 .param("name", "New Name")
                                 .param("date", "2021-11-30")
                                 .param("time", "10:00")
@@ -108,7 +108,7 @@ public class AdminEndpointConfigurationTest {
     @Test
     public void postToCompleteEndpointRedirects() throws Exception {
         createStubHuddleServiceReturningHuddleWithIdOf(13);
-        mockMvc.perform(post("/admin/huddle/13/complete")
+        mockMvc.perform(post("/admin/ensemble/13/complete")
                                 .with(csrf()))
                .andExpect(status().is3xxRedirection());
     }

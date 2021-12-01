@@ -31,7 +31,7 @@ public class MobRegApplication {
 
     @Bean
     @ConditionalOnProperty("mobreg.repository.inmemory")
-    public EnsembleRepository huddleRepository() {
+    public EnsembleRepository ensembleRepository() {
         return new InMemoryEnsembleRepository();
     }
 
@@ -48,7 +48,7 @@ public class MobRegApplication {
 
 
     @Bean
-    public EnsembleService createHuddleService(EnsembleRepository ensembleRepository, MemberRepository memberRepository, Notifier notifier) {
+    public EnsembleService createEnsembleService(EnsembleRepository ensembleRepository, MemberRepository memberRepository, Notifier notifier) {
         return new EnsembleService(ensembleRepository, memberRepository, notifier);
     }
 
