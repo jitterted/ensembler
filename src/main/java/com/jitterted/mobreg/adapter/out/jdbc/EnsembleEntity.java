@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 // Database Entity for Ensemble to be stored in the database
-public class HuddleEntity {
+public class EnsembleEntity {
     @Id
     private Long id;
 
@@ -24,35 +24,35 @@ public class HuddleEntity {
     private boolean isCompleted;
     private String recordingLink;
 
-    @MappedCollection(idColumn = "huddle_id")
+    @MappedCollection(idColumn = "ensemble_id")
     private Set<AcceptedMember> acceptedMembers = new HashSet<>();
 
-    @MappedCollection(idColumn = "huddle_id")
+    @MappedCollection(idColumn = "ensemble_id")
     private Set<DeclinedMember> declinedMembers = new HashSet<>();
 
-    public static HuddleEntity from(Ensemble ensemble) {
-        HuddleEntity huddleEntity = new HuddleEntity();
+    public static EnsembleEntity from(Ensemble ensemble) {
+        EnsembleEntity ensembleEntity = new EnsembleEntity();
         if (ensemble.getId() != null) {
-            huddleEntity.setId(ensemble.getId().id());
+            ensembleEntity.setId(ensemble.getId().id());
         }
-        huddleEntity.setName(ensemble.name());
-        huddleEntity.setDateTimeUtc(ensemble.startDateTime().toLocalDateTime());
-        huddleEntity.setZoomMeetingLink(ensemble.zoomMeetingLink().toString());
-        huddleEntity.setCompleted(ensemble.isCompleted());
-        huddleEntity.setRecordingLink(ensemble.recordingLink().toString());
-        huddleEntity.setAcceptedMembers(
+        ensembleEntity.setName(ensemble.name());
+        ensembleEntity.setDateTimeUtc(ensemble.startDateTime().toLocalDateTime());
+        ensembleEntity.setZoomMeetingLink(ensemble.zoomMeetingLink().toString());
+        ensembleEntity.setCompleted(ensemble.isCompleted());
+        ensembleEntity.setRecordingLink(ensemble.recordingLink().toString());
+        ensembleEntity.setAcceptedMembers(
                 ensemble.acceptedMembers()
                         .stream()
                         .map(AcceptedMember::toEntityId)
                         .collect(Collectors.toSet()));
-        huddleEntity.setDeclinedMembers(
+        ensembleEntity.setDeclinedMembers(
                 ensemble.declinedMembers()
                         .map(DeclinedMember::toEntityId)
                         .collect(Collectors.toSet()));
-        return huddleEntity;
+        return ensembleEntity;
     }
 
-    public Ensemble asHuddle() {
+    public Ensemble asEnsemble() {
         ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneOffset.UTC);
         Ensemble ensemble = new Ensemble(name, URI.create(zoomMeetingLink), startDateTime);
         ensemble.setId(EnsembleId.of(id));

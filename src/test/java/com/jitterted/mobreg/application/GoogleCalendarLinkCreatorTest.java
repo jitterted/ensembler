@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 public class GoogleCalendarLinkCreatorTest {
 
     @Test
-    public void googleCalendarLinkGeneratedFromHuddleWithZoomLinkInDetails() throws Exception {
+    public void googleCalendarLinkGeneratedFromEnsembleWithZoomLinkInDetails() throws Exception {
         Ensemble calendarEnsemble = new Ensemble("Calendar Ensemble",
                                                  URI.create("https://zoom.us"),
                                                  ZonedDateTime.of(2021, 9, 17, 16, 0, 0, 0, ZoneOffset.UTC));

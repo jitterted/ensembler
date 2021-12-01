@@ -52,7 +52,7 @@ class EnsembleServiceMemberTest {
     }
 
     @Test
-    public void existingMemberRegistersForHuddleThenIsRegisteredMember() throws Exception {
+    public void existingMemberRegistersForEnsembleThenIsRegisteredMember() throws Exception {
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository, memberRepository);
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
         EnsembleId ensembleId = ensembleRepository.save(ensemble).getId();
@@ -62,11 +62,11 @@ class EnsembleServiceMemberTest {
 
         ensembleService.registerMember(ensembleId, memberId);
 
-        Optional<Ensemble> foundHuddle = ensembleRepository.findById(ensembleId);
+        Optional<Ensemble> foundEnsemble = ensembleRepository.findById(ensembleId);
 
-        assertThat(foundHuddle)
+        assertThat(foundEnsemble)
                 .isPresent();
-        assertThat(foundHuddle.get().acceptedMembers())
+        assertThat(foundEnsemble.get().acceptedMembers())
                 .containsOnly(memberId);
     }
 

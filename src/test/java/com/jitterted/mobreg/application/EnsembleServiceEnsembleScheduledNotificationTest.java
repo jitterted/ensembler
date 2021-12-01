@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleServiceEnsembleScheduledNotificationTest {
 
     @Test
-    public void whenHuddleScheduledEnsembleOpenNotificationIsSent() throws Exception {
+    public void whenEnsembleScheduledEnsembleOpenNotificationIsSent() throws Exception {
         MockNotifier mockNotifier = new MockNotifier();
         EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),
@@ -28,7 +28,7 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
     }
 
     @Test
-    public void whenHuddleScheduledWithZoomLinkEnsembleOpenNotificationIsSent() throws Exception {
+    public void whenEnsembleScheduledWithZoomLinkEnsembleOpenNotificationIsSent() throws Exception {
         MockNotifier mockNotifier = new MockNotifier();
         EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),

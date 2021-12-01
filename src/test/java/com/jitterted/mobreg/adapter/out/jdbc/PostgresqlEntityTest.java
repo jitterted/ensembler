@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.*;
 class PostgresqlEntityTest {
 
     @Autowired
-    HuddleJdbcRepository huddleJdbcRepository;
+    EnsembleJdbcRepository ensembleJdbcRepository;
 
     @Autowired
     MemberJdbcRepository memberJdbcRepository;
@@ -47,17 +47,17 @@ class PostgresqlEntityTest {
     }
 
     @Test
-    public void huddleEntityStoredViaJdbcIsRetrievedWithMembers() throws Exception {
+    public void ensembleEntityStoredViaJdbcIsRetrievedWithMembers() throws Exception {
         Ensemble original = new Ensemble("entity", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
         original.acceptedBy(MemberId.of(4L));
         original.acceptedBy(MemberId.of(5L));
         original.declinedBy(MemberId.of(73L));
         original.declinedBy(MemberId.of(79L));
-        HuddleEntity originalEntity = HuddleEntity.from(original);
+        EnsembleEntity originalEntity = EnsembleEntity.from(original);
 
-        HuddleEntity savedEntity = huddleJdbcRepository.save(originalEntity);
+        EnsembleEntity savedEntity = ensembleJdbcRepository.save(originalEntity);
 
-        Optional<HuddleEntity> retrievedEntity = huddleJdbcRepository.findById(savedEntity.getId());
+        Optional<EnsembleEntity> retrievedEntity = ensembleJdbcRepository.findById(savedEntity.getId());
 
         assertThat(retrievedEntity)
                 .isPresent()

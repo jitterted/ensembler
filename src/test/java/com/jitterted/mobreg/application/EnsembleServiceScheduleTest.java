@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleServiceScheduleTest {
 
     @Test
-    public void singleScheduledHuddleIsReturnedForAllHuddles() throws Exception {
+    public void singleScheduledEnsembleIsReturnedForAllEnsembles() throws Exception {
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(new InMemoryEnsembleRepository());
 
         ensembleService.scheduleEnsemble("Name", ZonedDateTime.now());

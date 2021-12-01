@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleServiceCompletedTest {
 
     @Test
-    public void completedHuddleIsCompletedWithLinkAndSavedInRepository() throws Exception {
+    public void completedEnsembleIsCompletedWithLinkAndSavedInRepository() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         Ensemble ensemble = new Ensemble("Completed", ZonedDateTime.now());
@@ -22,12 +22,12 @@ class EnsembleServiceCompletedTest {
 
         ensembleService.completeWith(ensembleId, "https://recording.link/abc987");
 
-        Optional<Ensemble> foundHuddle = ensembleRepository.findById(ensembleId);
-        assertThat(foundHuddle)
+        Optional<Ensemble> foundEnsemble = ensembleRepository.findById(ensembleId);
+        assertThat(foundEnsemble)
                 .isPresent();
-        assertThat(foundHuddle.get().isCompleted())
+        assertThat(foundEnsemble.get().isCompleted())
                 .isTrue();
-        assertThat(foundHuddle.get().recordingLink().toString())
+        assertThat(foundEnsemble.get().recordingLink().toString())
                 .isEqualTo("https://recording.link/abc987");
 
         assertThat(ensembleRepository.saveCount())

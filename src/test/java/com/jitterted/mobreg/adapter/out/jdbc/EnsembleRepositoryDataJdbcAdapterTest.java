@@ -46,18 +46,18 @@ class EnsembleRepositoryDataJdbcAdapterTest {
     }
 
     @Autowired
-    EnsembleRepositoryDataJdbcAdapter huddleRepositoryAdapter;
+    EnsembleRepositoryDataJdbcAdapter ensembleRepositoryAdapter;
 
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
     @Test
-    public void savedHuddleCanBeFoundByItsId() throws Exception {
-        Ensemble ensemble = createWithRegisteredMemberHuddleNamed("test ensemble");
+    public void savedEnsembleCanBeFoundByItsId() throws Exception {
+        Ensemble ensemble = createWithRegisteredMemberEnsembleNamed("test ensemble");
 
-        Ensemble savedEnsemble = huddleRepositoryAdapter.save(ensemble);
+        Ensemble savedEnsemble = ensembleRepositoryAdapter.save(ensemble);
 
-        Optional<Ensemble> found = huddleRepositoryAdapter.findById(savedEnsemble.getId());
+        Optional<Ensemble> found = ensembleRepositoryAdapter.findById(savedEnsemble.getId());
 
         assertThat(found)
                 .isPresent()
@@ -68,21 +68,21 @@ class EnsembleRepositoryDataJdbcAdapterTest {
 
     @Test
     public void newRepositoryReturnsEmptyForFindAll() throws Exception {
-        List<Ensemble> ensembles = huddleRepositoryAdapter.findAll();
+        List<Ensemble> ensembles = ensembleRepositoryAdapter.findAll();
 
         assertThat(ensembles)
                 .isEmpty();
     }
 
     @Test
-    public void twoSavedHuddlesBothReturnedByFindAll() throws Exception {
-        Ensemble one = createWithRegisteredMemberHuddleNamed("one");
-        Ensemble two = createWithRegisteredMemberHuddleNamed("two");
+    public void twoSavedEnsemblesBothReturnedByFindAll() throws Exception {
+        Ensemble one = createWithRegisteredMemberEnsembleNamed("one");
+        Ensemble two = createWithRegisteredMemberEnsembleNamed("two");
 
-        huddleRepositoryAdapter.save(one);
-        huddleRepositoryAdapter.save(two);
+        ensembleRepositoryAdapter.save(one);
+        ensembleRepositoryAdapter.save(two);
 
-        List<Ensemble> allEnsembles = huddleRepositoryAdapter.findAll();
+        List<Ensemble> allEnsembles = ensembleRepositoryAdapter.findAll();
         assertThat(allEnsembles)
                 .hasSize(2);
 
@@ -95,12 +95,12 @@ class EnsembleRepositoryDataJdbcAdapterTest {
     }
 
     @Test
-    public void whenHuddleMeetingLinkIsStoredThenIsRetrievedByFind() throws Exception {
+    public void whenEnsembleMeetingLinkIsStoredThenIsRetrievedByFind() throws Exception {
         Ensemble zoom = new Ensemble("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
 
-        EnsembleId savedId = huddleRepositoryAdapter.save(zoom).getId();
+        EnsembleId savedId = ensembleRepositoryAdapter.save(zoom).getId();
 
-        Optional<Ensemble> found = huddleRepositoryAdapter.findById(savedId);
+        Optional<Ensemble> found = ensembleRepositoryAdapter.findById(savedId);
         assertThat(found)
                 .isPresent()
                 .get()
@@ -110,14 +110,14 @@ class EnsembleRepositoryDataJdbcAdapterTest {
     }
 
     @Test
-    public void whenHuddleCompletedWithRecordingLinkThenIsStoredSuccessfully() throws Exception {
+    public void whenEnsembleCompletedWithRecordingLinkThenIsStoredSuccessfully() throws Exception {
         Ensemble ensemble = new Ensemble("Completed", ZonedDateTime.now());
         ensemble.complete();
         ensemble.linkToRecordingAt(URI.create("https://recording.link/database"));
 
-        EnsembleId savedId = huddleRepositoryAdapter.save(ensemble).getId();
+        EnsembleId savedId = ensembleRepositoryAdapter.save(ensemble).getId();
 
-        Ensemble found = huddleRepositoryAdapter.findById(savedId).get();
+        Ensemble found = ensembleRepositoryAdapter.findById(savedId).get();
 
         assertThat(found.isCompleted())
                 .isTrue();
@@ -126,8 +126,8 @@ class EnsembleRepositoryDataJdbcAdapterTest {
     }
 
     @NotNull
-    private Ensemble createWithRegisteredMemberHuddleNamed(String huddleName) {
-        Ensemble ensemble = new Ensemble(huddleName, ZonedDateTime.now());
+    private Ensemble createWithRegisteredMemberEnsembleNamed(String name) {
+        Ensemble ensemble = new Ensemble(name, ZonedDateTime.now());
         ensemble.acceptedBy(MemberId.of(7L));
         return ensemble;
     }

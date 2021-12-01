@@ -16,18 +16,18 @@ class EnsembleEntityMappingTest {
 
     @Test
     public void databaseEntityToDomainIsMappedCorrectly() throws Exception {
-        HuddleEntity huddleEntity = new HuddleEntity();
-        huddleEntity.setId(19L);
-        huddleEntity.setCompleted(true);
-        huddleEntity.setRecordingLink("https://recording.link/entity");
+        EnsembleEntity ensembleEntity = new EnsembleEntity();
+        ensembleEntity.setId(19L);
+        ensembleEntity.setCompleted(true);
+        ensembleEntity.setRecordingLink("https://recording.link/entity");
         ZonedDateTime now = ZonedDateTime.now();
-        huddleEntity.setDateTimeUtc(now.toLocalDateTime());
-        huddleEntity.setName("Entity");
-        huddleEntity.setZoomMeetingLink("https://zoom.us/entity");
-        huddleEntity.setAcceptedMembers(Set.of(new AcceptedMember(13L)));
-        huddleEntity.setDeclinedMembers(Set.of(new DeclinedMember(29L)));
+        ensembleEntity.setDateTimeUtc(now.toLocalDateTime());
+        ensembleEntity.setName("Entity");
+        ensembleEntity.setZoomMeetingLink("https://zoom.us/entity");
+        ensembleEntity.setAcceptedMembers(Set.of(new AcceptedMember(13L)));
+        ensembleEntity.setDeclinedMembers(Set.of(new DeclinedMember(29L)));
 
-        Ensemble ensemble = huddleEntity.asHuddle();
+        Ensemble ensemble = ensembleEntity.asEnsemble();
 
         assertThat(ensemble.isCompleted())
                 .isTrue();
@@ -54,7 +54,7 @@ class EnsembleEntityMappingTest {
         ensemble.declinedBy(MemberId.of(13L));
         ensemble.complete();
 
-        HuddleEntity entity = HuddleEntity.from(ensemble);
+        EnsembleEntity entity = EnsembleEntity.from(ensemble);
 
         assertThat(entity.getName())
                 .isEqualTo("Domain");

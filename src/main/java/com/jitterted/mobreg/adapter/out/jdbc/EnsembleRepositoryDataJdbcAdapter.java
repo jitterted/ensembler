@@ -13,31 +13,31 @@ import java.util.stream.StreamSupport;
 @Repository
 public class EnsembleRepositoryDataJdbcAdapter implements EnsembleRepository {
 
-    private final HuddleJdbcRepository huddleJdbcRepository;
+    private final EnsembleJdbcRepository ensembleJdbcRepository;
 
     @Autowired
-    public EnsembleRepositoryDataJdbcAdapter(HuddleJdbcRepository huddleJdbcRepository) {
-        this.huddleJdbcRepository = huddleJdbcRepository;
+    public EnsembleRepositoryDataJdbcAdapter(EnsembleJdbcRepository ensembleJdbcRepository) {
+        this.ensembleJdbcRepository = ensembleJdbcRepository;
     }
 
     @Override
     public Ensemble save(Ensemble ensemble) {
-        HuddleEntity huddleEntity = HuddleEntity.from(ensemble);
-        HuddleEntity savedHuddleEntity = huddleJdbcRepository.save(huddleEntity);
-        return savedHuddleEntity.asHuddle();
+        EnsembleEntity ensembleEntity = EnsembleEntity.from(ensemble);
+        EnsembleEntity savedEnsembleEntity = ensembleJdbcRepository.save(ensembleEntity);
+        return savedEnsembleEntity.asEnsemble();
     }
 
     @Override
     public List<Ensemble> findAll() {
         return StreamSupport.stream(
-                huddleJdbcRepository.findAll().spliterator(), false)
-                            .map(HuddleEntity::asHuddle)
+                                    ensembleJdbcRepository.findAll().spliterator(), false)
+                            .map(EnsembleEntity::asEnsemble)
                             .toList();
     }
 
     @Override
     public Optional<Ensemble> findById(EnsembleId ensembleId) {
-        Optional<HuddleEntity> found = huddleJdbcRepository.findById(ensembleId.id());
-        return found.map(HuddleEntity::asHuddle);
+        Optional<EnsembleEntity> found = ensembleJdbcRepository.findById(ensembleId.id());
+        return found.map(EnsembleEntity::asEnsemble);
     }
 }

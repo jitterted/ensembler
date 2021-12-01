@@ -29,19 +29,19 @@ public class EnsembleServiceFindTest {
     }
 
     @Test
-    public void whenRepositoryHasHuddleFindByItsIdReturnsItInAnOptional() throws Exception {
+    public void whenRepositoryHasEnsembleFindByItsIdReturnsItInAnOptional() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble savedEnsemble = ensembleRepository.save(new Ensemble("test", ZonedDateTime.now()));
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
 
-        Optional<Ensemble> foundHuddle = ensembleService.findById(savedEnsemble.getId());
+        Optional<Ensemble> foundEnsemble = ensembleService.findById(savedEnsemble.getId());
 
-        assertThat(foundHuddle)
+        assertThat(foundEnsemble)
                 .isNotEmpty();
     }
 
     @Test
-    public void allHuddlesOrderedByDateTimeDescendingIsInCorrectOrder() throws Exception {
+    public void allEnsemblesOrderedByDateTimeDescendingIsInCorrectOrder() throws Exception {
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         ensembleService.scheduleEnsemble("two", ZonedDateTime.of(2021, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()));
@@ -57,7 +57,7 @@ public class EnsembleServiceFindTest {
 
     @Disabled("This is for the filtered view feature")
     @Test
-    public void findAllHuddlesForMemberDoesNotReturnCompletedHuddlesWhereMemberIsNotRegistered() throws Exception {
+    public void findAllEnsemblesForMemberDoesNotReturnCompletedEnsemblesWhereMemberIsNotRegistered() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         MemberId memberId = memberRepository.save(new Member("member", "ghuser")).getId();
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
