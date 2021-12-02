@@ -78,13 +78,15 @@ class PostgresqlEntityTest {
 
     @Test
     public void memberEntityStoredViaJdbcIsRetrievedAsOriginal() throws Exception {
-        Member member = new Member("firstName", "github");
+        Member originalMember = new Member("firstName", "github");
+        originalMember.changeEmailTo("email@example.com");
+        originalMember.changeTimeZoneTo(ZoneId.of("America/Los_Angeles"));
 
-        MemberEntity originalEntity = MemberEntity.from(member);
+        MemberEntity originalEntity = MemberEntity.from(originalMember);
 
         MemberEntity savedEntity = memberJdbcRepository.save(originalEntity);
 
-        Optional<MemberEntity> retrievedEntity = memberJdbcRepository.findById(savedEntity.getId());
+        Optional<MemberEntity> retrievedEntity = memberJdbcRepository.findById(savedEntity.id);
 
         assertThat(retrievedEntity)
                 .isPresent()
@@ -92,14 +94,18 @@ class PostgresqlEntityTest {
                 .usingRecursiveComparison()
                 .isEqualTo(originalEntity);
 
-        assertThat(retrievedEntity.get().asMember().firstName())
-                .isEqualTo("firstName");
-
-        assertThat(savedEntity.getId())
+        assertThat(savedEntity.id)
                 .isNotNull();
 
-        assertThat(retrievedEntity.get().getId())
+        assertThat(retrievedEntity.get().id)
                 .isNotNull();
+
+        Member retrievedMember = retrievedEntity.get().asMember();
+
+        assertThat(retrievedMember)
+                .usingRecursiveComparison()
+                .ignoringFields("id") // because the retrieved member has an ID assigned, but original doesn't
+                .isEqualTo(originalMember);
     }
 
 }

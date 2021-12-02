@@ -15,17 +15,18 @@ public class MemberEntityTranslationTest {
 
         MemberEntity memberEntity = MemberEntity.from(member);
 
-        assertThat(memberEntity.getRoles())
+        assertThat(memberEntity.roles)
                 .containsOnly("ROLE_USER", "ROLE_MEMBER");
     }
 
     @Test
     public void entityWithRolesTranslatedToMemberWithRoles() throws Exception {
         MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setFirstName("first");
-        memberEntity.setGithubUsername("githubusername");
-        memberEntity.setId(11L);
-        memberEntity.setRoles(Set.of("ROLE_ONE", "ROLE_TWO"));
+        memberEntity.firstName = "first";
+        memberEntity.githubUsername = "githubusername";
+        memberEntity.timeZone = "Z";
+        memberEntity.roles = Set.of("ROLE_ONE", "ROLE_TWO");
+        memberEntity.id = 11L;
 
         Member member = memberEntity.asMember();
 
@@ -36,11 +37,12 @@ public class MemberEntityTranslationTest {
     @Test
     public void entityWithEmailTranslatedToDomainMemberWithEmail() throws Exception {
         MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setEmail("member@example.com");
-        memberEntity.setFirstName("member");
-        memberEntity.setGithubUsername("githubusername");
-        memberEntity.setId(31L);
-        memberEntity.setRoles(Set.of("ROLE_ONE", "ROLE_TWO"));
+        memberEntity.email = "member@example.com";
+        memberEntity.firstName = "member";
+        memberEntity.githubUsername = "githubusername";
+        memberEntity.timeZone = "Z";
+        memberEntity.roles = Set.of("ROLE_ONE", "ROLE_TWO");
+        memberEntity.id = 31L;
 
         Member member = memberEntity.asMember();
 
@@ -55,7 +57,7 @@ public class MemberEntityTranslationTest {
 
         MemberEntity memberEntity = MemberEntity.from(member);
 
-        assertThat(memberEntity.getEmail())
+        assertThat(memberEntity.email)
                 .isEqualTo("ghuser@example.com");
     }
 }

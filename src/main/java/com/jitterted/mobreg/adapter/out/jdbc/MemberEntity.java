@@ -5,74 +5,40 @@ import com.jitterted.mobreg.domain.MemberId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 
+import java.time.ZoneId;
 import java.util.Set;
 
-public class MemberEntity {
+class MemberEntity {
     @Id
-    private Long id;
+    Long id;
 
-    private String firstName;
-    private String githubUsername;
-    private String email;
+    String firstName;
+    String githubUsername;
+    String email;
+    String timeZone;
+
     @MappedCollection
-    private Set<String> roles;
+    Set<String> roles;
 
-    public static MemberEntity from(Member member) {
+    static MemberEntity from(Member member) {
         MemberEntity memberEntity = new MemberEntity();
         if (member.getId() != null) {
-            memberEntity.setId(member.getId().id());
+            memberEntity.id = member.getId().id();
         }
-        memberEntity.setFirstName(member.firstName());
-        memberEntity.setGithubUsername(member.githubUsername());
-        memberEntity.setEmail(member.email());
-        memberEntity.setRoles(member.roles());
+        memberEntity.firstName = member.firstName();
+        memberEntity.githubUsername = member.githubUsername();
+        memberEntity.email = member.email();
+        memberEntity.timeZone = member.timeZone().getId();
+        memberEntity.roles = member.roles();
         return memberEntity;
     }
 
-    public Member asMember() {
+    Member asMember() {
         Member member = new Member(firstName, githubUsername, roles.toArray(new String[0]));
         member.changeEmailTo(email);
+        member.changeTimeZoneTo(ZoneId.of(timeZone));
         member.setId(MemberId.of(id));
         return member;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getGithubUsername() {
-        return githubUsername;
-    }
-
-    public void setGithubUsername(String githubUsername) {
-        this.githubUsername = githubUsername;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
