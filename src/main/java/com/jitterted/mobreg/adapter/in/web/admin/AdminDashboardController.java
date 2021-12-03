@@ -57,8 +57,8 @@ public class AdminDashboardController {
     public String ensembleDetailView(Model model, @PathVariable("ensembleId") Long ensembleId) {
         Ensemble ensemble = ensembleService.findById(EnsembleId.of(ensembleId))
                                            .orElseThrow(() -> {
-                                         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-                                     });
+                                               throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                                           });
 
         EnsembleDetailView ensembleDetailView = EnsembleDetailView.from(ensemble, memberService);
         model.addAttribute("ensemble", ensembleDetailView);
@@ -79,8 +79,8 @@ public class AdminDashboardController {
     @PostMapping("/schedule")
     public String scheduleEnsemble(ScheduleEnsembleForm scheduleEnsembleForm) {
         if (scheduleEnsembleForm.getZoomMeetingLink().isBlank()) {
-            ensembleService.scheduleEnsemble(scheduleEnsembleForm.getName(),
-                                             scheduleEnsembleForm.getDateTimeInUtc());
+            ensembleService.scheduleEnsembleWithVideoConference(scheduleEnsembleForm.getName(),
+                                                                scheduleEnsembleForm.getDateTimeInUtc());
         } else {
             ensembleService.scheduleEnsemble(scheduleEnsembleForm.getName(),
                                              URI.create(scheduleEnsembleForm.getZoomMeetingLink()),
@@ -93,8 +93,8 @@ public class AdminDashboardController {
     public String notifyEnsembleScheduled(@PathVariable("ensembleId") Long ensembleId) {
         Ensemble ensemble = ensembleService.findById(EnsembleId.of(ensembleId))
                                            .orElseThrow(() -> {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+                                               throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                                           });
         ensembleService.triggerEnsembleScheduledNotification(ensemble);
         return "redirect:/admin/dashboard";
     }

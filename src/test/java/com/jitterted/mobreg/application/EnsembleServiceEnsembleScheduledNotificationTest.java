@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.application;
 
+import com.jitterted.mobreg.application.port.DummyVideoConferenceScheduler;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.Notifier;
@@ -20,7 +21,7 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
         MockNotifier mockNotifier = new MockNotifier();
         EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),
-                                                              mockNotifier);
+                                                              mockNotifier, new DummyVideoConferenceScheduler());
 
         ensembleService.scheduleEnsemble("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
 
@@ -32,7 +33,7 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
         MockNotifier mockNotifier = new MockNotifier();
         EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),
-                                                              mockNotifier);
+                                                              mockNotifier, new DummyVideoConferenceScheduler());
 
         ensembleService.scheduleEnsemble("Notifying Ensemble",
                                          URI.create("https://zoom.us"),

@@ -1,12 +1,17 @@
 package com.jitterted.mobreg.application;
 
+import com.jitterted.mobreg.application.port.ConferenceDetails;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
+import com.jitterted.mobreg.application.port.FailedToScheduleMeeting;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.application.port.Notifier;
+import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -18,21 +23,39 @@ public class EnsembleService {
     private final EnsembleRepository ensembleRepository;
     private final Notifier notifier;
     private final MemberRepository memberRepository;
+    private final VideoConferenceScheduler videoConferenceScheduler;
 
-    public EnsembleService(EnsembleRepository ensembleRepository, MemberRepository memberRepository, Notifier notifier) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnsembleService.class);
+
+    public EnsembleService(EnsembleRepository ensembleRepository, MemberRepository memberRepository,
+                           Notifier notifier, VideoConferenceScheduler videoConferenceScheduler) {
         this.ensembleRepository = ensembleRepository;
-        this.notifier = notifier;
         this.memberRepository = memberRepository;
+        this.notifier = notifier;
+        this.videoConferenceScheduler = videoConferenceScheduler;
     }
 
-    public void scheduleEnsemble(String name, URI zoomMeetingLink, ZonedDateTime zonedDateTime) {
-        Ensemble ensemble = new Ensemble(name, zoomMeetingLink, zonedDateTime);
+    public void scheduleEnsemble(String name, URI zoomMeetingLink, ZonedDateTime startDateTime) {
+        Ensemble ensemble = new Ensemble(name, zoomMeetingLink, startDateTime);
         saveAndNotifyEnsembleScheduled(ensemble);
     }
 
-    public void scheduleEnsemble(String name, ZonedDateTime zonedDateTime) {
-        Ensemble ensemble = new Ensemble(name, zonedDateTime);
+    public void scheduleEnsemble(String name, ZonedDateTime startDateTime) {
+        Ensemble ensemble = new Ensemble(name, startDateTime);
         saveAndNotifyEnsembleScheduled(ensemble);
+    }
+
+    public void scheduleEnsembleWithVideoConference(String name, ZonedDateTime startDateTime) {
+        Ensemble ensemble = new Ensemble(name, startDateTime);
+        Ensemble savedEnsemble = ensembleRepository.save(ensemble);
+
+        try {
+            ConferenceDetails conferenceDetails = videoConferenceScheduler.createMeeting(savedEnsemble);
+            savedEnsemble.changeMeetingLinkTo(conferenceDetails.joinUrl());
+            saveAndNotifyEnsembleScheduled(savedEnsemble);
+        } catch (FailedToScheduleMeeting ftsm) {
+            LOGGER.warn("Failed to schedule Ensemble with Video Conference", ftsm);
+        }
     }
 
     private void saveAndNotifyEnsembleScheduled(Ensemble ensemble) {
@@ -98,4 +121,5 @@ public class EnsembleService {
         ensemble.changeStartDateTimeTo(newZoneDateTimeUtc);
         ensembleRepository.save(ensemble);
     }
+
 }

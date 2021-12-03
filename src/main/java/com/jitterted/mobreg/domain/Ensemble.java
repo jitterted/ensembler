@@ -90,6 +90,10 @@ public class Ensemble {
         return zoomMeetingLink;
     }
 
+    public void changeMeetingLinkTo(URI meetingLink) {
+        this.zoomMeetingLink = meetingLink;
+    }
+
     public void complete() {
         isCompleted = true;
     }

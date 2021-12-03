@@ -2,6 +2,7 @@ package com.jitterted.mobreg;
 
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.port.ConferenceDetails;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
@@ -19,6 +20,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
 @SpringBootApplication
@@ -49,7 +51,8 @@ public class MobRegApplication {
 
     @Bean
     public EnsembleService createEnsembleService(EnsembleRepository ensembleRepository, MemberRepository memberRepository, Notifier notifier) {
-        return new EnsembleService(ensembleRepository, memberRepository, notifier);
+        return new EnsembleService(ensembleRepository, memberRepository, notifier,
+                                   ensemble -> new ConferenceDetails("placeholder", URI.create("https://zoom.us"), URI.create("https://zoom.us")));
     }
 
     @Bean

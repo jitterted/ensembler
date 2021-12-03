@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.application;
 
+import com.jitterted.mobreg.application.port.DummyVideoConferenceScheduler;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
@@ -31,7 +32,8 @@ class EnsembleServiceMemberRegistrationNotificationTest {
                                          .build()
                                          .getId();
         SpyEmailNotifier spyEmailNotifier = new SpyEmailNotifier();
-        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberBuilder.memberRepository(), spyEmailNotifier);
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberBuilder.memberRepository(),
+                                                              spyEmailNotifier, new DummyVideoConferenceScheduler());
 
         ensembleService.registerMember(ensembleId, memberId);
 

@@ -4,6 +4,7 @@ import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.port.DummyVideoConferenceScheduler;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
@@ -56,7 +57,8 @@ class MemberControllerTest {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository, new DummyNotifier());
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository,
+                                                              new DummyNotifier(), new DummyVideoConferenceScheduler());
         MemberController memberController = new MemberController(ensembleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
 
         MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
@@ -75,7 +77,8 @@ class MemberControllerTest {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository, new DummyNotifier());
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository,
+                                                              new DummyNotifier(), new DummyVideoConferenceScheduler());
         MemberController memberController = new MemberController(ensembleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
 
         MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
