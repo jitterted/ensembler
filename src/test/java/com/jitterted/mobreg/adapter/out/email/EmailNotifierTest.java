@@ -18,7 +18,9 @@ class EmailNotifierTest {
     public void memberWithEmailWhenNotificationOccursThenEmailSentToMember() throws Exception {
         MemberBuilder memberBuilder = new MemberBuilder();
         memberBuilder.withEmail("name@example.com")
+                     .withTimezone("America/Los_Angeles")
                      .build();
+        Ensemble ensemble = new Ensemble("Ensemble #314", URI.create("https://zoom.us"), ZonedDateTime.of(2021, 12, 3, 17, 0, 0, 0, ZoneOffset.UTC));
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(memberBuilder.memberService(), spyEmailer);
 
@@ -40,6 +42,7 @@ class EmailNotifierTest {
     public void memberWithEmailRegistersThenEmailSentToMemberWithEnsembleDetails() throws Exception {
         Member member = new MemberBuilder().withFirstName("FirstName")
                                            .withEmail("name@example.com")
+                                           .withTimezone("America/Los_Angeles")
                                            .build();
         Ensemble ensemble = new Ensemble("Ensemble #123", URI.create("https://zoom.us"), ZonedDateTime.of(2021, 10, 20, 16, 0, 0, 0, ZoneOffset.UTC));
         SpyEmailer spyEmailer = new SpyEmailer();
@@ -53,7 +56,7 @@ class EmailNotifierTest {
                 .isEqualTo("""
                            Hi FirstName,
                            
-                           You have registered for the 'Ensemble #123', which happens on 2021-10-20T16:00Z.
+                           You have registered for the 'Ensemble #123', which happens on October 20, 2021 at 9:00AM.
                            Click <a href="https://zoom.us">here</a> to join the Zoom. You can add this event to your Google Calendar
                            by clicking <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ensemble+%23123&dates=20211020T160000Z/20211020T180000Z&details=Zoom+link+is%3A+%3Ca+href%3D%27https%3A%2F%2Fzoom.us%27%3Ehttps%3A%2F%2Fzoom.us%3C%2Fa%3E">here</a>.
                            """);

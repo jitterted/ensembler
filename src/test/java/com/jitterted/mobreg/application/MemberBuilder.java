@@ -5,6 +5,8 @@ import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.ZoneId;
+
 public class MemberBuilder {
     private final MemberRepository memberRepository = new InMemoryMemberRepository();
     private String firstName = "first";
@@ -12,6 +14,7 @@ public class MemberBuilder {
     private String email = "first.last@example.com";
     private String[] roles = {"ROLE_USER", "ROLE_MEMBER"};
     private MemberService memberService;
+    private String timeZoneId = "Z";
 
     @NotNull
     public MemberBuilder withEmail(String email) {
@@ -45,12 +48,14 @@ public class MemberBuilder {
     public Member build() {
         Member member = new Member(firstName, githubUsername, roles);
         member.changeEmailTo(email);
+        member.changeTimeZoneTo(ZoneId.of(timeZoneId));
         member = memberRepository.save(member);
         memberService = new MemberService(memberRepository);
         return member;
     }
 
     public MemberBuilder withTimezone(String timeZoneId) {
+        this.timeZoneId = timeZoneId;
         return this;
     }
 }

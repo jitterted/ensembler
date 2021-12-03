@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,6 +24,7 @@ import static java.util.function.Predicate.not;
 public class EmailNotifier implements Notifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailNotifier.class);
+    private static final DateTimeFormatter LONG_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("LLLL d, uuuu 'at' h:mma");
 
     private final MemberService memberService;
     private final Emailer emailer;
@@ -56,6 +59,9 @@ public class EmailNotifier implements Notifier {
             LOGGER.info("Member does not have email: {}", member.firstName());
             return;
         }
+
+        ZonedDateTime startDateTimeInMemberTimeZone = ensemble.startDateTime().withZoneSameInstant(member.timeZone());
+
         String body = """
                 Hi %s,
                                            
@@ -64,7 +70,7 @@ public class EmailNotifier implements Notifier {
                 by clicking <a href="%s">here</a>.
                 """.formatted(member.firstName(),
                               ensemble.name(),
-                              ensemble.startDateTime().toString(),
+                              LONG_DATE_TIME_FORMATTER.format(startDateTimeInMemberTimeZone),
                               ensemble.zoomMeetingLink().toString(),
                               googleCalendarLinkCreator.createFor(ensemble));
         emailer.send("Ensembler Notification: Registration Confirmation",
