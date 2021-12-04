@@ -24,6 +24,9 @@
             document.querySelectorAll("input#timezone").forEach(function (timezoneElement) {
                 timezoneElement.setAttribute("value", timezoneString)
             })
+
+            // put focus to the Name input field, but don't scroll to bring it into view
+            document.getElementById("name").focus({preventScroll:true});
         };
     </script>
 </head>
@@ -181,7 +184,7 @@
                     Name
                 </label>
                 <div class="mt-0 col-span-2">
-                    <input type="text" th:field="*{name}" autofocus required
+                    <input type="text" th:field="*{name}" required
                            class="max-w-xs text-sm block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md">
                 </div>
             </div>
