@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 
+import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.application.port.Notifier;
@@ -37,6 +38,9 @@ public class AdminMembershipEndpointTest {
 
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
+
+    @MockBean
+    EnsembleService ensembleService;
 
     @Test
     public void getOfMemberAdminPageIsStatus200Ok() throws Exception {
