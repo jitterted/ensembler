@@ -23,7 +23,7 @@ public record EnsembleDetailView(long id,
                         .toList();
         return new EnsembleDetailView(ensemble.getId().id(),
                                       ensemble.name(),
-                                      DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(ensemble.startDateTime()),
+                                      DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()),
                                       "90m",
                                       ensemble.zoomMeetingLink().toString(),
                                       ensemble.isCompleted(),

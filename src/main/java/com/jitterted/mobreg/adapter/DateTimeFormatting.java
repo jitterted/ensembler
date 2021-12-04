@@ -20,11 +20,13 @@ public class DateTimeFormatting {
 
     /**
      * Format Zoned date time as used by browser's Date parsing function Date.parse()
+     * and elsewhere, such as in JSON
+     *
      * @param zonedDateTime date time, usually in UTC (time zone "Z")
      * @return String formatted for use in JavaScript
      */
     @NotNull
-    public static String formatAsDateTimeForJavaScriptDateIso8601(ZonedDateTime zonedDateTime) {
+    public static String formatAsDateTimeForCommonIso8601(ZonedDateTime zonedDateTime) {
         return DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(zonedDateTime);
     }
 }

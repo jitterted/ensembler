@@ -1,0 +1,71 @@
+package com.jitterted.mobreg.adapter.out.zoom;
+
+import com.jitterted.mobreg.adapter.DateTimeFormatting;
+import com.jitterted.mobreg.application.port.ConferenceDetails;
+import com.jitterted.mobreg.application.port.FailedToScheduleMeeting;
+import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
+import com.jitterted.mobreg.domain.Ensemble;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+import java.util.Collections;
+
+@Component
+public class ZoomScheduler implements VideoConferenceScheduler {
+
+    private static final URI CREATE_MEETING_URI = URI.create("https://api.zoom.us/v2/users/me/meetings");
+
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    @Value("${zoom.jwt}")
+    private String zoomJwt;
+
+    @Override
+    public ConferenceDetails createMeeting(Ensemble ensemble) {
+        ZoomCreateMeetingRequest zoomCreateMeetingRequest = new ZoomCreateMeetingRequest();
+        zoomCreateMeetingRequest.duration = 115;
+        zoomCreateMeetingRequest.description = "Description";
+        zoomCreateMeetingRequest.startTime = DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime());
+        zoomCreateMeetingRequest.topic = ensemble.name();
+        zoomCreateMeetingRequest.type = ZoomCreateMeetingRequest.Type.SCHEDULED_MEETING;
+        Settings settings = new Settings();
+        settings.autoRecording = Settings.AutoRecording.LOCAL;
+        settings.hostVideo = true;
+        settings.jbhTime = Settings.JbhTime.JOIN_5_MINUTES_BEFORE;
+        settings.joinBeforeHost = true;
+        settings.muteUponEntry = false;
+        settings.participantVideo = false;
+        settings.waitingRoom = false;
+        zoomCreateMeetingRequest.settings = settings;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.set("Authorization", "Bearer " + zoomJwt);
+        HttpEntity<ZoomCreateMeetingRequest> requestEntity = new HttpEntity<>(zoomCreateMeetingRequest, headers);
+
+        ResponseEntity<ZoomCreateMeetingResponse> zoomResponse = restTemplate.exchange(
+                CREATE_MEETING_URI, HttpMethod.POST, requestEntity, ZoomCreateMeetingResponse.class);
+
+        if (!zoomResponse.getStatusCode().is2xxSuccessful()) {
+            throw new FailedToScheduleMeeting(zoomResponse.toString());
+        }
+
+        ZoomCreateMeetingResponse createMeetingResponse = zoomResponse.getBody();
+
+        if (createMeetingResponse == null) {
+            throw new FailedToScheduleMeeting(zoomResponse.toString());
+        }
+
+        return new ConferenceDetails(String.valueOf(createMeetingResponse.id),
+                              URI.create(createMeetingResponse.startUrl),
+                              URI.create(createMeetingResponse.joinUrl));
+    }
+
+}

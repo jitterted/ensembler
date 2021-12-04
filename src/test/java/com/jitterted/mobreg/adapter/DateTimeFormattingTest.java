@@ -27,7 +27,7 @@ class DateTimeFormattingTest {
         LocalDateTime localDateTime = LocalDateTime.of(2021, 4, 30, 9, 0, 0, 0);
         ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneOffset.UTC);
 
-        String formattedDateTime = DateTimeFormatting.formatAsDateTimeForJavaScriptDateIso8601(zonedDateTime);
+        String formattedDateTime = DateTimeFormatting.formatAsDateTimeForCommonIso8601(zonedDateTime);
 
         assertThat(formattedDateTime)
                 .isEqualTo("2021-04-30T09:00:00Z");
