@@ -16,8 +16,12 @@ public class VersionInfoContributor implements InfoContributor {
     @Value("${app.name}")
     private String name;
 
+    @Value("${app.build.timestamp}")
+    private String buildTimestamp;
+
     @Override
     public void contribute(Info.Builder builder) {
-        builder.withDetail("version", Map.of("version", version, "name", name));
+        builder.withDetail("version", Map.of("version", version, "name", name))
+               .withDetail("build", Map.of("timestamp", buildTimestamp));
     }
 }
