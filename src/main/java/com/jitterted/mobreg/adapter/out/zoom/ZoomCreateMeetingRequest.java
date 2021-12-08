@@ -40,6 +40,13 @@ public class ZoomCreateMeetingRequest {
     public Integer duration;
 
     /**
+     * Whether to generate a default password using the user's settings. This value defaults to `false`.
+     * If this value is `true` and the user has the PMI setting enabled with a password, then the user's meetings will use the PMI password. It will **not** use a default password.
+     */
+    @JsonProperty("default_password")
+    public Boolean defaultPassword;
+
+    /**
      * The meeting's Description. This value has a maximum length of 2,000 characters.
      */
     @JsonProperty("agenda")
@@ -70,6 +77,10 @@ public class ZoomCreateMeetingRequest {
         sb.append("duration");
         sb.append('=');
         sb.append(((this.duration == null)?"<null>":this.duration));
+        sb.append(',');
+        sb.append("default_password");
+        sb.append('=');
+        sb.append(((this.defaultPassword == null)?"<null>":this.defaultPassword));
         sb.append(',');
         sb.append("agenda");
         sb.append('=');

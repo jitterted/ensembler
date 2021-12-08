@@ -30,20 +30,13 @@ public class ZoomScheduler implements VideoConferenceScheduler {
     @Override
     public ConferenceDetails createMeeting(Ensemble ensemble) {
         ZoomCreateMeetingRequest zoomCreateMeetingRequest = new ZoomCreateMeetingRequest();
-        zoomCreateMeetingRequest.duration = 115;
-        zoomCreateMeetingRequest.description = "Description";
+        zoomCreateMeetingRequest.defaultPassword = true; // apparently if this is false, then "waitingRoom" gets set to true
+        zoomCreateMeetingRequest.description = "Description"; // no idea where this shows up
+        zoomCreateMeetingRequest.duration = 115; // in minutes
         zoomCreateMeetingRequest.startTime = DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime());
         zoomCreateMeetingRequest.topic = ensemble.name();
         zoomCreateMeetingRequest.type = ZoomCreateMeetingRequest.Type.SCHEDULED_MEETING;
-        Settings settings = new Settings();
-        settings.autoRecording = Settings.AutoRecording.LOCAL;
-        settings.hostVideo = true;
-        settings.jbhTime = Settings.JbhTime.JOIN_5_MINUTES_BEFORE;
-        settings.joinBeforeHost = true;
-        settings.muteUponEntry = false;
-        settings.participantVideo = false;
-        settings.waitingRoom = false;
-        zoomCreateMeetingRequest.settings = settings;
+        zoomCreateMeetingRequest.settings = createSettings();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -66,6 +59,18 @@ public class ZoomScheduler implements VideoConferenceScheduler {
         return new ConferenceDetails(String.valueOf(createMeetingResponse.id),
                               URI.create(createMeetingResponse.startUrl),
                               URI.create(createMeetingResponse.joinUrl));
+    }
+
+    private Settings createSettings() {
+        Settings settings = new Settings();
+        settings.autoRecording = Settings.AutoRecording.LOCAL;
+        settings.hostVideo = true;
+        settings.jbhTime = Settings.JbhTime.JOIN_5_MINUTES_BEFORE;
+        settings.joinBeforeHost = true;
+        settings.muteUponEntry = false;
+        settings.participantVideo = false;
+        settings.waitingRoom = false;
+        return settings;
     }
 
 }
