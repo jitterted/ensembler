@@ -56,7 +56,7 @@ class EmailNotifierTest {
                 .isEqualTo("""
                            Hi FirstName,
                            
-                           You have registered for the 'Ensemble #123', which happens on October 20, 2021 at 9:00AM.
+                           You have registered for 'Ensemble #123', which happens on October 20, 2021 at 9:00AM (PDT).
                            Click <a href="https://zoom.us">here</a> to join the Zoom. You can add this event to your Google Calendar
                            by clicking <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ensemble+%23123&dates=20211020T160000Z/20211020T180000Z&details=Zoom+link+is%3A+%3Ca+href%3D%27https%3A%2F%2Fzoom.us%27%3Ehttps%3A%2F%2Fzoom.us%3C%2Fa%3E">here</a>.
                            """);

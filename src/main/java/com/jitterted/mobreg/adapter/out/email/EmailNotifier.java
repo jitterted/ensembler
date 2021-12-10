@@ -24,7 +24,7 @@ import static java.util.function.Predicate.not;
 public class EmailNotifier implements Notifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailNotifier.class);
-    private static final DateTimeFormatter LONG_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("LLLL d, uuuu 'at' h:mma");
+    private static final DateTimeFormatter LONG_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("LLLL d, uuuu 'at' h:mma (zzz)");
 
     private final MemberService memberService;
     private final Emailer emailer;
@@ -65,7 +65,7 @@ public class EmailNotifier implements Notifier {
         String body = """
                 Hi %s,
                                            
-                You have registered for the '%s', which happens on %s.
+                You have registered for '%s', which happens on %s.
                 Click <a href="%s">here</a> to join the Zoom. You can add this event to your Google Calendar
                 by clicking <a href="%s">here</a>.
                 """.formatted(member.firstName(),
