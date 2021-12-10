@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.domain;
 
 import java.net.URI;
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,6 +16,7 @@ public class Ensemble {
 
     private String name;
     private ZonedDateTime startDateTime;
+    private Duration duration = Duration.ofHours(1).plusMinutes(55);
     private URI zoomMeetingLink;
     private final Set<MemberId> membersWhoAccepted = new HashSet<>();
     private final Set<MemberId> membersWhoDeclined = new HashSet<>();
@@ -145,7 +147,7 @@ public class Ensemble {
     }
 
     private boolean inThePast(ZonedDateTime now) {
-        return now.isAfter(startDateTime);
+        return now.isAfter(startDateTime.plus(duration));
     }
 
     public Rsvp rsvpOf(MemberId memberId) {

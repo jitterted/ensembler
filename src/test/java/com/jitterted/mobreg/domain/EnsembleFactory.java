@@ -29,4 +29,8 @@ public class EnsembleFactory {
         MemberFactory.registerCountMembersWith(futureEnsemble, 5);
         return futureEnsemble;
     }
+
+    public static Ensemble withStartTime(ZonedDateTime startDateTime) {
+        return new Ensemble("Ensemble Factory", startDateTime);
+    }
 }
