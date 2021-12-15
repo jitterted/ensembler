@@ -72,7 +72,9 @@ public class AdminDashboardController {
     @PostMapping("/ensemble/{ensembleId}")
     public String changeEnsemble(ScheduleEnsembleForm scheduleEnsembleForm, @PathVariable("ensembleId") Long id) {
         EnsembleId ensembleId = EnsembleId.of(id);
-        ensembleService.changeNameDateTimeTo(ensembleId, scheduleEnsembleForm.getName(), scheduleEnsembleForm.getDateTimeInUtc());
+        ensembleService.changeNameDateTimeTo(ensembleId,
+                                             scheduleEnsembleForm.getName(),
+                                             scheduleEnsembleForm.getDateTimeInUtc());
         return redirectToDetailViewFor(ensembleId);
     }
 

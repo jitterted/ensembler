@@ -17,7 +17,8 @@ class EnsembleServiceEditExistingTest {
     public void changesToExistingEnsembleAreSaved() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
-        Ensemble ensemble = new Ensemble("Before", URI.create("https://zoom.us/before"), ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 19, 17));
+        Ensemble ensemble = new Ensemble("Before", URI.create("https://zoom.us/before"),
+                                         ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 19, 17));
         EnsembleId ensembleId = ensembleRepository.save(ensemble).getId();
 
         ZonedDateTime afterZonedDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 20, 18);

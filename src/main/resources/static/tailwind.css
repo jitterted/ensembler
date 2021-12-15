@@ -1242,16 +1242,16 @@ select {
   padding-top: 0.5rem;
 }
 
-.pr-2 {
-  padding-right: 0.5rem;
-}
-
 .pl-3 {
   padding-left: 0.75rem;
 }
 
 .pr-10 {
   padding-right: 2.5rem;
+}
+
+.pr-2 {
+  padding-right: 0.5rem;
 }
 
 .text-left {
@@ -1432,6 +1432,11 @@ select {
   color: rgba(67, 56, 202, var(--tw-text-opacity));
 }
 
+.text-green-700 {
+  --tw-text-opacity: 1;
+  color: rgba(4, 120, 87, var(--tw-text-opacity));
+}
+
 .text-blue-700 {
   --tw-text-opacity: 1;
   color: rgba(29, 78, 216, var(--tw-text-opacity));
@@ -1537,20 +1542,12 @@ select {
   background-color: rgba(0, 0, 0, var(--tw-bg-opacity));
 }
 
-.disabled\:cursor-pointer:disabled {
-  cursor: pointer;
-}
-
-.disabled\:cursor-not-allowed:disabled {
-  cursor: not-allowed;
-}
-
 .disabled\:cursor-default:disabled {
   cursor: default;
 }
 
-.disabled\:cursor-text:disabled {
-  cursor: text;
+.disabled\:cursor-not-allowed:disabled {
+  cursor: not-allowed;
 }
 
 .disabled\:text-gray-400:disabled {

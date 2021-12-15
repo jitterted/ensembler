@@ -130,7 +130,6 @@
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
       <version>${jetbrains.annotations.version}</version>
-      <scope>test</scope>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit -->

@@ -80,8 +80,8 @@
                         <th class="py-3 px-6 text-left">Description</th>
                         <th class="py-3 px-6 text-center">Date/Time</th>
                         <th class="py-3 px-6 text-center">Participants</th>
-                        <th class="py-3 px-6 text-center">Status</th>
-                        <th class="py-3 px-6 text-center">Actions</th>
+                        <th class="py-3 px-6 text-center">RSVP</th>
+                        <th class="py-3 px-6 text-center">Links</th>
                     </tr>
                     </thead>
                     <tbody class="text-gray-800 text-med font-light">
@@ -110,17 +110,15 @@
                                 <!-- <img class="w-6 h-6 rounded-full border-gray-200 border -m-1 transform hover:scale-150 hover:z-50" src="https://randomuser.me/api/portraits/men/3.jpg"/> -->
                             </div>
                         </td>
-                        <!-- Member Status -->
-                        <td class="py-3 px-6 text-center" th:switch="${ensemble.memberStatus}">
+                        <!-- RSVP -->
+                        <td class="py-3 px-6 flex items-center justify-center" th:switch="${ensemble.memberStatus}">
 
-                            <form action="#" th:action="@{/member/accept}" th:object="${register}" method="post">
+                            <form action="#" th:action="@{/member/accept}" th:object="${register}" method="post"
+                                th:if="${ensemble.memberStatus == 'unknown' || ensemble.memberStatus == 'accepted' || ensemble.memberStatus == 'declined' || ensemble.memberStatus == 'declined_full'}">
                                 <input hidden="hidden" type="number" th:field="*{memberId}">
                                 <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
 
-                                <span th:text="${ensemble.memberStatus}" class="text-sm">Status</span>
-
-                                <fieldset th:case="'unknown'"
-                                        class="mt-2 flex">
+                                <fieldset th:case="'unknown'" class="flex">
                                     <legend class="sr-only">RSVP</legend>
                                     <div class="space-y-4 sm:flex sm:items-center sm:space-y-0">
                                         <button type="submit" th:formaction="@{/member/decline}"
@@ -135,11 +133,7 @@
                                     </div>
                                 </fieldset>
 
-                                <span th:case="'full'" class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">
-                                    Unavailable: Full <i class="fal fa-times-hexagon text-red-600"></i></span>
-
-                                <fieldset th:case="'accepted'"
-                                          class="mt-2 flex">
+                                <fieldset th:case="'accepted'" class="flex">
                                     <legend class="sr-only">RSVP</legend>
                                     <div class="space-y-4 sm:flex sm:items-center sm:space-y-0">
                                         <button type="submit" th:formaction="@{/member/decline}"
@@ -153,8 +147,7 @@
                                     </div>
                                 </fieldset>
 
-                                <fieldset th:case="'declined'"
-                                          class="mt-2 flex">
+                                <fieldset th:case="'declined'" class="flex">
                                     <legend class="sr-only">RSVP</legend>
                                     <div class="space-y-4 sm:flex sm:items-center sm:space-y-0">
                                         <button disabled
@@ -169,8 +162,7 @@
                                     </div>
                                 </fieldset>
 
-                                <fieldset th:case="'declined_full'"
-                                          class="mt-2 flex">
+                                <fieldset th:case="'declined_full'" class="flex">
                                     <legend class="sr-only">RSVP</legend>
                                     <div class="space-y-4 sm:flex sm:items-center sm:space-y-0">
                                         <button type="submit"
@@ -184,16 +176,22 @@
                                         </button>
                                     </div>
                                 </fieldset>
-
-                                <span th:case="'pending_completed'">Recording Coming Soon...</span>
-
-                                <span th:case="'completed'"
-                                      class="bg-blue-100 text-blue-800 py-1 px-3 rounded-lg text-xs font-bold">
-                                    Completed <i class="fal fa-badge-check text-blue-600"></i></span>
-
                             </form>
+
+                            <div th:case="'full'"
+                                 class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">
+                                Unavailable: Full <i class="fal fa-times-hexagon text-red-600"></i></div>
+
+                            <div th:case="'completed'"
+                                 class="bg-green-100 text-green-700 py-1 px-3 rounded-lg text-xs font-bold">
+                                Completed <i class="fal fa-badge-check text-blue-600"></i></div>
+
+                            <div th:case="'pending_completed'"
+                                 class="bg-green-100 text-green-700 py-1 px-3 rounded-lg text-xs font-bold">
+                                Completed <i class="fal fa-badge-check text-blue-600"></i></div>
+
                         </td>
-                        <!-- Actions -->
+                        <!-- Links -->
                         <td class="py-3 px-6 text-center" th:switch="${ensemble.memberStatus}">
                             <div th:case="'accepted'">
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
@@ -210,10 +208,14 @@
                                     <span>Add to Google Calendar</span>
                                 </a>
                             </div>
+
                             <div th:case="'completed'">
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
                                    href="#" th:href="${ensemble.recordingLink}">Recording Link</a>
                             </div>
+
+                            <div th:case="'pending_completed'">Recording Coming Soon...</div>
+
                         </td>
                     </tr>
                     </tbody>

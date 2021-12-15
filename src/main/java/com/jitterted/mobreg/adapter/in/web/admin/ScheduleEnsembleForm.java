@@ -27,7 +27,12 @@ public final class ScheduleEnsembleForm {
     }
 
     public static ScheduleEnsembleForm from(Ensemble ensemble) {
-        return new ScheduleEnsembleForm(ensemble.name(), ensemble.zoomMeetingLink().toString(), "", "", "");
+        ZonedDateTime zonedDateTime = convertFromUtcToTimeZone(ensemble.startDateTime(), DateTimeFormatting.PACIFIC_TIME_ZONE_ID.toString());
+        return new ScheduleEnsembleForm(ensemble.name(),
+                                        ensemble.zoomMeetingLink().toString(),
+                                        DateTimeFormatting.extractFormattedDateFrom(zonedDateTime),
+                                        DateTimeFormatting.extractFormattedTimeFrom(zonedDateTime),
+                                        zonedDateTime.getZone().toString());
     }
 
     public String getName() {
@@ -83,4 +88,9 @@ public final class ScheduleEnsembleForm {
     private ZonedDateTime convertToUtcTimeZone(ZonedDateTime zonedDateTimeInOriginalTimeZone) {
         return zonedDateTimeInOriginalTimeZone.withZoneSameInstant(ZoneOffset.UTC);
     }
+
+    private static ZonedDateTime convertFromUtcToTimeZone(ZonedDateTime zonedDateTimeInUtc, String timezone) {
+        return zonedDateTimeInUtc.withZoneSameInstant(ZoneId.of(timezone));
+    }
+
 }
