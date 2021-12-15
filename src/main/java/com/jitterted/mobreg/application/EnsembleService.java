@@ -58,9 +58,17 @@ public class EnsembleService {
         }
     }
 
+    public void changeNameDateTimeTo(EnsembleId ensembleId, String newName, ZonedDateTime newZoneDateTimeUtc) {
+        Ensemble ensemble = findById(ensembleId)
+                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
+        ensemble.changeNameTo(newName);
+        ensemble.changeStartDateTimeTo(newZoneDateTimeUtc);
+        ensembleRepository.save(ensemble);
+    }
+
     private void saveAndNotifyEnsembleScheduled(Ensemble ensemble) {
         ensembleRepository.save(ensemble);
-        notifier.ensembleScheduled(ensemble.name(), URI.create("https://mobreg.herokuapp.com/"));
+        triggerEnsembleScheduledNotification(ensemble);
     }
 
     public void triggerEnsembleScheduledNotification(Ensemble ensemble) {
@@ -112,14 +120,6 @@ public class EnsembleService {
 
     public List<Ensemble> findAllForMember(MemberId memberId) {
         return null;
-    }
-
-    public void changeNameDateTimeTo(EnsembleId ensembleId, String newName, ZonedDateTime newZoneDateTimeUtc) {
-        Ensemble ensemble = findById(ensembleId)
-                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
-        ensemble.changeNameTo(newName);
-        ensemble.changeStartDateTimeTo(newZoneDateTimeUtc);
-        ensembleRepository.save(ensemble);
     }
 
 }
