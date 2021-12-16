@@ -58,12 +58,25 @@ public class EnsembleService {
         }
     }
 
-    public void changeNameDateTimeTo(EnsembleId ensembleId, String newName, ZonedDateTime newZoneDateTimeUtc) {
+    public void changeTo(EnsembleId ensembleId, String newName, String newVideoConferenceLink, ZonedDateTime newZoneDateTimeUtc) {
         Ensemble ensemble = findById(ensembleId)
                 .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
         ensemble.changeNameTo(newName);
         ensemble.changeStartDateTimeTo(newZoneDateTimeUtc);
         ensembleRepository.save(ensemble);
+
+        if (newVideoConferenceLink.isBlank()) {
+            try {
+                ConferenceDetails conferenceDetails = videoConferenceScheduler.createMeeting(ensemble);
+                ensemble.changeMeetingLinkTo(conferenceDetails.joinUrl());
+                ensembleRepository.save(ensemble);
+            } catch (FailedToScheduleMeeting ftsm) {
+                LOGGER.warn("Failed to schedule Ensemble with Video Conference", ftsm);
+            }
+        } else {
+            ensemble.changeMeetingLinkTo(URI.create(newVideoConferenceLink));
+            ensembleRepository.save(ensemble);
+        }
     }
 
     private void saveAndNotifyEnsembleScheduled(Ensemble ensemble) {

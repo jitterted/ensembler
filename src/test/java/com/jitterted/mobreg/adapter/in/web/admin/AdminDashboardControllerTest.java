@@ -67,7 +67,7 @@ class AdminDashboardControllerTest {
         ensembleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = createAdminDashboardController(ensembleRepository);
 
-        ScheduleEnsembleForm scheduleEnsembleForm = new ScheduleEnsembleForm("New Name", null, "2021-12-01", "10:00", "America/Los_Angeles");
+        ScheduleEnsembleForm scheduleEnsembleForm = new ScheduleEnsembleForm("New Name", "https://zoom.us", "2021-12-01", "10:00", "America/Los_Angeles");
         EnsembleId ensembleId = ensemble.getId();
         String pageName = adminDashboardController.changeEnsemble(scheduleEnsembleForm, ensembleId.id());
 
