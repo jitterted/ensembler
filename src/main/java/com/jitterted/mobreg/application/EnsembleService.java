@@ -65,18 +65,20 @@ public class EnsembleService {
         ensemble.changeStartDateTimeTo(newZoneDateTimeUtc);
         ensembleRepository.save(ensemble);
 
+        URI newVideoConferenceUri = ensemble.zoomMeetingLink();
         if (newVideoConferenceLink.isBlank()) {
             try {
                 ConferenceDetails conferenceDetails = videoConferenceScheduler.createMeeting(ensemble);
-                ensemble.changeMeetingLinkTo(conferenceDetails.joinUrl());
-                ensembleRepository.save(ensemble);
+                newVideoConferenceUri = conferenceDetails.joinUrl();
             } catch (FailedToScheduleMeeting ftsm) {
                 LOGGER.warn("Failed to schedule Ensemble with Video Conference", ftsm);
             }
         } else {
-            ensemble.changeMeetingLinkTo(URI.create(newVideoConferenceLink));
-            ensembleRepository.save(ensemble);
+            newVideoConferenceUri = URI.create(newVideoConferenceLink);
         }
+
+        ensemble.changeMeetingLinkTo(newVideoConferenceUri);
+        ensembleRepository.save(ensemble);
     }
 
     private void saveAndNotifyEnsembleScheduled(Ensemble ensemble) {
