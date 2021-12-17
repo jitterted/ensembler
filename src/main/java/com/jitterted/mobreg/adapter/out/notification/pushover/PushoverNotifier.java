@@ -37,7 +37,7 @@ public class PushoverNotifier implements Notifier {
     }
 
     @Override
-    public void memberRegistered(Ensemble ensemble, Member member) {
+    public void memberAccepted(Ensemble ensemble, Member member) {
         throw new UnsupportedOperationException();
     }
 

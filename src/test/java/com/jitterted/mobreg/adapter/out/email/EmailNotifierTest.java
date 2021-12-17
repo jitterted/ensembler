@@ -39,7 +39,7 @@ class EmailNotifierTest {
     }
 
     @Test
-    public void memberWithEmailRegistersThenEmailSentToMemberWithEnsembleDetails() throws Exception {
+    public void memberWithEmailAcceptsThenEmailSentToMemberWithEnsembleDetails() throws Exception {
         Member member = new MemberBuilder().withFirstName("FirstName")
                                            .withEmail("name@example.com")
                                            .withTimezone("America/Los_Angeles")
@@ -48,7 +48,7 @@ class EmailNotifierTest {
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(null, spyEmailer);
 
-        notifier.memberRegistered(ensemble, member);
+        notifier.memberAccepted(ensemble, member);
 
         assertThat(spyEmailer.emailRecipients())
                 .containsExactly("name@example.com");
@@ -69,7 +69,7 @@ class EmailNotifierTest {
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(null, spyEmailer);
 
-        notifier.memberRegistered(ensemble, member);
+        notifier.memberAccepted(ensemble, member);
 
         assertThat(spyEmailer.body())
                 .isNull();

@@ -67,7 +67,7 @@ public class EmailNotifier implements Notifier {
     }
 
     @Override
-    public void memberRegistered(Ensemble ensemble, Member member) {
+    public void memberAccepted(Ensemble ensemble, Member member) {
         if (!member.hasEmail()) {
             LOGGER.info("Member does not have email: {}", member.firstName());
             return;

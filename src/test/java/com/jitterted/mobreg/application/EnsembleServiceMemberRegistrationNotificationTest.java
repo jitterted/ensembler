@@ -58,7 +58,7 @@ class EnsembleServiceMemberRegistrationNotificationTest {
         }
 
         @Override
-        public void memberRegistered(Ensemble ensemble, Member member) {
+        public void memberAccepted(Ensemble ensemble, Member member) {
             emailBody = String.join(", ",
                                     ensemble.name(),
                                     ensemble.zoomMeetingLink().toString(),

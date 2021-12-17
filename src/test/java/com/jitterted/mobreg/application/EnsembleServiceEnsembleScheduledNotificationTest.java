@@ -52,7 +52,7 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
         }
 
         @Override
-        public void memberRegistered(Ensemble ensemble, Member member) {
+        public void memberAccepted(Ensemble ensemble, Member member) {
             throw new UnsupportedOperationException();
         }
 

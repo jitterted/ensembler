@@ -112,7 +112,7 @@ public class EnsembleService {
 
         Member member = memberRepository.findById(memberId)
                                         .orElseThrow(() -> new MemberNotFoundByIdException("Member ID: " + memberId.id()));
-        notifier.memberRegistered(ensemble, member);
+        notifier.memberAccepted(ensemble, member);
     }
 
     public void declineMember(EnsembleId ensembleId, MemberId memberId) {

@@ -8,5 +8,5 @@ import java.net.URI;
 public interface Notifier {
     int ensembleScheduled(Ensemble ensemble, URI registrationLink);
 
-    void memberRegistered(Ensemble ensemble, Member member);
+    void memberAccepted(Ensemble ensemble, Member member);
 }
