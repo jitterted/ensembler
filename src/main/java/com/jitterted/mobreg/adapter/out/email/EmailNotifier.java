@@ -1,10 +1,12 @@
 package com.jitterted.mobreg.adapter.out.email;
 
+import com.jitterted.mobreg.adapter.DateTimeFormatting;
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
@@ -25,6 +28,7 @@ public class EmailNotifier implements Notifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailNotifier.class);
     private static final DateTimeFormatter LONG_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("LLLL d, uuuu 'at' h:mma (zzz)");
+    private static final DateTimeFormatter SHORT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' h:mma (zzz)");
 
     private final MemberService memberService;
     private final Emailer emailer;
@@ -37,7 +41,7 @@ public class EmailNotifier implements Notifier {
     }
 
     @Override
-    public int ensembleScheduled(String description, URI registrationLink) {
+    public int ensembleScheduled(Ensemble ensemble, URI registrationLink) {
         Set<String> emails = memberService.findAll().stream()
                                           .map(Member::email)
                                           .filter(not(String::isEmpty))
@@ -47,10 +51,19 @@ public class EmailNotifier implements Notifier {
                 <br/>
                 Visit <a href="%s">MobReg</a> to register.
                 """
-                .formatted(description, registrationLink.toString());
-        LOGGER.info("Sending New Ensemble '{}' emails to: {}", description, emails);
-        emailer.send("Ensembler Notification: New Ensemble Scheduled", messageBody, emails);
+                .formatted(ensemble.name(), registrationLink.toString());
+        String subject = createSubjectWith(ensemble, DateTimeFormatting.PACIFIC_TIME_ZONE_ID);
+
+        LOGGER.info("Sending New Ensemble '{}' emails to: {}", ensemble.name(), emails);
+        emailer.send(subject, messageBody, emails);
         return 0;
+    }
+
+    @NotNull
+    private String createSubjectWith(Ensemble ensemble, ZoneId zoneId) {
+        ZonedDateTime zonedDateTime = startDateTimeInMemberTimeZone(ensemble, zoneId);
+        String localizedDateTime = zonedDateTime.format(SHORT_DATE_TIME_FORMATTER);
+        return "Ensembler: New Ensemble Scheduled for " + localizedDateTime;
     }
 
     @Override
@@ -60,7 +73,7 @@ public class EmailNotifier implements Notifier {
             return;
         }
 
-        ZonedDateTime startDateTimeInMemberTimeZone = ensemble.startDateTime().withZoneSameInstant(member.timeZone());
+        ZonedDateTime startDateTimeInMemberTimeZone = startDateTimeInMemberTimeZone(ensemble, member.timeZone());
 
         String body = """
                 Hi %s,
@@ -76,6 +89,11 @@ public class EmailNotifier implements Notifier {
         emailer.send("Ensembler Notification: Registration Confirmation",
                      body,
                      Set.of(member.email()));
+    }
+
+    @NotNull
+    private ZonedDateTime startDateTimeInMemberTimeZone(Ensemble ensemble, ZoneId zoneId) {
+        return ensemble.startDateTime().withZoneSameInstant(zoneId);
     }
 
 }

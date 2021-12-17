@@ -25,12 +25,12 @@ public class PushoverNotifier implements Notifier {
     }
 
     @Override
-    public int ensembleScheduled(String description, URI registrationLink) {
+    public int ensembleScheduled(Ensemble ensemble, URI registrationLink) {
         String messageBody = """
                    New Ensemble '%s' has been scheduled.
                    Visit %s to register.
                 """
-                .formatted(description, registrationLink.toString());
+                .formatted(ensemble.name(), registrationLink.toString());
 
         int status = send(messageBody);
         return status;

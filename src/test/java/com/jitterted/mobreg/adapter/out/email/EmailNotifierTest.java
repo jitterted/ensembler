@@ -24,12 +24,12 @@ class EmailNotifierTest {
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(memberBuilder.memberService(), spyEmailer);
 
-        notifier.ensembleScheduled("Ensemble #314", URI.create("https://mobreg.herokuapp.com/"));
+        notifier.ensembleScheduled(ensemble, URI.create("https://mobreg.herokuapp.com/"));
 
         assertThat(spyEmailer.emailRecipients())
                 .containsExactly("name@example.com");
         assertThat(spyEmailer.subject())
-                .isEqualTo("Ensembler Notification: New Ensemble Scheduled");
+                .isEqualTo("Ensembler: New Ensemble Scheduled for 2021-12-03 at 9:00AM (PST)");
         assertThat(spyEmailer.body())
                 .isEqualTo("""
                                    New Ensemble 'Ensemble #314' has been scheduled.

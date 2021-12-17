@@ -53,7 +53,7 @@ class EnsembleServiceMemberRegistrationNotificationTest {
         private String emailAddress;
 
         @Override
-        public int ensembleScheduled(String description, URI registrationLink) {
+        public int ensembleScheduled(Ensemble ensemble, URI registrationLink) {
             throw new UnsupportedOperationException();
         }
 

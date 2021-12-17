@@ -46,7 +46,7 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
         private int statusValue = -1;
 
         @Override
-        public int ensembleScheduled(String description, URI registrationLink) {
+        public int ensembleScheduled(Ensemble ensemble, URI registrationLink) {
             statusValue = 1;
             return statusValue;
         }

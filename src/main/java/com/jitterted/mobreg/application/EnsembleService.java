@@ -87,7 +87,7 @@ public class EnsembleService {
     }
 
     public void triggerEnsembleScheduledNotification(Ensemble ensemble) {
-        notifier.ensembleScheduled(ensemble.name(), URI.create("https://mobreg.herokuapp.com/"));
+        notifier.ensembleScheduled(ensemble, URI.create("https://mobreg.herokuapp.com/"));
     }
 
     public List<Ensemble> allEnsembles() {
