@@ -26,7 +26,7 @@ public class EnsembleFactory {
     @NotNull
     public static Ensemble ensembleAtCapacityWithStartTime(int year, int month, int dayOfMonth, int hour) {
         Ensemble futureEnsemble = withStartTime(year, month, dayOfMonth, hour);
-        MemberFactory.registerCountMembersWith(futureEnsemble, 5);
+        MemberFactory.acceptCountMembersWith(futureEnsemble, 5);
         return futureEnsemble;
     }
 

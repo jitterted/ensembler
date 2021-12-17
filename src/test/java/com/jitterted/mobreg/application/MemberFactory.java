@@ -32,7 +32,7 @@ public class MemberFactory {
         return member;
     }
 
-    public static void registerCountMembersWith(Ensemble ensemble, int count) {
+    public static void acceptCountMembersWith(Ensemble ensemble, int count) {
         MemberFactory memberFactory = new MemberFactory();
         for (int i = 0; i < count; i++) {
             MemberId memberId = memberFactory.createMemberInRepositoryReturningId(

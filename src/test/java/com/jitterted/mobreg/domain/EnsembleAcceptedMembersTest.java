@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class EnsembleRegisteredMembersTest {
+public class EnsembleAcceptedMembersTest {
 
     @Test
     public void newEnsembleHasZeroParticipants() throws Exception {
@@ -21,7 +21,7 @@ public class EnsembleRegisteredMembersTest {
     }
 
     @Test
-    public void registerMemberByIdWithEnsembleRemembersTheMember() throws Exception {
+    public void acceptMemberByIdWithEnsembleRemembersTheMember() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = new MemberBuilder().build().getId();
 
@@ -35,7 +35,7 @@ public class EnsembleRegisteredMembersTest {
     }
 
     @Test
-    public void registeredMemberIsFoundAsRegisteredByMemberId() throws Exception {
+    public void acceptedMemberIsFoundAsRegisteredByMemberId() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = new MemberBuilder().build().getId();
 
@@ -55,10 +55,10 @@ public class EnsembleRegisteredMembersTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2, 3, 4, 5})
-    public void registeringMultipleMembersResultsInThatManyRegisteredMembers(int count) throws Exception {
+    public void acceptingMultipleMembersResultsInThatManyRegisteredMembers(int count) throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
-        MemberFactory.registerCountMembersWith(ensemble, count);
+        MemberFactory.acceptCountMembersWith(ensemble, count);
 
         assertThat(ensemble.acceptedCount())
                 .isEqualTo(count);
@@ -70,7 +70,7 @@ public class EnsembleRegisteredMembersTest {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
         assertThatThrownBy(() -> {
-            MemberFactory.registerCountMembersWith(ensemble, count);
+            MemberFactory.acceptCountMembersWith(ensemble, count);
         }).isInstanceOf(EnsembleFullException.class);
     }
 

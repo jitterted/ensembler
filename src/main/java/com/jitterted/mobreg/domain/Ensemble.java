@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 // This is the Aggregate Root for Ensembles
 public class Ensemble {
-    private static final int MAX_REGISTERED_MEMBERS = 5;
+    private static final int MAX_ACCEPTED_MEMBERS = 5;
 
     private EnsembleId id;
 
@@ -81,7 +81,7 @@ public class Ensemble {
     }
 
     private boolean isFull() {
-        return acceptedCount() == MAX_REGISTERED_MEMBERS;
+        return acceptedCount() == MAX_ACCEPTED_MEMBERS;
     }
 
     public boolean isAccepted(MemberId memberId) {

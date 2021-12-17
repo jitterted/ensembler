@@ -94,7 +94,7 @@ class EnsembleSummaryViewTest {
     @Test
     public void viewIndicatesNotAbleToAcceptIfEnsembleIsFullAndCurrentlyUnknown() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        MemberFactory.registerCountMembersWith(ensemble, 5);
+        MemberFactory.acceptCountMembersWith(ensemble, 5);
 
         MemberId memberIdOfUnknownMember = MemberId.of(99L);
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberIdOfUnknownMember);
@@ -106,7 +106,7 @@ class EnsembleSummaryViewTest {
     @Test
     public void viewIndicatesCanAcceptIfEnsembleIsNotFull() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        MemberFactory.registerCountMembersWith(ensemble, 2);
+        MemberFactory.acceptCountMembersWith(ensemble, 2);
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1));
 
