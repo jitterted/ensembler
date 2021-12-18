@@ -37,25 +37,10 @@ public class EmailNotifier implements Notifier {
 
     @Override
     public int ensembleScheduled(Ensemble ensemble, URI registrationLink) {
-        String messageBody = """
-                New Ensemble '%s' has been scheduled.
-                <br/>
-                Visit <a href="%s">MobReg</a> to register.
-                """
-                .formatted(ensemble.name(), registrationLink.toString());
-
-        for (Member member : memberService.findAll()) {
-            String subject = createSubjectWith(ensemble, member.timeZone());
-            emailer.send(new EmailToSend(subject, messageBody, member.email()));
-        }
+        memberService.findAll().stream()
+                     .map(member -> createEmailToSend(ensemble, registrationLink, member))
+                     .forEach(emailer::send);
         return 0;
-    }
-
-    @NotNull
-    private String createSubjectWith(Ensemble ensemble, ZoneId zoneId) {
-        ZonedDateTime zonedDateTime = startDateTimeInMemberTimeZone(ensemble, zoneId);
-        String localizedDateTime = zonedDateTime.format(SHORT_DATE_TIME_FORMATTER);
-        return "Ensembler: New Ensemble Scheduled for " + localizedDateTime;
     }
 
     @Override
@@ -80,6 +65,33 @@ public class EmailNotifier implements Notifier {
                               googleCalendarLinkCreator.createFor(ensemble));
         emailer.send(
                 new EmailToSend("Ensembler Notification: Registration Confirmation", body, member.email()));
+    }
+
+    @NotNull
+    private EmailToSend createEmailToSend(Ensemble ensemble, URI registrationLink, Member member) {
+        String subject = createSubjectWith(ensemble, member.timeZone());
+        String messageBody = createBodyWith(ensemble, registrationLink, member.timeZone());
+
+        return new EmailToSend(subject, messageBody, member.email());
+    }
+
+    @NotNull
+    private String createBodyWith(Ensemble ensemble, URI registrationLink, ZoneId zoneId) {
+        return """
+            New Ensemble '%s' has been scheduled for %s.
+            <br/>
+            Visit <a href="%s">MobReg</a> to register.
+            """
+                .formatted(ensemble.name(),
+                           startDateTimeInMemberTimeZone(ensemble, zoneId).format(LONG_DATE_TIME_FORMATTER),
+                           registrationLink.toString());
+    }
+
+    @NotNull
+    private String createSubjectWith(Ensemble ensemble, ZoneId zoneId) {
+        ZonedDateTime zonedDateTime = startDateTimeInMemberTimeZone(ensemble, zoneId);
+        String localizedDateTime = zonedDateTime.format(SHORT_DATE_TIME_FORMATTER);
+        return "Ensembler: New Ensemble Scheduled for " + localizedDateTime;
     }
 
     @NotNull

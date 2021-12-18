@@ -29,7 +29,7 @@ public class EmailToSendEnsembleScheduledNotifierTest {
                 .containsExactly(new EmailToSend(
                         "Ensembler: New Ensemble Scheduled for 2021-12-03 at 9:00AM (PST)",
                         """
-                           New Ensemble 'Ensemble #314' has been scheduled.
+                           New Ensemble 'Ensemble #314' has been scheduled for December 3, 2021 at 9:00AM (PST).
                            <br/>
                            Visit <a href="https://mobreg.herokuapp.com/">MobReg</a> to register.
                            """,
@@ -57,10 +57,15 @@ public class EmailToSendEnsembleScheduledNotifierTest {
         assertThat(spyEmailer.sentEmails())
                 .map(EmailToSend::body)
                 .containsOnly("""
-                                      New Ensemble 'Ensemble #1217' has been scheduled.
+                                      New Ensemble 'Ensemble #1217' has been scheduled for December 17, 2021 at 1:00PM (PST).
                                       <br/>
                                       Visit <a href="https://mobreg.herokuapp.com/">MobReg</a> to register.
-                                      """);
+                                      ""","""
+                                      New Ensemble 'Ensemble #1217' has been scheduled for December 17, 2021 at 4:00PM (EST).
+                                      <br/>
+                                      Visit <a href="https://mobreg.herokuapp.com/">MobReg</a> to register.
+                                      """
+                              );
     }
 
 }
