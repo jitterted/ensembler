@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.adapter.out.email;
 
-import com.jitterted.mobreg.adapter.DateTimeFormatting;
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.Notifier;
@@ -17,10 +16,6 @@ import java.net.URI;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static java.util.function.Predicate.not;
 
 @Primary
 @Component
@@ -42,20 +37,17 @@ public class EmailNotifier implements Notifier {
 
     @Override
     public int ensembleScheduled(Ensemble ensemble, URI registrationLink) {
-        Set<String> emails = memberService.findAll().stream()
-                                          .map(Member::email)
-                                          .filter(not(String::isEmpty))
-                                          .collect(Collectors.toSet());
         String messageBody = """
                 New Ensemble '%s' has been scheduled.
                 <br/>
                 Visit <a href="%s">MobReg</a> to register.
                 """
                 .formatted(ensemble.name(), registrationLink.toString());
-        String subject = createSubjectWith(ensemble, DateTimeFormatting.PACIFIC_TIME_ZONE_ID);
 
-        LOGGER.info("Sending New Ensemble '{}' emails to: {}", ensemble.name(), emails);
-        emailer.send(subject, messageBody, emails);
+        for (Member member : memberService.findAll()) {
+            String subject = createSubjectWith(ensemble, member.timeZone());
+            emailer.send(new EmailToSend(subject, messageBody, member.email()));
+        }
         return 0;
     }
 
@@ -86,9 +78,8 @@ public class EmailNotifier implements Notifier {
                               LONG_DATE_TIME_FORMATTER.format(startDateTimeInMemberTimeZone),
                               ensemble.zoomMeetingLink().toString(),
                               googleCalendarLinkCreator.createFor(ensemble));
-        emailer.send("Ensembler Notification: Registration Confirmation",
-                     body,
-                     Set.of(member.email()));
+        emailer.send(
+                new EmailToSend("Ensembler Notification: Registration Confirmation", body, member.email()));
     }
 
     @NotNull

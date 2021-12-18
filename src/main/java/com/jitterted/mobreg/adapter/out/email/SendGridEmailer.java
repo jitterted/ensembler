@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Set;
 
 @Component
 public class SendGridEmailer implements Emailer {
@@ -24,17 +23,16 @@ public class SendGridEmailer implements Emailer {
     private String sendgridApiKey;
 
     @Override
-    public void send(String subject, String body, Set<String> recipients) {
+    public void send(EmailToSend emailToSend) {
         Email from = new Email("mobreg@tedmyoung.com", "Ensembler (MobReg)"); // TODO: pull this into configuration
-        Content content = new Content("text/html", body);
+        Content content = new Content("text/html", emailToSend.body());
 
         Personalization personalization = new Personalization();
-        personalization.addTo(from); // same as "To:" as the rest will be BCC'd
-        recipients.forEach(recipient -> personalization.addBcc(new Email(recipient)));
+        personalization.addTo(new Email(emailToSend.recipient()));
 
         Mail mail = new Mail();
         mail.setFrom(from);
-        mail.setSubject(subject);
+        mail.setSubject(emailToSend.subject());
         mail.addPersonalization(personalization);
         mail.addContent(content);
 
