@@ -67,6 +67,11 @@ public class EmailNotifier implements Notifier {
                 new EmailToSend("Ensembler Notification: Registration Confirmation", body, member.email()));
     }
 
+    @Override
+    public void ensembleCompleted(Ensemble ensemble) {
+        throw new UnsupportedOperationException();
+    }
+
     @NotNull
     private EmailToSend createEmailToSend(Ensemble ensemble, URI registrationLink, Member member) {
         String subject = createSubjectWith(ensemble, member.timeZone());

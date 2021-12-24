@@ -131,10 +131,8 @@ public class EnsembleService {
         ensemble.complete();
         ensemble.linkToRecordingAt(URI.create(recordingLink));
         ensembleRepository.save(ensemble);
-    }
 
-    public List<Ensemble> findAllForMember(MemberId memberId) {
-        return null;
+        notifier.ensembleCompleted(ensemble);
     }
 
 }

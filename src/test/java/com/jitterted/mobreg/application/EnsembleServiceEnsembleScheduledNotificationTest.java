@@ -18,31 +18,31 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
 
     @Test
     public void whenEnsembleScheduledEnsembleOpenNotificationIsSent() throws Exception {
-        MockNotifier mockNotifier = new MockNotifier();
+        MockEnsembleScheduledNotifier mockEnsembleScheduledNotifier = new MockEnsembleScheduledNotifier();
         EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),
-                                                              mockNotifier, new DummyVideoConferenceScheduler());
+                                                              mockEnsembleScheduledNotifier, new DummyVideoConferenceScheduler());
 
         ensembleService.scheduleEnsemble("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
 
-        mockNotifier.verify();
+        mockEnsembleScheduledNotifier.verify();
     }
 
     @Test
     public void whenEnsembleScheduledWithZoomLinkEnsembleOpenNotificationIsSent() throws Exception {
-        MockNotifier mockNotifier = new MockNotifier();
+        MockEnsembleScheduledNotifier mockEnsembleScheduledNotifier = new MockEnsembleScheduledNotifier();
         EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),
-                                                              mockNotifier, new DummyVideoConferenceScheduler());
+                                                              mockEnsembleScheduledNotifier, new DummyVideoConferenceScheduler());
 
         ensembleService.scheduleEnsemble("Notifying Ensemble",
                                          URI.create("https://zoom.us"),
                                          ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
 
-        mockNotifier.verify();
+        mockEnsembleScheduledNotifier.verify();
     }
 
-    private static class MockNotifier implements Notifier {
+    private static class MockEnsembleScheduledNotifier implements Notifier {
         private int statusValue = -1;
 
         @Override
@@ -53,6 +53,11 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
 
         @Override
         public void memberAccepted(Ensemble ensemble, Member member) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void ensembleCompleted(Ensemble ensemble) {
             throw new UnsupportedOperationException();
         }
 

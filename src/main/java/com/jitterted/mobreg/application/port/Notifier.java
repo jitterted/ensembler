@@ -9,4 +9,6 @@ public interface Notifier {
     int ensembleScheduled(Ensemble ensemble, URI registrationLink);
 
     void memberAccepted(Ensemble ensemble, Member member);
+
+    void ensembleCompleted(Ensemble ensemble);
 }

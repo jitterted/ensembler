@@ -1,10 +1,13 @@
 package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
+import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
+import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Test;
 
+import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -33,4 +36,46 @@ class EnsembleServiceCompletedTest {
         assertThat(ensembleRepository.saveCount())
                 .isEqualTo(1);
     }
+
+    @Test
+    public void completedEnsembleNotifiesAcceptedMembers() throws Exception {
+        MockEnsembleCompletedNotifier mockEnsembleCompletedNotifier = new MockEnsembleCompletedNotifier();
+        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                .notifier(mockEnsembleCompletedNotifier)
+                .saveEnsembleStartingNow("test")
+                .saveMemberAndAccept("Ace", "accepterino");
+        EnsembleService ensembleService = builder.build();
+
+        ensembleService.completeWith(builder.lastEnsembleId(), "https://recording.link/123");
+
+        mockEnsembleCompletedNotifier.verify();
+    }
+
+
+    private static class MockEnsembleCompletedNotifier implements Notifier {
+        private boolean ensembleCompletedCalled;
+
+        @Override
+        public int ensembleScheduled(Ensemble ensemble, URI registrationLink) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void memberAccepted(Ensemble ensemble, Member member) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void ensembleCompleted(Ensemble ensemble) {
+            ensembleCompletedCalled = true;
+        }
+
+        public void verify() {
+            assertThat(ensembleCompletedCalled)
+                    .describedAs("Ensemble Completed was never called.")
+                    .isTrue();
+        }
+    }
+
+
 }

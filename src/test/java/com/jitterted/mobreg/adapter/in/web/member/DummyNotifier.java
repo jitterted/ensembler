@@ -16,4 +16,9 @@ public class DummyNotifier implements Notifier {
     public void memberAccepted(Ensemble ensemble, Member member) {
 
     }
+
+    @Override
+    public void ensembleCompleted(Ensemble ensemble) {
+
+    }
 }

@@ -68,6 +68,11 @@ class EnsembleServiceMemberRegistrationNotificationTest {
             emailAddress = member.email();
         }
 
+        @Override
+        public void ensembleCompleted(Ensemble ensemble) {
+            throw new UnsupportedOperationException();
+        }
+
         public String emailBody() {
             return emailBody;
         }

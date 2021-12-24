@@ -41,6 +41,11 @@ public class PushoverNotifier implements Notifier {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void ensembleCompleted(Ensemble ensemble) {
+        throw new UnsupportedOperationException();
+    }
+
     private int send(String messageBody) {
         PushoverMessageDto pushoverMessageDto = new PushoverMessageDto(pushoverApiConfig.getToken(),
                                                                        pushoverApiConfig.getGroupKeyMob1(),
