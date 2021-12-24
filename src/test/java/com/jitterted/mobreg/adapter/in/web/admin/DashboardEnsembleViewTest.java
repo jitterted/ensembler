@@ -55,7 +55,7 @@ public class DashboardEnsembleViewTest {
 
         EnsembleDetailView ensembleView = (EnsembleDetailView) model.getAttribute("ensemble");
 
-        assertThat(ensembleView.memberViews())
+        assertThat(ensembleView.acceptedMembers())
                 .hasSize(1);
     }
 

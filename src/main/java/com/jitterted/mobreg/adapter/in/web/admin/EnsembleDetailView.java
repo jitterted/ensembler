@@ -3,8 +3,10 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 import com.jitterted.mobreg.adapter.DateTimeFormatting;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.MemberId;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public record EnsembleDetailView(long id,
                                  String name,
@@ -13,14 +15,12 @@ public record EnsembleDetailView(long id,
                                  String zoomMeetingLink,
                                  boolean isCompleted,
                                  String recordingLink,
-                                 List<MemberView> memberViews) {
+                                 List<MemberView> acceptedMembers,
+                                 List<MemberView> declinedMembers) {
 
     static EnsembleDetailView from(Ensemble ensemble, MemberService memberService) {
-        List<MemberView> memberViews =
-                ensemble.acceptedMembers().stream()
-                        .map(memberService::findById)
-                        .map(MemberView::from)
-                        .toList();
+        List<MemberView> acceptedMembers = transform(memberService, ensemble.acceptedMembers().stream());
+        List<MemberView> declinedMembers = transform(memberService, ensemble.declinedMembers());
         return new EnsembleDetailView(ensemble.getId().id(),
                                       ensemble.name(),
                                       DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()),
@@ -28,10 +28,19 @@ public record EnsembleDetailView(long id,
                                       ensemble.zoomMeetingLink().toString(),
                                       ensemble.isCompleted(),
                                       ensemble.recordingLink().toString(),
-                                      memberViews);
+                                      acceptedMembers,
+                                      declinedMembers);
+    }
+
+    private static List<MemberView> transform(MemberService memberService, Stream<MemberId> memberIdStream) {
+        return memberIdStream
+                .map(memberService::findById)
+                .map(MemberView::from)
+                .toList();
     }
 
     public int size() {
-        return memberViews.size();
+        return acceptedMembers.size();
     }
+
 }

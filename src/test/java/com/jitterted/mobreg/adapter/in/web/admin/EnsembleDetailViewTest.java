@@ -28,22 +28,29 @@ class EnsembleDetailViewTest {
     }
 
     @Test
-    public void viewContainsDetailsForMembersInEnsemble() throws Exception {
+    public void viewContainsDetailsForAcceptedAndDeclinedMembersInEnsemble() throws Exception {
         Ensemble ensemble = new Ensemble("view", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(73));
         MemberRepository memberRepository = new InMemoryMemberRepository();
         MemberService memberService = new MemberService(memberRepository);
-        Member member = MemberFactory.createMember(7, "name", "ghusername");
-        memberRepository.save(member);
-        ensemble.acceptedBy(member.getId());
+        Member acceptedMember = MemberFactory.createMember(7, "Ace", "acceptated");
+        memberRepository.save(acceptedMember);
+        ensemble.acceptedBy(acceptedMember.getId());
+        Member declinedMember = MemberFactory.createMember(9, "Declan", "declaned");
+        memberRepository.save(declinedMember);
+        ensemble.declinedBy(declinedMember.getId());
 
         EnsembleDetailView view = EnsembleDetailView.from(ensemble, memberService);
 
-        MemberView expectedView = new MemberView(7L, "name", "ghusername", "");
-        assertThat(view.memberViews())
+        assertThat(view.acceptedMembers())
                 .first()
                 .usingRecursiveComparison()
-                .isEqualTo(expectedView);
+                .isEqualTo(new MemberView(7L, "Ace", "acceptated", ""));
+
+        assertThat(view.declinedMembers())
+                .first()
+                .usingRecursiveComparison()
+                .isEqualTo(new MemberView(9L, "Declan", "declaned", ""));
     }
 
 }

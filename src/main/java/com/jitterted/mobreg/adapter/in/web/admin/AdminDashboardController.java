@@ -64,7 +64,6 @@ public class AdminDashboardController {
         model.addAttribute("ensemble", ensembleDetailView);
         model.addAttribute("scheduleEnsembleForm", ScheduleEnsembleForm.from(ensemble));
         model.addAttribute("completeEnsemble", new CompleteEnsembleForm(""));
-        model.addAttribute("registration", new AdminRegistrationForm(ensemble.getId()));
 
         return "ensemble-detail";
     }
