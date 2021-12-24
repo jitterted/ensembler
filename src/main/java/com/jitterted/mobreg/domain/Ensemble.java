@@ -160,6 +160,10 @@ public class Ensemble {
         return Rsvp.UNKNOWN;
     }
 
+    public int declinedCount() {
+        return membersWhoDeclined.size();
+    }
+
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
         private static final Map<WhenSpaceRsvp, MemberStatus> STATE_TO_STATUS = Map.ofEntries(
                 Map.entry(new WhenSpaceRsvp(When.PAST, Space.AVAILABLE, Rsvp.UNKNOWN), MemberStatus.HIDDEN),

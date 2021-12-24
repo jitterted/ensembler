@@ -10,7 +10,8 @@ public record EnsembleSummaryView(long id,
                                   String zoomMeetingLink,
                                   String dateTime,
                                   boolean isCompleted,
-                                  int numberRegistered) {
+                                  int numberAccepted,
+                                  int numberDeclined) {
 
     public static List<EnsembleSummaryView> from(List<Ensemble> ensembles) {
         return ensembles.stream()
@@ -24,6 +25,7 @@ public record EnsembleSummaryView(long id,
                                        ensemble.zoomMeetingLink().toString(),
                                        DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()),
                                        ensemble.isCompleted(),
-                                       ensemble.acceptedCount());
+                                       ensemble.acceptedCount(),
+                                       ensemble.declinedCount());
     }
 }

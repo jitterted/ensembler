@@ -109,10 +109,21 @@
                             </div>
                         </td>
                         <td class="py-3 px-10 text-center">
-                            <div class="flex items-center justify-center">
-                                <span class="text-3xl font-bold text-purple-600"
-                                      th:text="${ensemble.numberRegistered}">4</span>
+                            <div class="flex items-center">
+                                <span class="text-3xl font-bold text-purple-600 pl-8"
+                                      th:text="${ensemble.numberAccepted}">4</span>
                                 <span class="text-xl font-bold text-purple-400">/5</span>
+                                <p th:if="${ensemble.numberDeclined > 0}"
+                                        class="ml-2 flex items-baseline text-sm font-semibold text-red-500">
+                                    <!-- Heroicon name: solid/arrow-sm-down -->
+                                    <svg class="self-center flex-shrink-0 h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="sr-only">
+                                        Declined
+                                    </span>
+                                    <span th:text="${ensemble.numberDeclined}">1</span>
+                                </p>
                                 <!-- <img class="w-6 h-6 rounded-full border-gray-200 border transform hover:scale-125" src="https://avatars.githubusercontent.com/u/47930468"/> -->
                                 <!-- <img class="w-6 h-6 rounded-full border-gray-200 border -m-1 transform hover:scale-125" src="https://avatars.githubusercontent.com/u/30540091"/> -->
                                 <!-- <img class="w-6 h-6 rounded-full border-gray-200 border -m-1 transform hover:scale-150 hover:z-50" src="https://randomuser.me/api/portraits/men/1.jpg"/> -->
@@ -124,9 +135,9 @@
                             <span th:if="${ensemble.isCompleted}"
                                   class="bg-blue-100 text-blue-800 py-1 px-3 rounded-lg text-xs font-bold">Completed <i class="fal fa-badge-check text-blue-600"></i></span>
                             <span th:unless="${ensemble.isCompleted}">
-                                <span th:if="${ensemble.numberRegistered} < 5"
+                                <span th:if="${ensemble.numberAccepted} < 5"
                                         class="bg-green-100 text-green-800 py-1 px-3 rounded-lg text-xs font-bold">Available <i class="fal fa-calendar-plus text-green-600"></i></span>
-                                <span th:if="${ensemble.numberRegistered} >= 5"
+                                <span th:if="${ensemble.numberAccepted} >= 5"
                                       class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">Full <i class="fal fa-times-hexagon text-red-600"></i></span>
                             </span>
                             <form method="post" th:action="@{notify/__${ensemble.id}__}">
