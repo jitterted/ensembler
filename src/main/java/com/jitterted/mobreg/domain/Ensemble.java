@@ -1,5 +1,7 @@
 package com.jitterted.mobreg.domain;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.net.URI;
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -45,9 +47,8 @@ public class Ensemble {
         return membersWhoAccepted.size();
     }
 
-    public Set<MemberId> acceptedMembers() {
-        // #28 TODO: provide Stream<> or ImmutableSet<>
-        return membersWhoAccepted;
+    public Stream<MemberId> acceptedMembers() {
+        return ImmutableSet.copyOf(membersWhoAccepted).stream();
     }
 
     public void acceptedBy(MemberId memberId) {
@@ -67,7 +68,7 @@ public class Ensemble {
     }
 
     public Stream<MemberId> declinedMembers() {
-        return membersWhoDeclined.stream();
+        return ImmutableSet.copyOf(membersWhoDeclined).stream();
     }
 
     private void requireHasSpace() {

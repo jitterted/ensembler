@@ -42,7 +42,6 @@ public class EnsembleEntity {
         ensembleEntity.setRecordingLink(ensemble.recordingLink().toString());
         ensembleEntity.setAcceptedMembers(
                 ensemble.acceptedMembers()
-                        .stream()
                         .map(AcceptedMember::toEntityId)
                         .collect(Collectors.toSet()));
         ensembleEntity.setDeclinedMembers(
