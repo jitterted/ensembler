@@ -69,7 +69,21 @@ public class EmailNotifier implements Notifier {
 
     @Override
     public void ensembleCompleted(Ensemble ensemble) {
-        final String subject = "Ensembler Notification: Ensemble Completed";
+        ensemble.acceptedMembers()
+                .map(memberService::findById)
+                .filter(Member::hasEmail)
+                .map(member -> emailForCompletedEnsemble(ensemble, member))
+                .forEach(emailer::send);
+    }
+
+    @NotNull
+    private EmailToSend emailForCompletedEnsemble(Ensemble ensemble, Member member) {
+        return new EmailToSend("Ensembler Notification: Ensemble Completed",
+                               bodyForCompletedEnsemble(ensemble, member),
+                               member.email());
+    }
+
+    private String bodyForCompletedEnsemble(Ensemble ensemble, Member member) {
         final String ensembleCompletedBodyTemplate = """
                                                      Hi %s,
                                                      
@@ -77,15 +91,7 @@ public class EmailNotifier implements Notifier {
                                                      
                                                      The <a href="%s">video recording</a> is now available.
                                                      """;
-        ensemble.acceptedMembers()
-                .map(memberService::findById)
-                .filter(Member::hasEmail)
-                .forEach(member -> {
-                    emailer.send(
-                            new EmailToSend(
-                                    subject, ensembleCompletedBodyTemplate.formatted(member.firstName(), ensemble.name(), ensemble.recordingLink()),
-                                    member.email()));
-                });
+        return ensembleCompletedBodyTemplate.formatted(member.firstName(), ensemble.name(), ensemble.recordingLink());
     }
 
     @NotNull
