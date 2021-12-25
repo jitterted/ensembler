@@ -26,10 +26,10 @@ class EnsembleServiceMemberRegistrationNotificationTest {
         EnsembleId ensembleId = EnsembleId.of(7L);
         ensemble.setId(ensembleId);
         ensembleRepository.save(ensemble);
-        MemberBuilder memberBuilder = new MemberBuilder();
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
         MemberId memberId = memberBuilder.withFirstName("Fake")
                                          .withEmail("fake@example.com")
-                                         .build()
+                                         .buildAndSave()
                                          .getId();
         SpyEmailNotifier spyEmailNotifier = new SpyEmailNotifier();
         EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberBuilder.memberRepository(),

@@ -7,8 +7,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.ZoneId;
 
-public class MemberBuilder {
-    private final MemberRepository memberRepository = new InMemoryMemberRepository();
+public class TestMemberBuilder {
+    private final MemberRepository memberRepository;
     private String firstName = "first";
     private String githubUsername = "githubusername";
     private String email = "first.last@example.com";
@@ -16,23 +16,28 @@ public class MemberBuilder {
     private MemberService memberService;
     private String timeZoneId = "Z";
 
+    public TestMemberBuilder() {
+        memberRepository = new InMemoryMemberRepository();
+        memberService = new MemberService(memberRepository);
+    }
+
     @NotNull
-    public MemberBuilder withEmail(String email) {
+    public TestMemberBuilder withEmail(String email) {
         this.email = email;
         return this;
     }
 
-    public MemberBuilder withGithubUsername(String githubUsername) {
+    public TestMemberBuilder withGithubUsername(String githubUsername) {
         this.githubUsername = githubUsername;
         return this;
     }
 
-    public MemberBuilder withFirstName(String firstName) {
+    public TestMemberBuilder withFirstName(String firstName) {
         this.firstName = firstName;
         return this;
     }
 
-    public MemberBuilder withNoEmail() {
+    public TestMemberBuilder withNoEmail() {
         email = "";
         return this;
     }
@@ -45,16 +50,15 @@ public class MemberBuilder {
         return memberService;
     }
 
-    public Member build() {
+    public Member buildAndSave() {
         Member member = new Member(firstName, githubUsername, roles);
         member.changeEmailTo(email);
         member.changeTimeZoneTo(ZoneId.of(timeZoneId));
         member = memberRepository.save(member);
-        memberService = new MemberService(memberRepository);
         return member;
     }
 
-    public MemberBuilder withTimezone(String timeZoneId) {
+    public TestMemberBuilder withTimezone(String timeZoneId) {
         this.timeZoneId = timeZoneId;
         return this;
     }

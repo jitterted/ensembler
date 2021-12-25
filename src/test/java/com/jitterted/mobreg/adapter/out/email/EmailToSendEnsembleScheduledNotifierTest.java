@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.out.email;
 
-import com.jitterted.mobreg.application.MemberBuilder;
+import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
 import org.junit.jupiter.api.Test;
@@ -15,10 +15,10 @@ public class EmailToSendEnsembleScheduledNotifierTest {
 
     @Test
     public void memberWithEmailWhenEnsembleScheduledThenCustomEmailSentToMember() throws Exception {
-        MemberBuilder memberBuilder = new MemberBuilder();
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
         memberBuilder.withEmail("name@example.com")
                      .withTimezone("America/Los_Angeles")
-                     .build();
+                     .buildAndSave();
         Ensemble ensemble = new Ensemble("Ensemble #314", URI.create("https://zoom.us"), ZonedDateTime.of(2021, 12, 3, 17, 0, 0, 0, ZoneOffset.UTC));
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(memberBuilder.memberService(), spyEmailer);
@@ -38,9 +38,9 @@ public class EmailToSendEnsembleScheduledNotifierTest {
 
     @Test
     public void membersInDifferentTimeZonesGetCustomizedEnsembleScheduledEmail() throws Exception {
-        MemberBuilder memberBuilder = new MemberBuilder();
-        memberBuilder.withEmail("pst@example.com").withTimezone("America/Los_Angeles").build();
-        memberBuilder.withEmail("est@example.com").withTimezone("America/New_York").build();
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
+        memberBuilder.withEmail("pst@example.com").withTimezone("America/Los_Angeles").buildAndSave();
+        memberBuilder.withEmail("est@example.com").withTimezone("America/New_York").buildAndSave();
         Ensemble ensemble = new Ensemble("Ensemble #1217", URI.create("https://zoom.us"), ZonedDateTime.of(2021, 12, 17, 21, 0, 0, 0, ZoneOffset.UTC));
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(memberBuilder.memberService(), spyEmailer);

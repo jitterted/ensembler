@@ -1,8 +1,8 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
-import com.jitterted.mobreg.application.MemberBuilder;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.OAuth2UserFactory;
@@ -48,11 +48,11 @@ public class MemberProfileControllerTest {
 
     @Test
     public void changeProfileInfoOnFormUpdatesMemberProfileAndRedirectsToProfileView() throws Exception {
-        MemberBuilder builder = new MemberBuilder()
+        TestMemberBuilder builder = new TestMemberBuilder()
                 .withEmail("none@nowhere")
                 .withGithubUsername(GITHUB_USERNAME)
                 .withTimezone("Asia/Tokyo");
-        Member member = builder.build();
+        Member member = builder.buildAndSave();
         MemberService memberService = builder.memberService();
         MemberProfileController memberProfileController = new MemberProfileController(memberService);
 

@@ -1,7 +1,7 @@
 package com.jitterted.mobreg.domain;
 
-import com.jitterted.mobreg.application.MemberBuilder;
 import com.jitterted.mobreg.application.MemberFactory;
+import com.jitterted.mobreg.application.TestMemberBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -23,7 +23,7 @@ public class EnsembleAcceptedMembersTest {
     @Test
     public void acceptMemberByIdWithEnsembleRemembersTheMember() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
-        MemberId memberId = new MemberBuilder().build().getId();
+        MemberId memberId = new TestMemberBuilder().buildAndSave().getId();
 
         ensemble.acceptedBy(memberId);
 
@@ -37,7 +37,7 @@ public class EnsembleAcceptedMembersTest {
     @Test
     public void acceptedMemberIsFoundAsRegisteredByMemberId() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
-        MemberId memberId = new MemberBuilder().build().getId();
+        MemberId memberId = new TestMemberBuilder().buildAndSave().getId();
 
         ensemble.acceptedBy(memberId);
 

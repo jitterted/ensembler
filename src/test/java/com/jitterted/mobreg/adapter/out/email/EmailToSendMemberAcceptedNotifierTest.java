@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.out.email;
 
-import com.jitterted.mobreg.application.MemberBuilder;
+import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
@@ -16,10 +16,10 @@ class EmailToSendMemberAcceptedNotifierTest {
 
     @Test
     public void memberWithEmailAcceptsThenEmailSentToMemberWithEnsembleDetails() throws Exception {
-        Member member = new MemberBuilder().withFirstName("FirstName")
-                                           .withEmail("name@example.com")
-                                           .withTimezone("America/Los_Angeles")
-                                           .build();
+        Member member = new TestMemberBuilder().withFirstName("FirstName")
+                                               .withEmail("name@example.com")
+                                               .withTimezone("America/Los_Angeles")
+                                               .buildAndSave();
         Ensemble ensemble = new Ensemble("Ensemble #123", URI.create("https://zoom.us"), ZonedDateTime.of(2021, 10, 20, 16, 0, 0, 0, ZoneOffset.UTC));
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(null, spyEmailer);
@@ -40,7 +40,7 @@ class EmailToSendMemberAcceptedNotifierTest {
 
     @Test
     public void memberWithoutEmailRegistersThenNoEmailIsSent() throws Exception {
-        Member member = new MemberBuilder().withNoEmail().build();
+        Member member = new TestMemberBuilder().withNoEmail().buildAndSave();
         Ensemble ensemble = new Ensemble("Doesn't matter", URI.create("https://whocar.es"), ZonedDateTime.now());
         SpyEmailer spyEmailer = new SpyEmailer();
         Notifier notifier = new EmailNotifier(null, spyEmailer);

@@ -11,6 +11,7 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.ZonedDateTime;
 
@@ -47,8 +48,14 @@ public class TestEnsembleServiceBuilder {
     }
 
     public TestEnsembleServiceBuilder saveEnsembleStartingNow(String ensembleName) {
-        lastEnsemble = new Ensemble(ensembleName, ZonedDateTime.now());
-        lastEnsembleId = ensembleRepository.save(lastEnsemble).getId();
+        Ensemble ensemble = new Ensemble(ensembleName, ZonedDateTime.now());
+        return saveEnsemble(ensemble);
+    }
+
+    @NotNull
+    public TestEnsembleServiceBuilder saveEnsemble(Ensemble ensemble) {
+        lastEnsemble = ensembleRepository.save(ensemble);
+        lastEnsembleId = lastEnsemble.getId();
         return this;
     }
 
@@ -68,4 +75,5 @@ public class TestEnsembleServiceBuilder {
     public EnsembleId lastEnsembleId() {
         return lastEnsembleId;
     }
+
 }

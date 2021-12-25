@@ -69,11 +69,23 @@ public class EmailNotifier implements Notifier {
 
     @Override
     public void ensembleCompleted(Ensemble ensemble) {
+        final String subject = "Ensembler Notification: Ensemble Completed";
+        final String ensembleCompletedBodyTemplate = """
+                                                     Hi %s,
+                                                     
+                                                     Ensemble '%s' has been completed.
+                                                     
+                                                     The <a href="%s">video recording</a> is now available.
+                                                     """;
         ensemble.acceptedMembers()
                 .map(memberService::findById)
                 .filter(Member::hasEmail)
-                .map(Member::email)
-                .forEach(recipient -> emailer.send(new EmailToSend("subject", "body", recipient)));
+                .forEach(member -> {
+                    emailer.send(
+                            new EmailToSend(
+                                    subject, ensembleCompletedBodyTemplate.formatted(member.firstName(), ensemble.name(), ensemble.recordingLink()),
+                                    member.email()));
+                });
     }
 
     @NotNull
@@ -87,10 +99,10 @@ public class EmailNotifier implements Notifier {
     @NotNull
     private String createBodyWith(Ensemble ensemble, URI registrationLink, ZoneId zoneId) {
         return """
-            New Ensemble '%s' has been scheduled for %s.
-            <br/>
-            Visit <a href="%s">MobReg</a> to register.
-            """
+                New Ensemble '%s' has been scheduled for %s.
+                <br/>
+                Visit <a href="%s">MobReg</a> to register.
+                """
                 .formatted(ensemble.name(),
                            startDateTimeInMemberTimeZone(ensemble, zoneId).format(LONG_DATE_TIME_FORMATTER),
                            registrationLink.toString());
