@@ -69,7 +69,11 @@ public class EmailNotifier implements Notifier {
 
     @Override
     public void ensembleCompleted(Ensemble ensemble) {
-        throw new UnsupportedOperationException();
+        ensemble.acceptedMembers()
+                .map(memberService::findById)
+                .filter(Member::hasEmail)
+                .map(Member::email)
+                .forEach(recipient -> emailer.send(new EmailToSend("subject", "body", recipient)));
     }
 
     @NotNull
