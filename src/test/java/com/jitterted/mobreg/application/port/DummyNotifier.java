@@ -1,6 +1,5 @@
-package com.jitterted.mobreg.adapter.in.web.member;
+package com.jitterted.mobreg.application.port;
 
-import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 

@@ -26,6 +26,14 @@ public class HexagonalArchitectureTest {
     }
 
     @Test
+    public void applicationMustNotDependOnAdapters() {
+        noClasses()
+                .that().resideInAPackage("..application..")
+                .should().dependOnClassesThat().resideInAPackage("..adapter..")
+                .check(productionAndTestClasses());
+    }
+
+    @Test
     public void adaptersMustNotDependOnEachOther() {
        slices().matching("..adapter.*.(*)..")
                .should().notDependOnEachOther()
