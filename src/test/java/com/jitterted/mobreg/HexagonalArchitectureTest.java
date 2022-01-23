@@ -21,6 +21,9 @@ public class HexagonalArchitectureTest {
 
     @Test
     public void domainMustNotDependOnApplication() {
+        // SMELL: Some test classes in the domain package depend on test classes
+        //   in the adapter package (e.g. TestMemberBuilder). Until they are
+        //   split or moved appropriately this test will only check productionClasses().
         noClasses()
                 .that().resideInAPackage("..domain..")
                 .should().dependOnClassesThat().resideInAPackage("..application..")
