@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
-public class HexArchTest {
+public class HexagonalArchitectureTest {
     @Test
     public void domainMustNotDependOnAdapters() {
         noClasses()
