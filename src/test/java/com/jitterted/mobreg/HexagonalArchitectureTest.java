@@ -6,6 +6,7 @@ import com.tngtech.archunit.core.importer.ImportOption;
 import org.junit.jupiter.api.Test;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
 public class HexagonalArchitectureTest {
     @Test
@@ -22,6 +23,14 @@ public class HexagonalArchitectureTest {
                 .that().resideInAPackage("..domain..")
                 .should().dependOnClassesThat().resideInAPackage("..application..")
                 .check(productionClasses());
+    }
+
+    @Test
+    public void adaptersMustNotDependOnEachOther() {
+       slices().matching("..adapter.*.(*)..")
+               .should().notDependOnEachOther()
+               .as("Adapters must not depend on each other")
+               .check(productionAndTestClasses());
     }
 
     private JavaClasses productionAndTestClasses() {
