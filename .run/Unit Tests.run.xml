@@ -5,7 +5,7 @@
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="tags" />
-    <tag value="!manual &amp; !integration &amp; !mvc" />
+    <tag value="!manual &amp; !integration &amp; !mvc &amp; !architecture" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
