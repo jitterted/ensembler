@@ -23,7 +23,7 @@ public class EnsembleAcceptedMembersTest {
     @Test
     public void acceptMemberByIdWithEnsembleRemembersTheMember() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
-        MemberId memberId = new TestMemberBuilder().buildAndSave().getId();
+        MemberId memberId = MemberId.of(123);
 
         ensemble.acceptedBy(memberId);
 
