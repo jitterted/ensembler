@@ -1,6 +1,7 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.application.TestMemberBuilder;
+import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleFactory;
 
 public class EnsembleBuilderAndSaviour {
 

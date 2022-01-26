@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.domain;
 
-import com.jitterted.mobreg.application.MemberFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -10,7 +9,7 @@ class EnsembleMemberRsvpTest {
     @Test
     public void unregisteredMemberIsRsvpUnknown() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
-        MemberId memberId = MemberFactory.createMember(73L, "Seventy3", "73").getId();
+        MemberId memberId = MemberId.of(73);
 
         assertThat(ensemble.rsvpOf(memberId))
                 .isEqualByComparingTo(Rsvp.UNKNOWN);
@@ -19,7 +18,7 @@ class EnsembleMemberRsvpTest {
     @Test
     public void registeredMemberIsRsvpAccepted() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
-        MemberId memberId = MemberFactory.createMember(73L, "Seventy3", "73").getId();
+        MemberId memberId = MemberId.of(73);
 
         ensemble.acceptedBy(memberId);
 
@@ -30,7 +29,7 @@ class EnsembleMemberRsvpTest {
     @Test
     public void memberWhoDeclinesIsRsvpDeclined() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
-        MemberId memberId = MemberFactory.createMember(97L, "Ninety7", "97").getId();
+        MemberId memberId = MemberId.of(97);
 
         ensemble.declinedBy(memberId);
 
@@ -41,7 +40,7 @@ class EnsembleMemberRsvpTest {
     @Test
     public void acceptedMemberWhenDeclinesIsRsvpDeclined() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
-        MemberId memberId = MemberFactory.createMember(97L, "Ninety7", "97").getId();
+        MemberId memberId = MemberId.of(97);
         ensemble.acceptedBy(memberId);
 
         ensemble.declinedBy(memberId);
@@ -53,7 +52,7 @@ class EnsembleMemberRsvpTest {
     @Test
     public void declinedMemberWhenAcceptsAndSpaceAvailableIsRsvpAccepted() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
-        MemberId memberId = MemberFactory.createMember(97L, "Ninety7", "97").getId();
+        MemberId memberId = MemberId.of(79);
         ensemble.declinedBy(memberId);
 
         ensemble.acceptedBy(memberId);

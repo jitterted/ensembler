@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.domain;
 
-import com.jitterted.mobreg.application.MemberFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.ZonedDateTime;
@@ -26,11 +25,17 @@ public class EnsembleFactory {
     @NotNull
     public static Ensemble ensembleAtCapacityWithStartTime(int year, int month, int dayOfMonth, int hour) {
         Ensemble futureEnsemble = withStartTime(year, month, dayOfMonth, hour);
-        MemberFactory.acceptCountMembersWith(futureEnsemble, 5);
+        acceptCountMembersFor(5, futureEnsemble);
         return futureEnsemble;
     }
 
     public static Ensemble withStartTime(ZonedDateTime startDateTime) {
         return new Ensemble("Ensemble Factory", startDateTime);
+    }
+
+    public static void acceptCountMembersFor(int count, Ensemble ensemble) {
+        for (int i = 0; i < count; i++) {
+            ensemble.acceptedBy(MemberId.of(i));
+        }
     }
 }

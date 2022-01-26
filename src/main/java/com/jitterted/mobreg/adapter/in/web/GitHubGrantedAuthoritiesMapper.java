@@ -1,4 +1,4 @@
-package com.jitterted.mobreg;
+package com.jitterted.mobreg.adapter.in.web;
 
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Member;
@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-// TODO: what package should this go in? adapter.in.security or .oauth?
 @Component
 public class GitHubGrantedAuthoritiesMapper implements GrantedAuthoritiesMapper {
 

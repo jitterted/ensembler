@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg;
 
 import com.sendgrid.Method;
 import com.sendgrid.Request;

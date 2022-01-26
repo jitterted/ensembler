@@ -2,7 +2,6 @@ package com.jitterted.mobreg;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
-import com.tngtech.archunit.core.importer.ImportOption;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -21,13 +20,10 @@ public class HexagonalArchitectureTest {
 
     @Test
     public void domainMustNotDependOnApplication() {
-        // SMELL: Some test classes in the domain package depend on test classes
-        //   in the adapter package (e.g. TestMemberBuilder). Until they are
-        //   split or moved appropriately this test will only check productionClasses().
         noClasses()
                 .that().resideInAPackage("..domain..")
                 .should().dependOnClassesThat().resideInAPackage("..application..")
-                .check(productionClasses());
+                .check(productionAndTestClasses());
     }
 
     @Test
@@ -50,9 +46,4 @@ public class HexagonalArchitectureTest {
         return new ClassFileImporter().importPackages("com.jitterted.mobreg");
     }
 
-    private JavaClasses productionClasses() {
-        return new ClassFileImporter()
-                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
-                .importPackages("com.jitterted.mobreg");
-    }
 }

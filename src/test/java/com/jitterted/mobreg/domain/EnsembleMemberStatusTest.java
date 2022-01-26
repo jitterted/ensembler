@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.domain;
 
-import com.jitterted.mobreg.application.MemberFactory;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
@@ -14,7 +13,7 @@ class EnsembleMemberStatusTest {
     public void unknownMemberAndPastEnsembleThenStatusHidden() throws Exception {
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 11);
         Ensemble pastEnsemble = EnsembleFactory.withStartTime(startDateTime);
-        MemberId memberId = MemberFactory.createMember(37L, "UnKnown", "unknown").getId();
+        MemberId memberId = MemberId.of(37);
 
         assertThat(pastEnsemble.statusFor(memberId, startDateTime.plusHours(3))) // duration defaults to 1h55m, so 3 hours means it's over
                 .isEqualByComparingTo(MemberStatus.HIDDEN);
@@ -23,7 +22,7 @@ class EnsembleMemberStatusTest {
     @Test
     public void unknownMemberAndFutureEnsembleAndHasSpaceThenStatusUnknown() throws Exception {
         Ensemble futureEnsemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
-        MemberId memberId = MemberFactory.createMember(31L, "UnKnown", "unknown").getId();
+        MemberId memberId = MemberId.of(31);
 
         assertThat(futureEnsemble.statusFor(memberId, UTC_2021_11_22_12))
                 .isEqualByComparingTo(MemberStatus.UNKNOWN);
@@ -32,7 +31,7 @@ class EnsembleMemberStatusTest {
     @Test
     public void unknownMemberAndFutureEnsembleAndIsFullThenStatusFull() throws Exception {
         Ensemble futureEnsemble = EnsembleFactory.ensembleAtCapacityWithStartTime(2022, 1, 3, 9);
-        MemberId memberIdIsUnknown = MemberFactory.createMember(33L, "UnKnown", "unknown").getId();
+        MemberId memberIdIsUnknown = MemberId.of(33);
 
         assertThat(futureEnsemble.statusFor(memberIdIsUnknown, UTC_2021_11_22_12))
                 .isEqualByComparingTo(MemberStatus.FULL);
@@ -41,7 +40,7 @@ class EnsembleMemberStatusTest {
     @Test
     public void declinedMemberAndFutureEnsembleAndHasSpaceThenStatusDeclined() throws Exception {
         Ensemble futureEnsemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
-        MemberId memberId = MemberFactory.createMember(31L, "Declined", "declined").getId();
+        MemberId memberId = MemberId.of(31);
         futureEnsemble.declinedBy(memberId);
 
         assertThat(futureEnsemble.statusFor(memberId, UTC_2021_11_22_12))
@@ -51,7 +50,7 @@ class EnsembleMemberStatusTest {
     @Test
     public void declinedMemberAndFutureEnsembleIsFullThenStatusDeclinedFull() throws Exception {
         Ensemble futureFullEnsemble = EnsembleFactory.ensembleAtCapacityWithStartTime(2022, 1, 3, 9);
-        MemberId memberId = MemberFactory.createMember(31L, "Declined", "declined").getId();
+        MemberId memberId = MemberId.of(31);
         futureFullEnsemble.declinedBy(memberId);
 
         assertThat(futureFullEnsemble.statusFor(memberId, UTC_2021_11_22_12))
@@ -61,7 +60,7 @@ class EnsembleMemberStatusTest {
     @Test
     public void acceptedMemberAndPastUncompletedEnsembleThenStatusPendingCompleted() throws Exception {
         Ensemble pastEnsemble = EnsembleFactory.withStartTime(2021, 11, 21, 11);
-        MemberId memberId = MemberFactory.createMember(41L, "Accepted", "accepted").getId();
+        MemberId memberId = MemberId.of(41);
         pastEnsemble.acceptedBy(memberId);
 
         assertThat(pastEnsemble.statusFor(memberId, UTC_2021_11_22_12))
@@ -71,7 +70,7 @@ class EnsembleMemberStatusTest {
     @Test
     public void acceptedMemberAndCompletedEnsembleThenStatusCompleted() throws Exception {
         Ensemble completedEnsemble = EnsembleFactory.withStartTime(2021, 11, 21, 11);
-        MemberId memberId = MemberFactory.createMember(41L, "Accepted", "accepted").getId();
+        MemberId memberId = MemberId.of(41);
         completedEnsemble.acceptedBy(memberId);
         completedEnsemble.complete();
 
@@ -82,7 +81,7 @@ class EnsembleMemberStatusTest {
     @Test
     public void acceptedMemberAndFutureEnsembleThenStatusAccepted() throws Exception {
         Ensemble futureEnsemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
-        MemberId memberId = MemberFactory.createMember(41L, "Accepted", "accepted").getId();
+        MemberId memberId = MemberId.of(41);
         futureEnsemble.acceptedBy(memberId);
 
         assertThat(futureEnsemble.statusFor(memberId, UTC_2021_11_22_12))
@@ -93,7 +92,7 @@ class EnsembleMemberStatusTest {
     public void acceptedMemberAndInProgressEnsembleThenStatusAccepted() throws Exception {
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 11);
         Ensemble futureEnsemble = EnsembleFactory.withStartTime(startDateTime);
-        MemberId memberId = MemberFactory.createMember(41L, "Accepted", "accepted").getId();
+        MemberId memberId = MemberId.of(41);
         futureEnsemble.acceptedBy(memberId);
 
         ZonedDateTime currentDateTime = startDateTime.plusHours(1).plusMinutes(50); // duration is 1h55m, so this ensemble has 5 minutes to go

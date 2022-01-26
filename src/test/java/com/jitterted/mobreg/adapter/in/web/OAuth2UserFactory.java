@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.adapter.in.web;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

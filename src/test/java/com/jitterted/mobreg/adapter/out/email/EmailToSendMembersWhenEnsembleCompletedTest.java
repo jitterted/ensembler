@@ -1,11 +1,11 @@
 package com.jitterted.mobreg.adapter.out.email;
 
+import com.jitterted.mobreg.application.EnsembleBuilderAndSaviour;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.EnsembleBuilderAndSaviour;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
