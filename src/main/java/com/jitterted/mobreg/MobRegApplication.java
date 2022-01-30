@@ -15,11 +15,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.WebSocketExtension;
+import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @SpringBootApplication
@@ -59,13 +69,103 @@ public class MobRegApplication {
                                    videoConferenceScheduler);
     }
 
-    @Bean
+    // disabled until can figure out MobTi.me new API
+//    @Bean
     public WebSocketSession createMobTimerWebSocketSession() throws ExecutionException, InterruptedException {
-        StandardWebSocketClient standardWebSocketClient = new StandardWebSocketClient();
-        ListenableFuture<WebSocketSession> webSocketSessionListenableFuture =
-                standardWebSocketClient.doHandshake(new TextWebSocketHandler(),
-                                                    "wss://mobti.me/jitterted00");
-        return webSocketSessionListenableFuture.completable().get();
+        try {
+            StandardWebSocketClient standardWebSocketClient = new StandardWebSocketClient();
+            ListenableFuture<WebSocketSession> webSocketSessionListenableFuture =
+                    standardWebSocketClient.doHandshake(new TextWebSocketHandler(),
+                                                        "wss://mobti.me/jitterted00");
+            return webSocketSessionListenableFuture.completable().get();
+        } catch (InterruptedException | ExecutionException e) {
+            return new WebSocketSession() {
+                @Override
+                public String getId() {
+                    return null;
+                }
+
+                @Override
+                public URI getUri() {
+                    return null;
+                }
+
+                @Override
+                public HttpHeaders getHandshakeHeaders() {
+                    return null;
+                }
+
+                @Override
+                public Map<String, Object> getAttributes() {
+                    return null;
+                }
+
+                @Override
+                public Principal getPrincipal() {
+                    return null;
+                }
+
+                @Override
+                public InetSocketAddress getLocalAddress() {
+                    return null;
+                }
+
+                @Override
+                public InetSocketAddress getRemoteAddress() {
+                    return null;
+                }
+
+                @Override
+                public String getAcceptedProtocol() {
+                    return null;
+                }
+
+                @Override
+                public void setTextMessageSizeLimit(int messageSizeLimit) {
+
+                }
+
+                @Override
+                public int getTextMessageSizeLimit() {
+                    return 0;
+                }
+
+                @Override
+                public void setBinaryMessageSizeLimit(int messageSizeLimit) {
+
+                }
+
+                @Override
+                public int getBinaryMessageSizeLimit() {
+                    return 0;
+                }
+
+                @Override
+                public List<WebSocketExtension> getExtensions() {
+                    return null;
+                }
+
+                @Override
+                public void sendMessage(WebSocketMessage<?> message) throws IOException {
+
+                }
+
+                @Override
+                public boolean isOpen() {
+                    return false;
+                }
+
+                @Override
+                public void close() throws IOException {
+
+                }
+
+                @Override
+                public void close(CloseStatus status) throws IOException {
+
+                }
+            };
+        }
     }
 
     // TODO: remove this once member registration works
