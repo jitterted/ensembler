@@ -19,7 +19,7 @@ public class Ensemble {
     private EnsembleId id;
 
     private String name;
-    private ZonedDateTime startDateTime;
+    private ZonedDateTime startDateTime; // PRIMITIVE OBSESSION
     private Duration duration = Duration.ofHours(1).plusMinutes(55);
     private URI zoomMeetingLink;
     private final Set<MemberId> membersWhoAccepted = new HashSet<>();
