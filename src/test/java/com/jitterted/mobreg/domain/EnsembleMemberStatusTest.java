@@ -89,15 +89,53 @@ class EnsembleMemberStatusTest {
     }
 
     @Test
-    public void acceptedMemberAndInProgressEnsembleThenStatusAccepted() throws Exception {
+    //   Member = Accepted,  -> IN_PROGRESS: only show Zoom link
+    public void acceptedMemberAndInProgressEnsembleThenStatusInGracePeriod() throws Exception {
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 11);
-        Ensemble futureEnsemble = EnsembleFactory.withStartTime(startDateTime);
+        Ensemble inGracePeriodEnsemble = EnsembleFactory.withStartTime(startDateTime);
         MemberId memberId = MemberId.of(41);
-        futureEnsemble.acceptedBy(memberId);
+        inGracePeriodEnsemble.acceptedBy(memberId);
 
-        ZonedDateTime currentDateTime = startDateTime.plusHours(1).plusMinutes(50); // duration is 1h55m, so this ensemble has 5 minutes to go
-        assertThat(futureEnsemble.statusFor(memberId, currentDateTime))
-                .isEqualByComparingTo(MemberStatus.ACCEPTED);
+        ZonedDateTime currentDateTime = startDateTime.plusMinutes(10).minusSeconds(1); // grace period is 10 minutes
+        assertThat(inGracePeriodEnsemble.statusFor(memberId, currentDateTime))
+                .isEqualByComparingTo(MemberStatus.IN_GRACE_PERIOD);
     }
+
+    @Test
+    public void acceptedMemberAndLaterThanGracePeriodAndNotCompletedThenStatusIsHidden() throws Exception {
+        ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2022, 2, 3, 16);
+        Ensemble inGracePeriodEnsemble = EnsembleFactory.withStartTime(startDateTime);
+        MemberId memberId = MemberId.of(41);
+        inGracePeriodEnsemble.acceptedBy(memberId);
+
+        ZonedDateTime currentDateTime = startDateTime.plusMinutes(10).plusSeconds(1); // grace period is 10 minutes
+        assertThat(inGracePeriodEnsemble.statusFor(memberId, currentDateTime))
+                .isEqualByComparingTo(MemberStatus.HIDDEN);
+    }
+    
+    @Test
+    public void unknownOrDeclinedWhenEnsembleStartedStatusIsHidden() throws Exception {
+        ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2022, 2, 3, 16);
+        Ensemble alreadyStartedEnsemble = EnsembleFactory.withStartTime(startDateTime);
+        MemberId memberId = MemberId.of(41);
+        ZonedDateTime currentDateTime = startDateTime.plusMinutes(1);
+
+        assertThat(alreadyStartedEnsemble.statusFor(memberId, currentDateTime))
+                .isEqualByComparingTo(MemberStatus.HIDDEN);
+
+        alreadyStartedEnsemble.declinedBy(memberId);
+        assertThat(alreadyStartedEnsemble.statusFor(memberId, currentDateTime))
+                .isEqualByComparingTo(MemberStatus.HIDDEN);
+    }
+    
+    // ---- [start] ----- [end of grace period] --------------- [end of start + duration] ---
+    //              IN_PROG                       HIDDEN                                     COMPLETED
+
+    // Ensemble has started (start time + 10 min):
+    //   Member = Unknown  -> (same as in the past) HIDDEN
+    //   Member = Declined -> HIDDEN
+    // Ensemble has gone beyond grace period (start time + 11 min)
+    //   Member = (doesn't matter) -> HIDDEN
+
 
 }
