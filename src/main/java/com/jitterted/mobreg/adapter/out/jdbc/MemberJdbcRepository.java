@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface MemberJdbcRepository extends CrudRepository<MemberEntity, Long> {
-    Optional<MemberEntity> findByGithubUsername(String githubUsername);
+public interface MemberJdbcRepository extends CrudRepository<MemberDbo, Long> {
+    Optional<MemberDbo> findByGithubUsername(String githubUsername);
 }

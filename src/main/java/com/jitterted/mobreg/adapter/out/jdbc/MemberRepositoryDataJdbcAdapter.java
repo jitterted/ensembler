@@ -22,28 +22,28 @@ public class MemberRepositoryDataJdbcAdapter implements MemberRepository {
 
     @Override
     public Member save(Member member) {
-        MemberEntity memberEntity = MemberEntity.from(member);
-        MemberEntity saved = memberJdbcRepository.save(memberEntity);
+        MemberDbo memberDbo = MemberDbo.from(member);
+        MemberDbo saved = memberJdbcRepository.save(memberDbo);
         return saved.asMember();
     }
 
     @Override
     public Optional<Member> findByGithubUsername(String githubUsername) {
-        Optional<MemberEntity> memberEntity = memberJdbcRepository.findByGithubUsername(githubUsername);
-        return memberEntity.map(MemberEntity::asMember);
+        Optional<MemberDbo> memberEntity = memberJdbcRepository.findByGithubUsername(githubUsername);
+        return memberEntity.map(MemberDbo::asMember);
     }
 
     @Override
     public Optional<Member> findById(MemberId memberId) {
-        Optional<MemberEntity> memberEntity = memberJdbcRepository.findById(memberId.id());
-        return memberEntity.map(MemberEntity::asMember);
+        Optional<MemberDbo> memberEntity = memberJdbcRepository.findById(memberId.id());
+        return memberEntity.map(MemberDbo::asMember);
     }
 
     @Override
     public List<Member> findAll() {
         return StreamSupport.stream(
                 memberJdbcRepository.findAll().spliterator(), false)
-                            .map(MemberEntity::asMember)
+                            .map(MemberDbo::asMember)
                             .toList();
     }
 }

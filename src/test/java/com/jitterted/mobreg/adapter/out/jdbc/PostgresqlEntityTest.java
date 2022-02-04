@@ -53,11 +53,11 @@ class PostgresqlEntityTest {
         original.acceptedBy(MemberId.of(5L));
         original.declinedBy(MemberId.of(73L));
         original.declinedBy(MemberId.of(79L));
-        EnsembleEntity originalEntity = EnsembleEntity.from(original);
+        EnsembleDbo originalEntity = EnsembleDbo.from(original);
 
-        EnsembleEntity savedEntity = ensembleJdbcRepository.save(originalEntity);
+        EnsembleDbo savedEntity = ensembleJdbcRepository.save(originalEntity);
 
-        Optional<EnsembleEntity> retrievedEntity = ensembleJdbcRepository.findById(savedEntity.getId());
+        Optional<EnsembleDbo> retrievedEntity = ensembleJdbcRepository.findById(savedEntity.getId());
 
         assertThat(retrievedEntity)
                 .isPresent()
@@ -82,11 +82,11 @@ class PostgresqlEntityTest {
         originalMember.changeEmailTo("email@example.com");
         originalMember.changeTimeZoneTo(ZoneId.of("America/Los_Angeles"));
 
-        MemberEntity originalEntity = MemberEntity.from(originalMember);
+        MemberDbo originalEntity = MemberDbo.from(originalMember);
 
-        MemberEntity savedEntity = memberJdbcRepository.save(originalEntity);
+        MemberDbo savedEntity = memberJdbcRepository.save(originalEntity);
 
-        Optional<MemberEntity> retrievedEntity = memberJdbcRepository.findById(savedEntity.id);
+        Optional<MemberDbo> retrievedEntity = memberJdbcRepository.findById(savedEntity.id);
 
         assertThat(retrievedEntity)
                 .isPresent()

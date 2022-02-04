@@ -12,22 +12,22 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
-class EnsembleEntityMappingTest {
+class EnsembleDboMappingTest {
 
     @Test
     public void databaseEntityToDomainIsMappedCorrectly() throws Exception {
-        EnsembleEntity ensembleEntity = new EnsembleEntity();
-        ensembleEntity.setId(19L);
-        ensembleEntity.setCompleted(true);
-        ensembleEntity.setRecordingLink("https://recording.link/entity");
+        EnsembleDbo ensembleDbo = new EnsembleDbo();
+        ensembleDbo.setId(19L);
+        ensembleDbo.setCompleted(true);
+        ensembleDbo.setRecordingLink("https://recording.link/entity");
         ZonedDateTime now = ZonedDateTime.now();
-        ensembleEntity.setDateTimeUtc(now.toLocalDateTime());
-        ensembleEntity.setName("Entity");
-        ensembleEntity.setZoomMeetingLink("https://zoom.us/entity");
-        ensembleEntity.setAcceptedMembers(Set.of(new AcceptedMember(13L)));
-        ensembleEntity.setDeclinedMembers(Set.of(new DeclinedMember(29L)));
+        ensembleDbo.setDateTimeUtc(now.toLocalDateTime());
+        ensembleDbo.setName("Entity");
+        ensembleDbo.setZoomMeetingLink("https://zoom.us/entity");
+        ensembleDbo.setAcceptedMembers(Set.of(new AcceptedMember(13L)));
+        ensembleDbo.setDeclinedMembers(Set.of(new DeclinedMember(29L)));
 
-        Ensemble ensemble = ensembleEntity.asEnsemble();
+        Ensemble ensemble = ensembleDbo.asEnsemble();
 
         assertThat(ensemble.isCompleted())
                 .isTrue();
@@ -54,7 +54,7 @@ class EnsembleEntityMappingTest {
         ensemble.declinedBy(MemberId.of(13L));
         ensemble.complete();
 
-        EnsembleEntity entity = EnsembleEntity.from(ensemble);
+        EnsembleDbo entity = EnsembleDbo.from(ensemble);
 
         assertThat(entity.getName())
                 .isEqualTo("Domain");

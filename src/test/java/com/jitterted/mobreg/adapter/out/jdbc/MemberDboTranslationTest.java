@@ -7,28 +7,28 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class MemberEntityTranslationTest {
+public class MemberDboTranslationTest {
 
     @Test
     public void memberWithRolesTranslatedToEntityWithRoles() throws Exception {
         Member member = new Member("first", "githubuser", "ROLE_USER", "ROLE_MEMBER");
 
-        MemberEntity memberEntity = MemberEntity.from(member);
+        MemberDbo memberDbo = MemberDbo.from(member);
 
-        assertThat(memberEntity.roles)
+        assertThat(memberDbo.roles)
                 .containsOnly("ROLE_USER", "ROLE_MEMBER");
     }
 
     @Test
     public void entityWithRolesTranslatedToMemberWithRoles() throws Exception {
-        MemberEntity memberEntity = new MemberEntity();
-        memberEntity.firstName = "first";
-        memberEntity.githubUsername = "githubusername";
-        memberEntity.timeZone = "Z";
-        memberEntity.roles = Set.of("ROLE_ONE", "ROLE_TWO");
-        memberEntity.id = 11L;
+        MemberDbo memberDbo = new MemberDbo();
+        memberDbo.firstName = "first";
+        memberDbo.githubUsername = "githubusername";
+        memberDbo.timeZone = "Z";
+        memberDbo.roles = Set.of("ROLE_ONE", "ROLE_TWO");
+        memberDbo.id = 11L;
 
-        Member member = memberEntity.asMember();
+        Member member = memberDbo.asMember();
 
         assertThat(member.roles())
                 .containsOnly("ROLE_ONE", "ROLE_TWO");
@@ -36,15 +36,15 @@ public class MemberEntityTranslationTest {
 
     @Test
     public void entityWithEmailTranslatedToDomainMemberWithEmail() throws Exception {
-        MemberEntity memberEntity = new MemberEntity();
-        memberEntity.email = "member@example.com";
-        memberEntity.firstName = "member";
-        memberEntity.githubUsername = "githubusername";
-        memberEntity.timeZone = "Z";
-        memberEntity.roles = Set.of("ROLE_ONE", "ROLE_TWO");
-        memberEntity.id = 31L;
+        MemberDbo memberDbo = new MemberDbo();
+        memberDbo.email = "member@example.com";
+        memberDbo.firstName = "member";
+        memberDbo.githubUsername = "githubusername";
+        memberDbo.timeZone = "Z";
+        memberDbo.roles = Set.of("ROLE_ONE", "ROLE_TWO");
+        memberDbo.id = 31L;
 
-        Member member = memberEntity.asMember();
+        Member member = memberDbo.asMember();
 
         assertThat(member.email())
                 .isEqualTo("member@example.com");
@@ -55,9 +55,9 @@ public class MemberEntityTranslationTest {
         Member member = new Member("member", "ghuser", "ROLE_THREE");
         member.changeEmailTo("ghuser@example.com");
 
-        MemberEntity memberEntity = MemberEntity.from(member);
+        MemberDbo memberDbo = MemberDbo.from(member);
 
-        assertThat(memberEntity.email)
+        assertThat(memberDbo.email)
                 .isEqualTo("ghuser@example.com");
     }
 }

@@ -4,11 +4,13 @@ import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.ZoneId;
 import java.util.Set;
 
-class MemberEntity {
+@Table("members")
+class MemberDbo {
     @Id
     Long id;
 
@@ -20,17 +22,17 @@ class MemberEntity {
     @MappedCollection
     Set<String> roles;
 
-    static MemberEntity from(Member member) {
-        MemberEntity memberEntity = new MemberEntity();
+    static MemberDbo from(Member member) {
+        MemberDbo memberDbo = new MemberDbo();
         if (member.getId() != null) {
-            memberEntity.id = member.getId().id();
+            memberDbo.id = member.getId().id();
         }
-        memberEntity.firstName = member.firstName();
-        memberEntity.githubUsername = member.githubUsername();
-        memberEntity.email = member.email();
-        memberEntity.timeZone = member.timeZone().getId();
-        memberEntity.roles = member.roles();
-        return memberEntity;
+        memberDbo.firstName = member.firstName();
+        memberDbo.githubUsername = member.githubUsername();
+        memberDbo.email = member.email();
+        memberDbo.timeZone = member.timeZone().getId();
+        memberDbo.roles = member.roles();
+        return memberDbo;
     }
 
     Member asMember() {

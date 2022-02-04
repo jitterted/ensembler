@@ -4,6 +4,7 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -13,8 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// Database Entity for Ensemble to be stored in the database
-public class EnsembleEntity {
+// Database-specific DTO for Ensemble to be stored in the database
+@Table("ensembles")
+class EnsembleDbo {
     @Id
     private Long id;
 
@@ -30,25 +32,25 @@ public class EnsembleEntity {
     @MappedCollection(idColumn = "ensemble_id")
     private Set<DeclinedMember> declinedMembers = new HashSet<>();
 
-    public static EnsembleEntity from(Ensemble ensemble) {
-        EnsembleEntity ensembleEntity = new EnsembleEntity();
+    public static EnsembleDbo from(Ensemble ensemble) {
+        EnsembleDbo ensembleDbo = new EnsembleDbo();
         if (ensemble.getId() != null) {
-            ensembleEntity.setId(ensemble.getId().id());
+            ensembleDbo.setId(ensemble.getId().id());
         }
-        ensembleEntity.setName(ensemble.name());
-        ensembleEntity.setDateTimeUtc(ensemble.startDateTime().toLocalDateTime());
-        ensembleEntity.setZoomMeetingLink(ensemble.zoomMeetingLink().toString());
-        ensembleEntity.setCompleted(ensemble.isCompleted());
-        ensembleEntity.setRecordingLink(ensemble.recordingLink().toString());
-        ensembleEntity.setAcceptedMembers(
+        ensembleDbo.setName(ensemble.name());
+        ensembleDbo.setDateTimeUtc(ensemble.startDateTime().toLocalDateTime());
+        ensembleDbo.setZoomMeetingLink(ensemble.zoomMeetingLink().toString());
+        ensembleDbo.setCompleted(ensemble.isCompleted());
+        ensembleDbo.setRecordingLink(ensemble.recordingLink().toString());
+        ensembleDbo.setAcceptedMembers(
                 ensemble.acceptedMembers()
                         .map(AcceptedMember::toEntityId)
                         .collect(Collectors.toSet()));
-        ensembleEntity.setDeclinedMembers(
+        ensembleDbo.setDeclinedMembers(
                 ensemble.declinedMembers()
                         .map(DeclinedMember::toEntityId)
                         .collect(Collectors.toSet()));
-        return ensembleEntity;
+        return ensembleDbo;
     }
 
     public Ensemble asEnsemble() {

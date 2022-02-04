@@ -22,22 +22,22 @@ public class EnsembleRepositoryDataJdbcAdapter implements EnsembleRepository {
 
     @Override
     public Ensemble save(Ensemble ensemble) {
-        EnsembleEntity ensembleEntity = EnsembleEntity.from(ensemble);
-        EnsembleEntity savedEnsembleEntity = ensembleJdbcRepository.save(ensembleEntity);
-        return savedEnsembleEntity.asEnsemble();
+        EnsembleDbo ensembleDbo = EnsembleDbo.from(ensemble);
+        EnsembleDbo savedEnsembleDbo = ensembleJdbcRepository.save(ensembleDbo);
+        return savedEnsembleDbo.asEnsemble();
     }
 
     @Override
     public List<Ensemble> findAll() {
         return StreamSupport.stream(
                                     ensembleJdbcRepository.findAll().spliterator(), false)
-                            .map(EnsembleEntity::asEnsemble)
+                            .map(EnsembleDbo::asEnsemble)
                             .toList();
     }
 
     @Override
     public Optional<Ensemble> findById(EnsembleId ensembleId) {
-        Optional<EnsembleEntity> found = ensembleJdbcRepository.findById(ensembleId.id());
-        return found.map(EnsembleEntity::asEnsemble);
+        Optional<EnsembleDbo> found = ensembleJdbcRepository.findById(ensembleId.id());
+        return found.map(EnsembleDbo::asEnsemble);
     }
 }
