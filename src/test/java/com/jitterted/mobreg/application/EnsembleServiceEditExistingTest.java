@@ -1,10 +1,10 @@
 package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.application.port.DummyNotifier;
-import com.jitterted.mobreg.application.port.ConferenceDetails;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
+import com.jitterted.mobreg.domain.ConferenceDetails;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.ZonedDateTimeFactory;

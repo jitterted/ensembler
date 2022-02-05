@@ -21,7 +21,7 @@ public class Ensemble {
     private String name;
     private ZonedDateTime startDateTime; // PRIMITIVE OBSESSION
     private Duration duration = Duration.ofHours(1).plusMinutes(55);
-    private URI zoomMeetingLink;
+    private ConferenceDetails conferenceDetails;
     private final Set<MemberId> membersWhoAccepted = new HashSet<>();
     private final Set<MemberId> membersWhoDeclined = new HashSet<>();
     private boolean isCompleted = false;
@@ -31,9 +31,9 @@ public class Ensemble {
         this(name, URI.create("https://zoom.us"), startDateTime);
     }
 
-    public Ensemble(String name, URI zoomMeetingLink, ZonedDateTime startDateTime) {
+    public Ensemble(String name, URI meetingLink, ZonedDateTime startDateTime) {
         this.name = name;
-        this.zoomMeetingLink = zoomMeetingLink;
+        this.conferenceDetails = new ConferenceDetails("", URI.create(""), meetingLink);
         this.startDateTime = startDateTime;
     }
 
@@ -92,11 +92,11 @@ public class Ensemble {
     }
 
     public URI zoomMeetingLink() {
-        return zoomMeetingLink;
+        return conferenceDetails.joinUrl();
     }
 
     public void changeMeetingLinkTo(URI meetingLink) {
-        this.zoomMeetingLink = meetingLink;
+        this.conferenceDetails = new ConferenceDetails("", URI.create(""), meetingLink);
     }
 
     public void complete() {

@@ -1,8 +1,8 @@
 package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.application.port.ConferenceDetails;
 import com.jitterted.mobreg.application.port.FailedToScheduleMeeting;
 import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
+import com.jitterted.mobreg.domain.ConferenceDetails;
 import com.jitterted.mobreg.domain.Ensemble;
 import org.junit.jupiter.api.Test;
 

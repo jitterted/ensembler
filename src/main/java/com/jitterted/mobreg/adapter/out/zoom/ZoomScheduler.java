@@ -1,9 +1,9 @@
 package com.jitterted.mobreg.adapter.out.zoom;
 
 import com.jitterted.mobreg.adapter.DateTimeFormatting;
-import com.jitterted.mobreg.application.port.ConferenceDetails;
 import com.jitterted.mobreg.application.port.FailedToScheduleMeeting;
 import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
+import com.jitterted.mobreg.domain.ConferenceDetails;
 import com.jitterted.mobreg.domain.Ensemble;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
