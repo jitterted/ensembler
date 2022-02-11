@@ -128,15 +128,19 @@
                                 <!-- <img class="w-6 h-6 rounded-full border-gray-200 border -m-1 transform hover:scale-150 hover:z-50" src="https://randomuser.me/api/portraits/men/3.jpg"/> -->
                             </div>
                         </td>
-                        <td class="py-3 px-10 text-center">
-                            <span th:if="${ensemble.isCompleted}"
-                                  class="bg-blue-100 text-blue-800 py-1 px-3 rounded-lg text-xs font-bold">Completed <i class="fal fa-badge-check text-blue-600"></i></span>
-                            <span th:unless="${ensemble.isCompleted}">
+                        <td class="py-3 px-10 text-center" th:switch="${ensemble.state}">
+                            <span th:case="'completed'"
+                                  class="bg-blue-100 text-blue-800 py-1 px-3 rounded-lg text-xs font-bold">
+                                Completed <i class="fal fa-badge-check text-blue-600"></i></span>
+                            <span th:case="'scheduled'">
                                 <span th:if="${ensemble.numberAccepted} < 5"
                                         class="bg-green-100 text-green-800 py-1 px-3 rounded-lg text-xs font-bold">Available <i class="fal fa-calendar-plus text-green-600"></i></span>
                                 <span th:if="${ensemble.numberAccepted} >= 5"
                                       class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">Full <i class="fal fa-times-hexagon text-red-600"></i></span>
                             </span>
+                            <span th:case="'canceled'"
+                                  class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">
+                                Canceled <i class="fal fa-calendar-times text-red-600"></i></span>
                             <form method="post" th:action="@{notify/__${ensemble.id}__}">
                                 <button type="submit"
                                         class="inline-flex justify-center py-1 px-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

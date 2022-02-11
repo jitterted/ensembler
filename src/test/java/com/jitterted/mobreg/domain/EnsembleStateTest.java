@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-class EnsembleStatusTest {
+class EnsembleStateTest {
 
     private static final MemberId DUMMY_MEMBER_ID = MemberId.of(-1);
 

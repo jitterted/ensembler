@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.domain;
 
-enum EnsembleState {
+public enum EnsembleState {
     SCHEDULED,
     COMPLETED,
     CANCELED

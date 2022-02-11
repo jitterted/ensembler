@@ -9,7 +9,7 @@ public record EnsembleSummaryView(long id,
                                   String name,
                                   String zoomMeetingLink,
                                   String dateTime,
-                                  boolean isCompleted,
+                                  String state,
                                   int numberAccepted,
                                   int numberDeclined) {
 
@@ -24,7 +24,7 @@ public record EnsembleSummaryView(long id,
                                        ensemble.name(),
                                        ensemble.zoomMeetingLink().toString(),
                                        DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()),
-                                       ensemble.isCompleted(),
+                                       ensemble.state().toString().toLowerCase(),
                                        ensemble.acceptedCount(),
                                        ensemble.declinedCount());
     }

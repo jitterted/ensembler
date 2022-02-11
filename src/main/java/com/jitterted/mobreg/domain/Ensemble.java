@@ -199,6 +199,10 @@ public class Ensemble {
         state = EnsembleState.CANCELED;
     }
 
+    public EnsembleState state() {
+        return state;
+    }
+
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
             // @formatter: off
         private static final Map<WhenSpaceRsvp, MemberStatus> STATE_TO_STATUS = Map.ofEntries(
