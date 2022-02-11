@@ -5,9 +5,12 @@ import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
@@ -83,7 +86,7 @@ class AdminDashboardControllerTest {
 
     @Test
     public void completeEnsembleCompletesTheEnsembleWithRecordingLinkAndRedirects() throws Exception {
-        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("to be completed", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(19));
         ensembleRepository.save(ensemble);
@@ -101,6 +104,24 @@ class AdminDashboardControllerTest {
     }
 
     @Test
+    public void cancelEnsembleThenEnsembleIsCanceled() throws Exception {
+        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                .saveEnsemble(EnsembleFactory.withStartTimeNow());
+        long ensembleId = builder.lastSavedEnsembleId().id();
+        Ensemble ensemble = builder.lastSavedEnsemble();
+        AdminDashboardController adminDashboardController = new AdminDashboardController(builder.build(), builder.memberService());
+
+        String pageName = adminDashboardController.cancelEnsemble(ensembleId);
+
+        assertThat(pageName)
+                .isEqualTo("redirect:/admin/ensemble/" + ensembleId);
+
+        assertThat(ensemble.isCanceled())
+                .isTrue();
+    }
+
+    @Test
+    @Deprecated
     public void manuallyRegisterExistingMemberForEnsemble() throws Exception {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member1 = MemberFactory.createMember(0, "ted", "tedyoung");
@@ -124,7 +145,7 @@ class AdminDashboardControllerTest {
     }
 
     @NotNull
-    private AdminDashboardController createAdminDashboardController(InMemoryEnsembleRepository ensembleRepository) {
+    private AdminDashboardController createAdminDashboardController(EnsembleRepository ensembleRepository) {
         MemberService memberService = new MemberService(new InMemoryMemberRepository());
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         return new AdminDashboardController(ensembleService, memberService);

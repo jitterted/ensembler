@@ -24,7 +24,7 @@ public class Ensemble {
     private ConferenceDetails conferenceDetails;
     private final Set<MemberId> membersWhoAccepted = new HashSet<>();
     private final Set<MemberId> membersWhoDeclined = new HashSet<>();
-    private boolean isCompleted = false;
+    private Status status = Status.SCHEDULED;
     private URI recordingLink = URI.create("");
 
     public Ensemble(String name, ZonedDateTime startDateTime) {
@@ -55,6 +55,9 @@ public class Ensemble {
 
     public void acceptedBy(MemberId memberId) {
         requireNotCompleted();
+        if (isCanceled()) {
+            throw new EnsembleCanceled(String.format("Ensemble (%s) is Canceled: cannot accept member (%s)", id, memberId));
+        }
         requireHasSpace();
         membersWhoAccepted.add(memberId);
         membersWhoDeclined.remove(memberId);
@@ -100,11 +103,11 @@ public class Ensemble {
     }
 
     public void complete() {
-        isCompleted = true;
+        status = Status.COMPLETED;
     }
 
     public boolean isCompleted() {
-        return isCompleted;
+        return status == Status.COMPLETED;
     }
 
     public void linkToRecordingAt(URI recordingLink) {
@@ -116,7 +119,7 @@ public class Ensemble {
     }
 
     private void requireNotCompleted() {
-        if (isCompleted) {
+        if (isCompleted()) {
             throw new EnsembleCompletedException();
         }
     }
@@ -182,6 +185,14 @@ public class Ensemble {
         return membersWhoDeclined.size();
     }
 
+    public boolean isCanceled() {
+        return status == Status.CANCELED;
+    }
+
+    public void cancel() {
+        status = Status.CANCELED;
+    }
+
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
             // @formatter: off
         private static final Map<WhenSpaceRsvp, MemberStatus> STATE_TO_STATUS = Map.ofEntries(
@@ -239,4 +250,9 @@ public class Ensemble {
         }
     }
 
+    private enum Status {
+        SCHEDULED,
+        COMPLETED,
+        CANCELED
+    }
 }

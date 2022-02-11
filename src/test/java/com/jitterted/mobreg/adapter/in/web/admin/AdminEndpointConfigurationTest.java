@@ -89,7 +89,7 @@ public class AdminEndpointConfigurationTest {
 
     @Test
     public void postToRegisterParticipantEndpointRedirects() throws Exception {
-        createStubEnsembleServiceReturningEnsembleWithIdOf(23L);
+        createStubEnsembleServiceReturningEnsembleWithIdOf(23);
         createStubMemberRepositoryWithMember(1L, "participant", "mygithub", "ROLE_USER", "ROLE_MEMBER");
         mockMvc.perform(post("/admin/register")
                                 .param("ensembleId", "23")
@@ -99,18 +99,26 @@ public class AdminEndpointConfigurationTest {
                .andExpect(status().is3xxRedirection());
     }
 
-    private void createStubMemberRepositoryWithMember(long id, String firstName, String githubUsername, String... roles) {
-        Member member = MemberFactory.createMember(id, firstName, githubUsername, roles);
-        when(memberRepository.findByGithubUsername(githubUsername))
-                .thenReturn(Optional.of(member));
-    }
-
     @Test
     public void postToCompleteEndpointRedirects() throws Exception {
         createStubEnsembleServiceReturningEnsembleWithIdOf(13);
         mockMvc.perform(post("/admin/ensemble/13/complete")
                                 .with(csrf()))
                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void postToCancelEndpointRedirects() throws Exception {
+        createStubEnsembleServiceReturningEnsembleWithIdOf(11);
+        mockMvc.perform(post("/admin/ensemble/11/cancel")
+                                .with(csrf()))
+               .andExpect(status().is3xxRedirection());
+    }
+
+    private void createStubMemberRepositoryWithMember(long id, String firstName, String githubUsername, String... roles) {
+        Member member = MemberFactory.createMember(id, firstName, githubUsername, roles);
+        when(memberRepository.findByGithubUsername(githubUsername))
+                .thenReturn(Optional.of(member));
     }
 
 

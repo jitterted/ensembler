@@ -46,7 +46,7 @@ class EnsembleServiceCompletedTest {
                 .saveMemberAndAccept("Ace", "accepterino");
         EnsembleService ensembleService = builder.build();
 
-        ensembleService.completeWith(builder.lastEnsembleId(), "https://recording.link/123");
+        ensembleService.completeWith(builder.lastSavedEnsembleId(), "https://recording.link/123");
 
         mockEnsembleCompletedNotifier.verify();
     }

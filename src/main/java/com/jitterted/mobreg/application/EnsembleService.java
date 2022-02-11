@@ -59,8 +59,7 @@ public class EnsembleService {
     }
 
     public void changeTo(EnsembleId ensembleId, String newName, String newVideoConferenceLink, ZonedDateTime newZoneDateTimeUtc) {
-        Ensemble ensemble = findById(ensembleId)
-                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
+        Ensemble ensemble = findOrThrow(ensembleId);
         ensemble.changeNameTo(newName);
         ensemble.changeStartDateTimeTo(newZoneDateTimeUtc);
         ensembleRepository.save(ensemble);
@@ -105,8 +104,7 @@ public class EnsembleService {
     }
 
     public void registerMember(EnsembleId ensembleId, MemberId memberId) {
-        Ensemble ensemble = findById(ensembleId)
-                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
+        Ensemble ensemble = findOrThrow(ensembleId);
         ensemble.acceptedBy(memberId);
         ensembleRepository.save(ensemble);
 
@@ -116,8 +114,7 @@ public class EnsembleService {
     }
 
     public void declineMember(EnsembleId ensembleId, MemberId memberId) {
-        Ensemble ensemble = findById(ensembleId)
-                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
+        Ensemble ensemble = findOrThrow(ensembleId);
 
         ensemble.declinedBy(memberId);
 
@@ -125,14 +122,26 @@ public class EnsembleService {
     }
 
     public void completeWith(EnsembleId ensembleId, String recordingLink) {
-        Ensemble ensemble = findById(ensembleId)
-                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
+        Ensemble ensemble = findOrThrow(ensembleId);
 
         ensemble.complete();
         ensemble.linkToRecordingAt(URI.create(recordingLink));
+
         ensembleRepository.save(ensemble);
 
         notifier.ensembleCompleted(ensemble);
     }
 
+    public void cancel(EnsembleId ensembleId) {
+        Ensemble ensemble = findOrThrow(ensembleId);
+
+        ensemble.cancel();
+
+        ensembleRepository.save(ensemble);
+    }
+
+    private Ensemble findOrThrow(EnsembleId ensembleId) {
+        return findById(ensembleId)
+                .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
+    }
 }

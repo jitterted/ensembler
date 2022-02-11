@@ -2,6 +2,7 @@ package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleFactory;
+import com.jitterted.mobreg.domain.EnsembleId;
 
 public class EnsembleBuilderAndSaviour {
 
@@ -29,6 +30,11 @@ public class EnsembleBuilderAndSaviour {
 
     public EnsembleBuilderAndSaviour named(String name) {
         ensemble.changeNameTo(name);
+        return this;
+    }
+
+    public EnsembleBuilderAndSaviour id(int id) {
+        ensemble.setId(EnsembleId.of(id));
         return this;
     }
 }

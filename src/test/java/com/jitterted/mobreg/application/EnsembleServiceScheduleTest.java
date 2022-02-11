@@ -37,10 +37,7 @@ class EnsembleServiceScheduleTest {
 
     @Test
     public void ensembleScheduledThenZoomLinkFetchedFromApiHasLink() throws Exception {
-        VideoConferenceScheduler stubScheduler = ensemble ->
-                new ConferenceDetails("123",
-                                      URI.create("https://zoom.us/startUrl"),
-                                      URI.create("https://zoom.us/joinUrl"));
+        VideoConferenceScheduler stubScheduler = new StubConferenceScheduler();
         EnsembleService ensembleService = EnsembleServiceFactory.with(stubScheduler);
 
         ensembleService.scheduleEnsembleWithVideoConference("With Zoom", ZonedDateTime.now());
@@ -66,4 +63,12 @@ class EnsembleServiceScheduleTest {
                 .containsOnly("https://zoom.us"); // default meeting link
     }
 
+    private static class StubConferenceScheduler implements VideoConferenceScheduler {
+        @Override
+        public ConferenceDetails createMeeting(Ensemble ensemble) {
+            return new ConferenceDetails("123",
+                                         URI.create("https://zoom.us/startUrl"),
+                                         URI.create("https://zoom.us/joinUrl"));
+        }
+    }
 }

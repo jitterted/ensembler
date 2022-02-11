@@ -120,6 +120,13 @@ public class AdminDashboardController {
         return redirectToDetailViewFor(ensembleId);
     }
 
+    @PostMapping("/ensemble/{ensembleId}/cancel")
+    public String cancelEnsemble(@PathVariable("ensembleId") long id) {
+        EnsembleId ensembleId = EnsembleId.of(id);
+        ensembleService.cancel(ensembleId);
+        return redirectToDetailViewFor(ensembleId);
+    }
+
     private String redirectToDetailViewFor(EnsembleId ensembleId) {
         return "redirect:/admin/ensemble/" + ensembleId.id();
     }

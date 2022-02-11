@@ -25,7 +25,7 @@ public class TestEnsembleServiceBuilder {
     private VideoConferenceScheduler videoConferenceScheduler = new DummyVideoConferenceScheduler();
 
     public TestEnsembleServiceBuilder() {
-        inMemoryRepositories();
+        withInMemoryRepositories();
     }
 
     public TestEnsembleServiceBuilder ensembleRepository(EnsembleRepository ensembleRepository) {
@@ -37,7 +37,7 @@ public class TestEnsembleServiceBuilder {
         return new EnsembleService(ensembleRepository, memberRepository, notifier, videoConferenceScheduler);
     }
 
-    public TestEnsembleServiceBuilder memberRepository(MemberRepository memberRepository) {
+    public TestEnsembleServiceBuilder withMemberRepository(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
         return this;
     }
@@ -66,14 +66,29 @@ public class TestEnsembleServiceBuilder {
         return this;
     }
 
-    public TestEnsembleServiceBuilder inMemoryRepositories() {
-        ensembleRepository(new InMemoryEnsembleRepository());
-        memberRepository(new InMemoryMemberRepository());
-        return this;
-    }
-
-    public EnsembleId lastEnsembleId() {
+    public EnsembleId lastSavedEnsembleId() {
         return lastEnsembleId;
     }
 
+    public MemberRepository withMemberRepository() {
+        return memberRepository;
+    }
+
+    public EnsembleRepository ensembleRepository() {
+        return ensembleRepository;
+    }
+
+    @NotNull
+    public MemberService memberService() {
+        return new MemberService(memberRepository);
+    }
+
+    public Ensemble lastSavedEnsemble() {
+        return lastEnsemble;
+    }
+
+    private void withInMemoryRepositories() {
+        ensembleRepository = new InMemoryEnsembleRepository();
+        memberRepository = new InMemoryMemberRepository();
+    }
 }

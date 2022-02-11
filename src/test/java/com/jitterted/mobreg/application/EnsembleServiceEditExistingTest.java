@@ -39,10 +39,7 @@ class EnsembleServiceEditExistingTest {
     public void changingZoomLinkToBeBlankThenFetchesNewLinkViaSchedulerApi() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         final URI newZoomMeetingLink = URI.create("https://us06web.zoom.us/j/83912958607?pwd=U0hNbk84a2IraEMrWi9WZ2xYalFCZz09");
-        VideoConferenceScheduler videoConferenceScheduler = ensemble ->
-                new ConferenceDetails("meetingId",
-                                      URI.create("https://zoom/us/start"),
-                                      newZoomMeetingLink);
+        VideoConferenceScheduler videoConferenceScheduler = new StubConferenceScheduler(newZoomMeetingLink);
         EnsembleService ensembleService = new EnsembleService(ensembleRepository, new InMemoryMemberRepository(),
                                                               new DummyNotifier(), videoConferenceScheduler);
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 12, 17, 17);
@@ -73,4 +70,18 @@ class EnsembleServiceEditExistingTest {
                 .isEqualTo(URI.create("https://new.zoom.link"));
     }
 
+    private static class StubConferenceScheduler implements VideoConferenceScheduler {
+        private final URI newZoomMeetingLink;
+
+        public StubConferenceScheduler(URI newZoomMeetingLink) {
+            this.newZoomMeetingLink = newZoomMeetingLink;
+        }
+
+        @Override
+        public ConferenceDetails createMeeting(Ensemble ensemble) {
+            return new ConferenceDetails("meetingId",
+                                         URI.create("https://zoom/us/start"),
+                                         newZoomMeetingLink);
+        }
+    }
 }
