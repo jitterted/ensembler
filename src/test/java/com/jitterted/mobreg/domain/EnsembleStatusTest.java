@@ -76,12 +76,28 @@ class EnsembleStatusTest {
 
     @Test
     public void completedEnsembleWhenRegisterMemberThrowsException() throws Exception {
-        Ensemble ensemble = new EnsembleBuilderAndSaviour().named("completed").id(-2).build();
-        ensemble.complete();
+        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+                .id(-2)
+                .named("completed")
+                .completed()
+                .build();
 
         assertThatThrownBy(() -> ensemble.acceptedBy(DUMMY_MEMBER_ID))
                 .isInstanceOf(EnsembleCompleted.class)
                 .hasMessage("Ensemble (EnsembleId=-2) is Completed");
+    }
+
+    @Test
+    public void completingCanceledEnsembleThrowsException() throws Exception {
+        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+                .id(-2)
+                .named("canceled")
+                .cancel()
+                .build();
+
+        assertThatThrownBy(ensemble::complete)
+                .isInstanceOf(EnsembleCanceled.class)
+                .hasMessage("Ensemble (EnsembleId=-2) is Canceled");
     }
 
     @Test

@@ -107,6 +107,7 @@ public class Ensemble {
     }
 
     public void complete() {
+        requireNotCanceled();
         status = Status.COMPLETED;
     }
 
