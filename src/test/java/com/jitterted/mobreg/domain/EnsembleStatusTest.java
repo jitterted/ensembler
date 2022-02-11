@@ -38,7 +38,7 @@ class EnsembleStatusTest {
     }
 
     @Test
-    public void whenCancelingEnsembleThenEnsembleIsCanceled() throws Exception {
+    public void whenCancelingScheduledEnsembleThenEnsembleIsCanceled() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
         ensemble.cancel();
@@ -48,15 +48,30 @@ class EnsembleStatusTest {
     }
 
     @Test
+    public void cancelCompletedEnsembleThenThrowsException() throws Exception {
+        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+                .id(-2)
+                .named("completed")
+                .completed()
+                .build();
+
+        assertThatThrownBy(ensemble::cancel)
+                .isInstanceOf(EnsembleCompleted.class);
+    }
+
+    @Test
     public void canceledEnsembleWhenAcceptMemberThrowsException() throws Exception {
-        Ensemble ensemble = new EnsembleBuilderAndSaviour().named("canceled").id(-2).build();
-        ensemble.cancel();
+        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+                .id(-2)
+                .named("canceled")
+                .cancel()
+                .build();
 
         assertThatThrownBy(() -> {
             ensemble.acceptedBy(DUMMY_MEMBER_ID);
         })
                 .isInstanceOf(EnsembleCanceled.class)
-                .hasMessage("Ensemble (EnsembleId=-2) is Canceled: cannot accept member (MemberId=-1)");
+                .hasMessage("Ensemble (EnsembleId=-2) is Canceled");
     }
 
     @Test
@@ -66,7 +81,7 @@ class EnsembleStatusTest {
 
         assertThatThrownBy(() -> ensemble.acceptedBy(DUMMY_MEMBER_ID))
                 .isInstanceOf(EnsembleCompleted.class)
-                .hasMessage("Ensemble (EnsembleId=-2) is Completed: cannot accept member (MemberId=-1)");
+                .hasMessage("Ensemble (EnsembleId=-2) is Completed");
     }
 
     @Test

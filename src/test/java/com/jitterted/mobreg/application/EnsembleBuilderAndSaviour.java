@@ -37,4 +37,14 @@ public class EnsembleBuilderAndSaviour {
         ensemble.setId(EnsembleId.of(id));
         return this;
     }
+
+    public EnsembleBuilderAndSaviour completed() {
+        ensemble.complete();
+        return this;
+    }
+
+    public EnsembleBuilderAndSaviour cancel() {
+        ensemble.cancel();
+        return this;
+    }
 }

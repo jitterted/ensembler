@@ -54,16 +54,16 @@ public class Ensemble {
     }
 
     public void acceptedBy(MemberId memberId) {
-        requireNotCompleted(memberId);
-        requireNotCanceled(memberId);
+        requireNotCompleted();
+        requireNotCanceled();
         requireHasSpace();
         membersWhoAccepted.add(memberId);
         membersWhoDeclined.remove(memberId);
     }
 
-    private void requireNotCanceled(MemberId memberId) {
+    private void requireNotCanceled() {
         if (isCanceled()) {
-            throw new EnsembleCanceled("Ensemble (%s) is Canceled: cannot accept member (%s)".formatted(id, memberId));
+            throw new EnsembleCanceled("Ensemble (%s) is Canceled".formatted(id));
         }
     }
 
@@ -122,9 +122,9 @@ public class Ensemble {
         return recordingLink;
     }
 
-    private void requireNotCompleted(MemberId memberId) {
+    private void requireNotCompleted() {
         if (isCompleted()) {
-            throw new EnsembleCompleted("Ensemble (%s) is Completed: cannot accept member (%s)".formatted(id, memberId));
+            throw new EnsembleCompleted("Ensemble (%s) is Completed".formatted(id));
         }
     }
 
@@ -194,6 +194,7 @@ public class Ensemble {
     }
 
     public void cancel() {
+        requireNotCompleted();
         status = Status.CANCELED;
     }
 
