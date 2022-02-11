@@ -24,7 +24,7 @@ public class Ensemble {
     private ConferenceDetails conferenceDetails;
     private final Set<MemberId> membersWhoAccepted = new HashSet<>();
     private final Set<MemberId> membersWhoDeclined = new HashSet<>();
-    private Status status = Status.SCHEDULED;
+    private EnsembleState state = EnsembleState.SCHEDULED;
     private URI recordingLink = URI.create("");
 
     public Ensemble(String name, ZonedDateTime startDateTime) {
@@ -108,11 +108,11 @@ public class Ensemble {
 
     public void complete() {
         requireNotCanceled();
-        status = Status.COMPLETED;
+        state = EnsembleState.COMPLETED;
     }
 
     public boolean isCompleted() {
-        return status == Status.COMPLETED;
+        return state == EnsembleState.COMPLETED;
     }
 
     public void linkToRecordingAt(URI recordingLink) {
@@ -191,12 +191,12 @@ public class Ensemble {
     }
 
     public boolean isCanceled() {
-        return status == Status.CANCELED;
+        return state == EnsembleState.CANCELED;
     }
 
     public void cancel() {
         requireNotCompleted();
-        status = Status.CANCELED;
+        state = EnsembleState.CANCELED;
     }
 
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
@@ -256,9 +256,4 @@ public class Ensemble {
         }
     }
 
-    private enum Status {
-        SCHEDULED,
-        COMPLETED,
-        CANCELED
-    }
 }
