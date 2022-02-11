@@ -61,11 +61,12 @@ class EnsembleStatusTest {
 
     @Test
     public void completedEnsembleWhenRegisterMemberThrowsException() throws Exception {
-        Ensemble ensemble = new Ensemble("completed", ZonedDateTime.now());
+        Ensemble ensemble = new EnsembleBuilderAndSaviour().named("completed").id(-2).build();
         ensemble.complete();
 
         assertThatThrownBy(() -> ensemble.acceptedBy(DUMMY_MEMBER_ID))
-                .isInstanceOf(EnsembleCompletedException.class);
+                .isInstanceOf(EnsembleCompleted.class)
+                .hasMessage("Ensemble (EnsembleId=-2) is Completed: cannot accept member (MemberId=-1)");
     }
 
     @Test

@@ -54,13 +54,17 @@ public class Ensemble {
     }
 
     public void acceptedBy(MemberId memberId) {
-        requireNotCompleted();
-        if (isCanceled()) {
-            throw new EnsembleCanceled(String.format("Ensemble (%s) is Canceled: cannot accept member (%s)", id, memberId));
-        }
+        requireNotCompleted(memberId);
+        requireNotCanceled(memberId);
         requireHasSpace();
         membersWhoAccepted.add(memberId);
         membersWhoDeclined.remove(memberId);
+    }
+
+    private void requireNotCanceled(MemberId memberId) {
+        if (isCanceled()) {
+            throw new EnsembleCanceled("Ensemble (%s) is Canceled: cannot accept member (%s)".formatted(id, memberId));
+        }
     }
 
     public boolean isDeclined(MemberId memberId) {
@@ -118,9 +122,9 @@ public class Ensemble {
         return recordingLink;
     }
 
-    private void requireNotCompleted() {
+    private void requireNotCompleted(MemberId memberId) {
         if (isCompleted()) {
-            throw new EnsembleCompletedException();
+            throw new EnsembleCompleted("Ensemble (%s) is Completed: cannot accept member (%s)".formatted(id, memberId));
         }
     }
 
