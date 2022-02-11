@@ -38,12 +38,12 @@ public class EnsembleBuilderAndSaviour {
         return this;
     }
 
-    public EnsembleBuilderAndSaviour completed() {
+    public EnsembleBuilderAndSaviour asCompleted() {
         ensemble.complete();
         return this;
     }
 
-    public EnsembleBuilderAndSaviour cancel() {
+    public EnsembleBuilderAndSaviour asCanceled() {
         ensemble.cancel();
         return this;
     }

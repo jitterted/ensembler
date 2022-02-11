@@ -192,9 +192,14 @@
                                 Completed <i class="fal fa-badge-check text-blue-600"></i></div>
 
                             <div th:case="'in_grace_period'"
-                            class="bg-yellow-100 text-yellow-800 py-1 px-3 rounded-lg text-xs font-bold">
+                                 class="bg-yellow-100 text-yellow-800 py-1 px-3 rounded-lg text-xs font-bold">
                                 In Progress <i class="fal fa-badge-check text-yellow-700"></i>
                             </div>
+
+                            <div th:case="'canceled'"
+                                 class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">
+                                Canceled <i class="fal fa-calendar-times text-red-600"></i></div>
+
                         </td>
 
                         <!-- Links -->

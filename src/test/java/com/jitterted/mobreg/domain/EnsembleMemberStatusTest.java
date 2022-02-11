@@ -1,5 +1,7 @@
 package com.jitterted.mobreg.domain;
 
+import com.jitterted.mobreg.application.EnsembleBuilderAndSaviour;
+import com.jitterted.mobreg.application.TestMemberBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
@@ -99,6 +101,45 @@ class EnsembleMemberStatusTest {
         ZonedDateTime currentDateTime = startDateTime.plusMinutes(10).minusSeconds(1); // grace period is 10 minutes
         assertThat(inGracePeriodEnsemble.statusFor(memberId, currentDateTime))
                 .isEqualByComparingTo(MemberStatus.IN_GRACE_PERIOD);
+    }
+
+    @Test
+    public void acceptedMemberAndCanceledThenStatusIsCanceled() throws Exception {
+        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+                .accept(new TestMemberBuilder())
+                .asCanceled()
+                .build();
+        MemberId memberId = ensemble.acceptedMembers().findFirst().get();
+
+        MemberStatus memberStatus = ensemble.statusFor(memberId, ZonedDateTime.now());
+
+        assertThat(memberStatus)
+                .isEqualByComparingTo(MemberStatus.CANCELED);
+    }
+
+    @Test
+    public void unknownMemberEnsembleInFutureWhenCanceledThenStatusIsHidden() throws Exception {
+        Ensemble ensemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
+        ensemble.cancel();
+        MemberId memberId = MemberId.of(99);
+
+        MemberStatus memberStatus = ensemble.statusFor(memberId, UTC_2021_11_22_12);
+
+        assertThat(memberStatus)
+                .isEqualByComparingTo(MemberStatus.HIDDEN);
+    }
+
+    @Test
+    public void declinedMemberEnsembleInFutureWhenCanceledThenStatusIsHidden() throws Exception {
+        Ensemble ensemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
+        MemberId memberId = MemberId.of(41);
+        ensemble.declinedBy(memberId);
+        ensemble.cancel();
+
+        MemberStatus memberStatus = ensemble.statusFor(memberId, UTC_2021_11_22_12);
+
+        assertThat(memberStatus)
+                .isEqualByComparingTo(MemberStatus.HIDDEN);
     }
 
     @Test

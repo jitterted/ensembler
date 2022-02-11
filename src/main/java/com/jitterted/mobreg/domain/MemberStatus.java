@@ -7,5 +7,5 @@ public enum MemberStatus {
     PENDING_COMPLETED, COMPLETED,
     ACCEPTED,
     IN_GRACE_PERIOD,
-    HIDDEN
+    CANCELED, HIDDEN
 }

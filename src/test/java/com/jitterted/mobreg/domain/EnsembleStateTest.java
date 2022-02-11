@@ -52,7 +52,7 @@ class EnsembleStateTest {
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
                 .id(-2)
                 .named("completed")
-                .completed()
+                .asCompleted()
                 .build();
 
         assertThatThrownBy(ensemble::cancel)
@@ -64,7 +64,7 @@ class EnsembleStateTest {
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
                 .id(-2)
                 .named("canceled")
-                .cancel()
+                .asCanceled()
                 .build();
 
         assertThatThrownBy(() -> {
@@ -79,7 +79,7 @@ class EnsembleStateTest {
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
                 .id(-2)
                 .named("completed")
-                .completed()
+                .asCompleted()
                 .build();
 
         assertThatThrownBy(() -> ensemble.acceptedBy(DUMMY_MEMBER_ID))
@@ -92,7 +92,7 @@ class EnsembleStateTest {
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
                 .id(-2)
                 .named("canceled")
-                .cancel()
+                .asCanceled()
                 .build();
 
         assertThatThrownBy(ensemble::complete)

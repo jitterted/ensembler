@@ -155,8 +155,14 @@ public class Ensemble {
 
     public MemberStatus statusFor(MemberId memberId, ZonedDateTime now) {
         MemberStatus status = WhenSpaceRsvp.memberStatus(this, memberId, now);
+        if (isAccepted(memberId) && isCanceled()) {
+            return MemberStatus.CANCELED;
+        }
+        if (isCanceled()) {
+            return MemberStatus.HIDDEN;
+        }
         if (isInGracePeriod(now) && status != MemberStatus.HIDDEN) {
-            status = MemberStatus.IN_GRACE_PERIOD;
+            return MemberStatus.IN_GRACE_PERIOD;
         }
         if (isBetweenExclusive(now, startDateTime.plus(IN_PROGRESS_GRACE_PERIOD_MINUTES), startDateTime.plus(duration))) {
             status = MemberStatus.HIDDEN;
