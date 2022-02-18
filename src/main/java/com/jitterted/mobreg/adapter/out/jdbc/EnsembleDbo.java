@@ -23,7 +23,7 @@ class EnsembleDbo {
     private String name;
     private String zoomMeetingLink;
     private LocalDateTime dateTimeUtc;
-    private boolean isCompleted;
+    private String state;
     private String recordingLink;
 
     @MappedCollection(idColumn = "ensemble_id")
@@ -40,7 +40,7 @@ class EnsembleDbo {
         ensembleDbo.setName(ensemble.name());
         ensembleDbo.setDateTimeUtc(ensemble.startDateTime().toLocalDateTime());
         ensembleDbo.setZoomMeetingLink(ensemble.zoomMeetingLink().toString());
-        ensembleDbo.setCompleted(ensemble.isCompleted());
+        ensembleDbo.setState(ensemble.state().toString());
         ensembleDbo.setRecordingLink(ensemble.recordingLink().toString());
         ensembleDbo.setAcceptedMembers(
                 ensemble.acceptedMembers()
@@ -67,8 +67,10 @@ class EnsembleDbo {
                        .map(DeclinedMember::asMemberId)
                        .forEach(ensemble::declinedBy);
 
-        if (isCompleted) {
+        if (state.equalsIgnoreCase("COMPLETED")) {
             ensemble.complete();
+        } else if (state.equalsIgnoreCase("CANCELED")) {
+            ensemble.cancel();
         }
 
         return ensemble;
@@ -122,12 +124,12 @@ class EnsembleDbo {
         this.zoomMeetingLink = zoomMeetingLink;
     }
 
-    public boolean isCompleted() {
-        return isCompleted;
+    public String getState() {
+        return state;
     }
 
-    public void setCompleted(boolean completed) {
-        isCompleted = completed;
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getRecordingLink() {

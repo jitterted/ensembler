@@ -18,7 +18,7 @@ class EnsembleDboMappingTest {
     public void databaseEntityToDomainIsMappedCorrectly() throws Exception {
         EnsembleDbo ensembleDbo = new EnsembleDbo();
         ensembleDbo.setId(19L);
-        ensembleDbo.setCompleted(true);
+        ensembleDbo.setState("CANCELED");
         ensembleDbo.setRecordingLink("https://recording.link/entity");
         ZonedDateTime now = ZonedDateTime.now();
         ensembleDbo.setDateTimeUtc(now.toLocalDateTime());
@@ -30,6 +30,8 @@ class EnsembleDboMappingTest {
         Ensemble ensemble = ensembleDbo.asEnsemble();
 
         assertThat(ensemble.isCompleted())
+                .isFalse();
+        assertThat(ensemble.isCanceled())
                 .isTrue();
         assertThat(ensemble.name())
                 .isEqualTo("Entity");
@@ -60,8 +62,8 @@ class EnsembleDboMappingTest {
                 .isEqualTo("Domain");
         assertThat(entity.getDateTimeUtc())
                 .isEqualTo(utc2021091316000.toLocalDateTime());
-        assertThat(entity.isCompleted())
-                .isTrue();
+        assertThat(entity.getState())
+                .isEqualTo("COMPLETED");
         assertThat(entity.getRecordingLink())
                 .isEqualTo("https://recording.link/domain");
         assertThat(entity.getAcceptedMembers())

@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.jitterted</groupId>
   <artifactId>mobreg</artifactId>
-  <version>1.0.8</version>
+  <version>1.0.9</version>
   <name>mobreg</name>
   <description>Mob Registration Manager</description>
   <properties>
@@ -19,7 +19,7 @@
     <maven.compiler.target>17</maven.compiler.target>
     <spotify.github-client.version>0.1.25</spotify.github-client.version>
     <testcontainers.version>1.16.3</testcontainers.version>
-    <htmlunit.version>2.57.0</htmlunit.version>
+    <htmlunit.version>2.58.0</htmlunit.version>
     <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
   </properties>
   <dependencies>
@@ -81,6 +81,17 @@
       <groupId>com.spotify</groupId>
       <artifactId>github-client</artifactId>
       <version>${spotify.github-client.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>31.0.1-jre</version>
     </dependency>
 
     <dependency>
