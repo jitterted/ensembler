@@ -9,3 +9,7 @@ ALTER TABLE ensembles
 ALTER TABLE ensembles
     RENAME COLUMN is_completed
     TO state;
+
+ALTER TABLE ensembles
+    ALTER COLUMN state
+    SET DEFAULT 'SCHEDULED';
