@@ -1,7 +1,5 @@
 package com.jitterted.mobreg.domain;
 
-import com.jitterted.mobreg.application.EnsembleBuilderAndSaviour;
-import com.jitterted.mobreg.application.TestMemberBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
@@ -18,7 +16,7 @@ class EnsembleMemberStatusTest {
         MemberId memberId = MemberId.of(37);
 
         assertThat(pastEnsemble.statusFor(memberId, startDateTime.plusHours(3))) // duration defaults to 1h55m, so 3 hours means it's over
-                .isEqualByComparingTo(MemberStatus.HIDDEN);
+                                                                                 .isEqualByComparingTo(MemberStatus.HIDDEN);
     }
 
     @Test
@@ -68,7 +66,7 @@ class EnsembleMemberStatusTest {
         assertThat(pastEnsemble.statusFor(memberId, UTC_2021_11_22_12))
                 .isEqualByComparingTo(MemberStatus.PENDING_COMPLETED);
     }
-    
+
     @Test
     public void acceptedMemberAndCompletedEnsembleThenStatusCompleted() throws Exception {
         Ensemble completedEnsemble = EnsembleFactory.withStartTime(2021, 11, 21, 11);
@@ -105,11 +103,13 @@ class EnsembleMemberStatusTest {
 
     @Test
     public void acceptedMemberAndCanceledThenStatusIsCanceled() throws Exception {
+        Member member = new Member("first", "username");
+        member.setId(MemberId.of(11));
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
-                .accept(new TestMemberBuilder())
+                .accept(member)
                 .asCanceled()
                 .build();
-        MemberId memberId = ensemble.acceptedMembers().findFirst().get();
+        MemberId memberId = MemberId.of(11);
 
         MemberStatus memberStatus = ensemble.statusFor(memberId, ZonedDateTime.now());
 
@@ -153,7 +153,7 @@ class EnsembleMemberStatusTest {
         assertThat(inGracePeriodEnsemble.statusFor(memberId, currentDateTime))
                 .isEqualByComparingTo(MemberStatus.HIDDEN);
     }
-    
+
     @Test
     public void unknownOrDeclinedWhenEnsembleStartedStatusIsHidden() throws Exception {
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2022, 2, 3, 16);
@@ -168,7 +168,7 @@ class EnsembleMemberStatusTest {
         assertThat(alreadyStartedEnsemble.statusFor(memberId, currentDateTime))
                 .isEqualByComparingTo(MemberStatus.HIDDEN);
     }
-    
+
     // ---- [start] ----- [end of grace period] --------------- [end of start + duration] ---
     //              IN_PROG                       HIDDEN                                     COMPLETED
 

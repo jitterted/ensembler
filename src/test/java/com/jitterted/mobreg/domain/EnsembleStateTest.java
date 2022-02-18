@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.domain;
 
-import com.jitterted.mobreg.application.EnsembleBuilderAndSaviour;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;

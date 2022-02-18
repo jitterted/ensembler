@@ -2,6 +2,7 @@ package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleBuilderAndSaviour;
 import com.jitterted.mobreg.domain.EnsembleId;
 import org.junit.jupiter.api.Test;
 

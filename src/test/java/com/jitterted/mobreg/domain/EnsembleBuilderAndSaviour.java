@@ -1,8 +1,4 @@
-package com.jitterted.mobreg.application;
-
-import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.EnsembleFactory;
-import com.jitterted.mobreg.domain.EnsembleId;
+package com.jitterted.mobreg.domain;
 
 public class EnsembleBuilderAndSaviour {
 
@@ -12,13 +8,13 @@ public class EnsembleBuilderAndSaviour {
         ensemble = EnsembleFactory.withStartTimeNow();
     }
 
-    public EnsembleBuilderAndSaviour accept(TestMemberBuilder memberBuilder) {
-        ensemble.acceptedBy(memberBuilder.buildAndSave().getId());
+    public EnsembleBuilderAndSaviour accept(Member member) {
+        ensemble.acceptedBy(member.getId());
         return this;
     }
 
-    public EnsembleBuilderAndSaviour decline(TestMemberBuilder memberBuilder) {
-        ensemble.declinedBy(memberBuilder.buildAndSave().getId());
+    public EnsembleBuilderAndSaviour decline(Member member) {
+        ensemble.declinedBy(member.getId());
         return this;
     }
 

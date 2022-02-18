@@ -11,10 +11,6 @@ public class MemberFactory {
 
     private final MemberRepository memberRepository;
 
-    public MemberFactory(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
     public MemberFactory() {
         this.memberRepository = new InMemoryMemberRepository();
     }
