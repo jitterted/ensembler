@@ -83,5 +83,10 @@ class EnsembleServiceEditExistingTest {
                                          URI.create("https://zoom/us/start"),
                                          newZoomMeetingLink);
         }
+
+        @Override
+        public boolean deleteMeeting(Ensemble ensemble) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

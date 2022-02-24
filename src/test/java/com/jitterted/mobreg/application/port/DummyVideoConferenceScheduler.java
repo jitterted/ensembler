@@ -8,4 +8,9 @@ public class DummyVideoConferenceScheduler implements VideoConferenceScheduler {
     public ConferenceDetails createMeeting(Ensemble ensemble) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public boolean deleteMeeting(Ensemble ensemble) {
+        return false;
+    }
 }

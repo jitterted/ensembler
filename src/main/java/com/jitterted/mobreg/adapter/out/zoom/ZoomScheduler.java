@@ -52,8 +52,20 @@ public class ZoomScheduler implements VideoConferenceScheduler {
         }
 
         return new ConferenceDetails(String.valueOf(createMeetingResponse.id),
-                              URI.create(createMeetingResponse.startUrl),
-                              URI.create(createMeetingResponse.joinUrl));
+                                     URI.create(createMeetingResponse.startUrl),
+                                     URI.create(createMeetingResponse.joinUrl));
+    }
+
+    @Override
+    public boolean deleteMeeting(Ensemble ensemble) {
+//        String zoomUrl = "https://api.zoom.us/v2/meetings/{meetingId}";
+//        HttpEntity<Object> httpEntity = new HttpEntity<>(createRequestHeaders());
+//        ResponseEntity<Void> responseEntity = restTemplate.exchange(zoomUrl,
+//                                                                    HttpMethod.DELETE,
+//                                                                    httpEntity,
+//                                                                    Void.class,
+//                                                                    "87956194555"); <-- need the Zoom meetind ID
+        throw new UnsupportedOperationException();
     }
 
     private ResponseEntity<ZoomCreateMeetingResponse> postRequest(HttpEntity<ZoomCreateMeetingRequest> requestEntity) {

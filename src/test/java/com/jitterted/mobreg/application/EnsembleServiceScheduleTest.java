@@ -50,8 +50,16 @@ class EnsembleServiceScheduleTest {
 
     @Test
     public void apiFailedToReturnValidConferenceDetailsThenMeetingLinkIsBlank() throws Exception {
-        VideoConferenceScheduler stubScheduler = ensemble -> {
-            throw new FailedToScheduleMeeting("Force exception within test");
+        VideoConferenceScheduler stubScheduler = new VideoConferenceScheduler() {
+            @Override
+            public ConferenceDetails createMeeting(Ensemble ensemble) {
+                throw new FailedToScheduleMeeting("Force exception within test");
+            }
+
+            @Override
+            public boolean deleteMeeting(Ensemble ensemble) {
+                throw new UnsupportedOperationException();
+            }
         };
         EnsembleService ensembleService = EnsembleServiceFactory.with(stubScheduler);
 
@@ -69,6 +77,11 @@ class EnsembleServiceScheduleTest {
             return new ConferenceDetails("123",
                                          URI.create("https://zoom.us/startUrl"),
                                          URI.create("https://zoom.us/joinUrl"));
+        }
+
+        @Override
+        public boolean deleteMeeting(Ensemble ensemble) {
+            throw new UnsupportedOperationException();
         }
     }
 }

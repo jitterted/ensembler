@@ -5,4 +5,6 @@ import com.jitterted.mobreg.domain.Ensemble;
 
 public interface VideoConferenceScheduler {
     ConferenceDetails createMeeting(Ensemble ensemble);
+
+    boolean deleteMeeting(Ensemble ensemble);
 }

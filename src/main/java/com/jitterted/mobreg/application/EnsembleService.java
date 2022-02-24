@@ -138,6 +138,10 @@ public class EnsembleService {
         ensemble.cancel();
 
         ensembleRepository.save(ensemble);
+
+        if (videoConferenceScheduler.deleteMeeting(ensemble)) {
+            ensemble.changeMeetingLinkTo(URI.create("https://deleted.link"));
+        }
     }
 
     private Ensemble findOrThrow(EnsembleId ensembleId) {

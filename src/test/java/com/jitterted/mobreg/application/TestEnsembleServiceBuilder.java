@@ -28,7 +28,7 @@ public class TestEnsembleServiceBuilder {
         withInMemoryRepositories();
     }
 
-    public TestEnsembleServiceBuilder ensembleRepository(EnsembleRepository ensembleRepository) {
+    public TestEnsembleServiceBuilder withEnsembleRepository(EnsembleRepository ensembleRepository) {
         this.ensembleRepository = ensembleRepository;
         return this;
     }
@@ -74,8 +74,13 @@ public class TestEnsembleServiceBuilder {
         return memberRepository;
     }
 
-    public EnsembleRepository ensembleRepository() {
+    public EnsembleRepository withEnsembleRepository() {
         return ensembleRepository;
+    }
+
+    public TestEnsembleServiceBuilder withVideoConferenceScheduler(VideoConferenceScheduler videoConferenceScheduler) {
+        this.videoConferenceScheduler = videoConferenceScheduler;
+        return this;
     }
 
     @NotNull
