@@ -62,8 +62,8 @@ class EnsembleDbo {
         ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneOffset.UTC);
         Ensemble ensemble = new Ensemble(name, startDateTime);
         ensemble.changeConferenceDetailsTo(new ConferenceDetails(getConferenceMeetingId(),
-                                                                 URI.create(getConferenceJoinUrl()),
-                                                                 URI.create(getConferenceStartUrl())));
+                                                                 URI.create(getConferenceStartUrl()),
+                                                                 URI.create(getConferenceJoinUrl())));
         ensemble.setId(EnsembleId.of(id));
         ensemble.linkToRecordingAt(URI.create(recordingLink));
 

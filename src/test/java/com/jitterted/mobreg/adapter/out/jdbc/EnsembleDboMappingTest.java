@@ -41,7 +41,7 @@ class EnsembleDboMappingTest {
         assertThat(ensemble.recordingLink().toString())
                 .isEqualTo("https://recording.link/entity");
         assertThat(ensemble.conferenceDetails())
-                .isEqualTo(new ConferenceDetails("entityMeetingId", URI.create("entityJoinUrl"), URI.create("entityStartUrl")));
+                .isEqualTo(new ConferenceDetails("entityMeetingId", URI.create("entityStartUrl"), URI.create("entityJoinUrl")));
         assertThat(ensemble.acceptedMembers())
                 .extracting(MemberId::id)
                 .isEqualTo(List.of(13L));
