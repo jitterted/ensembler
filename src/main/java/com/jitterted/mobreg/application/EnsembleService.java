@@ -140,7 +140,8 @@ public class EnsembleService {
         ensembleRepository.save(ensemble);
 
         if (videoConferenceScheduler.deleteMeeting(ensemble)) {
-            ensemble.changeConferenceDetailsTo(ConferenceDetails.DELETED);
+            ensemble.removeConferenceDetails();
+            ensembleRepository.save(ensemble);
         } // TODO: else: wasn't deleted: throw exception?
     }
 

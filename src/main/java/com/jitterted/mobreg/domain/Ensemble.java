@@ -217,6 +217,10 @@ public class Ensemble {
         conferenceDetails = newConferenceDetails;
     }
 
+    public void removeConferenceDetails() {
+        conferenceDetails = ConferenceDetails.DELETED;
+    }
+
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
             // @formatter: off
         private static final Map<WhenSpaceRsvp, MemberStatus> STATE_TO_STATUS = Map.ofEntries(
