@@ -139,7 +139,15 @@ public class EnsembleService {
 
         ensembleRepository.save(ensemble);
 
-        if (videoConferenceScheduler.deleteMeeting(ensemble.conferenceDetails())) {
+        deleteVideoConferenceMeeting(ensemble);
+    }
+
+    private void deleteVideoConferenceMeeting(Ensemble ensemble) {
+        ConferenceDetails conferenceDetails = ensemble.conferenceDetails();
+        if (!conferenceDetails.hasValidMeetingId()) {
+            return;
+        }
+        if (videoConferenceScheduler.deleteMeeting(conferenceDetails)) {
             ensemble.removeConferenceDetails();
             ensembleRepository.save(ensemble);
         } // TODO: else: wasn't deleted: throw exception?

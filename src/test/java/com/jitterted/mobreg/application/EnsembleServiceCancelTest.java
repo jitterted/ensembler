@@ -34,7 +34,7 @@ class EnsembleServiceCancelTest {
                 .withConferenceDetails("zoomMeetingId", "https://start.link", "https://join.link")
                 .build();
         VideoConferenceScheduler succeedsIfMeetingIdMatchesEnsemble =
-                new ZoomConferenceSchedulerMock("zoomMeetingId");
+                new ZoomConferenceSchedulerDeletesExpectedMeetingId("zoomMeetingId");
         TestEnsembleServiceBuilder ensembleServiceBuilder =
                 new TestEnsembleServiceBuilder()
                         .withVideoConferenceScheduler(succeedsIfMeetingIdMatchesEnsemble)
@@ -48,21 +48,19 @@ class EnsembleServiceCancelTest {
                 .isEqualTo(ConferenceDetails.DELETED);
     }
 
-    private static class ZoomConferenceSchedulerMock implements VideoConferenceScheduler {
-        private final String expectedMeetingId;
+    @Test
+    public void attemptingToCancelEnsembleWithNoMeetingIdDoesNotCallConferenceScheduler() throws Exception {
+        DeleteMeetingConferenceSchedulerMock deleteMeetingConferenceSchedulerMock = new DeleteMeetingConferenceSchedulerMock();
+        TestEnsembleServiceBuilder ensembleServiceBuilder =
+                new TestEnsembleServiceBuilder()
+                        .withVideoConferenceScheduler(deleteMeetingConferenceSchedulerMock)
+                        .saveEnsemble(new EnsembleBuilderAndSaviour().build());
+        EnsembleId ensembleId = ensembleServiceBuilder.lastSavedEnsembleId();
+        EnsembleService ensembleService = ensembleServiceBuilder.build();
 
-        public ZoomConferenceSchedulerMock(String expectedMeetingId) {
-            this.expectedMeetingId = expectedMeetingId;
-        }
-
-        @Override
-        public ConferenceDetails createMeeting(Ensemble ensemble) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean deleteMeeting(ConferenceDetails conferenceDetails) {
-            return conferenceDetails.meetingId().equals(expectedMeetingId);
-        }
+        ensembleService.cancel(ensembleId);
+        
+        deleteMeetingConferenceSchedulerMock.verifyDeleteMeetingWasNotCalled();
     }
+
 }
