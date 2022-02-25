@@ -61,8 +61,8 @@ class EnsembleServiceCancelTest {
         }
 
         @Override
-        public boolean deleteMeeting(Ensemble ensemble) {
-            return ensemble.conferenceDetails().meetingId().equals(expectedMeetingId);
+        public boolean deleteMeeting(ConferenceDetails conferenceDetails) {
+            return conferenceDetails.meetingId().equals(expectedMeetingId);
         }
     }
 }

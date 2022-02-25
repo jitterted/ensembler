@@ -85,7 +85,7 @@ class EnsembleServiceEditExistingTest {
         }
 
         @Override
-        public boolean deleteMeeting(Ensemble ensemble) {
+        public boolean deleteMeeting(ConferenceDetails conferenceDetails) {
             throw new UnsupportedOperationException();
         }
     }

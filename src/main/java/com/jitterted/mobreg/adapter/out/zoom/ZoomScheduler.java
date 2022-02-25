@@ -27,6 +27,7 @@ public class ZoomScheduler implements VideoConferenceScheduler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ZoomScheduler.class);
 
     private static final URI CREATE_MEETING_URI = URI.create("https://api.zoom.us/v2/users/me/meetings");
+    private static final String ZOOM_API_MEETING_URL_TEMPLATE = "https://api.zoom.us/v2/meetings/{meetingId}";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -57,15 +58,20 @@ public class ZoomScheduler implements VideoConferenceScheduler {
     }
 
     @Override
-    public boolean deleteMeeting(Ensemble ensemble) {
-//        String zoomUrl = "https://api.zoom.us/v2/meetings/{meetingId}";
-//        HttpEntity<Object> httpEntity = new HttpEntity<>(createRequestHeaders());
-//        ResponseEntity<Void> responseEntity = restTemplate.exchange(zoomUrl,
-//                                                                    HttpMethod.DELETE,
-//                                                                    httpEntity,
-//                                                                    Void.class,
-//                                                                    "87956194555"); <-- need the Zoom meetind ID
-        throw new UnsupportedOperationException();
+    public boolean deleteMeeting(ConferenceDetails conferenceDetails) {
+        HttpEntity<Object> httpEntity = new HttpEntity<>(createRequestHeaders());
+        ResponseEntity<Void> responseEntity = restTemplate.exchange(ZOOM_API_MEETING_URL_TEMPLATE,
+                                                                    HttpMethod.DELETE,
+                                                                    httpEntity,
+                                                                    Void.class,
+                                                                    conferenceDetails.meetingId());
+        int statusCode = responseEntity.getStatusCode().value();
+        if (statusCode == 204) {
+            return true;
+        } else {
+            LOGGER.warn("Unable to delete Zoom meeting with ID `{}`. Status Code was: {}", conferenceDetails.meetingId(), statusCode);
+            return false;
+        }
     }
 
     private ResponseEntity<ZoomCreateMeetingResponse> postRequest(HttpEntity<ZoomCreateMeetingRequest> requestEntity) {

@@ -36,51 +36,58 @@ class EnsembleServiceScheduleTest {
     }
 
     @Test
-    public void ensembleScheduledThenZoomLinkFetchedFromApiHasLink() throws Exception {
-        VideoConferenceScheduler stubScheduler = new StubConferenceScheduler();
+    public void ensembleScheduledThenZoomLinkFetchedFromApiHasConferenceDetails() throws Exception {
+        ConferenceDetails expectedConferenceDetails = new ConferenceDetails("123",
+                                                                            URI.create("https://zoom.us/startUrl"),
+                                                                            URI.create("https://zoom.us/joinUrl"));
+        VideoConferenceScheduler stubScheduler = new StubConferenceScheduler(expectedConferenceDetails);
         EnsembleService ensembleService = EnsembleServiceFactory.with(stubScheduler);
 
         ensembleService.scheduleEnsembleWithVideoConference("With Zoom", ZonedDateTime.now());
 
         assertThat(ensembleService.allEnsembles())
-                .extracting(Ensemble::meetingLink)
-                .extracting(URI::toString)
-                .containsOnly("https://zoom.us/joinUrl");
+                .extracting(Ensemble::conferenceDetails)
+                .containsOnly(expectedConferenceDetails);
     }
 
     @Test
-    public void apiFailedToReturnValidConferenceDetailsThenMeetingLinkIsBlank() throws Exception {
-        VideoConferenceScheduler stubScheduler = new VideoConferenceScheduler() {
-            @Override
-            public ConferenceDetails createMeeting(Ensemble ensemble) {
-                throw new FailedToScheduleMeeting("Force exception within test");
-            }
-
-            @Override
-            public boolean deleteMeeting(Ensemble ensemble) {
-                throw new UnsupportedOperationException();
-            }
-        };
-        EnsembleService ensembleService = EnsembleServiceFactory.with(stubScheduler);
+    public void apiFailedToReturnValidConferenceDetailsThenConferenceDetailsIsDefaultUnscheduled() throws Exception {
+        EnsembleService ensembleService = EnsembleServiceFactory.with(new FailsToScheduleConferenceStub());
 
         ensembleService.scheduleEnsembleWithVideoConference("With Zoom", ZonedDateTime.now());
 
+        ConferenceDetails originalConferenceDetails = new ConferenceDetails("", URI.create(""), URI.create("https://zoom.us"));
         assertThat(ensembleService.allEnsembles())
-                .extracting(Ensemble::meetingLink)
-                .extracting(URI::toString)
-                .containsOnly("https://zoom.us"); // default meeting link
+                .extracting(Ensemble::conferenceDetails)
+                .containsOnly(originalConferenceDetails);
     }
 
     private static class StubConferenceScheduler implements VideoConferenceScheduler {
-        @Override
-        public ConferenceDetails createMeeting(Ensemble ensemble) {
-            return new ConferenceDetails("123",
-                                         URI.create("https://zoom.us/startUrl"),
-                                         URI.create("https://zoom.us/joinUrl"));
+        private final ConferenceDetails stubConferenceDetails;
+
+        public StubConferenceScheduler(ConferenceDetails stubConferenceDetails) {
+            this.stubConferenceDetails = stubConferenceDetails;
         }
 
         @Override
-        public boolean deleteMeeting(Ensemble ensemble) {
+        public ConferenceDetails createMeeting(Ensemble ensemble) {
+            return stubConferenceDetails;
+        }
+
+        @Override
+        public boolean deleteMeeting(ConferenceDetails conferenceDetails) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private static class FailsToScheduleConferenceStub implements VideoConferenceScheduler {
+        @Override
+        public ConferenceDetails createMeeting(Ensemble ensemble) {
+            throw new FailedToScheduleMeeting("Force exception within test");
+        }
+
+        @Override
+        public boolean deleteMeeting(ConferenceDetails conferenceDetails) {
             throw new UnsupportedOperationException();
         }
     }

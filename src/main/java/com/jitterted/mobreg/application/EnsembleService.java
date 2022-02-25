@@ -51,7 +51,7 @@ public class EnsembleService {
 
         try {
             ConferenceDetails conferenceDetails = videoConferenceScheduler.createMeeting(savedEnsemble);
-            savedEnsemble.changeMeetingLinkTo(conferenceDetails.joinUrl());
+            savedEnsemble.changeConferenceDetailsTo(conferenceDetails);
             saveAndNotifyEnsembleScheduled(savedEnsemble);
         } catch (FailedToScheduleMeeting ftsm) {
             LOGGER.warn("Failed to schedule Ensemble with Video Conference", ftsm);
@@ -139,7 +139,7 @@ public class EnsembleService {
 
         ensembleRepository.save(ensemble);
 
-        if (videoConferenceScheduler.deleteMeeting(ensemble)) {
+        if (videoConferenceScheduler.deleteMeeting(ensemble.conferenceDetails())) {
             ensemble.removeConferenceDetails();
             ensembleRepository.save(ensemble);
         } // TODO: else: wasn't deleted: throw exception?

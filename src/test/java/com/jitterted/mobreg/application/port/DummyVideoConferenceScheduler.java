@@ -10,7 +10,7 @@ public class DummyVideoConferenceScheduler implements VideoConferenceScheduler {
     }
 
     @Override
-    public boolean deleteMeeting(Ensemble ensemble) {
+    public boolean deleteMeeting(ConferenceDetails conferenceDetails) {
         return false;
     }
 }
