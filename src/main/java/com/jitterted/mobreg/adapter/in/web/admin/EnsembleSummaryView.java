@@ -22,7 +22,7 @@ public record EnsembleSummaryView(long id,
     public static EnsembleSummaryView toView(Ensemble ensemble) {
         return new EnsembleSummaryView(ensemble.getId().id(),
                                        ensemble.name(),
-                                       ensemble.zoomMeetingLink().toString(),
+                                       ensemble.meetingLink().toString(),
                                        DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()),
                                        ensemble.state().toString().toLowerCase(),
                                        ensemble.acceptedCount(),

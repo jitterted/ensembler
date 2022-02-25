@@ -29,7 +29,7 @@ public final class ScheduleEnsembleForm {
     public static ScheduleEnsembleForm from(Ensemble ensemble) {
         ZonedDateTime zonedDateTime = convertFromUtcToTimeZone(ensemble.startDateTime(), DateTimeFormatting.PACIFIC_TIME_ZONE_ID.toString());
         return new ScheduleEnsembleForm(ensemble.name(),
-                                        ensemble.zoomMeetingLink().toString(),
+                                        ensemble.meetingLink().toString(),
                                         DateTimeFormatting.extractFormattedDateFrom(zonedDateTime),
                                         DateTimeFormatting.extractFormattedTimeFrom(zonedDateTime),
                                         zonedDateTime.getZone().toString());

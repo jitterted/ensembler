@@ -50,7 +50,7 @@ class EnsembleServiceEditExistingTest {
         ensembleService.changeTo(ensembleId, "Before", "", startDateTime);
 
         Ensemble updatedEnsemble = ensembleService.findById(ensembleId).orElseThrow();
-        assertThat(updatedEnsemble.zoomMeetingLink())
+        assertThat(updatedEnsemble.meetingLink())
                 .isEqualTo(newZoomMeetingLink);
     }
 
@@ -66,7 +66,7 @@ class EnsembleServiceEditExistingTest {
         ensembleService.changeTo(ensembleId, name, "https://new.zoom.link", startDateTime);
 
         Ensemble updatedEnsemble = ensembleService.findById(ensembleId).orElseThrow();
-        assertThat(updatedEnsemble.zoomMeetingLink())
+        assertThat(updatedEnsemble.meetingLink())
                 .isEqualTo(URI.create("https://new.zoom.link"));
     }
 

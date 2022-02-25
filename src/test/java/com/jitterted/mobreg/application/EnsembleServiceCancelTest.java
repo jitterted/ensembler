@@ -30,29 +30,39 @@ class EnsembleServiceCancelTest {
 
     @Test
     public void canceledEnsembleDeletesVideoConferenceMeeting() throws Exception {
-        Ensemble ensemble = new EnsembleBuilderAndSaviour().build();
-        VideoConferenceScheduler alwaysSuccessfulDeleteVideoConferenceScheduler = new VideoConferenceScheduler() {
-            @Override
-            public ConferenceDetails createMeeting(Ensemble ensemble) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public boolean deleteMeeting(Ensemble ensemble) {
-                return true;
-            }
-        };
+        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+                .withConferenceDetails("zoomMeetingId", "https://start.link", "https://join.link")
+                .build();
+        VideoConferenceScheduler succeedsIfMeetingIdMatchesEnsemble =
+                new ZoomConferenceSchedulerMock("zoomMeetingId");
         TestEnsembleServiceBuilder ensembleServiceBuilder =
                 new TestEnsembleServiceBuilder()
-                        .withVideoConferenceScheduler(alwaysSuccessfulDeleteVideoConferenceScheduler)
+                        .withVideoConferenceScheduler(succeedsIfMeetingIdMatchesEnsemble)
                         .saveEnsemble(ensemble);
         EnsembleId ensembleId = ensembleServiceBuilder.lastSavedEnsembleId();
         EnsembleService ensembleService = ensembleServiceBuilder.build();
 
         ensembleService.cancel(ensembleId);
 
-        assertThat(ensemble.zoomMeetingLink().toString())
-                .isEqualTo("https://deleted.link");
+        assertThat(ensemble.conferenceDetails())
+                .isEqualTo(ConferenceDetails.DELETED);
     }
 
+    private static class ZoomConferenceSchedulerMock implements VideoConferenceScheduler {
+        private final String expectedMeetingId;
+
+        public ZoomConferenceSchedulerMock(String expectedMeetingId) {
+            this.expectedMeetingId = expectedMeetingId;
+        }
+
+        @Override
+        public ConferenceDetails createMeeting(Ensemble ensemble) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean deleteMeeting(Ensemble ensemble) {
+            return ensemble.conferenceDetails().meetingId().equals(expectedMeetingId);
+        }
+    }
 }

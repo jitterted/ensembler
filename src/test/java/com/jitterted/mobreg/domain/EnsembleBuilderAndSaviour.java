@@ -1,8 +1,11 @@
 package com.jitterted.mobreg.domain;
 
+import java.net.URI;
+
 public class EnsembleBuilderAndSaviour {
 
     private Ensemble ensemble;
+    private ConferenceDetails conferenceDetails;
 
     public EnsembleBuilderAndSaviour() {
         ensemble = EnsembleFactory.withStartTimeNow();
@@ -20,7 +23,11 @@ public class EnsembleBuilderAndSaviour {
 
     public Ensemble build() {
         Ensemble ensembleToReturn = ensemble;
-        ensemble = EnsembleFactory.withStartTimeNow();
+        if (conferenceDetails != null) {
+            ensemble.changeConferenceDetailsTo(conferenceDetails);
+        }
+        // reset ensemble for next build (TODO: apply all properties upon build, not along the way)
+        ensemble = null;
         return ensembleToReturn;
     }
 
@@ -41,6 +48,11 @@ public class EnsembleBuilderAndSaviour {
 
     public EnsembleBuilderAndSaviour asCanceled() {
         ensemble.cancel();
+        return this;
+    }
+
+    public EnsembleBuilderAndSaviour withConferenceDetails(String meetingId, String startUrl, String joinUrl) {
+        conferenceDetails = new ConferenceDetails(meetingId, URI.create(startUrl), URI.create(joinUrl));
         return this;
     }
 }

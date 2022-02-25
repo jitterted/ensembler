@@ -142,12 +142,12 @@
       <artifactId>annotations</artifactId>
       <version>${jetbrains.annotations.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.tngtech.archunit</groupId>
-      <artifactId>archunit-junit5</artifactId>
-      <version>0.22.0</version>
-      <scope>test</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.tngtech.archunit</groupId>-->
+<!--      <artifactId>archunit-junit5</artifactId>-->
+<!--      <version>0.22.0</version>-->
+<!--      <scope>test</scope>-->
+<!--    </dependency>-->
 
     <!-- https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit -->
     <dependency>

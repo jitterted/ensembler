@@ -61,7 +61,7 @@ public class EmailNotifier implements Notifier {
                 """.formatted(member.firstName(),
                               ensemble.name(),
                               LONG_DATE_TIME_FORMATTER.format(startDateTimeInMemberTimeZone),
-                              ensemble.zoomMeetingLink().toString(),
+                              ensemble.meetingLink().toString(),
                               googleCalendarLinkCreator.createFor(ensemble));
         emailer.send(
                 new EmailToSend("Ensembler Notification: Registration Confirmation", body, member.email()));

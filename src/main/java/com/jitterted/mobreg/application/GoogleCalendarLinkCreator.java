@@ -37,7 +37,7 @@ public class GoogleCalendarLinkCreator {
     }
 
     private String encodedZoomLinkOf(Ensemble ensemble) {
-        String zoomLinkString = ensemble.zoomMeetingLink().toString();
+        String zoomLinkString = ensemble.meetingLink().toString();
         return encode("Zoom link is: <a href='" + zoomLinkString + "'>" + zoomLinkString + "</a>");
     }
 

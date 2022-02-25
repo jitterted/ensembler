@@ -30,7 +30,7 @@ class EnsembleServiceScheduleTest {
         ensembleService.scheduleEnsemble("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
 
         assertThat(ensembleService.allEnsembles())
-                .extracting(Ensemble::zoomMeetingLink)
+                .extracting(Ensemble::meetingLink)
                 .extracting(URI::toString)
                 .containsOnly("https://zoom.us/j/123456?pwd=12345");
     }
@@ -43,7 +43,7 @@ class EnsembleServiceScheduleTest {
         ensembleService.scheduleEnsembleWithVideoConference("With Zoom", ZonedDateTime.now());
 
         assertThat(ensembleService.allEnsembles())
-                .extracting(Ensemble::zoomMeetingLink)
+                .extracting(Ensemble::meetingLink)
                 .extracting(URI::toString)
                 .containsOnly("https://zoom.us/joinUrl");
     }
@@ -66,7 +66,7 @@ class EnsembleServiceScheduleTest {
         ensembleService.scheduleEnsembleWithVideoConference("With Zoom", ZonedDateTime.now());
 
         assertThat(ensembleService.allEnsembles())
-                .extracting(Ensemble::zoomMeetingLink)
+                .extracting(Ensemble::meetingLink)
                 .extracting(URI::toString)
                 .containsOnly("https://zoom.us"); // default meeting link
     }

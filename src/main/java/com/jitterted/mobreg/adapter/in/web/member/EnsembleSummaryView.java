@@ -28,7 +28,7 @@ public record EnsembleSummaryView(long id,
     public static EnsembleSummaryView toView(Ensemble ensemble, MemberId memberId) {
         return new EnsembleSummaryView(ensemble.getId().id(),
                                        ensemble.name(),
-                                       ensemble.zoomMeetingLink().toString(),
+                                       ensemble.meetingLink().toString(),
                                        DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()),
                                        new GoogleCalendarLinkCreator().createFor(ensemble),
                                        ensemble.acceptedCount(),

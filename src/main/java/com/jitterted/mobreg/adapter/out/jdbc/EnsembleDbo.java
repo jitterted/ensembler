@@ -39,7 +39,7 @@ class EnsembleDbo {
         }
         ensembleDbo.setName(ensemble.name());
         ensembleDbo.setDateTimeUtc(ensemble.startDateTime().toLocalDateTime());
-        ensembleDbo.setZoomMeetingLink(ensemble.zoomMeetingLink().toString());
+        ensembleDbo.setZoomMeetingLink(ensemble.meetingLink().toString());
         ensembleDbo.setState(ensemble.state().toString());
         ensembleDbo.setRecordingLink(ensemble.recordingLink().toString());
         ensembleDbo.setAcceptedMembers(

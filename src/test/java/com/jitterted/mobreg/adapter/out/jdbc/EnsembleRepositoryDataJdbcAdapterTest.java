@@ -104,7 +104,7 @@ class EnsembleRepositoryDataJdbcAdapterTest {
         assertThat(found)
                 .isPresent()
                 .get()
-                .extracting(Ensemble::zoomMeetingLink)
+                .extracting(Ensemble::meetingLink)
                 .extracting(URI::toString)
                 .isEqualTo("https://zoom.us/j/123456?pwd=12345");
     }

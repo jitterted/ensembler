@@ -35,8 +35,8 @@ public class EnsembleService {
         this.videoConferenceScheduler = videoConferenceScheduler;
     }
 
-    public void scheduleEnsemble(String name, URI zoomMeetingLink, ZonedDateTime startDateTime) {
-        Ensemble ensemble = new Ensemble(name, zoomMeetingLink, startDateTime);
+    public void scheduleEnsemble(String name, URI meetingLink, ZonedDateTime startDateTime) {
+        Ensemble ensemble = new Ensemble(name, meetingLink, startDateTime);
         saveAndNotifyEnsembleScheduled(ensemble);
     }
 
@@ -64,7 +64,7 @@ public class EnsembleService {
         ensemble.changeStartDateTimeTo(newZoneDateTimeUtc);
         ensembleRepository.save(ensemble);
 
-        URI newVideoConferenceUri = ensemble.zoomMeetingLink();
+        URI newVideoConferenceUri = ensemble.meetingLink();
         if (newVideoConferenceLink.isBlank()) {
             try {
                 ConferenceDetails conferenceDetails = videoConferenceScheduler.createMeeting(ensemble);
@@ -140,8 +140,8 @@ public class EnsembleService {
         ensembleRepository.save(ensemble);
 
         if (videoConferenceScheduler.deleteMeeting(ensemble)) {
-            ensemble.changeMeetingLinkTo(URI.create("https://deleted.link"));
-        }
+            ensemble.changeConferenceDetailsTo(ConferenceDetails.DELETED);
+        } // TODO: else: wasn't deleted: throw exception?
     }
 
     private Ensemble findOrThrow(EnsembleId ensembleId) {

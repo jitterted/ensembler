@@ -61,7 +61,7 @@ class EnsembleServiceMemberRegistrationNotificationTest {
         public void memberAccepted(Ensemble ensemble, Member member) {
             emailBody = String.join(", ",
                                     ensemble.name(),
-                                    ensemble.zoomMeetingLink().toString(),
+                                    ensemble.meetingLink().toString(),
                                     ensemble.startDateTime().toString(),
                                     "https://calendar.google.com",
                                     member.firstName());

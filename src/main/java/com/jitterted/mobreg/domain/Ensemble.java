@@ -98,7 +98,7 @@ public class Ensemble {
         return membersWhoAccepted.contains(memberId);
     }
 
-    public URI zoomMeetingLink() {
+    public URI meetingLink() {
         return conferenceDetails.joinUrl();
     }
 
@@ -207,6 +207,14 @@ public class Ensemble {
 
     public EnsembleState state() {
         return state;
+    }
+
+    public ConferenceDetails conferenceDetails() {
+        return conferenceDetails;
+    }
+
+    public void changeConferenceDetailsTo(ConferenceDetails newConferenceDetails) {
+        conferenceDetails = newConferenceDetails;
     }
 
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
