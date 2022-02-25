@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
+import com.jitterted.mobreg.domain.ConferenceDetails;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import org.springframework.data.annotation.Id;
@@ -21,7 +22,9 @@ class EnsembleDbo {
     private Long id;
 
     private String name;
-    private String zoomMeetingLink;
+    private String conferenceJoinUrl;
+    private String conferenceStartUrl;
+    private String conferenceMeetingId;
     private LocalDateTime dateTimeUtc;
     private String state;
     private String recordingLink;
@@ -39,7 +42,9 @@ class EnsembleDbo {
         }
         ensembleDbo.setName(ensemble.name());
         ensembleDbo.setDateTimeUtc(ensemble.startDateTime().toLocalDateTime());
-        ensembleDbo.setZoomMeetingLink(ensemble.meetingLink().toString());
+        ensembleDbo.setConferenceMeetingId(ensemble.conferenceDetails().meetingId());
+        ensembleDbo.setConferenceJoinUrl(ensemble.conferenceDetails().joinUrl().toString());
+        ensembleDbo.setConferenceStartUrl(ensemble.conferenceDetails().startUrl().toString());
         ensembleDbo.setState(ensemble.state().toString());
         ensembleDbo.setRecordingLink(ensemble.recordingLink().toString());
         ensembleDbo.setAcceptedMembers(
@@ -55,7 +60,10 @@ class EnsembleDbo {
 
     public Ensemble asEnsemble() {
         ZonedDateTime startDateTime = ZonedDateTime.of(dateTimeUtc, ZoneOffset.UTC);
-        Ensemble ensemble = new Ensemble(name, URI.create(zoomMeetingLink), startDateTime);
+        Ensemble ensemble = new Ensemble(name, startDateTime);
+        ensemble.changeConferenceDetailsTo(new ConferenceDetails(getConferenceMeetingId(),
+                                                                 URI.create(getConferenceJoinUrl()),
+                                                                 URI.create(getConferenceStartUrl())));
         ensemble.setId(EnsembleId.of(id));
         ensemble.linkToRecordingAt(URI.create(recordingLink));
 
@@ -116,14 +124,6 @@ class EnsembleDbo {
         this.declinedMembers = declinedMembers;
     }
 
-    public String getZoomMeetingLink() {
-        return zoomMeetingLink;
-    }
-
-    public void setZoomMeetingLink(String zoomMeetingLink) {
-        this.zoomMeetingLink = zoomMeetingLink;
-    }
-
     public String getState() {
         return state;
     }
@@ -138,5 +138,29 @@ class EnsembleDbo {
 
     public void setRecordingLink(String recordingLink) {
         this.recordingLink = recordingLink;
+    }
+
+    public String getConferenceJoinUrl() {
+        return conferenceJoinUrl;
+    }
+
+    public void setConferenceJoinUrl(String conferenceJoinUrl) {
+        this.conferenceJoinUrl = conferenceJoinUrl;
+    }
+
+    public String getConferenceStartUrl() {
+        return conferenceStartUrl;
+    }
+
+    public void setConferenceStartUrl(String conferenceStartUrl) {
+        this.conferenceStartUrl = conferenceStartUrl;
+    }
+
+    public String getConferenceMeetingId() {
+        return conferenceMeetingId;
+    }
+
+    public void setConferenceMeetingId(String conferenceMeetingId) {
+        this.conferenceMeetingId = conferenceMeetingId;
     }
 }

@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
+import com.jitterted.mobreg.domain.ConferenceDetails;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,9 @@ class EnsembleDboMappingTest {
         ZonedDateTime now = ZonedDateTime.now();
         ensembleDbo.setDateTimeUtc(now.toLocalDateTime());
         ensembleDbo.setName("Entity");
-        ensembleDbo.setZoomMeetingLink("https://zoom.us/entity");
+        ensembleDbo.setConferenceMeetingId("entityMeetingId");
+        ensembleDbo.setConferenceJoinUrl("entityJoinUrl");
+        ensembleDbo.setConferenceStartUrl("entityStartUrl");
         ensembleDbo.setAcceptedMembers(Set.of(new AcceptedMember(13L)));
         ensembleDbo.setDeclinedMembers(Set.of(new DeclinedMember(29L)));
 
@@ -37,8 +40,8 @@ class EnsembleDboMappingTest {
                 .isEqualTo("Entity");
         assertThat(ensemble.recordingLink().toString())
                 .isEqualTo("https://recording.link/entity");
-        assertThat(ensemble.meetingLink().toString())
-                .isEqualTo("https://zoom.us/entity");
+        assertThat(ensemble.conferenceDetails())
+                .isEqualTo(new ConferenceDetails("entityMeetingId", URI.create("entityJoinUrl"), URI.create("entityStartUrl")));
         assertThat(ensemble.acceptedMembers())
                 .extracting(MemberId::id)
                 .isEqualTo(List.of(13L));
@@ -50,7 +53,8 @@ class EnsembleDboMappingTest {
     @Test
     public void domainToDatabaseEntityIsMappedCorrectly() throws Exception {
         ZonedDateTime utc2021091316000 = ZonedDateTime.of(2021, 9, 13, 16, 0, 0, 0, ZoneOffset.UTC);
-        Ensemble ensemble = new Ensemble("Domain", URI.create("https://zoom.us/"), utc2021091316000);
+        Ensemble ensemble = new Ensemble("Domain", utc2021091316000);
+        ensemble.changeConferenceDetailsTo(new ConferenceDetails("someMeetingId", URI.create("https://start.us/"), URI.create("https://join.us/")));
         ensemble.linkToRecordingAt(URI.create("https://recording.link/domain"));
         ensemble.acceptedBy(MemberId.of(11L));
         ensemble.declinedBy(MemberId.of(13L));
@@ -64,6 +68,12 @@ class EnsembleDboMappingTest {
                 .isEqualTo(utc2021091316000.toLocalDateTime());
         assertThat(entity.getState())
                 .isEqualTo("COMPLETED");
+        assertThat(entity.getConferenceJoinUrl())
+                .isEqualTo("https://join.us/");
+        assertThat(entity.getConferenceStartUrl())
+                .isEqualTo("https://start.us/");
+        assertThat(entity.getConferenceMeetingId())
+                .isEqualTo("someMeetingId");
         assertThat(entity.getRecordingLink())
                 .isEqualTo("https://recording.link/domain");
         assertThat(entity.getAcceptedMembers())
