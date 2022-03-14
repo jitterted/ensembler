@@ -98,4 +98,10 @@ public class MemberEndpointConfigurationTest {
                .andExpect(status().is3xxRedirection());
     }
 
+    @Test
+    public void getToInviteIdEndpointRedirects() throws Exception {
+        mockMvc.perform(get("/invite?invite_id=testing123")
+                                .with(OAuth2UserFactory.oAuth2User("ROLE_USER")))
+               .andExpect(status().is3xxRedirection());
+    }
 }
