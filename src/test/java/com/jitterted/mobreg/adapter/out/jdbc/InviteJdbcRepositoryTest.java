@@ -18,10 +18,10 @@ import static org.assertj.core.api.Assertions.*;
 @Tag("container")
 @Tag("integration")
 @SpringBootTest
-class InviteRepositoryTest {
+class InviteJdbcRepositoryTest {
 
     @Autowired
-    InviteRepository inviteRepository;
+    InviteJdbcRepository inviteJdbcRepository;
 
     // create shared container with a container image name "postgres" and latest major release of PostgreSQL "13"
     @Container
@@ -52,14 +52,14 @@ class InviteRepositoryTest {
         usedInviteDbo.setDateUsedUtc(LocalDateTime.now());
         usedInviteDbo.setWasUsed(true);
 
-        inviteRepository.save(inviteDbo);
-        inviteRepository.save(usedInviteDbo);
+        inviteJdbcRepository.save(inviteDbo);
+        inviteJdbcRepository.save(usedInviteDbo);
 
-        assertThat(inviteRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token123", "tramstarzz"))
+        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token123", "tramstarzz"))
                 .isFalse();
-        assertThat(inviteRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token123", "howlingarcticfox"))
+        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token123", "howlingarcticfox"))
                 .isTrue();
-        assertThat(inviteRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token001", "echostrike36"))
+        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token001", "echostrike36"))
                 .isFalse();
     }
 
@@ -70,11 +70,11 @@ class InviteRepositoryTest {
         inviteDbo.setGithubUsername("howlingarcticfox");
         inviteDbo.setDateCreatedUtc(LocalDateTime.of(2022, 3, 14, 3, 14));
         inviteDbo.setWasUsed(false);
-        inviteRepository.save(inviteDbo);
+        inviteJdbcRepository.save(inviteDbo);
 
-        inviteRepository.markInviteAsUsed("token007", LocalDateTime.now());
+        inviteJdbcRepository.markInviteAsUsed("token007", LocalDateTime.now());
 
-        assertThat(inviteRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token007", "howlingarcticfox"))
+        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token007", "howlingarcticfox"))
                 .isFalse();
     }
 }
