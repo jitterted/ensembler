@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
+@SuppressWarnings("unchecked")
 class AdminMembershipControllerTest {
 
     @Test

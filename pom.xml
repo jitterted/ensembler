@@ -21,6 +21,8 @@
     <testcontainers.version>1.16.3</testcontainers.version>
     <htmlunit.version>2.59.0</htmlunit.version>
     <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
+    <guava.version>31.1-jre</guava.version>
+    <archunit.version>0.23.1</archunit.version>
   </properties>
   <dependencies>
     <dependency>
@@ -91,7 +93,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>31.1-jre</version>
+      <version>${guava.version}</version>
     </dependency>
 
     <dependency>
@@ -145,7 +147,7 @@
     <dependency>
       <groupId>com.tngtech.archunit</groupId>
       <artifactId>archunit-junit5</artifactId>
-      <version>0.23.1</version>
+      <version>${archunit.version}</version>
       <scope>test</scope>
     </dependency>
 
