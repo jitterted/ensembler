@@ -33,7 +33,7 @@ public class InvitationController {
             inviteRepository.markInviteAsUsed(token, LocalDateTime.now());
             return "redirect:/member/profile";
         }
-        throw new UnsupportedOperationException(); // should redirect to "invalid token" page
+        return "invite-invalid";
     }
 
 }

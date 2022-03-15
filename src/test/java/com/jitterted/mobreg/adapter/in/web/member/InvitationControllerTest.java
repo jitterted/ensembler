@@ -15,20 +15,9 @@ import static org.assertj.core.api.Assertions.*;
 class InvitationControllerTest {
 
     @Test
-    public void inviteRedirectsToMemberProfile() throws Exception {
-        InvitationController invitationController = new InvitationController(new InMemoryMemberRepository(), new InviteRepositoryMock());
-        AuthenticatedPrincipal nonMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("member_to_become", "ROLE_USER");
-
-        String redirectPage = invitationController.processInvitation("token", nonMemberAuthn);
-
-        assertThat(redirectPage)
-                .isEqualTo("redirect:/member/profile");
-    }
-
-    @Test
     public void validTokenAndAuthnPrincipalCreatesNewMemberAndMarks() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
-        InviteRepositoryMock inviteRepositoryMock = new InviteRepositoryMock();
+        InviteRepositoryBothExistsAndMarkAsUsedCalledCorrectly inviteRepositoryMock = new InviteRepositoryBothExistsAndMarkAsUsedCalledCorrectly();
         InvitationController invitationController = new InvitationController(memberRepository, inviteRepositoryMock);
         AuthenticatedPrincipal nonMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("member_to_become", "ROLE_USER");
 
@@ -41,7 +30,23 @@ class InvitationControllerTest {
                 .isEqualTo(new Member("", "member_to_become", "ROLE_USER", "ROLE_MEMBER"));
     }
 
-    private static class InviteRepositoryMock implements InviteRepository {
+    @Test
+    public void nonExistentInviteReturnsInvalidInvitePage() throws Exception {
+        MemberRepository memberRepository = new InMemoryMemberRepository();
+        InviteRepository inviteRepositoryMock = new InviteRepositoryWhereInviteNeverExists();
+        InvitationController invitationController = new InvitationController(memberRepository, inviteRepositoryMock);
+        AuthenticatedPrincipal nonMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("member_to_become", "ROLE_USER");
+
+        String redirectPage = invitationController.processInvitation("token", nonMemberAuthn);
+
+        assertThat(redirectPage)
+                .isEqualTo("invite-invalid");
+    }
+
+
+
+
+    private static class InviteRepositoryBothExistsAndMarkAsUsedCalledCorrectly implements InviteRepository {
         private boolean markAsUsedWasCalled;
         private boolean existsWasCalled;
 
@@ -66,6 +71,18 @@ class InvitationControllerTest {
             assertThat(markAsUsedWasCalled)
                     .as("markAsUsed() was NOT called, but should have been.")
                     .isTrue();
+        }
+    }
+
+    private static class InviteRepositoryWhereInviteNeverExists implements InviteRepository {
+        @Override
+        public boolean existsByTokenAndGithubUsernameAndWasUsedFalse(String token, String githubUsername) {
+            return false;
+        }
+
+        @Override
+        public void markInviteAsUsed(String token, LocalDateTime dateUsedUtc) {
+            fail("This should not have been called.");
         }
     }
 }
