@@ -4,9 +4,10 @@ ALTER TABLE members
 
 CREATE TABLE invites
 (
-    invite_id BIGINT NOT NULL PRIMARY KEY,
+    id SERIAL NOT NULL PRIMARY KEY,
+    token TEXT NOT NULL,
     github_username TEXT NOT NULL,
     date_created_utc TIMESTAMP NOT NULL,
     was_used boolean NOT NULL,
-    date_used_utc TIMESTAMP NOT NULL
+    date_used_utc TIMESTAMP
 );
