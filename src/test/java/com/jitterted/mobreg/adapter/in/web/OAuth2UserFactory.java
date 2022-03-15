@@ -6,14 +6,14 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 public class OAuth2UserFactory {
     @NotNull
-    public static DefaultOAuth2User createOAuth2UserWithMemberRole(String githubUsername, String role) {
+    public static DefaultOAuth2User createOAuth2UserWithMemberRole(String githubUsername, String... roles) {
         return new DefaultOAuth2User(
-                List.of(new SimpleGrantedAuthority(role)),
+                Arrays.stream(roles).map(SimpleGrantedAuthority::new).toList(),
                 Map.of("login", githubUsername, "name", "Ted M. Young"),
                 "name");
     }

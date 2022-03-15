@@ -103,9 +103,9 @@ public class MemberEndpointConfigurationTest {
     }
 
     @Test
-    public void getToInviteIdEndpointRedirects() throws Exception {
+    public void getToInviteIdEndpointIs200Ok() throws Exception {
         mockMvc.perform(get("/invite?invite_id=testing123")
                                 .with(OAuth2UserFactory.oAuth2User("ROLE_USER")))
-               .andExpect(status().is3xxRedirection());
+               .andExpect(status().isOk());
     }
 }

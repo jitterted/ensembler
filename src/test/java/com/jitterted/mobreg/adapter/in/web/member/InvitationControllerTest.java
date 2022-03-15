@@ -44,6 +44,19 @@ class InvitationControllerTest {
     }
 
 
+    @Test
+    public void inviteeAlreadyMemberRedirectedToMemberHome() throws Exception {
+        MemberRepository memberRepository = new InMemoryMemberRepository();
+        InviteRepository inviteRepositoryMock = new InviteRepositoryWhereInviteNeverExists();
+        InvitationController invitationController = new InvitationController(memberRepository, inviteRepositoryMock);
+        AuthenticatedPrincipal alreadyMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("already_member", "ROLE_USER", "ROLE_MEMBER");
+        memberRepository.save(new Member("AlreadyMember", "already_member", "ROLE_USER", "ROLE_MEMBER"));
+
+        String redirectPage = invitationController.processInvitation("token", alreadyMemberAuthn);
+
+        assertThat(redirectPage)
+                .isEqualTo("redirect:/member/register");
+    }
 
 
     private static class InviteRepositoryBothExistsAndMarkAsUsedCalledCorrectly implements InviteRepository {
