@@ -1,0 +1,28 @@
+@startuml
+
+start
+:click invite link;
+:authenticate with GitHub;
+if (authenticated?) then (yes)
+    if (already member?) then (yes)
+        #palegreen:you're already a member
+        welcome!;
+        kill
+    else (no)
+        if (invite link valid?\n(username matches and token is valid)) then (yes)
+            :create Member with ROLE_MEMBER role;
+            :persist in the database;
+            :clear authentication;
+            :redirect to member profile page;
+            stop
+        else (no)
+            #pink:sorry, invite link is invalid;
+            kill
+        endif
+    endif
+else (no)
+    #pink:sorry, you need to auth with GitHub;
+    kill
+endif
+
+@enduml

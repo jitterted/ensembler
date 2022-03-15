@@ -13,18 +13,12 @@ import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.sli
 @AnalyzeClasses(packages = {"com.jitterted.mobreg"})
 public class HexagonalArchitectureTest {
     @Test
-    public void domainMustNotDependOnAdapters() {
+    public void domainMustNotDependOnAnythingOutsideOfDomain() {
         noClasses()
                 .that().resideInAPackage("..domain..")
                 .should().dependOnClassesThat().resideInAPackage("..adapter..")
-                .check(productionAndTestClasses());
-    }
-
-    @Test
-    public void domainMustNotDependOnApplication() {
-        noClasses()
-                .that().resideInAPackage("..domain..")
-                .should().dependOnClassesThat().resideInAPackage("..application..")
+                .orShould().dependOnClassesThat().resideInAPackage("..application..")
+                .orShould().dependOnClassesThat().resideInAPackage("com.jitterted.mobreg")
                 .check(productionAndTestClasses());
     }
 
@@ -38,10 +32,10 @@ public class HexagonalArchitectureTest {
 
     @Test
     public void adaptersMustNotDependOnEachOther() {
-       slices().matching("..adapter.*.(*)..")
-               .should().notDependOnEachOther()
-               .as("Adapters must not depend on each other")
-               .check(productionAndTestClasses());
+        slices().matching("..adapter.*.(*)..")
+                .should().notDependOnEachOther()
+                .as("Adapters must not depend on each other")
+                .check(productionAndTestClasses());
     }
 
     private JavaClasses productionAndTestClasses() {

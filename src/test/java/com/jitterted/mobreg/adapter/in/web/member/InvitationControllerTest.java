@@ -4,6 +4,7 @@ import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.InviteRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
+import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.AuthenticatedPrincipal;
 
@@ -15,8 +16,8 @@ class InvitationControllerTest {
 
     @Test
     public void inviteRedirectsToMemberProfile() throws Exception {
-        InvitationController invitationController = new InvitationController(null, null);
-        AuthenticatedPrincipal nonMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("githubusername", "ROLE_USER");
+        InvitationController invitationController = new InvitationController(new InMemoryMemberRepository(), new InviteRepositoryMock());
+        AuthenticatedPrincipal nonMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("member_to_become", "ROLE_USER");
 
         String redirectPage = invitationController.processInvitation("token", nonMemberAuthn);
 
@@ -35,7 +36,9 @@ class InvitationControllerTest {
 
         inviteRepositoryMock.verify();
         assertThat(memberRepository.findByGithubUsername("member_to_become"))
-                .isPresent();
+                .isPresent().get()
+                .usingRecursiveComparison().comparingOnlyFields("firstName", "githubUsername", "roles")
+                .isEqualTo(new Member("", "member_to_become", "ROLE_USER", "ROLE_MEMBER"));
     }
 
     private static class InviteRepositoryMock implements InviteRepository {
@@ -57,7 +60,11 @@ class InvitationControllerTest {
         }
 
         public void verify() {
-            assertThat(existsWasCalled && markAsUsedWasCalled)
+            assertThat(existsWasCalled)
+                    .as("exists() was NOT called, but should have been.")
+                    .isTrue();
+            assertThat(markAsUsedWasCalled)
+                    .as("markAsUsed() was NOT called, but should have been.")
                     .isTrue();
         }
     }
