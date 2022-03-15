@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -18,7 +17,6 @@ import java.time.ZoneId;
 import java.util.List;
 
 @Controller
-@RequestMapping("/member/profile")
 public class MemberProfileController {
 
     private final MemberLookup memberLookup;
@@ -30,8 +28,9 @@ public class MemberProfileController {
         this.memberService = memberService;
     }
 
-    @GetMapping
-    public String prepareMemberProfileForm(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
+    @GetMapping("/member/profile")
+    public String prepareMemberProfileForm(Model model,
+                                           @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         Member member = memberLookup.findMemberBy(principal);
         model.addAttribute("githubUsername", member.githubUsername());
         model.addAttribute("firstName", member.firstName());
@@ -40,7 +39,7 @@ public class MemberProfileController {
         return "member-profile";
     }
 
-    @PostMapping
+    @PostMapping("/member/profile")
     public String updateProfileFromForm(@Valid MemberProfileForm memberProfileForm,
                                         @AuthenticationPrincipal AuthenticatedPrincipal principal,
                                         RedirectAttributes redirectAttrs) {
