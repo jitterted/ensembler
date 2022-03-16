@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class EnsembleService {
     private final EnsembleRepository ensembleRepository;
     private final Notifier notifier;
@@ -47,12 +48,12 @@ public class EnsembleService {
 
     public void scheduleEnsembleWithVideoConference(String name, ZonedDateTime startDateTime) {
         Ensemble ensemble = new Ensemble(name, startDateTime);
-        Ensemble savedEnsemble = ensembleRepository.save(ensemble);
+        Ensemble savedEnsemble = saveAndNotifyEnsembleScheduled(ensemble);
 
         try {
             ConferenceDetails conferenceDetails = videoConferenceScheduler.createMeeting(savedEnsemble);
             savedEnsemble.changeConferenceDetailsTo(conferenceDetails);
-            saveAndNotifyEnsembleScheduled(savedEnsemble);
+            ensembleRepository.save(ensemble);
         } catch (FailedToScheduleMeeting ftsm) {
             LOGGER.warn("Failed to schedule Ensemble with Video Conference", ftsm);
         }
@@ -80,9 +81,10 @@ public class EnsembleService {
         ensembleRepository.save(ensemble);
     }
 
-    private void saveAndNotifyEnsembleScheduled(Ensemble ensemble) {
-        ensembleRepository.save(ensemble);
+    private Ensemble saveAndNotifyEnsembleScheduled(Ensemble ensemble) {
+        Ensemble savedEnsemble = ensembleRepository.save(ensemble);
         triggerEnsembleScheduledNotification(ensemble);
+        return savedEnsemble;
     }
 
     public void triggerEnsembleScheduledNotification(Ensemble ensemble) {

@@ -14,6 +14,7 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
+@SuppressWarnings("RedundantThrows")
 class EnsembleServiceEnsembleScheduledNotificationTest {
 
     @Test
@@ -24,6 +25,20 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
                                                               mockEnsembleScheduledNotifier, new DummyVideoConferenceScheduler());
 
         ensembleService.scheduleEnsemble("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
+
+        mockEnsembleScheduledNotifier.verify();
+    }
+
+    @Test
+    public void ensembleScheduledWithFailureToAutoCreateZoomLinkThenNotificationIsStillSent() throws Exception {
+        MockEnsembleScheduledNotifier mockEnsembleScheduledNotifier = new MockEnsembleScheduledNotifier();
+        EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
+                                                              new InMemoryMemberRepository(),
+                                                              mockEnsembleScheduledNotifier,
+                                                              new FailsToCreateMeetingConferenceScheduler());
+
+        ensembleService.scheduleEnsembleWithVideoConference("Ensemble failed to create Zoom link",
+                                                            ZonedDateTime.of(2022, 3, 14, 15, 0, 0, 0, ZoneOffset.UTC));
 
         mockEnsembleScheduledNotifier.verify();
     }
@@ -43,11 +58,11 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
     }
 
     private static class MockEnsembleScheduledNotifier implements Notifier {
-        private int statusValue = -1;
+        private int statusValue = 0;
 
         @Override
         public int ensembleScheduled(Ensemble ensemble, URI registrationLink) {
-            statusValue = 1;
+            statusValue++;
             return statusValue;
         }
 
