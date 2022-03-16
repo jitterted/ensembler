@@ -27,7 +27,7 @@ class InvitationControllerTest {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         InviteRepositoryBothExistsAndMarkAsUsedCalledCorrectly inviteRepositoryMock = new InviteRepositoryBothExistsAndMarkAsUsedCalledCorrectly();
         InvitationController invitationController = new InvitationController(memberRepository, inviteRepositoryMock);
-        AuthenticatedPrincipal nonMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("member_to_become", "ROLE_USER");
+        AuthenticatedPrincipal nonMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("Member_To_Become", "ROLE_USER");
         Authentication authentication = createFakeAuthentication(nonMemberAuthn);
 
         invitationController.processInvitation("token", nonMemberAuthn, new ConcurrentModel());
@@ -35,7 +35,7 @@ class InvitationControllerTest {
         assertThat(authentication.isAuthenticated())
                 .isFalse();
         inviteRepositoryMock.verify();
-        assertThat(memberRepository.findByGithubUsername("member_to_become"))
+        assertThat(memberRepository.findByGithubUsername("Member_To_Become".toLowerCase()))
                 .isPresent().get()
                 .usingRecursiveComparison().comparingOnlyFields("firstName", "githubUsername", "roles")
                 .isEqualTo(new Member("", "member_to_become", "ROLE_USER", "ROLE_MEMBER"));

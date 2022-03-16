@@ -76,4 +76,15 @@ public class Member {
     public int hashCode() {
         return githubUsername.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", githubUsername='" + githubUsername + '\'' +
+                ", roles=" + roles +
+                ", timeZone=" + timeZone +
+                '}';
+    }
 }

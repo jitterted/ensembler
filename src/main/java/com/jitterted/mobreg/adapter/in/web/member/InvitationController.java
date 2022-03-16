@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -28,17 +29,19 @@ public class InvitationController {
     }
 
     @GetMapping("/invite")
-    public String processInvitation(String token, @AuthenticationPrincipal AuthenticatedPrincipal authenticatedPrincipal, Model model) {
+    public String processInvitation(@RequestParam(value = "invite_token", defaultValue = "") String token,
+                                    @AuthenticationPrincipal AuthenticatedPrincipal authenticatedPrincipal,
+                                    Model model) {
         String githubUsername = GitHubUsernamePrincipalExtractor.usernameFrom(authenticatedPrincipal);
-        if (memberRepository.findByGithubUsername(githubUsername)
+        if (memberRepository.findByGithubUsername(githubUsername.toLowerCase())
                             .stream()
                             .map(Member::roles)
                             .flatMap(Collection::stream)
                             .anyMatch(s -> s.equals("ROLE_MEMBER"))) {
             return "redirect:/member/register";
         }
-        if (inviteRepository.existsByTokenAndGithubUsernameAndWasUsedFalse(token, githubUsername)) {
-            Member member = new Member("", githubUsername, "ROLE_MEMBER", "ROLE_USER");
+        if (inviteRepository.existsByTokenAndGithubUsernameAndWasUsedFalse(token, githubUsername.toLowerCase())) {
+            Member member = new Member("", githubUsername.toLowerCase(), "ROLE_MEMBER", "ROLE_USER");
             memberRepository.save(member);
             inviteRepository.markInviteAsUsed(token, LocalDateTime.now());
             SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
