@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class Member {
     private MemberId id;
 
-    private final String firstName;
+    private String firstName;
     private final String githubUsername; // could be a Value Object
     private final Set<String> roles;
     private String email = "";
@@ -54,6 +54,10 @@ public class Member {
         timeZone = newTimeZone;
     }
 
+    public void changeFirstNameTo(String newFirstName) {
+        firstName = newFirstName;
+    }
+
     public MemberId getId() {
         return id;
     }
@@ -79,12 +83,11 @@ public class Member {
 
     @Override
     public String toString() {
-        return "Member{" +
+        return "Member: " +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", githubUsername='" + githubUsername + '\'' +
                 ", roles=" + roles +
-                ", timeZone=" + timeZone +
-                '}';
+                ", timeZone=" + timeZone;
     }
 }

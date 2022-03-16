@@ -44,6 +44,7 @@ public class MemberProfileController {
                                         @AuthenticationPrincipal AuthenticatedPrincipal principal,
                                         RedirectAttributes redirectAttrs) {
         Member member = memberLookup.findMemberBy(principal);
+        memberService.changeFirstName(member, memberProfileForm.getFirstName());
         memberService.changeEmail(member, memberProfileForm.getEmail());
         memberService.changeTimeZone(member, memberProfileForm.getTimeZone());
         redirectAttrs.addFlashAttribute("updated", true);

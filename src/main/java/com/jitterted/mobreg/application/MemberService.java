@@ -40,6 +40,11 @@ public class MemberService {
         save(member);
     }
 
+    public void changeFirstName(Member member, String newFirstName) {
+        member.changeFirstNameTo(newFirstName);
+        save(member);
+    }
+
     public Member save(Member member) {
         return memberRepository.save(member);
     }
