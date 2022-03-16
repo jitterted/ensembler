@@ -9,6 +9,7 @@ import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class InvitationController {
     }
 
     @GetMapping("/invite")
-    public String processInvitation(String token, @AuthenticationPrincipal AuthenticatedPrincipal authenticatedPrincipal) {
+    public String processInvitation(String token, @AuthenticationPrincipal AuthenticatedPrincipal authenticatedPrincipal, Model model) {
         String githubUsername = GitHubUsernamePrincipalExtractor.usernameFrom(authenticatedPrincipal);
         if (memberRepository.findByGithubUsername(githubUsername)
                             .stream()
@@ -43,6 +44,7 @@ public class InvitationController {
             SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
             return "redirect:/member/profile";
         }
+        model.addAttribute("username", githubUsername);
         return "invite-invalid";
     }
 
