@@ -3,6 +3,14 @@
 <head>
     <title>Invites</title>
     <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
+    <script>
+        function copyToClipboard(target) {
+            const copyText = target.dataset.copy
+            navigator.clipboard.writeText(copyText).then(() => {
+                alert(target.dataset.done);
+            });
+        }
+    </script>
 </head>
 <body class="p-4">
 
@@ -44,7 +52,9 @@
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Token</th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Created</th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Used?</th>
-                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Invite Link</th>
+                            <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                <span class="sr-only">Edit</span>
+                            </th>
                         </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 bg-white">
@@ -54,7 +64,13 @@
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" th:text="${invite.token}">token123</td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" th:text="${invite.dateCreatedUtc}">2022-03-14</td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" th:text="${invite.wasUsed}">false</td>
-                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6" th:text="${'https://mobreg.herokuapp.com/invite/?invite_token=' + invite.token}">https://mobreg.herokuapp.com/invite/?invite_token=red-rider-37</td>
+                            <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                <button onclick="copyToClipboard(this)"
+                                        th:data-copy="${'https://mobreg.herokuapp.com/invite/?invite_token=' + invite.token}"
+                                        data-done="Link Copied"
+                                        class="text-indigo-600 hover:text-indigo-900">Copy Invite Link to Clipboard
+                                </button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

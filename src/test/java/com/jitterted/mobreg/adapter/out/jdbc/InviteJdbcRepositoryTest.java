@@ -42,7 +42,7 @@ class InviteJdbcRepositoryTest {
     public void existsForInviteAndUsernameWorksAsExpected() throws Exception {
         InviteDbo inviteDbo = new InviteDbo();
         inviteDbo.setToken("token123");
-        inviteDbo.setGithubUsername("howlingarcticfox");
+        inviteDbo.setGithubUsername("HowlingArcticFox");
         inviteDbo.setDateCreatedUtc(LocalDateTime.now());
         inviteDbo.setWasUsed(false);
         InviteDbo usedInviteDbo = new InviteDbo();
@@ -55,11 +55,13 @@ class InviteJdbcRepositoryTest {
         inviteJdbcRepository.save(inviteDbo);
         inviteJdbcRepository.save(usedInviteDbo);
 
-        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token123", "tramstarzz"))
-                .isFalse();
-        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token123", "howlingarcticfox"))
+        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameIgnoreCaseAndWasUsedFalse("token123", "HowlingArcticFox"))
                 .isTrue();
-        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token001", "echostrike36"))
+        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameIgnoreCaseAndWasUsedFalse("token123", "howlingarcticfox"))
+                .isTrue();
+        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameIgnoreCaseAndWasUsedFalse("token123", "tramstarzz"))
+                .isFalse();
+        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameIgnoreCaseAndWasUsedFalse("token001", "echostrike36"))
                 .isFalse();
     }
 
@@ -74,7 +76,7 @@ class InviteJdbcRepositoryTest {
 
         inviteJdbcRepository.markInviteAsUsed("token007", LocalDateTime.now());
 
-        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameAndWasUsedFalse("token007", "howlingarcticfox"))
+        assertThat(inviteJdbcRepository.existsByTokenAndGithubUsernameIgnoreCaseAndWasUsedFalse("token007", "howlingarcticfox"))
                 .isFalse();
     }
 }

@@ -88,7 +88,7 @@ class InviteProcessControllerTest {
         private boolean existsWasCalled;
 
         @Override
-        public boolean existsByTokenAndGithubUsernameAndWasUsedFalse(String token, String githubUsername) {
+        public boolean existsByTokenAndGithubUsernameIgnoreCaseAndWasUsedFalse(String token, String githubUsername) {
             assertThat(token).isEqualTo("token");
             assertThat(githubUsername).isEqualTo("member_to_become");
             existsWasCalled = true;
@@ -118,7 +118,7 @@ class InviteProcessControllerTest {
 
     private static class InviteRepositoryWhereInviteNeverExists implements InviteRepository {
         @Override
-        public boolean existsByTokenAndGithubUsernameAndWasUsedFalse(String token, String githubUsername) {
+        public boolean existsByTokenAndGithubUsernameIgnoreCaseAndWasUsedFalse(String token, String githubUsername) {
             return false;
         }
 

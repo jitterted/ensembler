@@ -40,7 +40,7 @@ public class InviteProcessController {
                             .anyMatch(s -> s.equals("ROLE_MEMBER"))) {
             return "redirect:/member/register";
         }
-        if (inviteRepository.existsByTokenAndGithubUsernameAndWasUsedFalse(token, githubUsername.toLowerCase())) {
+        if (inviteRepository.existsByTokenAndGithubUsernameIgnoreCaseAndWasUsedFalse(token, githubUsername.toLowerCase())) {
             Member member = new Member("", githubUsername.toLowerCase(), "ROLE_MEMBER", "ROLE_USER");
             memberRepository.save(member);
             inviteRepository.markInviteAsUsed(token, LocalDateTime.now());
