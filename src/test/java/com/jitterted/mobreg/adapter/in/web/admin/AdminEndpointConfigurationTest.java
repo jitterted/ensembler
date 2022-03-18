@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 // TODO: create test configuration that uses Fake repositories
-@WebMvcTest({AdminDashboardController.class, AdminMembershipController.class})
+@WebMvcTest({AdminDashboardController.class, MemberManagementController.class})
 @Tag("mvc")
 // TODO: roles aren't needed here anymore
 @WithMockUser(username = "username", authorities = {"ROLE_MEMBER", "ROLE_ADMIN"})

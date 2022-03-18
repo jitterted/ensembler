@@ -7,14 +7,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
-public class AdminMembershipController {
+public class MemberManagementController {
 
     private final MemberRepository memberRepository;
 
-    public AdminMembershipController(MemberRepository memberRepository) {
+    public MemberManagementController(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
@@ -22,10 +23,11 @@ public class AdminMembershipController {
     public String membersView(Model model) {
         List<MemberView> memberViews = memberRepository.findAll()
                                                        .stream()
+                                                       .sorted(Comparator.comparingLong(member -> member.getId().id()))
                                                        .map(MemberView::from)
                                                        .toList();
-        model.addAttribute("members", memberViews);
-        model.addAttribute("addMemberForm", new AddMemberForm());
+        model.addAttribute("members", memberViews)
+             .addAttribute("addMemberForm", new AddMemberForm());
         return "members";
     }
 

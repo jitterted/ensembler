@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AdminMembershipController.class)
+@WebMvcTest(MemberManagementController.class)
 @Tag("mvc")
 @WithMockUser(username = "tedyoung", authorities = {"ROLE_MEMBER","ROLE_ADMIN"})
 public class AdminMembershipEndpointTest {

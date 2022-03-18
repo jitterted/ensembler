@@ -13,17 +13,17 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 
 @SuppressWarnings("unchecked")
-class AdminMembershipControllerTest {
+class MemberManagementControllerTest {
 
     @Test
     public void membersViewReturnsViewsOfAllMembers() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         memberRepository.save(new Member("First", "firstusername", "ROLE_MEMBER"));
         memberRepository.save(new Member("Second", "secondusername", "ROLE_ADMIN"));
-        AdminMembershipController adminMembershipController = new AdminMembershipController(memberRepository);
+        MemberManagementController memberManagementController = new MemberManagementController(memberRepository);
 
         Model model = new ConcurrentModel();
-        adminMembershipController.membersView(model);
+        memberManagementController.membersView(model);
 
         assertThat(model.containsAttribute("addMemberForm"))
                 .isTrue();
@@ -38,13 +38,13 @@ class AdminMembershipControllerTest {
     @Test
     public void addMemberShouldAddMemberFromFormContent() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
-        AdminMembershipController adminMembershipController = new AdminMembershipController(memberRepository);
+        MemberManagementController memberManagementController = new MemberManagementController(memberRepository);
 
         AddMemberForm addMemberForm = new AddMemberForm();
         addMemberForm.setFirstName("first");
         addMemberForm.setGithubUsername("ghuser");
 
-        String redirectPage = adminMembershipController.addMember(addMemberForm);
+        String redirectPage = memberManagementController.addMember(addMemberForm);
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/admin/members");

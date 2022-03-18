@@ -158,6 +158,27 @@
       <version>${htmlunit.version}</version>
     </dependency>
 
+    <!-- Generate short unique identifiers, from https://github.com/huxi/sulky/blob/master/sulky-ulid/README.md -->
+    <dependency>
+      <groupId>de.huxhorn.sulky</groupId>
+      <artifactId>de.huxhorn.sulky.ulid</artifactId>
+      <version>8.3.0</version>
+    </dependency>
+
+    <!-- For In-Memory implementation of Repositories, use a deep-cloner  -->
+    <!-- Deep Cloner from https://github.com/kostaskougios/cloning -->
+    <dependency>
+      <groupId>io.github.kostaskougios</groupId>
+      <artifactId>cloning</artifactId>
+      <version>1.10.3</version>
+      <type>bundle</type>
+    </dependency>
+    <!-- Another option: https://github.com/parkito/KaCopy -->
+    <dependency>
+      <groupId>ru.siksmfp</groupId>
+      <artifactId>KaCopy</artifactId>
+      <version>0.0.9</version>
+    </dependency>
   </dependencies>
 
   <dependencyManagement>
