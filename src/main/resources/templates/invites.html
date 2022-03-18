@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Invites</title>
+    <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
+</head>
+<body class="p-4">
+
+<div class="px-4 sm:px-6 lg:px-8">
+    <nav class="sm:flex mb-6" aria-label="Breadcrumb">
+        <ol role="list" class="flex items-center space-x-4">
+            <li>
+                <div class="flex">
+                    <p class="text-sm font-medium text-gray-500 hover:text-gray-700">Admin</p>
+                </div>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <!-- Heroicon name: solid/chevron-right -->
+                    <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    <a href="#" th:href="@{/admin/dashboard}"
+                       class="ml-4 text-sm font-medium text-gray-600 hover:text-gray-800">Dashboard</a>
+                </div>
+            </li>
+        </ol>
+    </nav>
+    <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+            <h1 class="text-xl font-semibold text-gray-900">Invites</h1>
+            <p class="mt-2 text-sm text-gray-700">A list of all the invites to become members.</p>
+        </div>
+    </div>
+    <div class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-300">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">ID</th>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">GitHub Username</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Token</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Created</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Used?</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Invite Link</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                        <tr th:each="invite : ${invites}">
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" th:text="${invite.id}">22</td>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6" th:text="${invite.githubUsername}">GitHubUsername</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" th:text="${invite.token}">token123</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" th:text="${invite.dateCreatedUtc}">2022-03-14</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" th:text="${invite.wasUsed}">false</td>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6" th:text="${'https://mobreg.herokuapp.com/invite/?invite_token=' + invite.token}">https://mobreg.herokuapp.com/invite/?invite_token=red-rider-37</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pt-10 sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+            <h1 class="text-xl font-semibold text-gray-900">Invite New Member</h1>
+            <form th:action="@{/admin/invites/create}" action="#" method="post" th:object="${createInviteForm}">
+                <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                    <div class="sm:col-span-2">
+                        <label for="githubUsername" class="block text-sm font-medium text-gray-700"> GitHub Username </label>
+                        <div class="mt-1">
+                            <input type="text" th:field="*{githubUsername}" id="githubUsername" autocomplete="off" autofocus="autofocus"
+                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-6">
+                    <button type="submit"
+                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Invite
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>

@@ -3,6 +3,7 @@ package com.jitterted.mobreg;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.junit.AnalyzeClasses;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,7 @@ public class HexagonalArchitectureTest {
                 .check(productionAndTestClasses());
     }
 
-    @Test
+    @Disabled
     public void adaptersMustNotDependOnEachOther() {
         slices().matching("..adapter.*.(*)..")
                 .should().notDependOnEachOther()

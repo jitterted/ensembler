@@ -101,6 +101,11 @@ class InviteProcessControllerTest {
             markAsUsedWasCalled = true;
         }
 
+        @Override
+        public void createInviteFor(String githubUsername, String token, LocalDateTime dateCreatedUtc) {
+            fail("createInviteFor should not have been called.");
+        }
+
         public void verify() {
             assertThat(existsWasCalled)
                     .as("exists() was NOT called, but should have been.")
@@ -119,7 +124,12 @@ class InviteProcessControllerTest {
 
         @Override
         public void markInviteAsUsed(String token, LocalDateTime dateUsedUtc) {
-            fail("This should not have been called.");
+            fail("markInviteAsUsed should not have been called.");
+        }
+
+        @Override
+        public void createInviteFor(String githubUsername, String token, LocalDateTime dateCreatedUtc) {
+            fail("createInviteFor should not have been called.");
         }
     }
 }

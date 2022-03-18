@@ -8,13 +8,21 @@ import java.time.LocalDateTime;
 @Table("invites")
 public class InviteDbo {
     @Id
-    Long id;
+    private Long id;
 
     private String token;
     private String githubUsername;
     private LocalDateTime dateCreatedUtc;
     private boolean wasUsed;
     private LocalDateTime dateUsedUtc;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
 
     public String getToken() {

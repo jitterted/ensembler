@@ -15,4 +15,13 @@ public interface InviteJdbcRepository extends CrudRepository<InviteDbo, Long>, I
     void markInviteAsUsed(@Param("token") String token,
                           @Param("dateUsedUtc") LocalDateTime dateUsedUtc);
 
+    @Modifying
+    @Query("""
+            INSERT INTO invites (token, github_username, date_created_utc, was_used)
+            VALUES (:token, :githubUsername, :dateCreatedUtc, false)
+            """)
+    void createInviteFor(@Param("githubUsername") String githubUsername,
+                         @Param("token") String token,
+                         @Param("dateCreatedUtc") LocalDateTime dateCreatedUtc);
+
 }

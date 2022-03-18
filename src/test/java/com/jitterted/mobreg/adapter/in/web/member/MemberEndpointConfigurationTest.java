@@ -1,10 +1,10 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
+import com.jitterted.mobreg.adapter.out.jdbc.InviteJdbcRepository;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
-import com.jitterted.mobreg.application.port.InviteRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest({MemberController.class, MemberProfileController.class, InviteProcessController.class})
 @Tag("mvc")
 @WithMockUser(username = "username", authorities = {"ROLE_MEMBER"})
 public class MemberEndpointConfigurationTest {
@@ -44,7 +44,7 @@ public class MemberEndpointConfigurationTest {
     MemberRepository memberRepository;
 
     @MockBean
-    InviteRepository inviteRepository;
+    InviteJdbcRepository inviteJdbcRepository;
 
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
