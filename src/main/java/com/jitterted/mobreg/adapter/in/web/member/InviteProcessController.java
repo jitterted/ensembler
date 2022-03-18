@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Controller
-public class InvitationController {
+public class InviteProcessController {
 
     private final MemberRepository memberRepository;
     private final InviteRepository inviteRepository;
 
     @Autowired
-    public InvitationController(MemberRepository memberRepository, InviteRepository inviteRepository) {
+    public InviteProcessController(MemberRepository memberRepository, InviteRepository inviteRepository) {
         this.memberRepository = memberRepository;
         this.inviteRepository = inviteRepository;
     }

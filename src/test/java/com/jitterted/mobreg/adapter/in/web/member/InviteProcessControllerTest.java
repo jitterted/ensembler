@@ -20,17 +20,17 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class InvitationControllerTest {
+class InviteProcessControllerTest {
 
     @Test
     public void validTokenAndAuthnPrincipalCreatesNewMemberAndMarks() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         InviteRepositoryBothExistsAndMarkAsUsedCalledCorrectly inviteRepositoryMock = new InviteRepositoryBothExistsAndMarkAsUsedCalledCorrectly();
-        InvitationController invitationController = new InvitationController(memberRepository, inviteRepositoryMock);
+        InviteProcessController inviteProcessController = new InviteProcessController(memberRepository, inviteRepositoryMock);
         AuthenticatedPrincipal nonMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("Member_To_Become", "ROLE_USER");
         Authentication authentication = createFakeAuthentication(nonMemberAuthn);
 
-        invitationController.processInvitation("token", nonMemberAuthn, new ConcurrentModel());
+        inviteProcessController.processInvitation("token", nonMemberAuthn, new ConcurrentModel());
 
         assertThat(authentication.isAuthenticated())
                 .isFalse();
@@ -45,11 +45,11 @@ class InvitationControllerTest {
     public void nonExistentInviteReturnsInvalidInvitePage() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         InviteRepository inviteRepositoryMock = new InviteRepositoryWhereInviteNeverExists();
-        InvitationController invitationController = new InvitationController(memberRepository, inviteRepositoryMock);
+        InviteProcessController inviteProcessController = new InviteProcessController(memberRepository, inviteRepositoryMock);
         AuthenticatedPrincipal nonMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("member_to_become", "ROLE_USER");
 
         ConcurrentModel model = new ConcurrentModel();
-        String redirectPage = invitationController.processInvitation("token", nonMemberAuthn, model);
+        String redirectPage = inviteProcessController.processInvitation("token", nonMemberAuthn, model);
 
         assertThat(redirectPage)
                 .isEqualTo("invite-invalid");
@@ -72,11 +72,11 @@ class InvitationControllerTest {
     public void inviteeAlreadyMemberRedirectedToMemberHome() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         InviteRepository inviteRepositoryMock = new InviteRepositoryWhereInviteNeverExists();
-        InvitationController invitationController = new InvitationController(memberRepository, inviteRepositoryMock);
+        InviteProcessController inviteProcessController = new InviteProcessController(memberRepository, inviteRepositoryMock);
         AuthenticatedPrincipal alreadyMemberAuthn = OAuth2UserFactory.createOAuth2UserWithMemberRole("already_member", "ROLE_USER", "ROLE_MEMBER");
         memberRepository.save(new Member("AlreadyMember", "already_member", "ROLE_USER", "ROLE_MEMBER"));
 
-        String redirectPage = invitationController.processInvitation("token", alreadyMemberAuthn, null);
+        String redirectPage = inviteProcessController.processInvitation("token", alreadyMemberAuthn, null);
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/member/register");
