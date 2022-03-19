@@ -48,11 +48,11 @@ public class EnsembleService {
 
     public void scheduleEnsembleWithVideoConference(String name, ZonedDateTime startDateTime) {
         Ensemble ensemble = new Ensemble(name, startDateTime);
-        Ensemble savedEnsemble = saveAndNotifyEnsembleScheduled(ensemble);
+        ensemble = saveAndNotifyEnsembleScheduled(ensemble);
 
         try {
-            ConferenceDetails conferenceDetails = videoConferenceScheduler.createMeeting(savedEnsemble);
-            savedEnsemble.changeConferenceDetailsTo(conferenceDetails);
+            ConferenceDetails conferenceDetails = videoConferenceScheduler.createMeeting(ensemble);
+            ensemble.changeConferenceDetailsTo(conferenceDetails);
             ensembleRepository.save(ensemble);
         } catch (FailedToScheduleMeeting ftsm) {
             LOGGER.warn("Failed to schedule Ensemble with Video Conference", ftsm);
@@ -63,7 +63,7 @@ public class EnsembleService {
         Ensemble ensemble = findOrThrow(ensembleId);
         ensemble.changeNameTo(newName);
         ensemble.changeStartDateTimeTo(newZoneDateTimeUtc);
-        ensembleRepository.save(ensemble);
+        ensemble = ensembleRepository.save(ensemble);
 
         URI newVideoConferenceUri = ensemble.meetingLink();
         if (newVideoConferenceLink.isBlank()) {
