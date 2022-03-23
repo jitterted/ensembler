@@ -20,7 +20,7 @@ class ZoomSchedulerDeleteTest {
 
     @Test
     public void deleteMeetingThenDeletesTheMeeting() throws Exception {
-        String zoomUrl = "https://api.zoom.us/v2/meetings/{meetingId}";
+        String zoomUrl = "https://api.zoom.us/v2/meetings/{meetingId}?schedule_for_reminder=true";
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set("Authorization", "Bearer " + zoomJwt);
@@ -31,7 +31,7 @@ class ZoomSchedulerDeleteTest {
                                       HttpMethod.DELETE,
                                       httpEntity,
                                       Void.class,
-                                      "87956194555");
+                                      "82526380374");
         System.out.println(responseEntity);
         assertThat(responseEntity.getStatusCode().value())
                 .isEqualTo(204);

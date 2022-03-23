@@ -147,6 +147,7 @@ public class EnsembleService {
     private void deleteVideoConferenceMeeting(Ensemble ensemble) {
         ConferenceDetails conferenceDetails = ensemble.conferenceDetails();
         if (!conferenceDetails.hasValidMeetingId()) {
+            LOGGER.warn("Could not delete meeting, Ensemble {} does not have a valid meeting ID.", ensemble.name());
             return;
         }
         if (videoConferenceScheduler.deleteMeeting(conferenceDetails)) {

@@ -27,7 +27,7 @@ public class ZoomScheduler implements VideoConferenceScheduler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ZoomScheduler.class);
 
     private static final URI CREATE_MEETING_URI = URI.create("https://api.zoom.us/v2/users/me/meetings");
-    private static final String ZOOM_API_MEETING_URL_TEMPLATE = "https://api.zoom.us/v2/meetings/{meetingId}";
+    private static final String DELETE_MEETING_URL_TEMPLATE = "https://api.zoom.us/v2/meetings/{meetingId}?schedule_for_reminder=true"; // query param sends email when deleted
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -60,13 +60,14 @@ public class ZoomScheduler implements VideoConferenceScheduler {
     @Override
     public boolean deleteMeeting(ConferenceDetails conferenceDetails) {
         HttpEntity<Object> httpEntity = new HttpEntity<>(createRequestHeaders());
-        ResponseEntity<Void> responseEntity = restTemplate.exchange(ZOOM_API_MEETING_URL_TEMPLATE,
+        ResponseEntity<Void> responseEntity = restTemplate.exchange(DELETE_MEETING_URL_TEMPLATE,
                                                                     HttpMethod.DELETE,
                                                                     httpEntity,
                                                                     Void.class,
                                                                     conferenceDetails.meetingId());
         int statusCode = responseEntity.getStatusCode().value();
         if (statusCode == 204) {
+            LOGGER.info("Deleted Zoom meeting with ID `{}`.", conferenceDetails.meetingId());
             return true;
         } else {
             LOGGER.warn("Unable to delete Zoom meeting with ID `{}`. Status Code was: {}", conferenceDetails.meetingId(), statusCode);

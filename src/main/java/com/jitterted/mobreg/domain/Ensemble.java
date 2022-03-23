@@ -37,6 +37,14 @@ public class Ensemble {
         this.startDateTime = startDateTime;
     }
 
+    public EnsembleId getId() {
+        return id;
+    }
+
+    public void setId(EnsembleId id) {
+        this.id = id;
+    }
+
     public String name() {
         return name;
     }
@@ -127,14 +135,6 @@ public class Ensemble {
         if (isCompleted()) {
             throw new EnsembleCompleted("Ensemble (%s) is Completed".formatted(id));
         }
-    }
-
-    public EnsembleId getId() {
-        return id;
-    }
-
-    public void setId(EnsembleId id) {
-        this.id = id;
     }
 
     public void changeNameTo(String newName) {
