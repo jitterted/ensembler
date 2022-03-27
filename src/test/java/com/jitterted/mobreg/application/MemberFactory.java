@@ -7,6 +7,9 @@ import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class MemberFactory {
 
     private final MemberRepository memberRepository;
@@ -32,9 +35,19 @@ public class MemberFactory {
         MemberFactory memberFactory = new MemberFactory();
         for (int i = 0; i < count; i++) {
             MemberId memberId = memberFactory.createMemberInRepositoryReturningId(
-                    i, "name" + i, "github" + i);
+                i, "name" + i, "github" + i);
             ensemble.acceptedBy(memberId);
         }
+    }
+
+    public static List<Member> createAcceptedMembersFrom(Ensemble ensemble) {
+        return ensemble.acceptedMembers()
+            .map(memberId -> createMember(
+                memberId.id(),
+                "name" + memberId.id(),
+                "github" + memberId.id())
+            )
+            .collect(Collectors.toList());
     }
 
     @NotNull
