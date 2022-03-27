@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
+import com.jitterted.mobreg.adapter.in.web.admin.MemberView;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.application.MemberFactory;
@@ -19,6 +20,7 @@ import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -89,6 +91,32 @@ class MemberControllerTest {
                 .isEqualTo("redirect:/member/register");
         assertThat(ensemble.isDeclined(MemberId.of(memberRegisterForm.getMemberId())))
                 .isTrue();
+    }
+
+    @Test
+    public void ensembleFormShowsMembersWhoAcceptedForEnsemble() throws Exception {
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
+        MemberService memberService = new MemberService(memberRepository);
+        memberRepository.save(MemberFactory.createMember(11, "John", "john_github"));
+        memberRepository.save(MemberFactory.createMember(22, "Mary", "mary_github"));
+
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        Ensemble ensemble = new Ensemble("Ensemble #1", ZonedDateTime.now().plusDays(1));
+        ensembleRepository.save(ensemble);
+
+        ensemble.acceptedBy(new MemberId(11));
+        ensemble.acceptedBy(new MemberId(22));
+
+        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
+        MemberController memberController = new MemberController(ensembleService, memberService);
+
+        Model model = new ConcurrentModel();
+        memberController.showEnsemblesForUser(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("john_github", "ROLE_MEMBER"));
+
+        List<EnsembleSummaryView> ensembleViews = (List<EnsembleSummaryView>)model.getAttribute("ensembles");
+        assertThat(ensembleViews.get(0).acceptedMembers())
+            .extracting(MemberView::firstName)
+            .containsExactlyInAnyOrder("John", "Mary");
     }
 
     @NotNull

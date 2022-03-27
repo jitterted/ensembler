@@ -38,7 +38,8 @@ public class MemberController {
         model.addAttribute("register", memberRegisterForm);
 
         List<Ensemble> ensembles = ensembleService.allEnsemblesByDateTimeDescending();
-        List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles, member.getId(), List.of());
+        List<Member> allUsers = memberLookup.findAll();
+        List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles, member.getId(), allUsers);
         model.addAttribute("ensembles", ensembleSummaryViews);
         return "member-register";
     }
