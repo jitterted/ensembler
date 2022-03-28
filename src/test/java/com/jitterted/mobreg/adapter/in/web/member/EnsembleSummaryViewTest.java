@@ -33,11 +33,14 @@ class EnsembleSummaryViewTest {
     public void withAnotherAcceptedMemberThenMemberAcceptedIsFalse() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
-        memberBuilder.createAnsSaveMembers(2);
-        ensemble.acceptedBy(MemberId.of(0));
+        Member member = memberBuilder
+                .withFirstName("name")
+                .withGithubUsername("seven")
+                .buildAndSave();
+        ensemble.acceptedBy(member.getId());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
-            .toView(ensemble, MemberId.of(1L), memberBuilder.memberService());
+            .toView(ensemble, MemberId.of(99L), memberBuilder.memberService());
 
         assertThat(ensembleSummaryView.numberRegistered())
             .isEqualTo(1);
