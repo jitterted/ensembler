@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 class EnsembleSummaryViewTest {
 
