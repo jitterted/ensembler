@@ -2,9 +2,9 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.admin.MemberView;
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
-import com.jitterted.mobreg.application.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.TestMemberBuilder;
+import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.Member;
@@ -12,7 +12,6 @@ import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,112 +20,118 @@ class EnsembleSummaryViewTest {
     @Test
     public void memberStatusUnknownWhenEnsembleIsEmpty() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+        MemberService memberService = new MemberService(new InMemoryMemberRepository());
 
         EnsembleSummaryView ensembleSummaryView =
-            EnsembleSummaryView.toView(ensemble, MemberId.of(97L), List.of());
+            EnsembleSummaryView.toView(ensemble, MemberId.of(97L), memberService);
 
         assertThat(ensembleSummaryView.memberStatus())
-                .isEqualTo("unknown");
+            .isEqualTo("unknown");
     }
 
     @Test
     public void withAnotherAcceptedMemberThenMemberAcceptedIsFalse() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        Member member = new Member("name", "seven");
-        MemberId memberId = MemberId.of(7L);
-        member.setId(memberId);
-        ensemble.acceptedBy(memberId);
-        List<Member> allRegisteredMembers = List.of(member, MemberFactory.createMember(5L, "other", "other_github"));
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
+        memberBuilder.createAnsSaveMembers(2);
+        ensemble.acceptedBy(MemberId.of(0));
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
-            .toView(ensemble, MemberId.of(5L), allRegisteredMembers);
+            .toView(ensemble, MemberId.of(1L), memberBuilder.memberService());
 
         assertThat(ensembleSummaryView.numberRegistered())
-                .isEqualTo(1);
+            .isEqualTo(1);
 
         assertThat(ensembleSummaryView.memberStatus())
-                .isEqualTo("unknown");
+            .isEqualTo("unknown");
     }
 
     @Test
     public void memberAcceptedIsTrueWhenMemberEnsembleParticipant() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        Member member = new Member("name",
-                                   "participant_username");
-        MemberId memberId = MemberId.of(3L);
-        member.setId(memberId);
-        ensemble.acceptedBy(memberId);
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
+        Member member = memberBuilder
+            .withFirstName("name")
+            .withGithubUsername("participant_username")
+            .buildAndSave();
+        ensemble.acceptedBy(member.getId());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
-            .toView(ensemble, memberId, List.of(member));
+            .toView(ensemble, member.getId(), memberBuilder.memberService());
 
         assertThat(ensembleSummaryView.memberStatus())
-                .isEqualTo("accepted");
+            .isEqualTo("accepted");
     }
 
     @Test
     public void noRecordingEnsembleThenViewIncludesEmptyLink() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+        MemberService memberService = new MemberService(new InMemoryMemberRepository());
 
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), List.of());
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
 
         assertThat(ensembleSummaryView.recordingLink())
-                .isEmpty();
+            .isEmpty();
     }
 
     @Test
     public void ensembleWithRecordingThenViewIncludesStringOfLink() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         ensemble.linkToRecordingAt(URI.create("https://recording.link/abc123"));
+        MemberService memberService = new MemberService(new InMemoryMemberRepository());
 
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), List.of());
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
 
         assertThat(ensembleSummaryView.recordingLink())
-                .isEqualTo("https://recording.link/abc123");
+            .isEqualTo("https://recording.link/abc123");
     }
 
     @Test
     public void viewContainsGoogleCalendarLink() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+        MemberService memberService = new MemberService(new InMemoryMemberRepository());
 
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), List.of());
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
 
         String expectedLink = new GoogleCalendarLinkCreator().createFor(ensemble);
         assertThat(ensembleSummaryView.googleCalendarLink())
-                .isEqualTo(expectedLink);
+            .isEqualTo(expectedLink);
     }
 
     @Test
     public void viewIndicatesNotAbleToAcceptIfEnsembleIsFullAndCurrentlyUnknown() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        MemberFactory.acceptCountMembersWith(ensemble, 5);
-        List<Member> allRegisteredMembers = MemberFactory.createAcceptedMembersFrom(ensemble);
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
+        memberBuilder.createAnsSaveMembers(5);
+        EnsembleFactory.acceptCountMembersFor(5, ensemble);
 
         MemberId memberIdOfUnknownMember = MemberId.of(99L);
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberIdOfUnknownMember, allRegisteredMembers);
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberIdOfUnknownMember, memberBuilder.memberService());
 
         assertThat(ensembleSummaryView.memberStatus())
-                .isEqualTo("full");
+            .isEqualTo("full");
     }
 
     @Test
     public void viewIndicatesCanAcceptIfEnsembleIsNotFull() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        MemberFactory.acceptCountMembersWith(ensemble, 2);
-        List<Member> allRegisteredMembers = MemberFactory.createAcceptedMembersFrom(ensemble);
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
+        memberBuilder.createAnsSaveMembers(2);
+        EnsembleFactory.acceptCountMembersFor(2, ensemble);
 
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), allRegisteredMembers);
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberBuilder.memberService());
 
         assertThat(ensembleSummaryView.memberStatus())
-                .isEqualTo("accepted");
+            .isEqualTo("accepted");
     }
 
     @Test
     public void ensembleWithNoOneAcceptedShowsNoAcceptedMembers() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+        MemberService memberService = new MemberService(new InMemoryMemberRepository());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
-            .toView(ensemble, MemberId.of(11L), List.of());
+            .toView(ensemble, MemberId.of(11L), memberService);
 
         assertThat(ensembleSummaryView.acceptedMembers())
             .isEmpty();
@@ -138,13 +143,13 @@ class EnsembleSummaryViewTest {
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         MemberService memberService = memberBuilder.memberService();
         Member member1 = memberBuilder
-            .withFirstName("one")
-            .withGithubUsername("github_one")
-            .buildAndSave();
+                         .withFirstName("one")
+                         .withGithubUsername("github_one")
+                         .buildAndSave();
         Member member2 = memberBuilder
-            .withFirstName("two")
-            .withGithubUsername("github_two")
-            .buildAndSave();
+                        .withFirstName("two")
+                        .withGithubUsername("github_two")
+                        .buildAndSave();
         ensemble.acceptedBy(member1.getId());
         ensemble.acceptedBy(member2.getId());
 
@@ -152,11 +157,11 @@ class EnsembleSummaryViewTest {
             .toView(ensemble, MemberId.of(member1.getId().id()), memberService);
 
         assertThat(ensembleSummaryView.acceptedMembers())
-            .extracting(MemberView::firstName)
-            .containsExactlyInAnyOrder("one", "two");
+                        .extracting(MemberView::firstName)
+                        .containsExactlyInAnyOrder("one", "two");
         assertThat(ensembleSummaryView.acceptedMembers())
-            .extracting(MemberView::githubUsername)
-            .containsExactlyInAnyOrder("github_one", "github_two");
+                        .extracting(MemberView::githubUsername)
+                        .containsExactlyInAnyOrder("github_one", "github_two");
     }
 
     @Test
@@ -165,9 +170,9 @@ class EnsembleSummaryViewTest {
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         MemberService memberService = memberBuilder.memberService();
         Member member = memberBuilder
-            .withFirstName("one")
-            .withGithubUsername("github_one")
-            .buildAndSave();
+                        .withFirstName("one")
+                        .withGithubUsername("github_one")
+                        .buildAndSave();
         ensemble.declinedBy(member.getId());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView

@@ -62,4 +62,11 @@ public class TestMemberBuilder {
         this.timeZoneId = timeZoneId;
         return this;
     }
+
+    public void createAnsSaveMembers(int count) {
+        for (int i = 0; i < count; i++) {
+            Member member = new Member("name" + i, "github" + i);
+            memberRepository.save(member);
+        }
+    }
 }
