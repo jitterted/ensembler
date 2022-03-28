@@ -90,38 +90,6 @@ class MemberControllerTest {
                 .isTrue();
     }
 
-    @Test
-    public void ensembleFormShowsMembersWhoAcceptedForEnsemble() throws Exception {
-        TestMemberBuilder memberBuilder = new TestMemberBuilder();
-        MemberService memberService = memberBuilder.memberService();
-        Member john = memberBuilder
-            .withFirstName("John")
-            .withGithubUsername("john_github")
-            .buildAndSave();
-        Member mary = memberBuilder
-            .withFirstName("Mary")
-            .withGithubUsername("mary_github")
-            .buildAndSave();
-
-        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-        Ensemble ensemble = new Ensemble("Ensemble #1", ZonedDateTime.now().plusDays(1));
-        ensembleRepository.save(ensemble);
-
-        ensemble.acceptedBy(john.getId());
-        ensemble.acceptedBy(mary.getId());
-
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
-        MemberController memberController = new MemberController(ensembleService, memberService);
-
-        Model model = new ConcurrentModel();
-        memberController.showEnsemblesForUser(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("john_github", "ROLE_MEMBER"));
-
-        List<EnsembleSummaryView> ensembleViews = (List<EnsembleSummaryView>)model.getAttribute("ensembles");
-        assertThat(ensembleViews.get(0).acceptedMembers())
-            .extracting(MemberView::firstName)
-            .containsExactlyInAnyOrder("John", "Mary");
-    }
-
     @NotNull
     private MemberRegisterForm createMemberFormFor(Ensemble ensemble, MemberRepository memberRepository) {
         MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
