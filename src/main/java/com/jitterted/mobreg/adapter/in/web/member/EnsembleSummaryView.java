@@ -25,14 +25,14 @@ public record EnsembleSummaryView(long id,
                                   String memberStatus,
                                   List<MemberView> acceptedMembers) {
 
-    public static List<EnsembleSummaryView> from(List<Ensemble> ensembles, MemberId memberId, List<Member> allExistingUsers) {
+    public static List<EnsembleSummaryView> from(List<Ensemble> ensembles, MemberId memberId, List<Member> allUsers) {
         return ensembles.stream()
                         .filter(ensemble -> ensemble.statusFor(memberId, ZonedDateTime.now()) != MemberStatus.HIDDEN)
-                        .map(ensemble -> toView(ensemble, memberId, allExistingUsers))
+                        .map(ensemble -> toView(ensemble, memberId, allUsers))
                         .toList();
     }
 
-    public static EnsembleSummaryView toView(Ensemble ensemble, MemberId memberId, List<Member> allExistingUsers) {
+    public static EnsembleSummaryView toView(Ensemble ensemble, MemberId memberId, List<Member> allUsers) {
         return new EnsembleSummaryView(ensemble.getId().id(),
                                        ensemble.name(),
                                        ensemble.meetingLink().toString(),
@@ -41,7 +41,7 @@ public record EnsembleSummaryView(long id,
                                        ensemble.acceptedCount(),
                                        ensemble.recordingLink().toString(),
                                        memberStatusToViewString(ensemble, memberId),
-                                       toMemberViews(ensemble, allExistingUsers));
+                                       acceptedMemberViews(ensemble, allUsers));
     }
 
     private static String memberStatusToViewString(Ensemble ensemble, MemberId memberId) {
@@ -50,7 +50,7 @@ public record EnsembleSummaryView(long id,
                        .toLowerCase();
     }
 
-    private static List<MemberView> toMemberViews(Ensemble ensemble, List<Member> allExistingUsers) {
+    private static List<MemberView> acceptedMemberViews(Ensemble ensemble, List<Member> allExistingUsers) {
         if (ensemble.acceptedCount() == 0 || allExistingUsers.isEmpty()) {
             return Collections.emptyList();
         }
