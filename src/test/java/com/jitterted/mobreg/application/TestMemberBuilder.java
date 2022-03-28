@@ -18,7 +18,7 @@ public class TestMemberBuilder {
 
     public TestMemberBuilder() {
         memberRepository = new InMemoryMemberRepository();
-        memberService = new MemberService(memberRepository);
+        memberService = new DefaultMemberService(memberRepository);
     }
 
     @NotNull

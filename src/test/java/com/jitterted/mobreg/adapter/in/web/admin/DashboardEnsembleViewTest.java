@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
+import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.domain.MemberFactory;
@@ -22,7 +23,7 @@ public class DashboardEnsembleViewTest {
 
     @Test
     public void detailViewOfExistingEnsembleByItsIdIsReturned() throws Exception {
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         Ensemble savedEnsemble = ensembleRepository.save(new Ensemble("Ensemble #1", ZonedDateTime.now()));
@@ -39,7 +40,7 @@ public class DashboardEnsembleViewTest {
 
     @Test
     public void detailViewOfExistingEnsembleWithOneParticipantReturnsEnsembleWithParticipantView() throws Exception {
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         Member member = MemberFactory.createMember(11, "name", "github");
         memberService.save(member);
 
@@ -61,7 +62,7 @@ public class DashboardEnsembleViewTest {
 
     @Test
     public void detailViewOfNonExistentEnsembleReturns404NotFound() throws Exception {
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);

@@ -10,7 +10,7 @@ class MemberServiceLookupByUsernameTest {
 
     @Test
     public void findingGithubUsernameWithUppercaseLettersFoundInAllLowercaseDatabase() throws Exception {
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         memberService.save(new Member("Mixed", "mixedcase", "ROLE_USER", "ROLE_MEMBER"));
 
         assertThat(memberService.findByGithubUsername("mIxEdCASE"))

@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
+import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.TestMemberBuilder;
@@ -28,7 +29,7 @@ public class MemberProfileControllerTest {
         Member member = MemberFactory.createMember(13, "first", GITHUB_USERNAME);
         member.changeEmailTo("member@example.com");
         memberRepository.save(member);
-        MemberService memberService = new MemberService(memberRepository);
+        MemberService memberService = new DefaultMemberService(memberRepository);
 
         MemberProfileController memberProfileController = new MemberProfileController(memberService);
 

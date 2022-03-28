@@ -1,5 +1,6 @@
 package com.jitterted.mobreg;
 
+import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
@@ -54,7 +55,7 @@ public class MobRegApplication {
 
     @Bean
     public MemberService memberService(MemberRepository memberRepository) {
-        return new MemberService(memberRepository);
+        return new DefaultMemberService(memberRepository);
     }
 
 

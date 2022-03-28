@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
+import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
 import com.jitterted.mobreg.domain.MemberFactory;
@@ -35,7 +36,7 @@ class MemberControllerTest {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member = MemberFactory.createMember(11, "name", "ghuser");
         memberRepository.save(member);
-        MemberService memberService = new MemberService(memberRepository);
+        MemberService memberService = new DefaultMemberService(memberRepository);
 
         MemberController memberController = new MemberController(ensembleService, memberService);
 

@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.admin.MemberView;
+import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.TestMemberBuilder;
@@ -20,7 +21,7 @@ class EnsembleSummaryViewTest {
     @Test
     public void memberStatusUnknownWhenEnsembleIsEmpty() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
 
         EnsembleSummaryView ensembleSummaryView =
             EnsembleSummaryView.toView(ensemble, MemberId.of(97L), memberService);
@@ -69,7 +70,7 @@ class EnsembleSummaryViewTest {
     @Test
     public void noRecordingEnsembleThenViewIncludesEmptyLink() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
 
@@ -81,7 +82,7 @@ class EnsembleSummaryViewTest {
     public void ensembleWithRecordingThenViewIncludesStringOfLink() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         ensemble.linkToRecordingAt(URI.create("https://recording.link/abc123"));
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
 
@@ -92,7 +93,7 @@ class EnsembleSummaryViewTest {
     @Test
     public void viewContainsGoogleCalendarLink() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
 
@@ -131,7 +132,7 @@ class EnsembleSummaryViewTest {
     @Test
     public void ensembleWithNoOneAcceptedShowsNoAcceptedMembers() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
             .toView(ensemble, MemberId.of(11L), memberService);
