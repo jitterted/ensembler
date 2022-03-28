@@ -1,7 +1,5 @@
-package com.jitterted.mobreg.application;
+package com.jitterted.mobreg.domain;
 
-import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberId;
 import org.jetbrains.annotations.NotNull;
 
 public class MemberFactory {
