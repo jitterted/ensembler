@@ -9,10 +9,8 @@ import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberStatus;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public record EnsembleSummaryView(long id,
@@ -51,16 +49,16 @@ public record EnsembleSummaryView(long id,
     }
 
     private static List<MemberView> acceptedMemberViews(Ensemble ensemble, List<Member> allExistingUsers) {
-        if (ensemble.acceptedCount() == 0 || allExistingUsers.isEmpty()) {
-            return Collections.emptyList();
-        }
+        Set<Long> acceptedMemberIds = acceptedMemberIds(ensemble);
+        return allExistingUsers.stream()
+                       .filter(user -> acceptedMemberIds.contains(user.getId().id()))
+                       .map(MemberView::from)
+                       .collect(Collectors.toList());
+    }
 
-        Map<MemberId, Member> membersById = allExistingUsers.stream()
-            .collect(Collectors.toMap(Member::getId, Function.identity()));
-
+    private static Set<Long> acceptedMemberIds(Ensemble ensemble) {
         return ensemble.acceptedMembers()
-            .map(membersById::get)
-            .map(MemberView::from)
-            .collect(Collectors.toList());
+                       .map(MemberId::id)
+                       .collect(Collectors.toSet());
     }
 }
