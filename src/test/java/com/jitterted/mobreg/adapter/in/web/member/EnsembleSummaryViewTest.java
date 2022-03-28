@@ -165,7 +165,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    public void ensembleWithDeclinedMembersShowsNoAcceptedMembers() throws Exception {
+    public void ensembleWithOnlyDeclinedMembersShowsNoAcceptedMembers() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         MemberService memberService = memberBuilder.memberService();
