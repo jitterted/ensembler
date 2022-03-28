@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.List;
-
 public class MemberLookup {
     private static final Logger LOGGER = LoggerFactory.getLogger(MemberLookup.class);
 
@@ -25,10 +23,6 @@ public class MemberLookup {
         String username = GitHubUsernamePrincipalExtractor.usernameFrom(principal);
 
         return memberService.findByGithubUsername(username);
-    }
-
-    public List<Member> findAll() {
-        return memberService.findAll();
     }
 
     private void requireAsOAuth2User(AuthenticatedPrincipal principal) {
