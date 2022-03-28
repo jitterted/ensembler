@@ -3,6 +3,8 @@ package com.jitterted.mobreg.adapter.in.web.member;
 import com.jitterted.mobreg.adapter.in.web.admin.MemberView;
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.application.MemberFactory;
+import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.Member;
@@ -106,7 +108,7 @@ class EnsembleSummaryViewTest {
         assertThat(ensembleSummaryView.memberStatus())
                 .isEqualTo("full");
     }
-    
+
     @Test
     public void viewIndicatesCanAcceptIfEnsembleIsNotFull() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
@@ -131,21 +133,47 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    public void ensembleWithAcceptedMembersShowsWhoAccepted() throws Exception {
+    public void ensembleWithAcceptedMembersGetsInfoOnAndShowsWhoAccepted() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        Member member1 = MemberFactory.createMember(11L, "one", "one_github");
-        Member member2 = MemberFactory.createMember(22L, "two", "two_github");
-        Member member3 = MemberFactory.createMember(33L, "three", "three_github");
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
+        MemberService memberService = memberBuilder.memberService();
+        Member member1 = memberBuilder
+            .withFirstName("one")
+            .withGithubUsername("github_one")
+            .buildAndSave();
+        Member member2 = memberBuilder
+            .withFirstName("two")
+            .withGithubUsername("github_two")
+            .buildAndSave();
         ensemble.acceptedBy(member1.getId());
         ensemble.acceptedBy(member2.getId());
-        ensemble.declinedBy(member3.getId());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
-            .toView(ensemble, MemberId.of(11L), List.of(member1, member2, member3));
+            .toView(ensemble, MemberId.of(member1.getId().id()), memberService);
 
         assertThat(ensembleSummaryView.acceptedMembers())
-            .containsExactlyInAnyOrder(
-                new MemberView(11L, "one", "one_github", ""),
-                new MemberView(22L, "two", "two_github", ""));
+            .extracting(MemberView::firstName)
+            .containsExactlyInAnyOrder("one", "two");
+        assertThat(ensembleSummaryView.acceptedMembers())
+            .extracting(MemberView::githubUsername)
+            .containsExactlyInAnyOrder("github_one", "github_two");
+    }
+
+    @Test
+    public void ensembleWithDeclinedMembersShowsNoAcceptedMembers() throws Exception {
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
+        MemberService memberService = memberBuilder.memberService();
+        Member member = memberBuilder
+            .withFirstName("one")
+            .withGithubUsername("github_one")
+            .buildAndSave();
+        ensemble.declinedBy(member.getId());
+
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
+            .toView(ensemble, MemberId.of(member.getId().id()), memberService);
+
+        assertThat(ensembleSummaryView.acceptedMembers())
+            .isEmpty();
     }
 }
