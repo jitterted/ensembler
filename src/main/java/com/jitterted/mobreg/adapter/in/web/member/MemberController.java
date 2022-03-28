@@ -21,11 +21,13 @@ public class MemberController {
 
     private final EnsembleService ensembleService;
     private final MemberLookup memberLookup;
+    private final MemberService memberService;
 
     @Autowired
     public MemberController(EnsembleService ensembleService, MemberService memberService) {
         this.ensembleService = ensembleService;
         this.memberLookup = new MemberLookup(memberService);
+        this.memberService = memberService;
     }
 
     @GetMapping("/member/register")
@@ -38,8 +40,7 @@ public class MemberController {
         model.addAttribute("register", memberRegisterForm);
 
         List<Ensemble> ensembles = ensembleService.allEnsemblesByDateTimeDescending();
-        List<Member> allUsers = memberLookup.findAll();
-        List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles, member.getId(), allUsers);
+        List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles, member.getId(), memberService);
         model.addAttribute("ensembles", ensembleSummaryViews);
         return "member-register";
     }

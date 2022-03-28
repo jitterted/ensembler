@@ -2,10 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
 import com.jitterted.mobreg.adapter.in.web.admin.MemberView;
-import com.jitterted.mobreg.application.EnsembleService;
-import com.jitterted.mobreg.application.EnsembleServiceFactory;
-import com.jitterted.mobreg.application.MemberFactory;
-import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.*;
 import com.jitterted.mobreg.application.port.DummyNotifier;
 import com.jitterted.mobreg.application.port.DummyVideoConferenceScheduler;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
@@ -95,17 +92,23 @@ class MemberControllerTest {
 
     @Test
     public void ensembleFormShowsMembersWhoAcceptedForEnsemble() throws Exception {
-        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        MemberService memberService = new MemberService(memberRepository);
-        memberRepository.save(MemberFactory.createMember(11, "John", "john_github"));
-        memberRepository.save(MemberFactory.createMember(22, "Mary", "mary_github"));
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
+        MemberService memberService = memberBuilder.memberService();
+        Member john = memberBuilder
+            .withFirstName("John")
+            .withGithubUsername("john_github")
+            .buildAndSave();
+        Member mary = memberBuilder
+            .withFirstName("Mary")
+            .withGithubUsername("mary_github")
+            .buildAndSave();
 
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("Ensemble #1", ZonedDateTime.now().plusDays(1));
         ensembleRepository.save(ensemble);
 
-        ensemble.acceptedBy(new MemberId(11));
-        ensemble.acceptedBy(new MemberId(22));
+        ensemble.acceptedBy(john.getId());
+        ensemble.acceptedBy(mary.getId());
 
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         MemberController memberController = new MemberController(ensembleService, memberService);
