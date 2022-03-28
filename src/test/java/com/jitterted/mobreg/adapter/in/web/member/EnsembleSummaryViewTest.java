@@ -166,22 +166,4 @@ class EnsembleSummaryViewTest {
                         .extracting(MemberView::githubUsername)
                         .containsExactlyInAnyOrder("github_one", "github_two");
     }
-
-    @Test
-    public void ensembleWithOnlyDeclinedMembersShowsNoAcceptedMembers() throws Exception {
-        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        TestMemberBuilder memberBuilder = new TestMemberBuilder();
-        MemberService memberService = memberBuilder.memberService();
-        Member member = memberBuilder
-                        .withFirstName("one")
-                        .withGithubUsername("github_one")
-                        .buildAndSave();
-        ensemble.declinedBy(member.getId());
-
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
-            .toView(ensemble, MemberId.of(member.getId().id()), memberService);
-
-        assertThat(ensembleSummaryView.acceptedMembers())
-            .isEmpty();
-    }
 }
