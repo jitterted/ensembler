@@ -4,6 +4,7 @@ import com.jitterted.mobreg.adapter.in.web.admin.MemberView;
 import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.StubMemberService;
 import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
@@ -105,12 +106,10 @@ class EnsembleSummaryViewTest {
     @Test
     public void viewIndicatesNotAbleToAcceptIfEnsembleIsFullAndCurrentlyUnknown() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        TestMemberBuilder memberBuilder = new TestMemberBuilder();
-        memberBuilder.createAnsSaveMembers(5);
         EnsembleFactory.acceptCountMembersFor(5, ensemble);
 
         MemberId memberIdOfUnknownMember = MemberId.of(99L);
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberIdOfUnknownMember, memberBuilder.memberService());
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberIdOfUnknownMember, new StubMemberService());
 
         assertThat(ensembleSummaryView.memberStatus())
             .isEqualTo("full");
@@ -119,11 +118,9 @@ class EnsembleSummaryViewTest {
     @Test
     public void viewIndicatesCanAcceptIfEnsembleIsNotFull() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        TestMemberBuilder memberBuilder = new TestMemberBuilder();
-        memberBuilder.createAnsSaveMembers(2);
         EnsembleFactory.acceptCountMembersFor(2, ensemble);
 
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberBuilder.memberService());
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), new StubMemberService());
 
         assertThat(ensembleSummaryView.memberStatus())
             .isEqualTo("accepted");
