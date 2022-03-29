@@ -18,6 +18,7 @@ module.exports = {
     variants: {
         extend: {},
         backgroundColor: ['responsive', 'first', 'last', 'even', 'odd', 'hover', 'focus'],
+        divideColor: ['group-hover'],
     },
     plugins: [
         require('@tailwindcss/forms'),

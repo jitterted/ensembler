@@ -102,11 +102,15 @@
                                 <span class="text-3xl font-bold text-purple-600"
                                       th:text="${ensemble.numberRegistered}">4</span>
                                 <span class="text-xl font-bold text-purple-400 mr-2">/5</span>
-                                <p th:each="member: ${ensemble.acceptedMembers}">
-                                    <img class="w-6 h-6 rounded-full border-gray-200 border transform hover:scale-125"
-                                         th:title="${member.firstName}"
-                                         th:src="@{https://avatars.githubusercontent.com/{githubusername}(githubusername=${member.githubUsername})}">
-                                </p>
+                                <div th:each="member: ${ensemble.acceptedMembers}"
+                                     class="group">
+                                    <img class="w-6 h-6 rounded-full border-gray-200 border transform group-hover:scale-125"
+                                         src="https://avatars.githubusercontent.com/tedyoung"
+                                         th:src="@{https://avatars.githubusercontent.com/{githubusername}(githubusername=${member.githubUsername})}"
+                                    >
+                                    <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
+                                          th:text="${member.firstName}">First Name</span>
+                                </div>
                             </div>
                         </td>
 
