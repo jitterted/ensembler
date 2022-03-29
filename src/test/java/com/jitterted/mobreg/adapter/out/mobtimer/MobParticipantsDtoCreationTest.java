@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.adapter.out.mobtimer;
 
+import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
@@ -15,7 +16,7 @@ class MobParticipantsDtoCreationTest {
     @Test
     public void convertsEnsembleToMobParticipantsDto() throws Exception {
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         Member member = new Member("Participant", "");
         Member savedMember = memberService.save(member);
         ensemble.acceptedBy(savedMember.getId());

@@ -1,9 +1,10 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
+import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
-import com.jitterted.mobreg.application.MemberFactory;
+import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
@@ -35,7 +36,7 @@ class AdminDashboardControllerTest {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member = MemberFactory.createMember(0, "ted", "tedyoung");
         memberRepository.save(member);
-        MemberService memberService = new MemberService(memberRepository);
+        MemberService memberService = new DefaultMemberService(memberRepository);
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         ensembleRepository.save(new Ensemble("Name", ZonedDateTime.now()));
@@ -128,7 +129,7 @@ class AdminDashboardControllerTest {
         memberRepository.save(member1);
         Member member2 = MemberFactory.createMember(1, "two", "githubtwo");
         memberRepository.save(member2);
-        MemberService memberService = new MemberService(memberRepository);
+        MemberService memberService = new DefaultMemberService(memberRepository);
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository, memberRepository);
         Ensemble ensemble = new Ensemble("Manual Registered Ensemble", ZonedDateTime.now());
@@ -146,7 +147,7 @@ class AdminDashboardControllerTest {
 
     @NotNull
     private AdminDashboardController createAdminDashboardController(EnsembleRepository ensembleRepository) {
-        MemberService memberService = new MemberService(new InMemoryMemberRepository());
+        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         return new AdminDashboardController(ensembleService, memberService);
     }

@@ -1,51 +1,22 @@
 package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 
-import java.time.ZoneId;
 import java.util.List;
 
-public class MemberService {
-    private final MemberRepository memberRepository;
+public interface MemberService {
+    Member findById(MemberId memberId);
 
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+    Member findByGithubUsername(String username);
 
-    public Member findById(MemberId memberId) {
-        return memberRepository
-                .findById(memberId)
-                .orElseThrow(MemberNotFoundByIdException::new);
-    }
+    List<Member> findAll();
 
-    public Member findByGithubUsername(String username) {
-        return memberRepository
-                .findByGithubUsername(username.toLowerCase())
-                .orElseThrow(() -> new MemberNotFoundByGitHubUsernameException(username));
-    }
+    void changeEmail(Member member, String newEmail);
 
-    public List<Member> findAll() {
-        return memberRepository.findAll();
-    }
+    void changeTimeZone(Member member, String timeZone);
 
-    public void changeEmail(Member member, String newEmail) {
-        member.changeEmailTo(newEmail);
-        save(member);
-    }
+    void changeFirstName(Member member, String newFirstName);
 
-    public void changeTimeZone(Member member, String timeZone) {
-        member.changeTimeZoneTo(ZoneId.of(timeZone));
-        save(member);
-    }
-
-    public void changeFirstName(Member member, String newFirstName) {
-        member.changeFirstNameTo(newFirstName);
-        save(member);
-    }
-
-    public Member save(Member member) {
-        return memberRepository.save(member);
-    }
+    Member save(Member member);
 }

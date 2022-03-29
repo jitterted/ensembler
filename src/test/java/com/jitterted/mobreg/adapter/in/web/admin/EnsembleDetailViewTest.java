@@ -1,7 +1,8 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
+import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.DummyMemberRepository;
-import com.jitterted.mobreg.application.MemberFactory;
+import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
@@ -18,7 +19,7 @@ class EnsembleDetailViewTest {
 
     @Test
     public void ensembleIdIsTranslatedFromDomainIntoView() throws Exception {
-        MemberService memberService = new MemberService(new DummyMemberRepository());
+        MemberService memberService = new DefaultMemberService(new DummyMemberRepository());
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(23));
         EnsembleDetailView ensembleDetailView = EnsembleDetailView.from(ensemble, memberService);
@@ -32,7 +33,7 @@ class EnsembleDetailViewTest {
         Ensemble ensemble = new Ensemble("view", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(73));
         MemberRepository memberRepository = new InMemoryMemberRepository();
-        MemberService memberService = new MemberService(memberRepository);
+        MemberService memberService = new DefaultMemberService(memberRepository);
         Member acceptedMember = MemberFactory.createMember(7, "Ace", "acceptated");
         memberRepository.save(acceptedMember);
         ensemble.acceptedBy(acceptedMember.getId());

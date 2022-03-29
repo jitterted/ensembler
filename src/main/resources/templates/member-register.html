@@ -101,13 +101,12 @@
                             <div class="flex items-center justify-center">
                                 <span class="text-3xl font-bold text-purple-600"
                                       th:text="${ensemble.numberRegistered}">4</span>
-                                <span class="text-xl font-bold text-purple-400">/5</span>
-                                <!-- use images to represent attendees -->
-                                <!-- <img class="w-6 h-6 rounded-full border-gray-200 border transform hover:scale-125" src="https://avatars.githubusercontent.com/u/47930468"/> -->
-                                <!-- <img class="w-6 h-6 rounded-full border-gray-200 border -m-1 transform hover:scale-125" src="https://avatars.githubusercontent.com/u/30540091"/> -->
-                                <!-- <img class="w-6 h-6 rounded-full border-gray-200 border -m-1 transform hover:scale-150 hover:z-50" src="https://randomuser.me/api/portraits/men/1.jpg"/> -->
-                                <!-- <img class="w-6 h-6 rounded-full border-gray-200 border -m-1 transform hover:scale-150 hover:z-50" src="https://randomuser.me/api/portraits/women/2.jpg"/> -->
-                                <!-- <img class="w-6 h-6 rounded-full border-gray-200 border -m-1 transform hover:scale-150 hover:z-50" src="https://randomuser.me/api/portraits/men/3.jpg"/> -->
+                                <span class="text-xl font-bold text-purple-400 mr-2">/5</span>
+                                <p th:each="member: ${ensemble.acceptedMembers}">
+                                    <img class="w-6 h-6 rounded-full border-gray-200 border transform hover:scale-125"
+                                         th:title="${member.firstName}"
+                                         th:src="@{https://avatars.githubusercontent.com/{githubusername}(githubusername=${member.githubUsername})}">
+                                </p>
                             </div>
                         </td>
 

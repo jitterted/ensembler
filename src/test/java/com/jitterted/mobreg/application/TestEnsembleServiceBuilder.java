@@ -85,7 +85,7 @@ public class TestEnsembleServiceBuilder {
 
     @NotNull
     public MemberService memberService() {
-        return new MemberService(memberRepository);
+        return new DefaultMemberService(memberRepository);
     }
 
     public Ensemble lastSavedEnsemble() {
