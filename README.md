@@ -26,12 +26,20 @@ Requires Java 17 (or later) and uses Maven for building.
 
 Since it uses GitHub OAuth2 for authentication, you'll need to register this application with your GitHub account if you want to run it yourself.
 
-## Development
+## Development Setup
 
-Using Tailwind CSS 3.x, keep this running if working on the HTML files: 
+### Docker
+
+Docker is needed for running the TestContainer-based database tests. If you don't have docker running, those tests will be skipped.
+
+### Tailwind CSS
+
+We're using Tailwind CSS 3.x with the platform-specific command-line tool (CLI). You'll need to install that separately from https://tailwindcss.com/blog/standalone-cli#get-started. You can keep it running in the background when working on HTML files (templates):
 
 ```
-npx tailwindcss -i ./src/main/resources/static/ensembler.css -o ./src/main/resources/static/tailwind.css --watch
+tailwindcss -i ./src/main/resources/static/ensembler.css -o ./src/main/resources/static/tailwind.css --watch
 ```
 
-(more details to come)
+## Questions?
+
+Join me on my Discord in the dedicated `#mob-reg` channel: https://discord.gg/FYSkuufDSH.
