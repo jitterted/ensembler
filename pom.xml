@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.6.5</version>
+    <version>2.6.6</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.jitterted</groupId>
@@ -165,16 +165,22 @@
 
     <!-- For In-Memory implementation of Repositories, use a deep-cloner  -->
     <!-- Deep Cloner from https://github.com/kostaskougios/cloning -->
-    <dependency>
-      <groupId>io.github.kostaskougios</groupId>
-      <artifactId>cloning</artifactId>
-      <version>1.10.3</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>io.github.kostaskougios</groupId>-->
+<!--      <artifactId>cloning</artifactId>-->
+<!--      <version>1.10.3</version>-->
+<!--    </dependency>-->
     <!-- Another option: https://github.com/parkito/KaCopy -->
+<!--    <dependency>-->
+<!--      <groupId>ru.siksmfp</groupId>-->
+<!--      <artifactId>KaCopy</artifactId>-->
+<!--      <version>0.0.9</version>-->
+<!--    </dependency>-->
+    <!-- Another option that seems well-supported: https://github.com/EsotericSoftware/kryo -->
     <dependency>
-      <groupId>ru.siksmfp</groupId>
-      <artifactId>KaCopy</artifactId>
-      <version>0.0.9</version>
+      <groupId>com.esotericsoftware</groupId>
+      <artifactId>kryo</artifactId>
+      <version>5.3.0</version>
     </dependency>
   </dependencies>
 
@@ -200,7 +206,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M5</version>
+        <version>3.0.0-M6</version>
         <configuration>
           <excludedGroups>manual</excludedGroups>
         </configuration>
