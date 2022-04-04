@@ -23,9 +23,8 @@ class InviteJdbcRepositoryTest {
     @Autowired
     InviteJdbcRepository inviteJdbcRepository;
 
-    // create shared container with a container image name "postgres" and latest major release of PostgreSQL "13"
     @Container
-    public static PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres")
+    public static PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:14")
             .withDatabaseName("posttest")
             .withUsername("test")
             .withPassword("test");

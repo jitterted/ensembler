@@ -24,9 +24,8 @@ import static org.assertj.core.api.Assertions.*;
 @Tag("integration")
 class MemberRepositoryDataJdbcAdapterTest {
 
-    // create shared container with a container image name "postgres" and latest major release of PostgreSQL "13"
     @Container
-    static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres")
+    static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:14")
             .withDatabaseName("posttest")
             .withUsername("test")
             .withPassword("test");
