@@ -1,0 +1,5 @@
+/* this is the baseline CSS that will be processed by Tailwind CSS, any non-Tailwind custom CSS would go here */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

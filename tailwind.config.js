@@ -1,9 +1,8 @@
 module.exports = {
-    mode: 'jit',
-    purge: [
-        './src/main/resources/**/*.html',
+    content: [
+        './src/main/resources/static/index.html',
+        './src/main/resources/templates/**/*.html',
     ],
-    darkMode: false, // or 'media' or 'class'
     theme: {
         extend: {},
         minWidth: {
@@ -14,11 +13,6 @@ module.exports = {
             '4/5': '80%',
             'full': '100%',
         },
-    },
-    variants: {
-        extend: {},
-        backgroundColor: ['responsive', 'first', 'last', 'even', 'odd', 'hover', 'focus'],
-        divideColor: ['group-hover'],
     },
     plugins: [
         require('@tailwindcss/forms'),
