@@ -10,12 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -24,25 +18,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Testcontainers(disabledWithoutDocker = true)
 @SpringBootTest
-@Transactional
 @Tag("integration")
-class EnsembleRepositoryDataJdbcAdapterTest {
-
-    @Container
-    public static PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:14")
-            .withDatabaseName("posttest")
-            .withUsername("test")
-            .withPassword("test");
-
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
-        registry.add("spring.datasource.username", POSTGRESQL_CONTAINER::getUsername);
-        registry.add("spring.datasource.password", POSTGRESQL_CONTAINER::getPassword);
-        registry.add("spring.sql.init.platform", () -> "postgresql");
-    }
+class EnsembleRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
 
     @Autowired
     EnsembleRepositoryDataJdbcAdapter ensembleRepositoryAdapter;

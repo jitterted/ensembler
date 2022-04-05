@@ -32,6 +32,8 @@ Since it uses GitHub OAuth2 for authentication, you'll need to register this app
 
 Docker is needed for running the TestContainer-based database tests. If you don't have docker running, those tests will be skipped.
 
+See `PostgresTestcontainerBase` for information on the reusable Testcontainer setup.
+
 ### Tailwind CSS
 
 We're using Tailwind CSS 3.x with the platform-specific command-line tool (CLI). You'll need to install that separately from https://tailwindcss.com/blog/standalone-cli#get-started. You can keep it running in the background when working on HTML files (templates):

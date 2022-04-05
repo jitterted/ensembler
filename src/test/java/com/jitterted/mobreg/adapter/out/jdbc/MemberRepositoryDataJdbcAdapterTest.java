@@ -7,45 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Testcontainers(disabledWithoutDocker = true)
 @SpringBootTest
-@Transactional
 @Tag("integration")
-class MemberRepositoryDataJdbcAdapterTest {
+class MemberRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
 
-    @Container
-    static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:14")
-            .withDatabaseName("posttest")
-            .withUsername("test")
-            .withPassword("test");
     @Autowired
     MemberRepositoryDataJdbcAdapter memberRepositoryAdapter;
 
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
-        registry.add("spring.datasource.username", POSTGRESQL_CONTAINER::getUsername);
-        registry.add("spring.datasource.password", POSTGRESQL_CONTAINER::getPassword);
-        registry.add("spring.sql.init.platform", () -> "postgresql");
-    }
-
     @Test
     public void newlyCreatedAndSavedMemberGetsIdAssigned() throws Exception {
-        Member member = new Member("first", "githubuser", "ROLE_USER", "ROLE_MEMBER");
+        Member member = new Member("user", "githubuser", "ROLE_USER");
 
         Member savedMember = memberRepositoryAdapter.save(member);
 
@@ -55,7 +34,7 @@ class MemberRepositoryDataJdbcAdapterTest {
 
     @Test
     public void memberWithRolesAreStoredThenRetrieved() throws Exception {
-        Member member = new Member("first", "githubuser", "ROLE_USER", "ROLE_MEMBER");
+        Member member = new Member("member", "github_member", "ROLE_USER", "ROLE_MEMBER");
 
         Member savedMember = memberRepositoryAdapter.save(member);
 
