@@ -1,19 +1,17 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
 import com.jitterted.mobreg.domain.Member;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
-@Tag("integration")
+@Import(MemberRepositoryDataJdbcAdapter.class)
 class MemberRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
 
     @Autowired

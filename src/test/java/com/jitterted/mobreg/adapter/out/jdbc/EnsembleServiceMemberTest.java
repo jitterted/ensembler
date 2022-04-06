@@ -8,18 +8,16 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
-@Tag("integration")
+@Import({EnsembleRepositoryDataJdbcAdapter.class, MemberRepositoryDataJdbcAdapter.class})
 class EnsembleServiceMemberTest extends PostgresTestcontainerBase {
 
     @Autowired

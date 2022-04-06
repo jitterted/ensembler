@@ -6,7 +6,7 @@ import com.jitterted.mobreg.domain.MemberId;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -14,7 +14,12 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
+//@SpringBootTest
+@DataJdbcTest(properties = {
+        "spring.test.database.replace=NONE",
+        "spring.datasource.url=jdbc:tc:postgresql:14:///springboot"
+})
+
 @Tag("integration")
 class PostgresqlEntityTest extends PostgresTestcontainerBase {
 

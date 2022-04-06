@@ -1,14 +1,15 @@
 package com.jitterted.mobreg.adapter.out.jdbc;
 
 import org.junit.jupiter.api.Tag;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 @Tag("container")
+@Tag("integration")
 /* NOTE: For reusing a container (faster test runs), this setup requires the file
  * testcontainers.properties in your "home" directory (e.g., ~/) to have this property set:
  *
@@ -17,7 +18,7 @@ import org.testcontainers.utility.DockerImageName;
  * You will need to manually clean up running containers.
  */
 @Testcontainers(disabledWithoutDocker = true)
-@Transactional
+@DataJdbcTest(properties = "spring.test.database.replace=NONE")
 public abstract class PostgresTestcontainerBase {
 
     public static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER;
@@ -38,6 +39,5 @@ public abstract class PostgresTestcontainerBase {
         registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
         registry.add("spring.datasource.username", POSTGRESQL_CONTAINER::getUsername);
         registry.add("spring.datasource.password", POSTGRESQL_CONTAINER::getPassword);
-        registry.add("spring.sql.init.platform", () -> "postgresql");
     }
 }

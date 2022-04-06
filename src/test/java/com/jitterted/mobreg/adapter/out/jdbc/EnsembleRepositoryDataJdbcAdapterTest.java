@@ -4,11 +4,10 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.MemberId;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 
 import java.net.URI;
@@ -18,8 +17,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
-@Tag("integration")
+@Import(EnsembleRepositoryDataJdbcAdapter.class) // @Repository classes aren't created as part of @DataJdbcTest slicing
 class EnsembleRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
 
     @Autowired
