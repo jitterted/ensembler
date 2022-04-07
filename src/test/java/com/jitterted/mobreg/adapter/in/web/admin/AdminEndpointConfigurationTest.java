@@ -123,8 +123,6 @@ public class AdminEndpointConfigurationTest {
     private void createStubMemberRepositoryWithMember(long id, String firstName, String githubUsername, String... roles) {
         Member member = MemberFactory.createMember(id, firstName, githubUsername, roles);
         memberRepository.save(member);
-//        when(memberRepository.findByGithubUsername(githubUsername))
-//                .thenReturn(Optional.of(member));
     }
 
 
@@ -133,8 +131,6 @@ public class AdminEndpointConfigurationTest {
         EnsembleId ensembleId = EnsembleId.of(id);
         dummyEnsemble.setId(ensembleId);
         ensembleRepository.save(dummyEnsemble);
-//        when(ensembleService.findById(ensembleId))
-//                .thenReturn(Optional.of(dummyEnsemble));
     }
 
 }
