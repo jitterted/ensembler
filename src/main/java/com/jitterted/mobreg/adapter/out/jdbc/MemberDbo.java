@@ -36,7 +36,7 @@ class MemberDbo {
     }
 
     Member asMember() {
-        Member member = new Member(firstName, githubUsername, roles.toArray(new String[0]));
+        Member member = new Member(firstName, githubUsername, roles.toArray(String[]::new));
         member.changeEmailTo(email);
         member.changeTimeZoneTo(ZoneId.of(timeZone));
         member.setId(MemberId.of(id));

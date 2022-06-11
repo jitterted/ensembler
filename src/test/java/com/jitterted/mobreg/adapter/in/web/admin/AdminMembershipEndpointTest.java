@@ -1,10 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 
-import com.jitterted.mobreg.application.EnsembleService;
-import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
-import com.jitterted.mobreg.application.port.Notifier;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +28,7 @@ public class AdminMembershipEndpointTest {
     MemberRepository memberRepository;
 
     @MockBean
-    EnsembleRepository ensembleRepository;
-
-    @MockBean
-    Notifier notifier;
-
-    @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
-
-    @MockBean
-    EnsembleService ensembleService;
 
     @Test
     public void getOfMemberAdminPageIsStatus200Ok() throws Exception {

@@ -29,15 +29,15 @@ public class EnsembleRepositoryDataJdbcAdapter implements EnsembleRepository {
 
     @Override
     public List<Ensemble> findAll() {
-        return StreamSupport.stream(
-                                    ensembleJdbcRepository.findAll().spliterator(), false)
+        return StreamSupport.stream(ensembleJdbcRepository.findAll().spliterator(), false)
                             .map(EnsembleDbo::asEnsemble)
                             .toList();
     }
 
     @Override
     public Optional<Ensemble> findById(EnsembleId ensembleId) {
-        Optional<EnsembleDbo> found = ensembleJdbcRepository.findById(ensembleId.id());
-        return found.map(EnsembleDbo::asEnsemble);
+        return ensembleJdbcRepository
+                .findById(ensembleId.id())
+                .map(EnsembleDbo::asEnsemble);
     }
 }
