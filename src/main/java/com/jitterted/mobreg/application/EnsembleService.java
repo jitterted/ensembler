@@ -51,9 +51,12 @@ public class EnsembleService {
         ensemble = saveAndNotifyEnsembleScheduled(ensemble);
 
         try {
+            LOGGER.info("Calling out to Video Conference Scheduler for {}", ensemble.name());
             ConferenceDetails conferenceDetails = videoConferenceScheduler.createMeeting(ensemble);
             ensemble.changeConferenceDetailsTo(conferenceDetails);
+            LOGGER.info("Saving Conference Details for {}", ensemble.name());
             ensembleRepository.save(ensemble);
+            LOGGER.info("Saved Conference Details for {}", ensemble.name());
         } catch (FailedToScheduleMeeting ftsm) {
             LOGGER.warn("Failed to schedule Ensemble with Video Conference", ftsm);
         }
@@ -82,13 +85,17 @@ public class EnsembleService {
     }
 
     private Ensemble saveAndNotifyEnsembleScheduled(Ensemble ensemble) {
+        LOGGER.info("Saving Ensemble: {}", ensemble.name());
         Ensemble savedEnsemble = ensembleRepository.save(ensemble);
+        LOGGER.info("Ensemble Saved: {}", ensemble.name());
         triggerEnsembleScheduledNotification(ensemble);
         return savedEnsemble;
     }
 
     public void triggerEnsembleScheduledNotification(Ensemble ensemble) {
+        LOGGER.info("Notifying scheduling of Ensemble {}", ensemble.name());
         notifier.ensembleScheduled(ensemble, URI.create("https://mobreg.herokuapp.com/"));
+        LOGGER.info("Done notifying for Ensemble {}", ensemble.name());
     }
 
     public List<Ensemble> allEnsembles() {
