@@ -6,7 +6,9 @@ Managing their access to the GitHub repository, knowing if they're new to mobbin
 
 This is currently a Work In Progress, being built almost 100% in public, [live on Twitch](https://JitterTed.Live).
 
+## Questions?
 
+Join me on my Discord in the dedicated `#mob-reg` channel: https://discord.gg/FYSkuufDSH.
 
 ## Environment Variables
 
@@ -41,7 +43,3 @@ We're using Tailwind CSS 3.x with the platform-specific command-line tool (CLI).
 ```
 tailwindcss -i ./src/main/resources/static/ensembler.css -o ./src/main/resources/static/tailwind.css --watch
 ```
-
-## Questions?
-
-Join me on my Discord in the dedicated `#mob-reg` channel: https://discord.gg/FYSkuufDSH.
