@@ -22,6 +22,15 @@ public class Member {
         this.roles = Arrays.stream(roles).collect(Collectors.toUnmodifiableSet());
     }
 
+    public Member(MemberState memberState) {
+        this.id = memberState.memberId();
+        this.firstName = memberState.firstName();
+        this.githubUsername = memberState.githubUsername();
+        this.roles = Set.copyOf(memberState.roles());
+        this.email = memberState.email();
+        this.timeZone = memberState.timeZone();
+    }
+
     public String firstName() {
         return firstName;
     }
@@ -89,5 +98,14 @@ public class Member {
                 ", githubUsername='" + githubUsername + '\'' +
                 ", roles=" + roles +
                 ", timeZone=" + timeZone;
+    }
+
+    public MemberState memento() {
+        return new MemberState(firstName,
+                               githubUsername,
+                               roles,
+                               email,
+                               timeZone,
+                               id);
     }
 }
