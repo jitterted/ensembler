@@ -19,16 +19,19 @@ class MemberProfileChangeTest {
                                          .buildAndSave();
         MemberService memberService = testMemberBuilder.memberService();
 
-        memberService.changeEmail(member, "new@example.com");
-        memberService.changeTimeZone(member, "America/New_York");
         memberService.changeFirstName(member, "Firsty");
-
-        Member foundMember = memberService.findById(member.getId());
-        assertThat(foundMember.firstName())
+        Member foundMember1 = memberService.findById(member.getId());
+        assertThat(foundMember1.firstName())
                 .isEqualTo("Firsty");
-        assertThat(foundMember.email())
+
+        memberService.changeEmail(member, "new@example.com");
+        Member foundMember2 = memberService.findById(member.getId());
+        assertThat(foundMember2.email())
                 .isEqualTo("new@example.com");
-        assertThat(foundMember.timeZone())
+
+        memberService.changeTimeZone(member, "America/New_York");
+        Member foundMember3 = memberService.findById(member.getId());
+        assertThat(foundMember3.timeZone())
                 .isEqualTo(ZoneId.of("America/New_York"));
     }
 
