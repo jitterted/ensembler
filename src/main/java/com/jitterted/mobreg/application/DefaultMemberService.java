@@ -47,6 +47,9 @@ public class DefaultMemberService implements MemberService {
 
     @Override
     public void changeFirstName(Member member, String newFirstName) {
+        // find Member via MemberId
+        // make the change on the found Member
+        // save the changed Member in the Repository
         member.changeFirstNameTo(newFirstName);
         save(member);
     }
