@@ -15,7 +15,7 @@
   <description>Mob Registration Manager</description>
   <properties>
     <java.version>17</java.version>
-    <spotify.github-client.version>0.1.34</spotify.github-client.version>
+    <spotify.github-client.version>0.1.42</spotify.github-client.version>
     <testcontainers.version>1.17.2</testcontainers.version>
     <htmlunit.version>2.62.0</htmlunit.version>
     <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
