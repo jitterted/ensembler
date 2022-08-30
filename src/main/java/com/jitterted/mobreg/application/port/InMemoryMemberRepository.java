@@ -3,7 +3,6 @@ package com.jitterted.mobreg.application.port;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberState;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -32,21 +31,14 @@ public class InMemoryMemberRepository implements MemberRepository {
 
     @Override
     public Optional<Member> findByGithubUsername(String githubUsername) {
-        MemberState memberState = usernameToMemberMap.get(githubUsername);
-        return memberFrom(memberState);
+        return Optional.ofNullable(usernameToMemberMap.get(githubUsername))
+                       .map(Member::new);
     }
 
     @Override
     public Optional<Member> findById(MemberId memberId) {
-        return memberFrom(idToMemberMap.get(memberId));
-    }
-
-    @NotNull
-    private Optional<Member> memberFrom(MemberState memberState) {
-        if (memberState == null) {
-            return Optional.empty();
-        }
-        return Optional.of(new Member(memberState));
+        return Optional.ofNullable(idToMemberMap.get(memberId))
+                       .map(Member::new);
     }
 
     @Override
