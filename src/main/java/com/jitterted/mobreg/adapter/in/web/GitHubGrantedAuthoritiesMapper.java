@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-@Component
+//@Component
 public class GitHubGrantedAuthoritiesMapper implements GrantedAuthoritiesMapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubGrantedAuthoritiesMapper.class);
