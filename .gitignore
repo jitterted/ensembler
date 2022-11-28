@@ -1,4 +1,6 @@
-HELP.md
+# Ignore any database dump files
+*.dump
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

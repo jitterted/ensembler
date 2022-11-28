@@ -94,7 +94,7 @@ public class EnsembleService {
 
     public void triggerEnsembleScheduledNotification(Ensemble ensemble) {
         LOGGER.info("Notifying scheduling of Ensemble {}", ensemble.name());
-        notifier.ensembleScheduled(ensemble, URI.create("https://mobreg.herokuapp.com/"));
+        notifier.ensembleScheduled(ensemble, URI.create("https://ensembler.dev/"));
         LOGGER.info("Done notifying for Ensemble {}", ensemble.name());
     }
 
