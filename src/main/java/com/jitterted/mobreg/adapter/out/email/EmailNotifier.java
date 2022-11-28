@@ -107,7 +107,7 @@ public class EmailNotifier implements Notifier {
         return """
                 New Ensemble '%s' has been scheduled for %s.
                 <br/>
-                Visit <a href="%s">MobReg</a> to register.
+                Visit <a href="%s">Ensembler</a> to register.
                 """
                 .formatted(ensemble.name(),
                            startDateTimeInMemberTimeZone(ensemble, zoneId).format(LONG_DATE_TIME_FORMATTER),

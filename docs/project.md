@@ -1,10 +1,10 @@
-# MobReg
+# Ensembler
 
-This project manages Remote Learning Ensemble (Mob Programming) ensembles (ensembles are a specific, scheduled learning session).
+This project manages Remote Learning Ensembles (aka Mob Programming), which are a specific, scheduled learning session.
 
 # Features To-Do
 
-* Rename domain term: Huddle -> Ensemble
+[X] Rename domain term: Huddle -> Ensemble
 
 * Groups
     + Ensembles belong to a group

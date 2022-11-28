@@ -31,7 +31,7 @@ public class EmailToSendEnsembleScheduledNotifierTest {
                         """
                            New Ensemble 'Ensemble #314' has been scheduled for December 3, 2021 at 9:00AM (PST).
                            <br/>
-                           Visit <a href="https://ensembler.dev/">MobReg</a> to register.
+                           Visit <a href="https://ensembler.dev/">Ensembler</a> to register.
                            """,
                         "name@example.com"));
     }
@@ -59,11 +59,11 @@ public class EmailToSendEnsembleScheduledNotifierTest {
                 .containsOnly("""
                                       New Ensemble 'Ensemble #1217' has been scheduled for December 17, 2021 at 1:00PM (PST).
                                       <br/>
-                                      Visit <a href="https://ensembler.dev/">MobReg</a> to register.
+                                      Visit <a href="https://ensembler.dev/">Ensembler</a> to register.
                                       ""","""
                                       New Ensemble 'Ensemble #1217' has been scheduled for December 17, 2021 at 4:00PM (EST).
                                       <br/>
-                                      Visit <a href="https://ensembler.dev/">MobReg</a> to register.
+                                      Visit <a href="https://ensembler.dev/">Ensembler</a> to register.
                                       """
                               );
     }

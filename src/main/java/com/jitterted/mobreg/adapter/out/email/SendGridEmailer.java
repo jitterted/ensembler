@@ -26,7 +26,7 @@ public class SendGridEmailer implements Emailer {
 
     @Override
     public void send(EmailToSend emailToSend) {
-        Email from = new Email("mobreg@tedmyoung.com", "Ensembler (MobReg)"); // TODO: pull this into configuration
+        Email from = new Email("mobreg@tedmyoung.com", "Ensembler.dev"); // TODO: pull this into configuration
         Content content = new Content("text/html", emailToSend.body());
 
         Personalization personalization = new Personalization();
