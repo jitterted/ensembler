@@ -56,9 +56,9 @@ public class AdminDashboardController {
     @GetMapping("/ensemble/{ensembleId}")
     public String ensembleDetailView(Model model, @PathVariable("ensembleId") Long ensembleId) {
         Ensemble ensemble = ensembleService.findById(EnsembleId.of(ensembleId))
-                                           .orElseThrow(() -> {
-                                               throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-                                           });
+                                           .orElseThrow(() ->
+                                               new ResponseStatusException(HttpStatus.NOT_FOUND)
+                                           );
 
         EnsembleDetailView ensembleDetailView = EnsembleDetailView.from(ensemble, memberService);
         model.addAttribute("ensemble", ensembleDetailView);
@@ -94,9 +94,9 @@ public class AdminDashboardController {
     @PostMapping("/notify/{ensembleId}")
     public String notifyEnsembleScheduled(@PathVariable("ensembleId") Long ensembleId) {
         Ensemble ensemble = ensembleService.findById(EnsembleId.of(ensembleId))
-                                           .orElseThrow(() -> {
-                                               throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-                                           });
+                                           .orElseThrow(() ->
+                                               new ResponseStatusException(HttpStatus.NOT_FOUND)
+                                           );
         ensembleService.triggerEnsembleScheduledNotification(ensemble);
         return "redirect:/admin/dashboard";
     }
