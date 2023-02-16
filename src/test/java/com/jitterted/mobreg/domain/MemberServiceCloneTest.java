@@ -17,31 +17,31 @@ class MemberServiceCloneTest {
         member.changeEmailTo("first@example.com");
         member.changeTimeZoneTo(ZoneId.of("America/Los_Angeles"));
         member.setId(MemberId.of(23L));
-        MemberState expectedMemberState =
-                new MemberState("first",
-                                "github",
-                                Set.of("ROLE_USER", "ROLE_MEMBER"),
-                                "first@example.com",
-                                ZoneId.of("America/Los_Angeles"),
-                                MemberId.of(23L));
+        MemberSnapshot expectedMemberSnapshot =
+                new MemberSnapshot("first",
+                                   "github",
+                                   Set.of("ROLE_USER", "ROLE_MEMBER"),
+                                   "first@example.com",
+                                   ZoneId.of("America/Los_Angeles"),
+                                   MemberId.of(23L));
 
-        MemberState memberState = member.memento();
+        MemberSnapshot memberSnapshot = member.memento();
 
-        assertThat(memberState)
-                .isEqualTo(expectedMemberState);
+        assertThat(memberSnapshot)
+                .isEqualTo(expectedMemberSnapshot);
     }
 
     @Test
     public void memberFromMementoIsContentEqualToOriginal() throws Exception {
-        MemberState memberState =
-                new MemberState("ted",
-                                "jitterted",
-                                Set.of("ROLE_USER", "ROLE_MEMBER", "ROLE_ADMIN"),
-                                "jitterted@example.com",
-                                ZoneId.of("America/Los_Angeles"),
-                                MemberId.of(37L));
+        MemberSnapshot memberSnapshot =
+                new MemberSnapshot("ted",
+                                   "jitterted",
+                                   Set.of("ROLE_USER", "ROLE_MEMBER", "ROLE_ADMIN"),
+                                   "jitterted@example.com",
+                                   ZoneId.of("America/Los_Angeles"),
+                                   MemberId.of(37L));
 
-        Member memberFromState = new Member(memberState);
+        Member memberFromState = new Member(memberSnapshot);
 
         assertThat(memberFromState.getId())
                 .isEqualTo(MemberId.of(37L));
