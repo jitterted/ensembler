@@ -10,17 +10,11 @@
   </parent>
   <groupId>com.jitterted</groupId>
   <artifactId>ensembler</artifactId>
-  <version>1.0.13</version>
+  <version>1.0.14</version>
   <name>ensembler</name>
   <description>Ensemble Registration Manager</description>
   <properties>
     <java.version>17</java.version>
-    <spotify.github-client.version>0.1.34</spotify.github-client.version>
-    <testcontainers.version>1.17.2</testcontainers.version>
-    <htmlunit.version>2.62.0</htmlunit.version>
-    <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
-    <guava.version>31.1-jre</guava.version>
-    <archunit.version>0.23.1</archunit.version>
   </properties>
   <dependencies>
     <dependency>
@@ -75,28 +69,17 @@
       <artifactId>thymeleaf-extras-springsecurity5</artifactId>
     </dependency>
 
-
     <!-- THIRD-PARTY API STUFF -->
     <dependency>
       <groupId>com.spotify</groupId>
       <artifactId>github-client</artifactId>
-      <version>${spotify.github-client.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>${guava.version}</version>
+      <version>0.1.51</version>
     </dependency>
 
     <dependency>
       <groupId>com.sendgrid</groupId>
       <artifactId>sendgrid-java</artifactId>
+      <version>4.9.3</version>
     </dependency>
 
     <!-- DATABASE STUFF   -->
@@ -140,12 +123,12 @@
     <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
-      <version>${jetbrains.annotations.version}</version>
+      <version>24.0.1</version>
     </dependency>
     <dependency>
       <groupId>com.tngtech.archunit</groupId>
       <artifactId>archunit-junit5</artifactId>
-      <version>${archunit.version}</version>
+      <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
 
@@ -153,7 +136,7 @@
     <dependency>
       <groupId>net.sourceforge.htmlunit</groupId>
       <artifactId>htmlunit</artifactId>
-      <version>${htmlunit.version}</version>
+      <version>2.70.0</version>
     </dependency>
 
     <!-- Generate short unique identifiers, from https://github.com/huxi/sulky/blob/master/sulky-ulid/README.md -->
@@ -163,25 +146,7 @@
       <version>8.3.0</version>
     </dependency>
 
-    <!-- For In-Memory implementation of Repositories, use a deep-cloner  -->
-    <!-- Deep Cloner from https://github.com/kostaskougios/cloning -->
-<!--    <dependency>-->
-<!--      <groupId>io.github.kostaskougios</groupId>-->
-<!--      <artifactId>cloning</artifactId>-->
-<!--      <version>1.10.3</version>-->
-<!--    </dependency>-->
-    <!-- Another option: https://github.com/parkito/KaCopy -->
-<!--    <dependency>-->
-<!--      <groupId>ru.siksmfp</groupId>-->
-<!--      <artifactId>KaCopy</artifactId>-->
-<!--      <version>0.0.9</version>-->
-<!--    </dependency>-->
-    <!-- Another option that seems well-supported: https://github.com/EsotericSoftware/kryo -->
-    <dependency>
-      <groupId>com.esotericsoftware</groupId>
-      <artifactId>kryo</artifactId>
-      <version>5.3.0</version>
-    </dependency>
+  <!-- Given the switch to Aggregate Snapshot (memento) no longer need object cloners  -->
   </dependencies>
 
   <dependencyManagement>
@@ -189,7 +154,7 @@
       <dependency>
         <groupId>org.testcontainers</groupId>
         <artifactId>testcontainers-bom</artifactId>
-        <version>${testcontainers.version}</version>
+        <version>1.18.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -202,11 +167,12 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
-<!-- Configure Surefire to ignore and not run tests that have @Tag("manual") -->
+
+      <!-- Configure Surefire to ignore and not run tests that have @Tag("manual") -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M7</version>
+        <version>3.1.0</version>
         <configuration>
           <excludedGroups>manual</excludedGroups>
         </configuration>
