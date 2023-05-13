@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Members Admin</title>
 </head>
@@ -28,10 +28,24 @@
 
 <h2>Add Member</h2>
 <form th:action="@{/admin/add-member}" action="#" method="post" th:object="${addMemberForm}">
-    <div>First Name: <input type="text" th:field="*{firstName}" autofocus></div>
-    <div>GitHub Username: <input type="text" th:field="*{githubUsername}"></div>
-    <div class="mt-3">
+    <div style="margin-bottom: 0.5rem;">
+        <label th:for="firstName">First Name:</label>
+        <input type="text" th:field="*{firstName}" autofocus>
+        <span th:if="${#fields.hasErrors('firstName')}"
+              th:errors="*{firstName}"
+              style="color: #CC1122;">Error</span>
+    </div>
+    <div style="margin-bottom: 0.5rem;">
+        <label th:for="githubUsername">GitHub Username:
+            <input type="text" th:field="*{githubUsername}">
+            <span th:if="${#fields.hasErrors('githubUsername')}"
+                  th:errors="*{githubUsername}"
+                  style="color: #CC1122;">Error</span>
+        </label>
+    </div>
+    <div>
         <button type="submit">Add Member</button>
     </div>
 </form>
+
 </body>
