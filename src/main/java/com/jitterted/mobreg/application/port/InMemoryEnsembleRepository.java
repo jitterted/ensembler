@@ -3,6 +3,7 @@ package com.jitterted.mobreg.application.port;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class InMemoryEnsembleRepository implements EnsembleRepository {
     private final Map<EnsembleId, Ensemble> ensembles = new ConcurrentHashMap<>();
     private final AtomicLong sequence = new AtomicLong(0);
-    private int saveCount = 0;
+    private final List<Ensemble> savedEnsembles = new ArrayList<>();
 
     @Override
     public Ensemble save(Ensemble ensemble) {
@@ -20,7 +21,7 @@ public class InMemoryEnsembleRepository implements EnsembleRepository {
             ensemble.setId(EnsembleId.of(sequence.getAndIncrement()));
         }
         ensembles.put(ensemble.getId(), ensemble);
-        saveCount++;
+        savedEnsembles.add(ensemble);
         return ensemble;
     }
 
@@ -34,11 +35,15 @@ public class InMemoryEnsembleRepository implements EnsembleRepository {
         return Optional.ofNullable(ensembles.get(ensembleId));
     }
 
+    public List<Ensemble> savedEnsembles() {
+        return savedEnsembles;
+    }
+
     public int saveCount() {
-        return saveCount;
+        return savedEnsembles.size();
     }
 
     public void resetSaveCount() {
-        saveCount = 0;
+        savedEnsembles.clear();
     }
 }
