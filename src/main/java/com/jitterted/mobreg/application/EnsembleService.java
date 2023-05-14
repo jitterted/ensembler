@@ -123,7 +123,11 @@ public class EnsembleService {
     }
 
     public void joinAsSpectator(EnsembleId ensembleId, MemberId memberId) {
+        Ensemble ensemble = findOrThrow(ensembleId);
 
+        ensemble.joinAsSpectator(memberId);
+
+        ensembleRepository.save(ensemble);
     }
 
     public void declineMember(EnsembleId ensembleId, MemberId memberId) {
