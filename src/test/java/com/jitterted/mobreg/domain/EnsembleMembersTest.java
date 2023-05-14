@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class EnsembleAcceptedMembersTest {
+public class EnsembleMembersTest {
 
     @Test
     public void newEnsembleHasZeroParticipants() throws Exception {
@@ -27,6 +27,20 @@ public class EnsembleAcceptedMembersTest {
 
         ensemble.joinAsSpectator(memberId);
 
+        assertThat(ensemble.spectators())
+                .containsExactly(memberId);
+    }
+
+    @Test
+    void acceptedMemberWhenJoinAsSpectatorRemovesFromAccepted() {
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
+        MemberId memberId = MemberId.of(123);
+        ensemble.acceptedBy(memberId);
+
+        ensemble.joinAsSpectator(memberId);
+
+        assertThat(ensemble.acceptedMembers())
+                .isEmpty();
         assertThat(ensemble.spectators())
                 .containsExactly(memberId);
     }

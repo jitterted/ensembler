@@ -1,9 +1,9 @@
 # Tasks
 
 1. Ensemble: Add "Spectators" (as Set<MemberId>)
-   * void joinAsSpectator(MemberId memberId)
-     * can't be in Accepted nor Declined
-   * Set<MemberId> spectators()
+   [X] void joinAsSpectator(MemberId memberId)
+     [ ] remove from Accepted and Declined
+   [X] Set<MemberId> spectators()
    * Accept removes from Spectators
    * Decline removes from Spectators
 2. EnsembleService: joinAsSpectator(EnsembleId, MemberId)
