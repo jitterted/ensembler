@@ -2,10 +2,11 @@
 
 1. Ensemble: Add "Spectators" (as Set<MemberId>)
    [X] void joinAsSpectator(MemberId memberId)
-     [ ] remove from Accepted and Declined
+     [X] remove from Accepted 
+     [X] remove from Declined
    [X] Set<MemberId> spectators()
-   * Accept removes from Spectators
-   * Decline removes from Spectators
+   [ ] Accept removes from Spectators
+   [ ] Decline removes from Spectators
 2. EnsembleService: joinAsSpectator(EnsembleId, MemberId)
 3. Add "Spectators" column to the member-register template
    * Add to the EnsembleSummaryView object

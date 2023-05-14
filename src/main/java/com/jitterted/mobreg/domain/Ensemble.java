@@ -96,6 +96,7 @@ public class Ensemble {
     public void joinAsSpectator(MemberId memberId) {
         membersAsSpectators.add(memberId);
         membersWhoAccepted.remove(memberId);
+        membersWhoDeclined.remove(memberId);
     }
 
     private void requireHasSpace() {
