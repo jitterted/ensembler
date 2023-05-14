@@ -75,13 +75,20 @@ public class Ensemble {
         return membersAsSpectators;
     }
 
+    public void joinAsSpectator(MemberId memberId) {
+        membersAsSpectators.add(memberId);
+        membersWhoAccepted.remove(memberId);
+        membersWhoDeclined.remove(memberId);
+    }
+
     public boolean isDeclined(MemberId memberId) {
         return membersWhoDeclined.contains(memberId);
     }
 
     public void declinedBy(MemberId memberId) {
-        membersWhoAccepted.remove(memberId);
         membersWhoDeclined.add(memberId);
+        membersWhoAccepted.remove(memberId);
+        membersAsSpectators.remove(memberId);
     }
 
     public Stream<MemberId> declinedMembers() {
@@ -92,12 +99,6 @@ public class Ensemble {
         if (isCanceled()) {
             throw new EnsembleCanceled("Ensemble (%s) is Canceled".formatted(id));
         }
-    }
-
-    public void joinAsSpectator(MemberId memberId) {
-        membersAsSpectators.add(memberId);
-        membersWhoAccepted.remove(memberId);
-        membersWhoDeclined.remove(memberId);
     }
 
     private void requireHasSpace() {

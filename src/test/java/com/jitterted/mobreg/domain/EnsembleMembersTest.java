@@ -74,6 +74,20 @@ public class EnsembleMembersTest {
     }
 
     @Test
+    void spectatorWhenDeclineRemovesFromSpectators() {
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
+        MemberId memberId = MemberId.of(123);
+        ensemble.joinAsSpectator(memberId);
+
+        ensemble.declinedBy(memberId);
+
+        assertThat(ensemble.spectators())
+                .isEmpty();
+        assertThat(ensemble.declinedMembers())
+                .containsExactly(memberId);
+    }
+
+    @Test
     public void acceptMemberByIdWithEnsembleRemembersTheMember() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(123);
@@ -82,7 +96,6 @@ public class EnsembleMembersTest {
 
         assertThat(ensemble.acceptedCount())
                 .isEqualTo(1);
-
         assertThat(ensemble.acceptedMembers())
                 .containsOnly(memberId);
     }
