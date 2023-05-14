@@ -112,7 +112,7 @@ public class EnsembleService {
         return ensembleRepository.findById(ensembleId);
     }
 
-    public void registerMember(EnsembleId ensembleId, MemberId memberId) {
+    public void acceptMember(EnsembleId ensembleId, MemberId memberId) {
         Ensemble ensemble = findOrThrow(ensembleId);
         ensemble.acceptedBy(memberId);
         ensembleRepository.save(ensemble);
@@ -120,6 +120,10 @@ public class EnsembleService {
         Member member = memberRepository.findById(memberId)
                                         .orElseThrow(() -> new MemberNotFoundByIdException("Member ID: " + memberId.id()));
         notifier.memberAccepted(ensemble, member);
+    }
+
+    public void joinAsSpectator(EnsembleId ensembleId, MemberId memberId) {
+
     }
 
     public void declineMember(EnsembleId ensembleId, MemberId memberId) {

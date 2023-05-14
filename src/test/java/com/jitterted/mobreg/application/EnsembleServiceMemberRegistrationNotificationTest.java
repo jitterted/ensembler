@@ -35,7 +35,7 @@ class EnsembleServiceMemberRegistrationNotificationTest {
         EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberBuilder.memberRepository(),
                                                               spyEmailNotifier, new DummyVideoConferenceScheduler());
 
-        ensembleService.registerMember(ensembleId, memberId);
+        ensembleService.acceptMember(ensembleId, memberId);
 
         assertThat(spyEmailNotifier.emailBody())
                 .contains("https://zoom.us",

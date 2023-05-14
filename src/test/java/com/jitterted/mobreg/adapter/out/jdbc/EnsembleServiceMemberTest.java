@@ -35,7 +35,7 @@ class EnsembleServiceMemberTest extends PostgresTestcontainerBase {
         Member member = new Member("memberFirstName", "memberGithubUsername");
         MemberId memberId = memberRepository.save(member).getId();
 
-        ensembleService.registerMember(ensembleId, memberId);
+        ensembleService.acceptMember(ensembleId, memberId);
 
         Optional<Ensemble> foundEnsemble = ensembleRepository.findById(ensembleId);
 
