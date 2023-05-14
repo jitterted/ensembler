@@ -24,6 +24,7 @@ public class Ensemble {
     private ConferenceDetails conferenceDetails;
     private final Set<MemberId> membersWhoAccepted = new HashSet<>();
     private final Set<MemberId> membersWhoDeclined = new HashSet<>();
+    private final Set<MemberId> membersAsSpectators = new HashSet<>();
     private EnsembleState state = EnsembleState.SCHEDULED;
     private URI recordingLink = URI.create("");
 
@@ -69,10 +70,8 @@ public class Ensemble {
         membersWhoDeclined.remove(memberId);
     }
 
-    private void requireNotCanceled() {
-        if (isCanceled()) {
-            throw new EnsembleCanceled("Ensemble (%s) is Canceled".formatted(id));
-        }
+    public Set<MemberId> spectators() {
+        return membersAsSpectators;
     }
 
     public boolean isDeclined(MemberId memberId) {
@@ -86,6 +85,16 @@ public class Ensemble {
 
     public Stream<MemberId> declinedMembers() {
         return ImmutableSet.copyOf(membersWhoDeclined).stream();
+    }
+
+    private void requireNotCanceled() {
+        if (isCanceled()) {
+            throw new EnsembleCanceled("Ensemble (%s) is Canceled".formatted(id));
+        }
+    }
+
+    public void joinAsSpectator(MemberId memberId) {
+        membersAsSpectators.add(memberId);
     }
 
     private void requireHasSpace() {

@@ -16,6 +16,19 @@ public class EnsembleAcceptedMembersTest {
                 .isZero();
         assertThat(ensemble.acceptedMembers())
                 .isEmpty();
+        assertThat(ensemble.spectators())
+                .isEmpty();
+    }
+
+    @Test
+    void joinAsSpectatorEnsembleRemembersTheMember() {
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
+        MemberId memberId = MemberId.of(123);
+
+        ensemble.joinAsSpectator(memberId);
+
+        assertThat(ensemble.spectators())
+                .containsExactly(memberId);
     }
 
     @Test
