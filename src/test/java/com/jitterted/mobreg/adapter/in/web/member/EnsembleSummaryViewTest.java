@@ -69,6 +69,23 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
+    public void spectatorIsInSpectatorList() throws Exception {
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
+        Member member = memberBuilder
+                .withFirstName("name")
+                .withGithubUsername("participant_username")
+                .buildAndSave();
+        ensemble.joinAsSpectator(member.getId());
+
+        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
+                .toView(ensemble, member.getId(), memberBuilder.memberService());
+
+        assertThat(ensembleSummaryView.spectators())
+                .containsExactly(MemberView.from(member));
+    }
+
+    @Test
     public void noRecordingEnsembleThenViewIncludesEmptyLink() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());

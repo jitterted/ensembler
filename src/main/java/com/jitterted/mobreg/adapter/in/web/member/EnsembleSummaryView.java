@@ -32,12 +32,13 @@ public record EnsembleSummaryView(long id,
 
     public static EnsembleSummaryView toView(Ensemble ensemble, MemberId memberId, MemberService memberService) {
         List<MemberView> participantViews = transform(memberService, ensemble.acceptedMembers());
+        List<MemberView> spectatorViews = transform(memberService, ensemble.spectators());
         return new EnsembleSummaryView(ensemble.getId().id(),
                                        ensemble.name(),
                                        DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()),
                                        ensemble.acceptedCount(),
                                        participantViews,
-                                       participantViews,
+                                       spectatorViews,
                                        memberStatusToViewString(ensemble, memberId),
                                        ensemble.meetingLink().toString(),
                                        new GoogleCalendarLinkCreator().createFor(ensemble),
