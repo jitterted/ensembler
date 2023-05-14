@@ -103,7 +103,7 @@
                                       th:text="${ensemble.numberRegistered}">4</span>
                                 <span class="text-xl font-bold text-purple-400 mr-2">/5</span>
                                 <div th:each="member: ${ensemble.acceptedMembers}"
-                                     class="group">
+                                     class="group mr-1">
                                     <img class="w-6 h-6 rounded-full border-gray-200 border transform group-hover:scale-125"
                                          src="https://avatars.githubusercontent.com/tedyoung"
                                          th:src="@{https://avatars.githubusercontent.com/{githubusername}(githubusername=${member.githubUsername})}"
@@ -111,6 +111,12 @@
                                     <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
                                           th:text="${member.firstName}">First Name</span>
                                 </div>
+<!-- an empty circle indicating an available slot -->
+<!--                                <div class="group mr-1">-->
+<!--                                    <img class="w-6 h-6 rounded-full border-green-200 border-4 group-hover:block"-->
+<!--                                         src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">-->
+<!--                                    <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>-->
+<!--                                </div>-->
                             </div>
                         </td>
 
