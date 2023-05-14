@@ -16,7 +16,8 @@ public record EnsembleSummaryView(long id,
                                   String name,
                                   String dateTime,
                                   int participantCount,
-                                  List<MemberView> acceptedMembers,
+                                  List<MemberView> participants,
+                                  List<MemberView> spectators,
                                   String memberStatus,
                                   String zoomMeetingLink,
                                   String googleCalendarLink,
@@ -30,10 +31,15 @@ public record EnsembleSummaryView(long id,
     }
 
     public static EnsembleSummaryView toView(Ensemble ensemble, MemberId memberId, MemberService memberService) {
-        List<MemberView> acceptedMembers = transform(memberService, ensemble.acceptedMembers());
+        List<MemberView> participantViews = transform(memberService, ensemble.acceptedMembers());
         return new EnsembleSummaryView(ensemble.getId().id(),
                                        ensemble.name(),
-                                       DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()), ensemble.acceptedCount(), acceptedMembers, memberStatusToViewString(ensemble, memberId), ensemble.meetingLink().toString(),
+                                       DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()),
+                                       ensemble.acceptedCount(),
+                                       participantViews,
+                                       participantViews,
+                                       memberStatusToViewString(ensemble, memberId),
+                                       ensemble.meetingLink().toString(),
                                        new GoogleCalendarLinkCreator().createFor(ensemble),
                                        ensemble.recordingLink().toString()
         );

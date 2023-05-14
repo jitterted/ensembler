@@ -134,7 +134,7 @@ class EnsembleSummaryViewTest {
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
             .toView(ensemble, MemberId.of(11L), memberService);
 
-        assertThat(ensembleSummaryView.acceptedMembers())
+        assertThat(ensembleSummaryView.participants())
             .isEmpty();
     }
 
@@ -157,10 +157,10 @@ class EnsembleSummaryViewTest {
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
             .toView(ensemble, MemberId.of(member1.getId().id()), memberService);
 
-        assertThat(ensembleSummaryView.acceptedMembers())
+        assertThat(ensembleSummaryView.participants())
                         .extracting(MemberView::firstName)
                         .containsExactlyInAnyOrder("one", "two");
-        assertThat(ensembleSummaryView.acceptedMembers())
+        assertThat(ensembleSummaryView.participants())
                         .extracting(MemberView::githubUsername)
                         .containsExactlyInAnyOrder("github_one", "github_two");
     }
