@@ -6,7 +6,10 @@ import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.MapBindingResult;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +47,9 @@ class MemberManagementControllerTest {
         addMemberForm.setFirstName("first");
         addMemberForm.setGithubUsername("ghuser");
 
-        String redirectPage = memberManagementController.addMember(addMemberForm);
+
+        BindingResult bindingResult = new MapBindingResult(Collections.emptyMap(), "");
+        String redirectPage = memberManagementController.addMember(addMemberForm, bindingResult, new ConcurrentModel());
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/admin/members");

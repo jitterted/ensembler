@@ -1,7 +1,11 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
+import javax.validation.constraints.NotBlank;
+
 public class AddMemberForm {
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String githubUsername;
 
     public String getFirstName() {

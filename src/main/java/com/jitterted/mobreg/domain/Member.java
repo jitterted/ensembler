@@ -22,13 +22,13 @@ public class Member {
         this.roles = Arrays.stream(roles).collect(Collectors.toUnmodifiableSet());
     }
 
-    public Member(MemberState memberState) {
-        this.id = memberState.memberId();
-        this.firstName = memberState.firstName();
-        this.githubUsername = memberState.githubUsername();
-        this.roles = Set.copyOf(memberState.roles());
-        this.email = memberState.email();
-        this.timeZone = memberState.timeZone();
+    public Member(MemberSnapshot memberSnapshot) {
+        this.id = memberSnapshot.memberId();
+        this.firstName = memberSnapshot.firstName();
+        this.githubUsername = memberSnapshot.githubUsername();
+        this.roles = Set.copyOf(memberSnapshot.roles());
+        this.email = memberSnapshot.email();
+        this.timeZone = memberSnapshot.timeZone();
     }
 
     public String firstName() {
@@ -100,12 +100,12 @@ public class Member {
                 ", timeZone=" + timeZone;
     }
 
-    public MemberState memento() {
-        return new MemberState(firstName,
-                               githubUsername,
-                               roles,
-                               email,
-                               timeZone,
-                               id);
+    public MemberSnapshot memento() {
+        return new MemberSnapshot(firstName,
+                                  githubUsername,
+                                  roles,
+                                  email,
+                                  timeZone,
+                                  id);
     }
 }
