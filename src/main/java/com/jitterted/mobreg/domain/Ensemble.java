@@ -68,6 +68,7 @@ public class Ensemble {
         requireHasSpace();
         membersWhoAccepted.add(memberId);
         membersWhoDeclined.remove(memberId);
+        membersAsSpectators.remove(memberId);
     }
 
     public Set<MemberId> spectators() {

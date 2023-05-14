@@ -7,13 +7,14 @@
    [X] Set<MemberId> spectators()
    [ ] Accept removes from Spectators
    [ ] Decline removes from Spectators
-2. EnsembleService: joinAsSpectator(EnsembleId, MemberId)
-3. Add "Spectators" column to the member-register template
+2. Update RSVP enum to also have SPECTATOR
+3. EnsembleService: joinAsSpectator(EnsembleId, MemberId)
+4. Add "Spectators" column to the member-register template
    * Add to the EnsembleSummaryView object
    * Add button for "Join as Spectator"
-4. MemberController: handle the POST for Join as Spectator
-5. Admin Ensemble details screen: move a Member between Participant, Spectator, and Declined
-6. Update labels and location of "accept" and "decline" buttons
+5. MemberController: handle the POST for Join as Spectator
+6. Admin Ensemble details screen: move a Member between Participant, Spectator, and Declined
+7. Update labels and location of "accept" and "decline" buttons
 
 # Later
 

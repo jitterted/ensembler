@@ -60,6 +60,20 @@ public class EnsembleMembersTest {
     }
 
     @Test
+    void spectatorWhenAcceptRemovesFromSpectators() {
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
+        MemberId memberId = MemberId.of(123);
+        ensemble.joinAsSpectator(memberId);
+
+        ensemble.acceptedBy(memberId);
+
+        assertThat(ensemble.spectators())
+                .isEmpty();
+        assertThat(ensemble.acceptedMembers())
+                .containsExactly(memberId);
+    }
+
+    @Test
     public void acceptMemberByIdWithEnsembleRemembersTheMember() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(123);
