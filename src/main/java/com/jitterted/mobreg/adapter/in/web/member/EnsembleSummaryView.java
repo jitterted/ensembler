@@ -14,13 +14,13 @@ import java.util.stream.Stream;
 
 public record EnsembleSummaryView(long id,
                                   String name,
-                                  String zoomMeetingLink,
                                   String dateTime,
-                                  String googleCalendarLink,
-                                  int numberRegistered,
-                                  String recordingLink,
+                                  int participantCount,
+                                  List<MemberView> acceptedMembers,
                                   String memberStatus,
-                                  List<MemberView> acceptedMembers) {
+                                  String zoomMeetingLink,
+                                  String googleCalendarLink,
+                                  String recordingLink) {
 
     public static List<EnsembleSummaryView> from(List<Ensemble> ensembles, MemberId memberId, MemberService memberService) {
         return ensembles.stream()
@@ -33,13 +33,10 @@ public record EnsembleSummaryView(long id,
         List<MemberView> acceptedMembers = transform(memberService, ensemble.acceptedMembers());
         return new EnsembleSummaryView(ensemble.getId().id(),
                                        ensemble.name(),
-                                       ensemble.meetingLink().toString(),
-                                       DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()),
+                                       DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()), ensemble.acceptedCount(), acceptedMembers, memberStatusToViewString(ensemble, memberId), ensemble.meetingLink().toString(),
                                        new GoogleCalendarLinkCreator().createFor(ensemble),
-                                       ensemble.acceptedCount(),
-                                       ensemble.recordingLink().toString(),
-                                       memberStatusToViewString(ensemble, memberId),
-                                       acceptedMembers);
+                                       ensemble.recordingLink().toString()
+        );
     }
 
     private static String memberStatusToViewString(Ensemble ensemble, MemberId memberId) {

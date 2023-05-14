@@ -44,7 +44,7 @@ class EnsembleSummaryViewTest {
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
             .toView(ensemble, MemberId.of(99L), memberBuilder.memberService());
 
-        assertThat(ensembleSummaryView.numberRegistered())
+        assertThat(ensembleSummaryView.participantCount())
             .isEqualTo(1);
 
         assertThat(ensembleSummaryView.memberStatus())
