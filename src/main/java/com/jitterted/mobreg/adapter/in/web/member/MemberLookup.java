@@ -28,7 +28,7 @@ public class MemberLookup {
     private void requireAsOAuth2User(AuthenticatedPrincipal principal) {
         if (!(principal instanceof OAuth2User)) {
             LOGGER.warn("AuthenticatedPrincipal expected to be OAuth2User, but was {}", principal);
-            throw new IllegalStateException("Not an OAuth2User");
+            throw new IllegalStateException("Not an OAuth2User, was " + principal.toString());
         }
     }
 }

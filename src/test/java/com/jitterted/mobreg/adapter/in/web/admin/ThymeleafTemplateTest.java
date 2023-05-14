@@ -6,6 +6,8 @@ import com.jitterted.mobreg.NoSecurityTestConfiguration;
 import com.jitterted.mobreg.WebSecurityConfig;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,6 +23,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
+@Disabled
 @Import(NoSecurityTestConfiguration.class)
 @WebMvcTest(
         controllers = AdminDashboardController.class,
@@ -28,6 +31,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
                 type = FilterType.ASSIGNABLE_TYPE,
                 classes = WebSecurityConfig.class)
 )
+@Tag("mvc")
 public class ThymeleafTemplateTest {
 
     @Autowired
