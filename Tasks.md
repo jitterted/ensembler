@@ -10,8 +10,8 @@
 [X] EnsembleService: joinAsSpectator(EnsembleId, MemberId)
 [ ] Add "Spectators" column to the member-register template
     [X] Dummy copy of spectators: use copy of participants
-    [ ] Add the real Spectators to the EnsembleSummaryView object
-    [ ] Add new POST endpoint to MemberController for joinAsSpectator
+    [X] Add the real Spectators to the EnsembleSummaryView object
+    [X] Add new POST endpoint to MemberController for joinAsSpectator
     [ ] Add button for "Join as Spectator"
 [ ] Update RSVP enum to also have SPECTATOR
 [ ] Admin Ensemble details screen: move a Member between Participant, Spectator, and Declined

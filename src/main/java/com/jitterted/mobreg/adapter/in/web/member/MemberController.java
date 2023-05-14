@@ -61,6 +61,16 @@ public class MemberController {
         return "redirect:/member/register";
     }
 
+    @PostMapping("/member/join-as-spectator")
+    public String joinAsSpectator(MemberRegisterForm memberRegisterForm) {
+        EnsembleId ensembleId = EnsembleId.of(memberRegisterForm.getEnsembleId());
+        MemberId memberId = MemberId.of(memberRegisterForm.getMemberId());
+
+        ensembleService.joinAsSpectator(ensembleId, memberId);
+
+        return "redirect:/member/register";
+    }
+
     @PostMapping("/member/decline")
     public String decline(MemberRegisterForm memberRegisterForm) {
         EnsembleId ensembleId = EnsembleId.of(memberRegisterForm.getEnsembleId());
@@ -70,5 +80,4 @@ public class MemberController {
 
         return "redirect:/member/register";
     }
-
 }
