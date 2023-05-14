@@ -18,6 +18,7 @@ import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @SuppressWarnings("ClassCanBeRecord")
 public class EnsembleService {
@@ -113,50 +114,43 @@ public class EnsembleService {
     }
 
     public void acceptMember(EnsembleId ensembleId, MemberId memberId) {
-        Ensemble ensemble = findOrThrow(ensembleId);
-        ensemble.acceptedBy(memberId);
-        ensembleRepository.save(ensemble);
+        Ensemble savedEnsemble = execute(ensembleId,
+                                         ensemble -> ensemble.acceptedBy(memberId));
 
         Member member = memberRepository.findById(memberId)
                                         .orElseThrow(() -> new MemberNotFoundByIdException("Member ID: " + memberId.id()));
-        notifier.memberAccepted(ensemble, member);
+        notifier.memberAccepted(savedEnsemble, member);
     }
 
     public void joinAsSpectator(EnsembleId ensembleId, MemberId memberId) {
-        Ensemble ensemble = findOrThrow(ensembleId);
-
-        ensemble.joinAsSpectator(memberId);
-
-        ensembleRepository.save(ensemble);
+        execute(ensembleId, ensemble -> ensemble.joinAsSpectator(memberId));
     }
 
     public void declineMember(EnsembleId ensembleId, MemberId memberId) {
-        Ensemble ensemble = findOrThrow(ensembleId);
-
-        ensemble.declinedBy(memberId);
-
-        ensembleRepository.save(ensemble);
+        execute(ensembleId, ensemble -> ensemble.declinedBy(memberId));
     }
 
     public void completeWith(EnsembleId ensembleId, String recordingLink) {
-        Ensemble ensemble = findOrThrow(ensembleId);
+        Ensemble savedEnsemble = execute(ensembleId, ensemble -> {
+            ensemble.complete();
+            ensemble.linkToRecordingAt(URI.create(recordingLink));
+        });
 
-        ensemble.complete();
-        ensemble.linkToRecordingAt(URI.create(recordingLink));
-
-        ensembleRepository.save(ensemble);
-
-        notifier.ensembleCompleted(ensemble);
+        notifier.ensembleCompleted(savedEnsemble);
     }
 
     public void cancel(EnsembleId ensembleId) {
+        Ensemble savedEnsemble = execute(ensembleId, Ensemble::cancel);
+
+        deleteVideoConferenceMeeting(savedEnsemble);
+    }
+
+    private Ensemble execute(EnsembleId ensembleId, Consumer<Ensemble> action) {
         Ensemble ensemble = findOrThrow(ensembleId);
 
-        ensemble.cancel();
+        action.accept(ensemble);
 
-        ensembleRepository.save(ensemble);
-
-        deleteVideoConferenceMeeting(ensemble);
+        return ensembleRepository.save(ensemble);
     }
 
     private void deleteVideoConferenceMeeting(Ensemble ensemble) {

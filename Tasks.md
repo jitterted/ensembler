@@ -7,7 +7,7 @@
     [X] Set<MemberId> spectators()
     [X] Accept removes from Spectators
     [X] Decline removes from Spectators
-[ ] EnsembleService: joinAsSpectator(EnsembleId, MemberId)
+[X] EnsembleService: joinAsSpectator(EnsembleId, MemberId)
 [ ] Add "Spectators" column to the member-register template
     [ ] Add to the EnsembleSummaryView object
     [ ] Add button for "Join as Spectator"
