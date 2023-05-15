@@ -121,6 +121,7 @@
                             </div>
                         </td>
 
+                        <!-- SPECTATORS -->
                         <td class="py-3 px-6 text-center">
                             <div class="flex items-center justify-center">
                                 <div th:each="member: ${ensemble.spectators}"
@@ -133,6 +134,14 @@
                                           th:text="${member.firstName}">First Name</span>
                                 </div>
                             </div>
+                            <form action="#" th:action="@{/member/join-as-spectator}" th:object="${register}" method="post">
+                                <input hidden="hidden" type="number" th:field="*{memberId}">
+                                <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
+                                <button type="submit"
+                                        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Join as Spectator 👀
+                                </button>
+                            </form>
                         </td>
 
                         <!-- RSVP -->
