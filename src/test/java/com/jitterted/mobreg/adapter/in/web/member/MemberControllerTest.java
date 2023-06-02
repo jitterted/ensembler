@@ -14,6 +14,7 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberId;
+import com.jitterted.mobreg.domain.MemberStatus;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -88,8 +89,8 @@ class MemberControllerTest {
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/member/register");
-        assertThat(ensemble.isDeclined(MemberId.of(memberRegisterForm.getMemberId())))
-                .isTrue();
+        assertThat(ensemble.memberStatusFor(MemberId.of(memberRegisterForm.getMemberId())))
+                .isEqualByComparingTo(MemberStatus.DECLINED);
     }
 
     @Test

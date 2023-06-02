@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class EnsembleMembersTest {
+public class EnsembleMemberStateTest {
 
     @Test
     public void newEnsembleHasZeroParticipants() throws Exception {
@@ -21,7 +21,27 @@ public class EnsembleMembersTest {
     }
 
     @Test
-    void joinAsSpectatorEnsembleRemembersTheMember() {
+    void unknownMemberThenMemberStatusIsUnknown() {
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
+        MemberId memberId = MemberId.of(42);
+
+        assertThat(ensemble.memberStatusFor(memberId))
+                .isEqualByComparingTo(MemberStatus.UNKNOWN);
+    }
+
+    @Test
+    void unknownMemberDeclinesThenMemberStatusIsDeclined() {
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
+        MemberId memberId = MemberId.of(97);
+
+        ensemble.declinedBy(memberId);
+
+        assertThat(ensemble.memberStatusFor(memberId))
+                .isEqualByComparingTo(MemberStatus.DECLINED);
+    }
+
+    @Test
+    void joinAsSpectatorThenMemberIsInSpectatorsAndIsSpectatorState() {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(123);
 
@@ -29,6 +49,8 @@ public class EnsembleMembersTest {
 
         assertThat(ensemble.spectators())
                 .containsExactly(memberId);
+        assertThat(ensemble.memberStatusFor(memberId))
+                .isEqualByComparingTo(MemberStatus.SPECTATOR);
     }
 
     @Test
@@ -88,7 +110,7 @@ public class EnsembleMembersTest {
     }
 
     @Test
-    public void acceptMemberByIdWithEnsembleRemembersTheMember() throws Exception {
+    public void acceptMemberThenEnsembleTracksMemberAsParticipant() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(123);
 
@@ -98,25 +120,8 @@ public class EnsembleMembersTest {
                 .isEqualTo(1);
         assertThat(ensemble.acceptedMembers())
                 .containsOnly(memberId);
-    }
-
-    @Test
-    public void acceptedMemberIsFoundAsRegisteredByMemberId() throws Exception {
-        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
-        MemberId memberId = MemberId.of(97);
-
-        ensemble.acceptedBy(memberId);
-
-        assertThat(ensemble.isAccepted(memberId))
-                .isTrue();
-    }
-
-    @Test
-    public void nonExistentMemberIsNotFoundAsRegisteredByMemberId() throws Exception {
-        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
-
-        assertThat(ensemble.isAccepted(MemberId.of(73L)))
-                .isFalse();
+        assertThat(ensemble.memberStatusFor(memberId))
+                .isEqualByComparingTo(MemberStatus.PARTICIPANT);
     }
 
     @ParameterizedTest

@@ -58,10 +58,6 @@ public class Ensemble {
         return membersWhoAccepted.size();
     }
 
-    public Stream<MemberId> acceptedMembers() {
-        return ImmutableSet.copyOf(membersWhoAccepted).stream();
-    }
-
     public void acceptedBy(MemberId memberId) {
         requireNotCompleted();
         requireNotCanceled();
@@ -71,8 +67,12 @@ public class Ensemble {
         membersAsSpectators.remove(memberId);
     }
 
-    public Stream<MemberId> spectators() {
-        return ImmutableSet.copyOf(membersAsSpectators).stream();
+    public Stream<MemberId> acceptedMembers() {
+        return ImmutableSet.copyOf(membersWhoAccepted).stream();
+    }
+
+    private boolean isAccepted(MemberId memberId) {
+        return membersWhoAccepted.contains(memberId);
     }
 
     public void joinAsSpectator(MemberId memberId) {
@@ -81,8 +81,12 @@ public class Ensemble {
         membersWhoDeclined.remove(memberId);
     }
 
-    public boolean isDeclined(MemberId memberId) {
-        return membersWhoDeclined.contains(memberId);
+    public Stream<MemberId> spectators() {
+        return ImmutableSet.copyOf(membersAsSpectators).stream();
+    }
+
+    private boolean isSpectator(MemberId memberId) {
+        return membersAsSpectators.contains(memberId);
     }
 
     public void declinedBy(MemberId memberId) {
@@ -93,6 +97,22 @@ public class Ensemble {
 
     public Stream<MemberId> declinedMembers() {
         return ImmutableSet.copyOf(membersWhoDeclined).stream();
+    }
+
+    private boolean isDeclined(MemberId memberId) {
+        return membersWhoDeclined.contains(memberId);
+    }
+
+    public MemberStatus memberStatusFor(MemberId memberId) {
+        if (isAccepted(memberId)) {
+            return MemberStatus.PARTICIPANT;
+        } else if (isSpectator(memberId)) {
+            return MemberStatus.SPECTATOR;
+        } else if (isDeclined(memberId)) {
+            return MemberStatus.DECLINED;
+        } else {
+            return MemberStatus.UNKNOWN;
+        }
     }
 
     private void requireNotCanceled() {
@@ -113,10 +133,6 @@ public class Ensemble {
 
     private boolean isFull() {
         return acceptedCount() == MAX_ACCEPTED_MEMBERS;
-    }
-
-    public boolean isAccepted(MemberId memberId) {
-        return membersWhoAccepted.contains(memberId);
     }
 
     public URI meetingLink() {
@@ -235,28 +251,28 @@ public class Ensemble {
     }
 
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
-            // @formatter: off
+        // @formatter: off
         private static final Map<WhenSpaceRsvp, MemberEnsembleStatus> STATE_TO_STATUS = Map.ofEntries(
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.AVAILABLE,    Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE,    Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.AVAILABLE,    Rsvp.UNKNOWN), MemberEnsembleStatus.UNKNOWN),
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.FULL,         Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL,         Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.FULL,         Rsvp.UNKNOWN), MemberEnsembleStatus.FULL),
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.AVAILABLE,    Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE,    Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.AVAILABLE,    Rsvp.DECLINED), MemberEnsembleStatus.DECLINED),
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.FULL,         Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL,         Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.FULL,         Rsvp.DECLINED), MemberEnsembleStatus.DECLINED_FULL),
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.AVAILABLE,    Rsvp.ACCEPTED), MemberEnsembleStatus.PENDING_COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE,    Rsvp.ACCEPTED), MemberEnsembleStatus.COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.AVAILABLE,    Rsvp.ACCEPTED), MemberEnsembleStatus.ACCEPTED),
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.FULL,         Rsvp.ACCEPTED), MemberEnsembleStatus.PENDING_COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL,         Rsvp.ACCEPTED), MemberEnsembleStatus.COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.FULL,         Rsvp.ACCEPTED), MemberEnsembleStatus.ACCEPTED))
-                ;
-            // @formatter:on
+                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.AVAILABLE, Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.UNKNOWN), MemberEnsembleStatus.UNKNOWN),
+                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.FULL, Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.UNKNOWN), MemberEnsembleStatus.FULL),
+                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.AVAILABLE, Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.DECLINED), MemberEnsembleStatus.DECLINED),
+                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.FULL, Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.DECLINED), MemberEnsembleStatus.DECLINED_FULL),
+                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.AVAILABLE, Rsvp.ACCEPTED), MemberEnsembleStatus.PENDING_COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.ACCEPTED), MemberEnsembleStatus.COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.ACCEPTED), MemberEnsembleStatus.ACCEPTED),
+                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.FULL, Rsvp.ACCEPTED), MemberEnsembleStatus.PENDING_COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.ACCEPTED), MemberEnsembleStatus.COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.ACCEPTED), MemberEnsembleStatus.ACCEPTED));
+
+        // @formatter:on
         private static When when(Ensemble ensemble, ZonedDateTime now) {
             if (ensemble.isCompleted()) {
                 return When.COMPLETED;
