@@ -18,8 +18,6 @@
 [ ] Update schema and DB adapter for "Spectators" data from Ensemble
 [ ] Show Zoom/Calendar link when spectating
 
-[ ] Don't forget to change URL for GitHub OAuth back to production
-
 # Optional
 [ ] Add notification when joining as spectator
 
@@ -33,4 +31,8 @@
 * Rename "accept" to "participate" [in rotation]
 * Change storage of Member registrations from 3 separate Sets to a single Set,
   where there's an Enum for each (PARTICIPANT, SPECTATOR, and DECLINED)
+
+## UI
+
+* Change table to fixed width grid instead of flex to avoid columns changing size and moving around
 * 

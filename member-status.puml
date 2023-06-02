@@ -1,0 +1,24 @@
+@startuml
+title Member Status for UI (for a specific Ensemble)
+
+state "Declined/Unknown" as Declined
+
+'[*] --> Unknown
+[*] --> Declined
+'Unknown --> Participant : Participate in Rotation
+'Unknown --> Spectator : Join as Spectator
+'Unknown --> Declined : Decline
+Participant --> Spectator : Join as Spectator
+Participant --> Declined : Leave Rotation
+Participant : [ParticipantAction] Leave Rotation
+Participant : [SpectatorAction] Become Spectator
+Spectator --> Participant : Participate in Rotation
+Spectator --> Declined : Leave Spectator
+Spectator : [ParticipantAction] Participate in Rotation * disabled = full
+Spectator : [SpectatorAction] Leave Spectator
+Declined --> Participant : Participate in Rotation
+Declined --> Spectator : Join as Spectator
+Declined : [ParticipantAction] Participate in Rotation * disabled = full
+Declined : [SpectatorAction] Join as Spectator
+
+@enduml

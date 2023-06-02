@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-class EnsembleMemberStatusTest {
+class EnsembleMemberEnsembleStatusTest {
     private static final ZonedDateTime UTC_2021_11_22_12 = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 12);
 
     @Test
@@ -16,7 +16,7 @@ class EnsembleMemberStatusTest {
         MemberId memberId = MemberId.of(37);
 
         assertThat(pastEnsemble.statusFor(memberId, startDateTime.plusHours(3))) // duration defaults to 1h55m, so 3 hours means it's over
-                                                                                 .isEqualByComparingTo(MemberStatus.HIDDEN);
+                                                                                 .isEqualByComparingTo(MemberEnsembleStatus.HIDDEN);
     }
 
     @Test
@@ -25,7 +25,7 @@ class EnsembleMemberStatusTest {
         MemberId memberId = MemberId.of(31);
 
         assertThat(futureEnsemble.statusFor(memberId, UTC_2021_11_22_12))
-                .isEqualByComparingTo(MemberStatus.UNKNOWN);
+                .isEqualByComparingTo(MemberEnsembleStatus.UNKNOWN);
     }
 
     @Test
@@ -34,7 +34,7 @@ class EnsembleMemberStatusTest {
         MemberId memberIdIsUnknown = MemberId.of(33);
 
         assertThat(futureEnsemble.statusFor(memberIdIsUnknown, UTC_2021_11_22_12))
-                .isEqualByComparingTo(MemberStatus.FULL);
+                .isEqualByComparingTo(MemberEnsembleStatus.FULL);
     }
 
     @Test
@@ -44,7 +44,7 @@ class EnsembleMemberStatusTest {
         futureEnsemble.declinedBy(memberId);
 
         assertThat(futureEnsemble.statusFor(memberId, UTC_2021_11_22_12))
-                .isEqualByComparingTo(MemberStatus.DECLINED);
+                .isEqualByComparingTo(MemberEnsembleStatus.DECLINED);
     }
 
     @Test
@@ -54,7 +54,7 @@ class EnsembleMemberStatusTest {
         futureFullEnsemble.declinedBy(memberId);
 
         assertThat(futureFullEnsemble.statusFor(memberId, UTC_2021_11_22_12))
-                .isEqualByComparingTo(MemberStatus.DECLINED_FULL);
+                .isEqualByComparingTo(MemberEnsembleStatus.DECLINED_FULL);
     }
 
     @Test
@@ -64,7 +64,7 @@ class EnsembleMemberStatusTest {
         pastEnsemble.acceptedBy(memberId);
 
         assertThat(pastEnsemble.statusFor(memberId, UTC_2021_11_22_12))
-                .isEqualByComparingTo(MemberStatus.PENDING_COMPLETED);
+                .isEqualByComparingTo(MemberEnsembleStatus.PENDING_COMPLETED);
     }
 
     @Test
@@ -75,7 +75,7 @@ class EnsembleMemberStatusTest {
         completedEnsemble.complete();
 
         assertThat(completedEnsemble.statusFor(memberId, UTC_2021_11_22_12))
-                .isEqualByComparingTo(MemberStatus.COMPLETED);
+                .isEqualByComparingTo(MemberEnsembleStatus.COMPLETED);
     }
 
     @Test
@@ -85,7 +85,7 @@ class EnsembleMemberStatusTest {
         futureEnsemble.acceptedBy(memberId);
 
         assertThat(futureEnsemble.statusFor(memberId, UTC_2021_11_22_12))
-                .isEqualByComparingTo(MemberStatus.ACCEPTED);
+                .isEqualByComparingTo(MemberEnsembleStatus.ACCEPTED);
     }
 
     @Test
@@ -98,7 +98,7 @@ class EnsembleMemberStatusTest {
 
         ZonedDateTime currentDateTime = startDateTime.plusMinutes(10).minusSeconds(1); // grace period is 10 minutes
         assertThat(inGracePeriodEnsemble.statusFor(memberId, currentDateTime))
-                .isEqualByComparingTo(MemberStatus.IN_GRACE_PERIOD);
+                .isEqualByComparingTo(MemberEnsembleStatus.IN_GRACE_PERIOD);
     }
 
     @Test
@@ -111,10 +111,10 @@ class EnsembleMemberStatusTest {
                 .build();
         MemberId memberId = MemberId.of(11);
 
-        MemberStatus memberStatus = ensemble.statusFor(memberId, ZonedDateTime.now());
+        MemberEnsembleStatus memberEnsembleStatus = ensemble.statusFor(memberId, ZonedDateTime.now());
 
-        assertThat(memberStatus)
-                .isEqualByComparingTo(MemberStatus.CANCELED);
+        assertThat(memberEnsembleStatus)
+                .isEqualByComparingTo(MemberEnsembleStatus.CANCELED);
     }
 
     @Test
@@ -123,10 +123,10 @@ class EnsembleMemberStatusTest {
         ensemble.cancel();
         MemberId memberId = MemberId.of(99);
 
-        MemberStatus memberStatus = ensemble.statusFor(memberId, UTC_2021_11_22_12);
+        MemberEnsembleStatus memberEnsembleStatus = ensemble.statusFor(memberId, UTC_2021_11_22_12);
 
-        assertThat(memberStatus)
-                .isEqualByComparingTo(MemberStatus.HIDDEN);
+        assertThat(memberEnsembleStatus)
+                .isEqualByComparingTo(MemberEnsembleStatus.HIDDEN);
     }
 
     @Test
@@ -136,10 +136,10 @@ class EnsembleMemberStatusTest {
         ensemble.declinedBy(memberId);
         ensemble.cancel();
 
-        MemberStatus memberStatus = ensemble.statusFor(memberId, UTC_2021_11_22_12);
+        MemberEnsembleStatus memberEnsembleStatus = ensemble.statusFor(memberId, UTC_2021_11_22_12);
 
-        assertThat(memberStatus)
-                .isEqualByComparingTo(MemberStatus.HIDDEN);
+        assertThat(memberEnsembleStatus)
+                .isEqualByComparingTo(MemberEnsembleStatus.HIDDEN);
     }
 
     @Test
@@ -151,7 +151,7 @@ class EnsembleMemberStatusTest {
 
         ZonedDateTime currentDateTime = startDateTime.plusMinutes(10).plusSeconds(1); // grace period is 10 minutes
         assertThat(inGracePeriodEnsemble.statusFor(memberId, currentDateTime))
-                .isEqualByComparingTo(MemberStatus.HIDDEN);
+                .isEqualByComparingTo(MemberEnsembleStatus.HIDDEN);
     }
 
     @Test
@@ -162,11 +162,11 @@ class EnsembleMemberStatusTest {
         ZonedDateTime currentDateTime = startDateTime.plusMinutes(1);
 
         assertThat(alreadyStartedEnsemble.statusFor(memberId, currentDateTime))
-                .isEqualByComparingTo(MemberStatus.HIDDEN);
+                .isEqualByComparingTo(MemberEnsembleStatus.HIDDEN);
 
         alreadyStartedEnsemble.declinedBy(memberId);
         assertThat(alreadyStartedEnsemble.statusFor(memberId, currentDateTime))
-                .isEqualByComparingTo(MemberStatus.HIDDEN);
+                .isEqualByComparingTo(MemberEnsembleStatus.HIDDEN);
     }
 
     // ---- [start] ----- [end of grace period] --------------- [end of start + duration] ---

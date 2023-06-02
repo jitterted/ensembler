@@ -166,19 +166,19 @@ public class Ensemble {
         startDateTime = newStartDateTime;
     }
 
-    public MemberStatus statusFor(MemberId memberId, ZonedDateTime now) {
-        MemberStatus status = WhenSpaceRsvp.memberStatus(this, memberId, now);
+    public MemberEnsembleStatus statusFor(MemberId memberId, ZonedDateTime now) {
+        MemberEnsembleStatus status = WhenSpaceRsvp.memberStatus(this, memberId, now);
         if (isAccepted(memberId) && isCanceled()) {
-            return MemberStatus.CANCELED;
+            return MemberEnsembleStatus.CANCELED;
         }
         if (isCanceled()) {
-            return MemberStatus.HIDDEN;
+            return MemberEnsembleStatus.HIDDEN;
         }
-        if (isInGracePeriod(now) && status != MemberStatus.HIDDEN) {
-            return MemberStatus.IN_GRACE_PERIOD;
+        if (isInGracePeriod(now) && status != MemberEnsembleStatus.HIDDEN) {
+            return MemberEnsembleStatus.IN_GRACE_PERIOD;
         }
         if (isBetweenExclusive(now, startDateTime.plus(IN_PROGRESS_GRACE_PERIOD_MINUTES), startDateTime.plus(duration))) {
-            status = MemberStatus.HIDDEN;
+            status = MemberEnsembleStatus.HIDDEN;
         }
         return status;
     }
@@ -236,25 +236,25 @@ public class Ensemble {
 
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
             // @formatter: off
-        private static final Map<WhenSpaceRsvp, MemberStatus> STATE_TO_STATUS = Map.ofEntries(
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.AVAILABLE,    Rsvp.UNKNOWN), MemberStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE,    Rsvp.UNKNOWN), MemberStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.AVAILABLE,    Rsvp.UNKNOWN), MemberStatus.UNKNOWN),
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.FULL,         Rsvp.UNKNOWN), MemberStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL,         Rsvp.UNKNOWN), MemberStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.FULL,         Rsvp.UNKNOWN), MemberStatus.FULL),
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.AVAILABLE,    Rsvp.DECLINED), MemberStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE,    Rsvp.DECLINED), MemberStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.AVAILABLE,    Rsvp.DECLINED), MemberStatus.DECLINED),
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.FULL,         Rsvp.DECLINED), MemberStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL,         Rsvp.DECLINED), MemberStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.FULL,         Rsvp.DECLINED), MemberStatus.DECLINED_FULL),
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.AVAILABLE,    Rsvp.ACCEPTED), MemberStatus.PENDING_COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE,    Rsvp.ACCEPTED), MemberStatus.COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.AVAILABLE,    Rsvp.ACCEPTED), MemberStatus.ACCEPTED),
-                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.FULL,         Rsvp.ACCEPTED), MemberStatus.PENDING_COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL,         Rsvp.ACCEPTED), MemberStatus.COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.FULL,         Rsvp.ACCEPTED), MemberStatus.ACCEPTED))
+        private static final Map<WhenSpaceRsvp, MemberEnsembleStatus> STATE_TO_STATUS = Map.ofEntries(
+                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.AVAILABLE,    Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE,    Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.AVAILABLE,    Rsvp.UNKNOWN), MemberEnsembleStatus.UNKNOWN),
+                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.FULL,         Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL,         Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.FULL,         Rsvp.UNKNOWN), MemberEnsembleStatus.FULL),
+                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.AVAILABLE,    Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE,    Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.AVAILABLE,    Rsvp.DECLINED), MemberEnsembleStatus.DECLINED),
+                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.FULL,         Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL,         Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.FULL,         Rsvp.DECLINED), MemberEnsembleStatus.DECLINED_FULL),
+                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.AVAILABLE,    Rsvp.ACCEPTED), MemberEnsembleStatus.PENDING_COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE,    Rsvp.ACCEPTED), MemberEnsembleStatus.COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.AVAILABLE,    Rsvp.ACCEPTED), MemberEnsembleStatus.ACCEPTED),
+                Map.entry(new WhenSpaceRsvp(When.STARTED,   Space.FULL,         Rsvp.ACCEPTED), MemberEnsembleStatus.PENDING_COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL,         Rsvp.ACCEPTED), MemberEnsembleStatus.COMPLETED),
+                Map.entry(new WhenSpaceRsvp(When.FUTURE,    Space.FULL,         Rsvp.ACCEPTED), MemberEnsembleStatus.ACCEPTED))
                 ;
             // @formatter:on
         private static When when(Ensemble ensemble, ZonedDateTime now) {
@@ -268,7 +268,7 @@ public class Ensemble {
             return ensemble.isFull() ? Space.FULL : Space.AVAILABLE;
         }
 
-        private static MemberStatus memberStatus(Ensemble ensemble, MemberId memberId, ZonedDateTime now) {
+        private static MemberEnsembleStatus memberStatus(Ensemble ensemble, MemberId memberId, ZonedDateTime now) {
             When when = when(ensemble, now);
             Space space = space(ensemble);
             Rsvp rsvp = ensemble.rsvpOf(memberId);

@@ -81,7 +81,7 @@
                         <th class="py-3 px-6 text-center">Date/Time</th>
                         <th class="py-3 px-6 text-center">Participants</th>
                         <th class="py-3 px-6 text-center">Spectators</th>
-                        <th class="py-3 px-6 text-center">RSVP</th>
+                        <th class="py-3 px-6 text-center">Status</th>
                         <th class="py-3 px-6 text-center">Links</th>
                     </tr>
                     </thead>
@@ -98,11 +98,15 @@
                                 <span class="datetimeutc" th:text="${ensemble.dateTime}">2021-09-17T16:00:00Z</span>
                             </div>
                         </td>
-                        <td class="py-3 px-6 text-center">
+
+                        <!-- PARTICIPANTS -->
+                        <td class="py-3 px-6 text-center" th:switch="${ensemble.memberEnsembleStatus}">
                             <div class="flex items-center justify-center">
+                                <!-- Participant Count -->
                                 <span class="text-3xl font-bold text-purple-600"
                                       th:text="${ensemble.participantCount}">4</span>
                                 <span class="text-xl font-bold text-purple-400 mr-2">/5</span>
+                                <!-- Avatar stack -->
                                 <div th:each="member: ${ensemble.participants}"
                                      class="group mr-1">
                                     <img class="w-6 h-6 rounded-full border-gray-200 border transform group-hover:scale-125"
@@ -112,43 +116,10 @@
                                     <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
                                           th:text="${member.firstName}">First Name</span>
                                 </div>
-<!-- an empty circle indicating an available slot -->
-<!--                                <div class="group mr-1">-->
-<!--                                    <img class="w-6 h-6 rounded-full border-green-200 border-4 group-hover:block"-->
-<!--                                         src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">-->
-<!--                                    <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>-->
-<!--                                </div>-->
                             </div>
-                        </td>
-
-                        <!-- SPECTATORS -->
-                        <td class="py-3 px-6 text-center">
-                            <div class="flex items-center justify-center">
-                                <div th:each="member: ${ensemble.spectators}"
-                                     class="group mr-1">
-                                    <img class="w-6 h-6 rounded-full border-gray-200 border transform group-hover:scale-125"
-                                         src="https://avatars.githubusercontent.com/tedyoung"
-                                         th:src="@{https://avatars.githubusercontent.com/{githubusername}(githubusername=${member.githubUsername})}"
-                                    >
-                                    <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
-                                          th:text="${member.firstName}">First Name</span>
-                                </div>
-                            </div>
-                            <form action="#" th:action="@{/member/join-as-spectator}" th:object="${register}" method="post">
-                                <input hidden="hidden" type="number" th:field="*{memberId}">
-                                <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
-                                <button type="submit"
-                                        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Join as Spectator 👀
-                                </button>
-                            </form>
-                        </td>
-
-                        <!-- RSVP -->
-                        <td class="py-3 px-6 flex items-center justify-center" th:switch="${ensemble.memberStatus}">
 
                             <form action="#" th:action="@{/member/accept}" th:object="${register}" method="post"
-                                th:if="${ensemble.memberStatus == 'unknown' || ensemble.memberStatus == 'accepted' || ensemble.memberStatus == 'declined' || ensemble.memberStatus == 'declined_full'}">
+                                  th:if="${ensemble.memberEnsembleStatus == 'unknown' || ensemble.memberEnsembleStatus == 'accepted' || ensemble.memberEnsembleStatus == 'declined' || ensemble.memberEnsembleStatus == 'declined_full'}">
                                 <input hidden="hidden" type="number" th:field="*{memberId}">
                                 <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
 
@@ -212,6 +183,42 @@
                                 </fieldset>
                             </form>
 
+                        </td>
+
+                        <!-- an empty circle indicating an available slot -->
+                        <!--       <div class="group mr-1">-->
+                        <!--       <img class="w-6 h-6 rounded-full border-green-200 border-4 group-hover:block"-->
+                        <!--     src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">-->
+                        <!--       <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>-->
+                        <!--      </div>-->
+
+                        <!-- SPECTATORS -->
+                        <td class="py-3 px-6 text-center">
+                            <div class="flex items-center justify-center mb-4">
+                                <div th:each="member: ${ensemble.spectators}"
+                                     class="group mr-1">
+                                    <img class="w-6 h-6 rounded-full border-gray-200 border transform group-hover:scale-125"
+                                         src="https://avatars.githubusercontent.com/tedyoung"
+                                         th:src="@{https://avatars.githubusercontent.com/{githubusername}(githubusername=${member.githubUsername})}"
+                                    >
+                                    <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
+                                          th:text="${member.firstName}">First Name</span>
+                                </div>
+                            </div>
+                            <form action="#" th:action="@{${ensemble.spectatorAction.actionUrl}}" th:object="${register}" method="post">
+                                <input hidden="hidden" type="number" th:field="*{memberId}">
+                                <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
+                                <button type="submit" th:text="${ensemble.spectatorAction.buttonText}"
+                                        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    spectator button text
+                                </button>
+                                <p th:text="${ensemble.memberEnsembleStatus}">Member Status</p>
+                            </form>
+                        </td>
+
+                        <!-- STATUS -->
+                        <td class="py-3 px-6 flex items-center justify-center" th:switch="${ensemble.memberEnsembleStatus}">
+
                             <div th:case="'full'"
                                  class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">
                                 Unavailable: Full <i class="fal fa-times-hexagon text-red-600"></i></div>
@@ -237,7 +244,7 @@
 
                         <!-- Links -->
                         <td class="py-3 px-6 text-center">
-                            <div th:if="${ensemble.memberStatus == 'in_grace_period' || ensemble.memberStatus == 'accepted'}">
+                            <div th:if="${ensemble.memberEnsembleStatus == 'in_grace_period' || ensemble.memberEnsembleStatus == 'accepted'}">
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
                                    href="#" th:href="${ensemble.zoomMeetingLink}">
                                     <i class="far fa-video pr-2" aria-hidden="true"></i>
@@ -253,12 +260,12 @@
                                 </a>
                             </div>
 
-                            <div th:if="${ensemble.memberStatus} == 'completed'">
+                            <div th:if="${ensemble.memberEnsembleStatus} == 'completed'">
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
                                    href="#" th:href="${ensemble.recordingLink}">Recording Link</a>
                             </div>
 
-                            <div th:if="${ensemble.memberStatus} == 'pending_completed'">Recording Coming Soon...</div>
+                            <div th:if="${ensemble.memberEnsembleStatus} == 'pending_completed'">Recording Coming Soon...</div>
 
                         </td>
                     </tr>

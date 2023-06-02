@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.domain;
 
-public enum MemberStatus {
+public enum MemberEnsembleStatus {
     UNKNOWN,
     FULL,
     DECLINED, DECLINED_FULL,
