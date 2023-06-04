@@ -40,10 +40,10 @@ public record EnsembleSummaryView(long id,
         SpectatorAction spectatorAction = switch (memberStatus) {
             case "declined" -> new SpectatorAction(
                     "/member/join-as-spectator",
-                    "Join as Spectator");
+                    "Join as Spectator &#x1F440;"); // HTML unicode for 👀
             default -> new SpectatorAction(
                     "/member/decline",
-                    "Leave");
+                    "Leave Spectators &#x1f44b;"); // HTML unicode for 👋
         };
 
         return new EnsembleSummaryView(

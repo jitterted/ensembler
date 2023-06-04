@@ -116,6 +116,11 @@
                                     <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
                                           th:text="${member.firstName}">First Name</span>
                                 </div>
+                                <div class="group mr-1">
+                                    <img class="w-6 h-6 rounded-full border-green-300 border-4 group-hover:block"
+                                         src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">
+                                    <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>
+                                </div>
                             </div>
 
                             <form action="#" th:action="@{/member/accept}" th:object="${register}" method="post"
@@ -124,17 +129,15 @@
                                 <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
 
                                 <fieldset th:case="'unknown'" class="flex">
-                                    <legend class="sr-only">RSVP</legend>
-                                    <div class="space-y-4 sm:flex sm:items-center sm:space-y-0">
+                                    <legend class="sr-only">Participants</legend>
+                                    <div class="space-y-4 space-x-2 sm:flex sm:items-center sm:space-y-0">
                                         <button type="submit" th:formaction="@{/member/decline}"
-                                                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Decline
-                                        </button>
+                                                class="whitespace-nowrap rounded bg-blue-600 shadow-md px-4 py-2 text-xs font-semibold uppercase leading-normal text-white hover:bg-blue-500 focus:outline-none focus:ring-1 focus:ring-offset-1 active:bg-blue-400"
+                                        >Leave Participants &#x1f44b;</button>
 
-                                        <button type="submit"  th:formaction="@{/member/accept}"
-                                                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Accept
-                                        </button>
+                                        <button type="submit" th:formaction="@{/member/accept}"
+                                                class="whitespace-nowrap rounded bg-blue-600 shadow-md px-4 py-2 text-xs font-semibold uppercase leading-normal text-white hover:bg-blue-500 focus:outline-none focus:ring-1 focus:ring-offset-1 active:bg-blue-400"
+                                            >Join as Participant &#x2328;</button>
                                     </div>
                                 </fieldset>
 
@@ -185,13 +188,6 @@
 
                         </td>
 
-                        <!-- an empty circle indicating an available slot -->
-                        <!--       <div class="group mr-1">-->
-                        <!--       <img class="w-6 h-6 rounded-full border-green-200 border-4 group-hover:block"-->
-                        <!--     src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">-->
-                        <!--       <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>-->
-                        <!--      </div>-->
-
                         <!-- SPECTATORS -->
                         <td class="py-3 px-6 text-center">
                             <div class="flex items-center justify-center mb-4">
@@ -204,13 +200,18 @@
                                     <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
                                           th:text="${member.firstName}">First Name</span>
                                 </div>
+                                <div class="group mr-1">
+                                    <img class="w-6 h-6 rounded-full border-green-300 border-4 group-hover:block"
+                                         src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">
+                                    <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>
+                                </div>
                             </div>
                             <form action="#" th:action="@{${ensemble.spectatorAction.actionUrl}}" th:object="${register}" method="post">
                                 <input hidden="hidden" type="number" th:field="*{memberId}">
                                 <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
                                 <button type="submit" th:text="${ensemble.spectatorAction.buttonText}"
-                                        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    spectator button text
+                                        class="whitespace-nowrap rounded bg-blue-600 shadow-md px-4 py-2 text-xs font-semibold uppercase leading-normal text-white hover:bg-blue-500 focus:outline-none focus:ring-1 focus:ring-offset-1 active:bg-blue-400">
+                                    spectator &#x1F440; button text
                                 </button>
                                 <p th:text="${ensemble.memberEnsembleStatus}">Member Status</p>
                             </form>
