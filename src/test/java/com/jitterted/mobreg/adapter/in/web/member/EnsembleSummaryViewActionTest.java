@@ -67,13 +67,14 @@ class EnsembleSummaryViewActionTest {
 
         @Test
         void participateInRotationWhenMemberIsUnknown() {
-            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.UNKNOWN);
+            ParticipantAction participantAction =
+                    ParticipantAction.from(MemberStatus.UNKNOWN, false);
 
             ParticipantAction expectedParticipantAction =
                     new ParticipantAction(
                             "/member/accept",
-                            "Participate in Rotation &#x2328;"
-                    );
+                            "Participate in Rotation &#x2328;",
+                            false);
 
             assertThat(participantAction)
                     .isEqualTo(expectedParticipantAction);
@@ -81,13 +82,14 @@ class EnsembleSummaryViewActionTest {
 
         @Test
         void participateInRotationWhenMemberIsDeclined() {
-            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.DECLINED);
+            ParticipantAction participantAction =
+                    ParticipantAction.from(MemberStatus.DECLINED, false);
 
             ParticipantAction expectedParticipantAction =
                     new ParticipantAction(
                             "/member/accept",
-                            "Participate in Rotation &#x2328;"
-                    );
+                            "Participate in Rotation &#x2328;",
+                            false);
 
             assertThat(participantAction)
                     .isEqualTo(expectedParticipantAction);
@@ -95,13 +97,14 @@ class EnsembleSummaryViewActionTest {
         
         @Test
         void leaveRotationWhenMemberIsParticipant() {
-            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.PARTICIPANT);
+            ParticipantAction participantAction =
+                    ParticipantAction.from(MemberStatus.PARTICIPANT, false);
 
             ParticipantAction expectedParticipantAction =
                     new ParticipantAction(
                             "/member/decline",
-                            "Leave Rotation &#x1f44b;"
-                    );
+                            "Leave Rotation &#x1f44b;",
+                            false);
 
             assertThat(participantAction)
                     .isEqualTo(expectedParticipantAction);
@@ -110,21 +113,25 @@ class EnsembleSummaryViewActionTest {
 
         @Test
         void switchToParticipantWhenMemberIsSpectator() {
-            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.SPECTATOR);
+            ParticipantAction participantAction =
+                    ParticipantAction.from(MemberStatus.SPECTATOR, false);
 
             ParticipantAction expectedParticipantAction =
                     new ParticipantAction(
                             "/member/accept",
-                            "Switch to Participant &#x1f44b;"
-                    );
+                            "Switch to Participant &#x1f44b;",
+                            false);
 
             assertThat(participantAction)
                     .isEqualTo(expectedParticipantAction);
         }
 
-        @Test // parameterize
+        @Test // parameterize for Unknown/Declined/Spectator
         void disabledWhenMemberIsNotParticipantAndRotationIsFull() {
-            fail("Don't forget about disabled when full");
+//            ParticipantAction participantAction = ParticipantAction.disabled("");
+//
+//            assertThat(participantAction.disabled())
+//                    .isTrue();
         }
     }
 

@@ -39,7 +39,7 @@ public record EnsembleSummaryView(long id,
 
         String memberStatus = memberStatusToViewString(ensemble, memberId);
         SpectatorAction spectatorAction = SpectatorAction.from(ensemble.memberStatusFor(memberId));
-        ParticipantAction participantAction = ParticipantAction.from(ensemble.memberStatusFor(memberId));
+        ParticipantAction participantAction = ParticipantAction.from(ensemble.memberStatusFor(memberId), ensemble.isFull());
 
         return new EnsembleSummaryView(
                 ensemble.getId().id(),
@@ -88,22 +88,23 @@ record SpectatorAction(String actionUrl, String buttonText) {
     }
 }
 
-record ParticipantAction(String actionUrl, String buttonText) {
+record ParticipantAction(String actionUrl, String buttonText, boolean disabled) {
 
-    public static ParticipantAction from(MemberStatus memberStatus) {
+    public static ParticipantAction from(MemberStatus memberStatus, boolean disabled) {
         return switch (memberStatus) {
             case UNKNOWN, DECLINED -> new ParticipantAction(
                     "/member/accept",
-                    "Participate in Rotation &#x2328;"
-            );
+                    "Participate in Rotation &#x2328;",
+                    disabled);
             case PARTICIPANT -> new ParticipantAction(
                     "/member/decline",
-                    "Leave Rotation &#x1f44b;"
-            );
+                    "Leave Rotation &#x1f44b;",
+                    false); // can always leave
             case SPECTATOR -> new ParticipantAction(
                     "/member/accept",
-                    "Switch to Participant &#x1f44b;"
-            );
+                    "Switch to Participant &#x1f44b;",
+                    disabled);
         };
     }
+
 }

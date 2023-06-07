@@ -131,7 +131,7 @@ public class Ensemble {
         return !isFull();
     }
 
-    private boolean isFull() {
+    public boolean isFull() {
         return acceptedCount() == MAX_ACCEPTED_MEMBERS;
     }
 

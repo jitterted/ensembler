@@ -38,4 +38,10 @@ public class EnsembleFactory {
             ensemble.acceptedBy(MemberId.of(i));
         }
     }
+
+    public static Ensemble fullEnsembleOneDayInTheFuture() {
+        Ensemble ensemble = withIdOf1AndOneDayInTheFuture();
+        acceptCountMembersFor(5, ensemble);
+        return ensemble;
+    }
 }
