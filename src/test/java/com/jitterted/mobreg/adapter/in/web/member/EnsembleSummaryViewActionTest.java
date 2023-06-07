@@ -66,7 +66,65 @@ class EnsembleSummaryViewActionTest {
     class ParticipantActionIs {
 
         @Test
-        void becomeSpectatorWhenMemberIsUnknown() {
+        void participateInRotationWhenMemberIsUnknown() {
+            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.UNKNOWN);
+
+            ParticipantAction expectedParticipantAction =
+                    new ParticipantAction(
+                            "/member/accept",
+                            "Participate in Rotation &#x2328;"
+                    );
+
+            assertThat(participantAction)
+                    .isEqualTo(expectedParticipantAction);
+        }
+
+        @Test
+        void participateInRotationWhenMemberIsDeclined() {
+            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.DECLINED);
+
+            ParticipantAction expectedParticipantAction =
+                    new ParticipantAction(
+                            "/member/accept",
+                            "Participate in Rotation &#x2328;"
+                    );
+
+            assertThat(participantAction)
+                    .isEqualTo(expectedParticipantAction);
+        }
+        
+        @Test
+        void leaveRotationWhenMemberIsParticipant() {
+            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.PARTICIPANT);
+
+            ParticipantAction expectedParticipantAction =
+                    new ParticipantAction(
+                            "/member/decline",
+                            "Leave Rotation &#x1f44b;"
+                    );
+
+            assertThat(participantAction)
+                    .isEqualTo(expectedParticipantAction);
+
+        }
+
+        @Test
+        void switchToParticipantWhenMemberIsSpectator() {
+            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.SPECTATOR);
+
+            ParticipantAction expectedParticipantAction =
+                    new ParticipantAction(
+                            "/member/accept",
+                            "Switch to Participant &#x1f44b;"
+                    );
+
+            assertThat(participantAction)
+                    .isEqualTo(expectedParticipantAction);
+        }
+
+        @Test // parameterize
+        void disabledWhenMemberIsNotParticipantAndRotationIsFull() {
+
         }
     }
 

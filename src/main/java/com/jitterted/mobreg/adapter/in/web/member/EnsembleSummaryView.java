@@ -37,15 +37,7 @@ public record EnsembleSummaryView(long id,
         List<MemberView> spectatorViews = transform(memberService, ensemble.spectators());
 
         String memberStatus = memberStatusToViewString(ensemble, memberId);
-        // To be replaced with getting the status from the member
-        SpectatorAction spectatorAction = switch (memberStatus) {
-            case "declined" -> new SpectatorAction(
-                    "/member/join-as-spectator",
-                    "Join as Spectator &#x1F440;"); // HTML unicode for 👀
-            default -> new SpectatorAction(
-                    "/member/decline",
-                    "Leave Spectators &#x1f44b;"); // HTML unicode for 👋
-        };
+        SpectatorAction spectatorAction = SpectatorAction.from(ensemble.memberStatusFor(memberId));
 
         return new EnsembleSummaryView(
                 ensemble.getId().id(),
@@ -88,6 +80,26 @@ record SpectatorAction(String actionUrl, String buttonText) {
             case SPECTATOR -> new SpectatorAction(
                     "/member/decline",
                     "Leave Spectators &#x1f44b;");
+        };
+    }
+}
+
+record ParticipantAction(String actionUrl, String buttonText) {
+
+    public static ParticipantAction from(MemberStatus memberStatus) {
+        return switch (memberStatus) {
+            case UNKNOWN, DECLINED -> new ParticipantAction(
+                    "/member/accept",
+                    "Participate in Rotation &#x2328;"
+            );
+            case PARTICIPANT -> new ParticipantAction(
+                    "/member/decline",
+                    "Leave Rotation &#x1f44b;"
+            );
+            case SPECTATOR -> new ParticipantAction(
+                    "/member/accept",
+                    "Switch to Participant &#x1f44b;"
+            );
         };
     }
 }
