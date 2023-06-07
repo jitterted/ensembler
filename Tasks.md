@@ -17,6 +17,7 @@
         [ ] If you are Spectator, show "Leave" button instead 
 [ ] Update schema and DB adapter for "Spectators" data from Ensemble
 [ ] Show Zoom/Calendar link when spectating
+[ ] Replace EnsembleSummaryView.memberStatus with ActionLinks (for right-most column)
 
 # Optional
 [ ] Add notification when joining as spectator

@@ -11,6 +11,7 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
+import com.jitterted.mobreg.domain.MemberStatus;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -20,15 +21,22 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleSummaryViewTest {
 
     @Test
-    public void memberStatusUnknownWhenEnsembleIsEmpty() throws Exception {
+    public void memberStatusUnknownAndActionsExistWhenEnsembleIsEmpty() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
+        MemberId memberId = MemberId.of(97L);
 
         EnsembleSummaryView ensembleSummaryView =
-            EnsembleSummaryView.toView(ensemble, MemberId.of(97L), memberService);
+            EnsembleSummaryView.toView(ensemble, memberId, memberService);
 
+        // the .memberStatus will go away once we're done replacing it with Actions
         assertThat(ensembleSummaryView.memberStatus())
             .isEqualTo("unknown");
+        MemberStatus memberStatus = ensemble.memberStatusFor(memberId);
+        assertThat(ensembleSummaryView.spectatorAction())
+                .isEqualTo(SpectatorAction.from(memberStatus));
+        assertThat(ensembleSummaryView.participantAction())
+                .isEqualTo(ParticipantAction.from(memberStatus));
     }
 
     @Test

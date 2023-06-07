@@ -124,7 +124,7 @@ class EnsembleSummaryViewActionTest {
 
         @Test // parameterize
         void disabledWhenMemberIsNotParticipantAndRotationIsFull() {
-
+            fail("Don't forget about disabled when full");
         }
     }
 

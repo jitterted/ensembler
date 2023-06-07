@@ -19,11 +19,12 @@ public record EnsembleSummaryView(long id,
                                   int participantCount,
                                   List<MemberView> participants,
                                   List<MemberView> spectators,
-                                  String memberStatus,
+                                  @Deprecated String memberStatus,
                                   String zoomMeetingLink,
                                   String googleCalendarLink,
                                   String recordingLink,
-                                  SpectatorAction spectatorAction) {
+                                  SpectatorAction spectatorAction,
+                                  ParticipantAction participantAction) {
 
     public static List<EnsembleSummaryView> from(List<Ensemble> ensembles, MemberId memberId, MemberService memberService) {
         return ensembles.stream()
@@ -38,6 +39,7 @@ public record EnsembleSummaryView(long id,
 
         String memberStatus = memberStatusToViewString(ensemble, memberId);
         SpectatorAction spectatorAction = SpectatorAction.from(ensemble.memberStatusFor(memberId));
+        ParticipantAction participantAction = ParticipantAction.from(ensemble.memberStatusFor(memberId));
 
         return new EnsembleSummaryView(
                 ensemble.getId().id(),
@@ -50,7 +52,8 @@ public record EnsembleSummaryView(long id,
                 ensemble.meetingLink().toString(),
                 new GoogleCalendarLinkCreator().createFor(ensemble),
                 ensemble.recordingLink().toString(),
-                spectatorAction
+                spectatorAction,
+                participantAction
         );
     }
 
@@ -66,6 +69,7 @@ public record EnsembleSummaryView(long id,
                 .map(MemberView::from)
                 .toList();
     }
+
 }
 
 record SpectatorAction(String actionUrl, String buttonText) {
