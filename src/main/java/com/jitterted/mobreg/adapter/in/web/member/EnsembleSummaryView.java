@@ -7,6 +7,7 @@ import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.MemberEnsembleStatus;
 import com.jitterted.mobreg.domain.MemberId;
+import com.jitterted.mobreg.domain.MemberStatus;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -76,4 +77,17 @@ public record EnsembleSummaryView(long id,
 }
 
 record SpectatorAction(String actionUrl, String buttonText) {
+    public static SpectatorAction from(MemberStatus memberStatus) {
+        return switch (memberStatus) {
+            case UNKNOWN, DECLINED -> new SpectatorAction(
+                    "/member/join-as-spectator",
+                    "Join as Spectator &#x1F440;");
+            case PARTICIPANT -> new SpectatorAction(
+                    "/member/join-as-spectator",
+                    "Switch to Spectator &#x1F440;");
+            case SPECTATOR -> new SpectatorAction(
+                    "/member/decline",
+                    "Leave Spectators &#x1f44b;");
+        };
+    }
 }
