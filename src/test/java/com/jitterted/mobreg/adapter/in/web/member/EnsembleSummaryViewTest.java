@@ -12,6 +12,7 @@ import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberStatus;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -29,9 +30,6 @@ class EnsembleSummaryViewTest {
         EnsembleSummaryView ensembleSummaryView =
                 EnsembleSummaryView.toView(ensemble, memberId, memberService);
 
-        // the .memberStatus will go away once we're done replacing it with Actions
-        assertThat(ensembleSummaryView.memberStatus())
-                .isEqualTo("unknown");
         MemberStatus memberStatus = ensemble.memberStatusFor(memberId);
         assertThat(ensembleSummaryView.spectatorAction())
                 .isEqualTo(SpectatorAction.from(memberStatus));
@@ -93,39 +91,45 @@ class EnsembleSummaryViewTest {
                 .containsExactly(MemberView.from(member));
     }
 
-    @Test
-    public void noRecordingEnsembleThenViewIncludesEmptyLink() throws Exception {
-        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
+    @Nested
+    class Links {
 
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
+        @Test
+        public void forParticipantHasGoogleCalendarAndZoomMeetingLinks() throws Exception {
+            Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+            MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
 
-        assertThat(ensembleSummaryView.recordingLink())
-                .isEmpty();
-    }
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
 
-    @Test
-    public void ensembleWithRecordingThenViewIncludesStringOfLink() throws Exception {
-        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        ensemble.linkToRecordingAt(URI.create("https://recording.link/abc123"));
-        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
+            String expectedLink = new GoogleCalendarLinkCreator().createFor(ensemble);
+            assertThat(ensembleSummaryView.googleCalendarLink())
+                    .isEqualTo(expectedLink);
+            assertThat(ensembleSummaryView.zoomMeetingLink())
+                    .isEqualTo("https://zoom.us");
+        }
 
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
+        @Test
+        public void ensembleWithRecordingThenViewIncludesStringOfLink() throws Exception {
+            Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+            ensemble.linkToRecordingAt(URI.create("https://recording.link/abc123"));
+            MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
 
-        assertThat(ensembleSummaryView.recordingLink())
-                .isEqualTo("https://recording.link/abc123");
-    }
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
 
-    @Test
-    public void viewContainsGoogleCalendarLink() throws Exception {
-        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
+            assertThat(ensembleSummaryView.recordingLink())
+                    .isEqualTo("https://recording.link/abc123");
+        }
 
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
+        @Test
+        public void noRecordingEnsembleThenViewIncludesEmptyLink() throws Exception {
+            Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+            MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
 
-        String expectedLink = new GoogleCalendarLinkCreator().createFor(ensemble);
-        assertThat(ensembleSummaryView.googleCalendarLink())
-                .isEqualTo(expectedLink);
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), memberService);
+
+            assertThat(ensembleSummaryView.recordingLink())
+                    .isEmpty();
+        }
     }
 
     @Test
