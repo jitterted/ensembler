@@ -81,7 +81,6 @@
                         <th class="py-3 px-6 text-center">Date/Time</th>
                         <th class="py-3 px-6 text-center">Participants</th>
                         <th class="py-3 px-6 text-center">Spectators</th>
-                        <th class="py-3 px-6 text-center">Status</th>
                         <th class="py-3 px-6 text-center">Links</th>
                     </tr>
                     </thead>
@@ -123,69 +122,14 @@
                                 </div>
                             </div>
 
-                            <form action="#" th:action="@{/member/accept}" th:object="${register}" method="post"
-                                  th:if="${ensemble.memberEnsembleStatus == 'unknown' || ensemble.memberEnsembleStatus == 'accepted' || ensemble.memberEnsembleStatus == 'declined' || ensemble.memberEnsembleStatus == 'declined_full'}">
+                            <form action="#" th:action="@{${ensemble.participantAction.actionUrl}}" th:object="${register}" method="post">
                                 <input hidden="hidden" type="number" th:field="*{memberId}">
                                 <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
 
-                                <fieldset th:case="'unknown'" class="flex">
-                                    <legend class="sr-only">Participants</legend>
-                                    <div class="space-y-4 space-x-2 sm:flex sm:items-center sm:space-y-0">
-                                        <button type="submit" th:formaction="@{/member/decline}"
-                                                class="whitespace-nowrap rounded bg-blue-600 shadow-md px-4 py-2 text-xs font-semibold uppercase leading-normal text-white hover:bg-blue-500 focus:outline-none focus:ring-1 focus:ring-offset-1 active:bg-blue-400"
-                                        >Leave Participants &#x1f44b;</button>
-
-                                        <button type="submit" th:formaction="@{/member/accept}"
-                                                class="whitespace-nowrap rounded bg-blue-600 shadow-md px-4 py-2 text-xs font-semibold uppercase leading-normal text-white hover:bg-blue-500 focus:outline-none focus:ring-1 focus:ring-offset-1 active:bg-blue-400"
-                                            >Join as Participant &#x2328;</button>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset th:case="'accepted'" class="flex">
-                                    <legend class="sr-only">RSVP</legend>
-                                    <div class="space-y-4 sm:flex sm:items-center sm:space-y-0">
-                                        <button type="submit" th:formaction="@{/member/decline}"
-                                                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Decline
-                                        </button>
-
-                                        <div class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100">
-                                            Accepted
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset th:case="'declined'" class="flex">
-                                    <legend class="sr-only">RSVP</legend>
-                                    <div class="space-y-4 sm:flex sm:items-center sm:space-y-0">
-                                        <button disabled
-                                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 disabled:cursor-default">
-                                            Declined
-                                        </button>
-
-                                        <button type="submit" th:formaction="@{/member/accept}"
-                                                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Accept
-                                        </button>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset th:case="'declined_full'" class="flex">
-                                    <legend class="sr-only">RSVP</legend>
-                                    <div class="space-y-4 sm:flex sm:items-center sm:space-y-0">
-                                        <button type="submit"
-                                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Declined
-                                        </button>
-
-                                        <button type="submit" disabled
-                                                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white disabled:cursor-not-allowed disabled:text-gray-400">
-                                            Accept
-                                        </button>
-                                    </div>
-                                </fieldset>
+                                <button type="submit" th:utext="${ensemble.participantAction.buttonText}"
+                                        class="whitespace-nowrap rounded bg-blue-600 shadow-md px-4 py-2 text-xs font-semibold uppercase leading-normal text-white hover:bg-blue-500 focus:outline-none focus:ring-1 focus:ring-offset-1 active:bg-blue-400"
+                                >participant &#x1f44b; button text</button>
                             </form>
-
                         </td>
 
                         <!-- SPECTATORS -->
@@ -209,43 +153,17 @@
                             <form action="#" th:action="@{${ensemble.spectatorAction.actionUrl}}" th:object="${register}" method="post">
                                 <input hidden="hidden" type="number" th:field="*{memberId}">
                                 <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
-                                <button type="submit" th:text="${ensemble.spectatorAction.buttonText}"
+                                <button type="submit" th:utext="${ensemble.spectatorAction.buttonText}"
                                         class="whitespace-nowrap rounded bg-blue-600 shadow-md px-4 py-2 text-xs font-semibold uppercase leading-normal text-white hover:bg-blue-500 focus:outline-none focus:ring-1 focus:ring-offset-1 active:bg-blue-400">
                                     spectator &#x1F440; button text
                                 </button>
-                                <p th:text="${ensemble.memberEnsembleStatus}">Member Status</p>
+                                <p th:text="${ensemble.memberStatus}">Member Status</p>
                             </form>
                         </td>
 
-                        <!-- STATUS -->
-                        <td class="py-3 px-6 flex items-center justify-center" th:switch="${ensemble.memberEnsembleStatus}">
-
-                            <div th:case="'full'"
-                                 class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">
-                                Unavailable: Full <i class="fal fa-times-hexagon text-red-600"></i></div>
-
-                            <div th:case="'completed'"
-                                 class="bg-green-100 text-green-700 py-1 px-3 rounded-lg text-xs font-bold">
-                                Completed <i class="fal fa-badge-check text-blue-600"></i></div>
-
-                            <div th:case="'pending_completed'"
-                                 class="bg-green-100 text-green-700 py-1 px-3 rounded-lg text-xs font-bold">
-                                Completed <i class="fal fa-badge-check text-blue-600"></i></div>
-
-                            <div th:case="'in_grace_period'"
-                                 class="bg-yellow-100 text-yellow-800 py-1 px-3 rounded-lg text-xs font-bold">
-                                In Progress <i class="fal fa-badge-check text-yellow-700"></i>
-                            </div>
-
-                            <div th:case="'canceled'"
-                                 class="bg-red-100 text-red-800 py-1 px-3 rounded-lg text-xs font-bold">
-                                Canceled <i class="fal fa-calendar-times text-red-600"></i></div>
-
-                        </td>
-
-                        <!-- Links -->
+                        <!-- LINKS (TO ADD: show status for "in progress" and "pending complete") -->
                         <td class="py-3 px-6 text-center">
-                            <div th:if="${ensemble.memberEnsembleStatus == 'in_grace_period' || ensemble.memberEnsembleStatus == 'accepted'}">
+                            <div th:if="${ensemble.memberStatus == 'in_grace_period' || ensemble.memberStatus == 'accepted'}">
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
                                    href="#" th:href="${ensemble.zoomMeetingLink}">
                                     <i class="far fa-video pr-2" aria-hidden="true"></i>
@@ -261,12 +179,12 @@
                                 </a>
                             </div>
 
-                            <div th:if="${ensemble.memberEnsembleStatus} == 'completed'">
+                            <div th:if="${ensemble.memberStatus} == 'completed'">
                                 <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
                                    href="#" th:href="${ensemble.recordingLink}">Recording Link</a>
                             </div>
 
-                            <div th:if="${ensemble.memberEnsembleStatus} == 'pending_completed'">Recording Coming Soon...</div>
+                            <div th:if="${ensemble.memberStatus} == 'pending_completed'">Recording Coming Soon...</div>
 
                         </td>
                     </tr>
