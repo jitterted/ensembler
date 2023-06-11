@@ -2,6 +2,7 @@ package com.jitterted.mobreg.domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
@@ -9,6 +10,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleStateTest {
 
     private static final MemberId DUMMY_MEMBER_ID = MemberId.of(-1);
+    private static final Duration ENSEMBLE_DURATION = Duration.ofHours(1).plusMinutes(55);
 
     @Test
     public void newEnsembleIsNotCanceled() throws Exception {
@@ -108,5 +110,38 @@ class EnsembleStateTest {
 
         assertThat(ensemble.isCompleted())
                 .isTrue();
+    }
+
+
+    @Test
+    public void uncompletedEnsembleHasNotEndedThenPendingCompletedIsFalse() throws Exception {
+        ZonedDateTime startTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 12);
+        Ensemble ensemble = EnsembleFactory.withStartTime(startTime);
+
+        assertThat(ensemble.isPendingCompletedAsOf(
+                startTime.plus(ENSEMBLE_DURATION.minusMinutes(1))))
+                .isFalse();
+    }
+
+    @Test
+    public void uncompletedEnsembleEndedInThePastThenPendingCompletedIsTrue() throws Exception {
+        ZonedDateTime startTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 12);
+        Ensemble ensemble = EnsembleFactory.withStartTime(startTime);
+
+        assertThat(ensemble.isPendingCompletedAsOf(
+                startTime.plus(ENSEMBLE_DURATION.plusMinutes(1))))
+                .isTrue();
+    }
+
+    @Test
+    void completedEnsembleEndedInThePastThenPendingCompletedIsFalse() {
+        ZonedDateTime startTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 12);
+        Ensemble ensemble = EnsembleFactory.withStartTime(startTime);
+
+        ensemble.complete();
+
+        assertThat(ensemble.isPendingCompletedAsOf(
+                startTime.plus(ENSEMBLE_DURATION.plusMinutes(1))))
+                .isFalse();
     }
 }

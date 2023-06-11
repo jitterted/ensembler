@@ -250,6 +250,17 @@ public class Ensemble {
         conferenceDetails = ConferenceDetails.DELETED;
     }
 
+    public boolean isPendingCompletedAsOf(ZonedDateTime now) {
+        if (isCompleted()) {
+            return false;
+        }
+        return endTimeIsInThePast(now);
+    }
+
+    public boolean endTimeIsInThePast(ZonedDateTime now) {
+        return now.isAfter(startDateTime.plus(duration));
+    }
+
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
         // @formatter: off
         private static final Map<WhenSpaceRsvp, MemberEnsembleStatus> STATE_TO_STATUS = Map.ofEntries(
