@@ -10,6 +10,7 @@ import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberStatus;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -20,9 +21,10 @@ public record EnsembleSummaryView(long id,
                                   List<MemberView> participants,
                                   List<MemberView> spectators,
                                   @Deprecated String memberStatus,
-                                  String zoomMeetingLink,
-                                  String googleCalendarLink,
-                                  String recordingLink,
+                                  @Deprecated String zoomMeetingLink,
+                                  @Deprecated String googleCalendarLink,
+                                  @Deprecated String recordingLink,
+                                  List<DisplayLink> links,
                                   SpectatorAction spectatorAction,
                                   ParticipantAction participantAction) {
 
@@ -37,9 +39,10 @@ public record EnsembleSummaryView(long id,
         List<MemberView> participantViews = transform(memberService, ensemble.acceptedMembers());
         List<MemberView> spectatorViews = transform(memberService, ensemble.spectators());
 
-        String memberStatus = memberStatusToViewString(ensemble, memberId);
-        SpectatorAction spectatorAction = SpectatorAction.from(ensemble.memberStatusFor(memberId));
-        ParticipantAction participantAction = ParticipantAction.from(ensemble.memberStatusFor(memberId), ensemble.isFull());
+        String memberStatusAsString = memberStatusToViewString(ensemble, memberId);
+        MemberStatus memberStatusForEnsemble = ensemble.memberStatusFor(memberId);
+        SpectatorAction spectatorAction = SpectatorAction.from(memberStatusForEnsemble);
+        ParticipantAction participantAction = ParticipantAction.from(memberStatusForEnsemble, ensemble.isFull());
 
         return new EnsembleSummaryView(
                 ensemble.getId().id(),
@@ -48,13 +51,37 @@ public record EnsembleSummaryView(long id,
                 ensemble.acceptedCount(),
                 participantViews,
                 spectatorViews,
-                memberStatus,
+                memberStatusAsString,
                 ensemble.meetingLink().toString(),
                 new GoogleCalendarLinkCreator().createFor(ensemble),
                 ensemble.recordingLink().toString(),
+                createLinksFor(ensemble, memberStatusForEnsemble),
                 spectatorAction,
                 participantAction
         );
+    }
+
+    private static List<DisplayLink> createLinksFor(Ensemble ensemble, MemberStatus memberStatusForEnsemble) {
+        if (ensemble.isCompleted()) {
+            return List.of(new DisplayLink(ensemble.recordingLink().toString(),
+                                           "Recording Link"));
+        }
+        if (ensemble.isPendingCompletedAsOf(ZonedDateTime.now())) {
+            return List.of(new DisplayLink("", "Recording Coming Soon..."));
+        }
+        return switch (memberStatusForEnsemble) {
+            case UNKNOWN, DECLINED -> Collections.emptyList();
+            case PARTICIPANT, SPECTATOR -> {
+                DisplayLink calendarLink = new DisplayLink(
+                        new GoogleCalendarLinkCreator().createFor(ensemble),
+                        "<i class=\"fas fa-calendar-plus pr-2\" aria-hidden=\"true\"></i>Add to Google Calendar");
+                DisplayLink zoomLink = new DisplayLink(
+                        ensemble.meetingLink().toString(),
+                        "<i class=\"far fa-video pr-2\" aria-hidden=\"true\"></i>Zoom Link");
+                yield List.of(calendarLink,
+                              zoomLink);
+            }
+        };
     }
 
     private static String memberStatusToViewString(Ensemble ensemble, MemberId memberId) {
@@ -106,5 +133,7 @@ record ParticipantAction(String actionUrl, String buttonText, boolean disabled) 
                     disabled);
         };
     }
+}
 
+record DisplayLink(String url, String text) {
 }
