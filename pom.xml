@@ -15,7 +15,7 @@
   <description>Ensemble Registration Manager</description>
   <properties>
     <java.version>17</java.version>
-    <spotify.github-client.version>0.1.43</spotify.github-client.version>
+    <spotify.github-client.version>0.1.56</spotify.github-client.version>
     <testcontainers.version>1.17.3</testcontainers.version>
     <htmlunit.version>2.65.1</htmlunit.version>
     <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
