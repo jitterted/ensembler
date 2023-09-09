@@ -1,0 +1,17 @@
+# curl -X POST https://zoom.us/oauth/token -d 'grant_type=account_credentials' -d 'account_id={accountID}' -H 'Host: zoom.us' -H 'Authorization: Basic Base64Encoded(clientId:clientSecret)'
+POST https://zoom.us/oauth/token
+Host: zoom.us
+Authorization: Basic Base64Encoded(clientId:clientSecret)
+Content-Type: application/x-www-form-urlencoded
+
+grant_type = account_credentials &
+account_id = {accountID}
+
+###
+
+{
+      “access_token“: [String],
+      “token_type”: “bearer”,
+      “expires_in”: long,
+      “scope” : [String]
+}

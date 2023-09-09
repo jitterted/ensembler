@@ -15,6 +15,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,17 +30,23 @@ public class ZoomScheduler implements VideoConferenceScheduler {
 
     private static final URI CREATE_MEETING_URI = URI.create("https://api.zoom.us/v2/users/me/meetings");
     private static final String DELETE_MEETING_URL_TEMPLATE = "https://api.zoom.us/v2/meetings/{meetingId}?schedule_for_reminder=true"; // query param sends email when deleted
+    private static final String ZOOM_ACCESS_TOKEN_URL = "https://zoom.us/oauth/token";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${zoom.jwt}")
-    private String zoomJwt;
+    @Value("${zoom.account.id}")
+    private String zoomAccountId;
+    @Value("${zoom.client.id}")
+    private String zoomClientId;
+    @Value("${zoom.client.secret}")
+    private String zoomClientSecret;
 
     @Override
     public ConferenceDetails createMeeting(Ensemble ensemble) {
         ZoomCreateMeetingRequest zoomCreateMeetingRequest = createRequestFor(ensemble);
-        HttpHeaders headers = createRequestHeaders();
-        HttpEntity<ZoomCreateMeetingRequest> requestEntity = new HttpEntity<>(zoomCreateMeetingRequest, headers);
+        HttpHeaders headers = createMeetingApiRequestHeaders();
+        HttpEntity<ZoomCreateMeetingRequest> requestEntity =
+                new HttpEntity<>(zoomCreateMeetingRequest, headers);
 
         ResponseEntity<ZoomCreateMeetingResponse> zoomResponse = postRequest(requestEntity);
 
@@ -57,9 +65,29 @@ public class ZoomScheduler implements VideoConferenceScheduler {
                                      URI.create(createMeetingResponse.joinUrl));
     }
 
+    private ZoomAccessTokenResponse fetchAccessToken() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBasicAuth(zoomClientId, zoomClientSecret); // will base-64 encode it according to RFC 7617
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "account_credentials");
+        params.add("account_id", zoomAccountId);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(params, headers);
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<ZoomAccessTokenResponse> accessTokenResponseResponseEntity =
+                restTemplate.postForEntity(ZOOM_ACCESS_TOKEN_URL,
+                                           httpEntity,
+                                           ZoomAccessTokenResponse.class);
+
+        return accessTokenResponseResponseEntity.getBody();
+    }
+
+
     @Override
     public boolean deleteMeeting(ConferenceDetails conferenceDetails) {
-        HttpEntity<Object> httpEntity = new HttpEntity<>(createRequestHeaders());
+        HttpEntity<Object> httpEntity = new HttpEntity<>(createMeetingApiRequestHeaders());
         ResponseEntity<Void> responseEntity = restTemplate.exchange(DELETE_MEETING_URL_TEMPLATE,
                                                                     HttpMethod.DELETE,
                                                                     httpEntity,
@@ -87,10 +115,11 @@ public class ZoomScheduler implements VideoConferenceScheduler {
     }
 
     @NotNull
-    private HttpHeaders createRequestHeaders() {
+    private HttpHeaders createMeetingApiRequestHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set("Authorization", "Bearer " + zoomJwt);
+        String bearerToken = fetchAccessToken().accessToken();
+        headers.setBearerAuth(bearerToken);
         return headers;
     }
 
@@ -118,5 +147,4 @@ public class ZoomScheduler implements VideoConferenceScheduler {
         settings.waitingRoom = false;
         return settings;
     }
-
 }
