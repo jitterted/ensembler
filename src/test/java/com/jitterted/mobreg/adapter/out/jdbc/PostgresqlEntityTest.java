@@ -14,7 +14,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-//@SpringBootTest
 @DataJdbcTest(properties = {
         "spring.test.database.replace=NONE",
         "spring.datasource.url=jdbc:tc:postgresql:14:///springboot"
@@ -36,6 +35,8 @@ class PostgresqlEntityTest extends PostgresTestcontainerBase {
         original.acceptedBy(MemberId.of(5L));
         original.declinedBy(MemberId.of(73L));
         original.declinedBy(MemberId.of(79L));
+        original.joinAsSpectator(MemberId.of(97L));
+        original.joinAsSpectator(MemberId.of(101L));
         EnsembleDbo originalEntity = EnsembleDbo.from(original);
 
         EnsembleDbo savedEntity = ensembleJdbcRepository.save(originalEntity);
@@ -57,6 +58,11 @@ class PostgresqlEntityTest extends PostgresTestcontainerBase {
                 .extracting(DeclinedMember::asMemberId)
                 .extracting(MemberId::id)
                 .containsOnly(73L, 79L);
+
+        assertThat(retrievedEntity.get().getSpectatorMembers())
+                .extracting(SpectatorMember::asMemberId)
+                .extracting(MemberId::id)
+                .containsOnly(97L, 101L);
     }
 
     @Test
