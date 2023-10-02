@@ -1,6 +1,6 @@
 # Tasks
 
-[ ] Update schema and DB adapter for "Spectators" data from Ensemble
+[ ] Deploy: update Zoom credentials for environment variables on Railway
 
 [ ] Hide both Join & Participate buttons when the Ensemble is in the past (e.g., "pending_complete")
     [ ] Test against EnsembleSummaryView, adding a "show" boolean for each of the Actions 
@@ -8,6 +8,8 @@
 [ ] Replace EnsembleSummaryView.memberStatus with ActionLinks (for right-most column)
     [ ] Remove deprecated EnsembleSummaryView.memberStatus() method
     [ ] Remove showing memberStatus from member-register.html
+
+[ ] Add display of Spectators to admin screens
 
 [ ] Start writing HTML tests??
 
