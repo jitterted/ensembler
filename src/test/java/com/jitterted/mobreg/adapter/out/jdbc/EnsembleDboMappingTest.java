@@ -29,6 +29,7 @@ class EnsembleDboMappingTest {
         ensembleDbo.setConferenceStartUrl("entityStartUrl");
         ensembleDbo.setAcceptedMembers(Set.of(new AcceptedMember(13L)));
         ensembleDbo.setDeclinedMembers(Set.of(new DeclinedMember(29L)));
+        ensembleDbo.setSpectatorMembers(Set.of(new SpectatorMember(37L)));
 
         Ensemble ensemble = ensembleDbo.asEnsemble();
 
@@ -48,6 +49,9 @@ class EnsembleDboMappingTest {
         assertThat(ensemble.declinedMembers())
                 .extracting(MemberId::id)
                 .isEqualTo(List.of(29L));
+        assertThat(ensemble.spectators())
+                .extracting(MemberId::id)
+                .isEqualTo(List.of(37L));
     }
 
     @Test
@@ -58,6 +62,7 @@ class EnsembleDboMappingTest {
         ensemble.linkToRecordingAt(URI.create("https://recording.link/domain"));
         ensemble.acceptedBy(MemberId.of(11L));
         ensemble.declinedBy(MemberId.of(13L));
+        ensemble.joinAsSpectator(MemberId.of(19L));
         ensemble.complete();
 
         EnsembleDbo entity = EnsembleDbo.from(ensemble);
@@ -84,6 +89,10 @@ class EnsembleDboMappingTest {
                 .extracting(DeclinedMember::asMemberId)
                 .extracting(MemberId::id)
                 .isEqualTo(List.of(13L));
+        assertThat(entity.getSpectatorMembers())
+                .extracting(SpectatorMember::asMemberId)
+                .extracting(MemberId::id)
+                .isEqualTo(List.of(19L));
     }
 
 }

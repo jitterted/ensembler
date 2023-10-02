@@ -35,6 +35,9 @@ class EnsembleDbo {
     @MappedCollection(idColumn = "ensemble_id")
     private Set<DeclinedMember> declinedMembers = new HashSet<>();
 
+    @MappedCollection(idColumn = "ensemble_id")
+    private Set<SpectatorMember> spectatorMembers = new HashSet<>();
+
     public static EnsembleDbo from(Ensemble ensemble) {
         EnsembleDbo ensembleDbo = new EnsembleDbo();
         if (ensemble.getId() != null) {
@@ -55,6 +58,10 @@ class EnsembleDbo {
                 ensemble.declinedMembers()
                         .map(DeclinedMember::toEntityId)
                         .collect(Collectors.toSet()));
+        ensembleDbo.setSpectatorMembers(
+                ensemble.spectators()
+                        .map(SpectatorMember::toEntityId)
+                        .collect(Collectors.toSet()));
         return ensembleDbo;
     }
 
@@ -74,6 +81,10 @@ class EnsembleDbo {
         declinedMembers.stream()
                        .map(DeclinedMember::asMemberId)
                        .forEach(ensemble::declinedBy);
+
+        spectatorMembers.stream()
+                       .map(SpectatorMember::asMemberId)
+                       .forEach(ensemble::joinAsSpectator);
 
         if (state.equalsIgnoreCase("COMPLETED")) {
             ensemble.complete();
@@ -122,6 +133,14 @@ class EnsembleDbo {
 
     public void setDeclinedMembers(Set<DeclinedMember> declinedMembers) {
         this.declinedMembers = declinedMembers;
+    }
+
+    public Set<SpectatorMember> getSpectatorMembers() {
+        return spectatorMembers;
+    }
+
+    public void setSpectatorMembers(Set<SpectatorMember> spectatorMembers) {
+        this.spectatorMembers = spectatorMembers;
     }
 
     public String getState() {

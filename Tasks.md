@@ -23,8 +23,8 @@
 # Later
 
 * Rename "accept" to "participate" [in rotation]
-* Change storage of Member registrations from 3 separate Sets to a single Set,
-  where there's an Enum for each (PARTICIPANT, SPECTATOR, and DECLINED)
+* Change storage of Member registrations from 3 separate Sets to a single Set, where there's an Enum for each (PARTICIPANT, SPECTATOR, and DECLINED)
+* Convert Ensemble to use the Snapshot Persistence pattern
 
 ## UI
 
