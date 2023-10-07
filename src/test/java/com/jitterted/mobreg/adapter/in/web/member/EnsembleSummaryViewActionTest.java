@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.domain.MemberStatus;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -103,7 +104,7 @@ class EnsembleSummaryViewActionTest {
             ParticipantAction expectedParticipantAction =
                     new ParticipantAction(
                             "/member/decline",
-                            "Leave Rotation &#x1f44b;",
+                            "Leave Rotation &#x1f44b;", // hand wave symbol
                             false);
 
             assertThat(participantAction)
@@ -119,7 +120,7 @@ class EnsembleSummaryViewActionTest {
             ParticipantAction expectedParticipantAction =
                     new ParticipantAction(
                             "/member/accept",
-                            "Switch to Participant &#x1f44b;",
+                            "Switch to Participant &#x2328;", // keyboard symbol
                             false);
 
             assertThat(participantAction)
@@ -127,11 +128,12 @@ class EnsembleSummaryViewActionTest {
         }
 
         @Test // parameterize for Unknown/Declined/Spectator
+        @Disabled
         void disabledWhenMemberIsNotParticipantAndRotationIsFull() {
-//            ParticipantAction participantAction = ParticipantAction.disabled("");
-//
-//            assertThat(participantAction.disabled())
-//                    .isTrue();
+            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.UNKNOWN, false);
+
+            assertThat(participantAction.disabled())
+                    .isTrue();
         }
     }
 

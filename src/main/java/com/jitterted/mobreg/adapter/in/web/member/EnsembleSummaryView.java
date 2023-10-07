@@ -129,7 +129,7 @@ record ParticipantAction(String actionUrl, String buttonText, boolean disabled) 
                     false); // can always leave
             case SPECTATOR -> new ParticipantAction(
                     "/member/accept",
-                    "Switch to Participant &#x1f44b;",
+                    "Switch to Participant &#x2328;",
                     disabled);
         };
     }
