@@ -130,8 +130,10 @@
                                 <input hidden="hidden" type="number" th:field="*{memberId}">
                                 <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
 
-                                <button type="submit" th:utext="${ensemble.participantAction.buttonText}"
-                                        class="whitespace-nowrap rounded bg-blue-600 shadow-md px-4 py-2 text-xs font-semibold uppercase leading-normal text-white hover:bg-blue-500 focus:outline-none focus:ring-1 focus:ring-offset-1 active:bg-blue-400"
+                                <button type="submit"
+                                        th:disabled="${ensemble.participantAction.disabled}"
+                                        th:utext="${ensemble.participantAction.buttonText}"
+                                        class="whitespace-nowrap rounded bg-blue-600 shadow-md px-4 py-2 text-xs font-semibold uppercase leading-normal text-white hover:bg-blue-500 focus:outline-none focus:ring-1 focus:ring-offset-1 active:bg-blue-400 disabled:cursor-not-allowed"
                                 >participant &#x1f44b; button text</button>
                             </form>
                         </td>
