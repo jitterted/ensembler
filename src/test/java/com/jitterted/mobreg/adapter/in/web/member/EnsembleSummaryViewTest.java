@@ -189,6 +189,35 @@ class EnsembleSummaryViewTest {
         }
     }
 
+    @Nested
+    class ActionButtonsAre {
+
+        @Test
+        void visibleWhenEnsembleIsInTheFuture() {
+            Ensemble ensemble = EnsembleFactory.oneDayInTheFuture();
+
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble,
+                                                                                 MemberId.of(37L),
+                                                                                 STUB_MEMBER_SERVICE);
+
+            assertThat(ensembleSummaryView.showActionButtons())
+                    .isTrue();
+        }
+
+        @Test
+        void hiddenWhenEnsembleIsInThePast() {
+            Ensemble ensemble = EnsembleFactory.oneDayInThePast();
+
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble,
+                                                                                 MemberId.of(23L),
+                                                                                 STUB_MEMBER_SERVICE);
+
+            assertThat(ensembleSummaryView.showActionButtons())
+                    .isFalse();
+        }
+    }
+
+
     @Test
     public void unknownMemberWhenEnsembleIsFullThenParticipateIsDisabled() throws Exception {
         Ensemble ensemble = EnsembleFactory.fullEnsembleOneDayInTheFuture();

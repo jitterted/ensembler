@@ -23,6 +23,13 @@ public class EnsembleFactory {
     }
 
     @NotNull
+    public static Ensemble oneDayInTheFuture() {
+        Ensemble ensemble = new Ensemble("test", ZonedDateTime.now().plusDays(1));
+        ensemble.setId(EnsembleId.of(1L));
+        return ensemble;
+    }
+
+    @NotNull
     public static Ensemble ensembleAtCapacityWithStartTime(int year, int month, int dayOfMonth, int hour) {
         Ensemble futureEnsemble = withStartTime(year, month, dayOfMonth, hour);
         acceptCountMembersFor(5, futureEnsemble);
@@ -42,6 +49,13 @@ public class EnsembleFactory {
     public static Ensemble fullEnsembleOneDayInTheFuture() {
         Ensemble ensemble = withIdOf1AndOneDayInTheFuture();
         acceptCountMembersFor(5, ensemble);
+        return ensemble;
+    }
+
+    @NotNull
+    public static Ensemble oneDayInThePast() {
+        Ensemble ensemble = withStartTime(ZonedDateTime.now().minusDays(1));
+        ensemble.setId(EnsembleId.of(11));
         return ensemble;
     }
 }

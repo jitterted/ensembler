@@ -22,6 +22,7 @@ public record EnsembleSummaryView(long id,
                                   List<MemberView> spectators,
                                   @Deprecated String memberStatus,
                                   List<DisplayLink> links,
+                                  boolean showActionButtons,
                                   SpectatorAction spectatorAction,
                                   ParticipantAction participantAction) {
 
@@ -50,9 +51,14 @@ public record EnsembleSummaryView(long id,
                 spectatorViews,
                 memberStatusAsString,
                 createLinksFor(ensemble, memberStatusForEnsemble),
+                showActionButtonsFor(ensemble),
                 spectatorAction,
                 participantAction
         );
+    }
+
+    private static boolean showActionButtonsFor(Ensemble ensemble) {
+        return !ensemble.endTimeIsInThePast(ZonedDateTime.now());
     }
 
     private static List<DisplayLink> createLinksFor(Ensemble ensemble, MemberStatus memberStatusForEnsemble) {
