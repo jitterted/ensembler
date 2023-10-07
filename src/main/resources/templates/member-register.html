@@ -115,7 +115,10 @@
                                     <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
                                           th:text="${member.firstName}">First Name</span>
                                 </div>
-                                <div class="group mr-1">
+
+                                <div th:if="${ensemble.participantCount} &lt; 5 and ${ensemble.showActionButtons}"
+                                    th:each="i : ${#numbers.sequence(__${ensemble.participantCount}__, 4)}"
+                                    class="group mr-1">
                                     <img class="w-6 h-6 rounded-full border-green-300 border-4 group-hover:block"
                                          src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">
                                     <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>
@@ -150,7 +153,9 @@
                                     <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
                                           th:text="${member.firstName}">First Name</span>
                                 </div>
-                                <div class="group mr-1">
+
+                                <div th:if="${ensemble.showActionButtons}"
+                                     class="group mr-1">
                                     <img class="w-6 h-6 rounded-full border-green-300 border-4 group-hover:block"
                                          src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">
                                     <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>
