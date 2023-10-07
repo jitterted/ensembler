@@ -41,7 +41,7 @@ public record EnsembleSummaryView(long id,
         MemberStatus memberStatusForEnsemble = ensemble.memberStatusFor(memberId);
         SpectatorAction spectatorAction = SpectatorAction.from(memberStatusForEnsemble);
         ParticipantAction participantAction = ParticipantAction.from(memberStatusForEnsemble,
-                                                                     ensemble.isFull() && memberStatusForEnsemble != MemberStatus.PARTICIPANT);
+                                                                     ensemble.isFull());
 
         return new EnsembleSummaryView(
                 ensemble.getId().id(),
@@ -118,11 +118,8 @@ record SpectatorAction(String actionUrl, String buttonText) {
 
 record ParticipantAction(String actionUrl, String buttonText, boolean disabled) {
 
-    public static ParticipantAction from(MemberStatus memberStatus, boolean disabled) {
-        if (disabled && memberStatus == MemberStatus.PARTICIPANT) {
-            throw new IllegalStateException("Can't disable Participate Button if Member is a Participant");
-        }
-        if (disabled) {
+    public static ParticipantAction from(MemberStatus memberStatus, boolean ensembleFull) {
+        if (ensembleFull && memberStatus != MemberStatus.PARTICIPANT) {
             return new ParticipantAction(
                     "",
                     "Cannot Participate: Ensemble Full",
