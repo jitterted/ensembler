@@ -122,7 +122,11 @@
                                 </div>
                             </div>
 
-                            <form action="#" th:action="@{${ensemble.participantAction.actionUrl}}" th:object="${register}" method="post">
+                            <form action="#" method="post"
+                                  th:action="@{${ensemble.participantAction.actionUrl}}"
+                                  th:object="${register}"
+                                  th:if="${ensemble.showActionButtons}"
+                                  >
                                 <input hidden="hidden" type="number" th:field="*{memberId}">
                                 <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
 
@@ -150,7 +154,11 @@
                                     <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>
                                 </div>
                             </div>
-                            <form action="#" th:action="@{${ensemble.spectatorAction.actionUrl}}" th:object="${register}" method="post">
+                            <form action="#" method="post"
+                                  th:action="@{${ensemble.spectatorAction.actionUrl}}"
+                                  th:object="${register}"
+                                  th:if="${ensemble.showActionButtons}"
+                            >
                                 <input hidden="hidden" type="number" th:field="*{memberId}">
                                 <input hidden="hidden" type="number" th:value="${ensemble.id}" name="ensembleId">
                                 <button type="submit" th:utext="${ensemble.spectatorAction.buttonText}"
