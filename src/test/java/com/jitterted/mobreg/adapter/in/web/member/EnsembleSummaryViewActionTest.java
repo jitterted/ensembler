@@ -3,6 +3,9 @@ package com.jitterted.mobreg.adapter.in.web.member;
 import com.jitterted.mobreg.domain.MemberStatus;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -95,10 +98,11 @@ class EnsembleSummaryViewActionTest {
                     .isEqualTo(expectedParticipantAction);
         }
         
-        @Test
-        void leaveRotationWhenMemberIsParticipant() {
+        @ParameterizedTest
+        @ValueSource(booleans = {false, true})
+        void leaveRotationWhenMemberIsParticipant(boolean ensembleFull) {
             ParticipantAction participantAction =
-                    ParticipantAction.from(MemberStatus.PARTICIPANT, false);
+                    ParticipantAction.from(MemberStatus.PARTICIPANT, ensembleFull);
 
             ParticipantAction expectedParticipantAction =
                     new ParticipantAction(
@@ -126,9 +130,10 @@ class EnsembleSummaryViewActionTest {
                     .isEqualTo(expectedParticipantAction);
         }
 
-        @Test // parameterize for Unknown/Declined/Spectator
-        void disabledTextShowsWhenButtonIsDisabled() {
-            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.UNKNOWN, true);
+        @ParameterizedTest
+        @EnumSource(names = {"UNKNOWN", "DECLINED", "SPECTATOR"})
+        void disabledTextShowsWhenButtonIsDisabled(MemberStatus memberStatus) {
+            ParticipantAction participantAction = ParticipantAction.from(memberStatus, true);
 
             ParticipantAction expectedParticipantAction =
                     new ParticipantAction(
