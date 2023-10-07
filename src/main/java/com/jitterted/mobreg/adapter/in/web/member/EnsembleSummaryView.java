@@ -40,7 +40,8 @@ public record EnsembleSummaryView(long id,
         String memberStatusAsString = memberStatusToViewString(ensemble, memberId);
         MemberStatus memberStatusForEnsemble = ensemble.memberStatusFor(memberId);
         SpectatorAction spectatorAction = SpectatorAction.from(memberStatusForEnsemble);
-        ParticipantAction participantAction = ParticipantAction.from(memberStatusForEnsemble, ensemble.isFull());
+        ParticipantAction participantAction = ParticipantAction.from(memberStatusForEnsemble,
+                                                                     ensemble.isFull() && memberStatusForEnsemble != MemberStatus.PARTICIPANT);
 
         return new EnsembleSummaryView(
                 ensemble.getId().id(),
@@ -118,11 +119,20 @@ record SpectatorAction(String actionUrl, String buttonText) {
 record ParticipantAction(String actionUrl, String buttonText, boolean disabled) {
 
     public static ParticipantAction from(MemberStatus memberStatus, boolean disabled) {
+        if (disabled && memberStatus == MemberStatus.PARTICIPANT) {
+            throw new IllegalStateException("Can't disable Participate Button if Member is a Participant");
+        }
+        if (disabled) {
+            return new ParticipantAction(
+                    "",
+                    "Cannot Participate: Ensemble Full",
+                    true);
+        }
         return switch (memberStatus) {
             case UNKNOWN, DECLINED -> new ParticipantAction(
                     "/member/accept",
                     "Participate in Rotation &#x2328;",
-                    disabled);
+                    false);
             case PARTICIPANT -> new ParticipantAction(
                     "/member/decline",
                     "Leave Rotation &#x1f44b;",
@@ -130,7 +140,7 @@ record ParticipantAction(String actionUrl, String buttonText, boolean disabled) 
             case SPECTATOR -> new ParticipantAction(
                     "/member/accept",
                     "Switch to Participant &#x2328;",
-                    disabled);
+                    false);
         };
     }
 }

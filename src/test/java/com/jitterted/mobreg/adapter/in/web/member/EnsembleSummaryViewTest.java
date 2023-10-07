@@ -215,6 +215,7 @@ class EnsembleSummaryViewTest {
             assertThat(ensembleSummaryView.showActionButtons())
                     .isFalse();
         }
+
     }
 
 

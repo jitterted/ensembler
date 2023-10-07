@@ -1,7 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.domain.MemberStatus;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -128,12 +127,17 @@ class EnsembleSummaryViewActionTest {
         }
 
         @Test // parameterize for Unknown/Declined/Spectator
-        @Disabled
-        void disabledWhenMemberIsNotParticipantAndRotationIsFull() {
-            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.UNKNOWN, false);
+        void disabledTextShowsWhenButtonIsDisabled() {
+            ParticipantAction participantAction = ParticipantAction.from(MemberStatus.UNKNOWN, true);
 
-            assertThat(participantAction.disabled())
-                    .isTrue();
+            ParticipantAction expectedParticipantAction =
+                    new ParticipantAction(
+                            "",
+                            "Cannot Participate: Ensemble Full",
+                            true);
+
+            assertThat(participantAction)
+                    .isEqualTo(expectedParticipantAction);
         }
     }
 
