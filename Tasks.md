@@ -1,36 +1,32 @@
 # Tasks
 
-[ ] Deploy: update Zoom credentials for environment variables on Railway
-
-[ ] Hide both Join & Participate buttons when the Ensemble is in the past (e.g., "pending_complete")
-    [ ] Test against EnsembleSummaryView, adding a "show" boolean for each of the Actions 
-
-[ ] Replace EnsembleSummaryView.memberStatus with ActionLinks (for right-most column)
-    [ ] Remove deprecated EnsembleSummaryView.memberStatus() method
+[ ] Replace EnsembleSummaryView.memberStatus with Links (for right-most column)
+    [ ] Update all EnsembleSummaryViewTest to NOT use EnsembleSummaryView.memberStatus()
     [ ] Remove showing memberStatus from member-register.html
+    [ ] Remove deprecated EnsembleSummaryView.memberStatus() method
 
-[ ] Add display of Spectators to admin screens
+[ ] (ADMIN) Add display of Spectators to Ensemble detail screen
+
+[ ] (ADMIN) Show number of Spectators on Ensemble summary screen
 
 [ ] Start writing HTML tests??
 
-# Optional
-
 [ ] Add notification when joining as spectator
 
-[ ] Don't show "Spectate" button if ensemble is ineligible
 [ ] Update RSVP enum to also have SPECTATOR
+
 [ ] Admin Ensemble details screen: move a Member between Participant, Spectator, and Declined
-[ ] Update labels and location of "accept" and "decline" buttons
 
 # Later
 
-* Rename "accept" to "participate" [in rotation]
-* Change storage of Member registrations from 3 separate Sets to a single Set, where there's an Enum for each (PARTICIPANT, SPECTATOR, and DECLINED)
-* Convert Ensemble to use the Snapshot Persistence pattern
+* [ ] Change storage of Member registrations from 3 separate Sets to a single Set, where there's an Enum for each (PARTICIPANT, SPECTATOR, and DECLINED)
+* [ ] Convert Ensemble to use the Snapshot Persistence pattern
+* [ ] Convert Member to use the Snapshot Persistence pattern
 
 ## UI
 
-* Change table to fixed width grid instead of flex to avoid columns changing size and moving around
+* [ ] Change table to fixed width grid instead of flex to avoid columns changing size and moving around
+* [ ] New layout for Member Registration
 
 # DONE
 
@@ -50,4 +46,11 @@
     [X] Only show "Spectate" when it makes sense (when not already Spectator)
         [X] If you are Spectator, show "Leave" button instead
 [X] Show Zoom/Calendar link when spectating
- 
+
+[X] Deploy: update Zoom credentials for environment variables on Railway
+
+[X] Hide both Join & Participate buttons when the Ensemble is in the past
+    [X] Test against EnsembleSummaryView, adding a "show" boolean for each of the Actions
+
+[X] Don't show "Spectate" button if ensemble is ineligible
+
