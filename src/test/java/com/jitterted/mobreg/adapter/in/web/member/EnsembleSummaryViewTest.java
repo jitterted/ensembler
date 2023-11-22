@@ -26,7 +26,7 @@ class EnsembleSummaryViewTest {
     private static final StubMemberService STUB_MEMBER_SERVICE = new StubMemberService();
 
     @Test
-    public void memberStatusUnknownWhenEnsembleIsEmptyCanDoAnyAction() throws Exception {
+    void memberStatusUnknownWhenEnsembleIsEmptyCanDoAnyAction() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         MemberId memberId = MemberId.of(97L);
@@ -42,7 +42,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    public void withAnotherAcceptedMemberThenMemberAcceptedIsFalse() throws Exception {
+    void withAnotherAcceptedMemberThenMemberAcceptedIsFalse() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         Member member = memberBuilder
@@ -62,7 +62,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    public void memberAcceptedIsTrueWhenMemberEnsembleParticipant() throws Exception {
+    void memberAcceptedIsTrueWhenMemberEnsembleParticipant() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         Member member = memberBuilder
@@ -79,7 +79,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    public void spectatorIsInSpectatorList() throws Exception {
+    void spectatorIsInSpectatorList() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         Member member = memberBuilder
@@ -121,7 +121,7 @@ class EnsembleSummaryViewTest {
         }
 
         @Test
-        public void forParticipantAreCalendarAndMeeting() throws Exception {
+        void forParticipantAreCalendarAndMeeting() throws Exception {
             Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
             ensemble.changeMeetingLinkTo(URI.create("https://zoom.us/test"));
             MemberId memberId = MemberId.of(42);
@@ -152,7 +152,7 @@ class EnsembleSummaryViewTest {
         }
 
         @Test
-        public void forCompletedEnsembleAndMemberParticipantIsRecording() throws Exception {
+        void forCompletedEnsembleAndMemberParticipantIsRecording() throws Exception {
             Fixture fixture = completedEnsembleWithRecordingLinkOf("https://recording.link/abc123");
 
             EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(fixture.ensemble(),
@@ -178,7 +178,7 @@ class EnsembleSummaryViewTest {
         }
 
         @Test
-        public void forPendingCompletedIsRecordingComingSoon() throws Exception {
+        void forPendingCompletedIsRecordingComingSoon() throws Exception {
             Ensemble ensemble = EnsembleFactory.withStartTime(ZonedDateTime.now().minusHours(2));
             ensemble.setId(EnsembleId.of(11));
 
@@ -220,7 +220,7 @@ class EnsembleSummaryViewTest {
 
 
     @Test
-    public void unknownMemberWhenEnsembleIsFullThenParticipateIsDisabled() throws Exception {
+    void unknownMemberWhenEnsembleIsFullThenParticipateIsDisabled() throws Exception {
         Ensemble ensemble = EnsembleFactory.fullEnsembleOneDayInTheFuture();
 
         MemberId memberIdOfUnknownMember = MemberId.of(99L);
@@ -244,7 +244,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    public void viewIndicatesCanAcceptIfEnsembleIsNotFull() throws Exception {
+    void viewIndicatesCanAcceptIfEnsembleIsNotFull() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         EnsembleFactory.acceptCountMembersFor(2, ensemble);
 
@@ -255,7 +255,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    public void ensembleWithNoOneAcceptedShowsNoAcceptedMembers() throws Exception {
+    void ensembleWithNoOneAcceptedShowsNoAcceptedMembers() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
 
@@ -267,7 +267,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    public void ensembleWithAcceptedMembersGetsInfoOnAndShowsWhoAccepted() throws Exception {
+    void ensembleWithAcceptedMembersGetsInfoOnAndShowsWhoAccepted() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         MemberService memberService = memberBuilder.memberService();

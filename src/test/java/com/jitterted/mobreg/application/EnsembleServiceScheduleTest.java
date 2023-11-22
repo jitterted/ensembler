@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleServiceScheduleTest {
 
     @Test
-    public void singleScheduledEnsembleIsReturnedForAllEnsembles() throws Exception {
+    void singleScheduledEnsembleIsReturnedForAllEnsembles() throws Exception {
         EnsembleService ensembleService = EnsembleServiceFactory.withDefaults();
 
         ensembleService.scheduleEnsemble("Name", ZonedDateTime.now());
@@ -23,7 +23,7 @@ class EnsembleServiceScheduleTest {
     }
 
     @Test
-    public void ensembleScheduledWithManuallyEnteredZoomLinkThenHasZoomLink() throws Exception {
+    void ensembleScheduledWithManuallyEnteredZoomLinkThenHasZoomLink() throws Exception {
         EnsembleService ensembleService = EnsembleServiceFactory.withDefaults();
 
         ensembleService.scheduleEnsemble("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
@@ -35,7 +35,7 @@ class EnsembleServiceScheduleTest {
     }
 
     @Test
-    public void ensembleScheduledThenZoomLinkFetchedFromApiHasConferenceDetails() throws Exception {
+    void ensembleScheduledThenZoomLinkFetchedFromApiHasConferenceDetails() throws Exception {
         ConferenceDetails expectedConferenceDetails = new ConferenceDetails("123",
                                                                             URI.create("https://zoom.us/startUrl"),
                                                                             URI.create("https://zoom.us/joinUrl"));
@@ -50,7 +50,7 @@ class EnsembleServiceScheduleTest {
     }
 
     @Test
-    public void apiFailedToReturnValidConferenceDetailsThenConferenceDetailsIsDefaultUnscheduled() throws Exception {
+    void apiFailedToReturnValidConferenceDetailsThenConferenceDetailsIsDefaultUnscheduled() throws Exception {
         EnsembleService ensembleService = EnsembleServiceFactory.with(new FailsToCreateMeetingConferenceScheduler());
 
         ensembleService.scheduleEnsembleWithVideoConference("With Zoom", ZonedDateTime.now());

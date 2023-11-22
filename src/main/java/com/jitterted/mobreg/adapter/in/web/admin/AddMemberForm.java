@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public class AddMemberForm {
     @NotBlank

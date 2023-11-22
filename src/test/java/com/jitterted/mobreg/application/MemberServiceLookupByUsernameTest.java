@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.*;
 class MemberServiceLookupByUsernameTest {
 
     @Test
-    public void findingGithubUsernameWithUppercaseLettersFoundInAllLowercaseDatabase() throws Exception {
+    void findingGithubUsernameWithUppercaseLettersFoundInAllLowercaseDatabase() throws Exception {
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         memberService.save(new Member("Mixed", "mixedcase", "ROLE_USER", "ROLE_MEMBER"));
 

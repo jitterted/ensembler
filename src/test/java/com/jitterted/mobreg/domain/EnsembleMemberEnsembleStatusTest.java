@@ -10,7 +10,7 @@ class EnsembleMemberEnsembleStatusTest {
     private static final ZonedDateTime UTC_2021_11_22_12 = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 12);
 
     @Test
-    public void unknownMemberAndPastEnsembleThenStatusHidden() throws Exception {
+    void unknownMemberAndPastEnsembleThenStatusHidden() throws Exception {
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 11);
         Ensemble pastEnsemble = EnsembleFactory.withStartTime(startDateTime);
         MemberId memberId = MemberId.of(37);
@@ -20,7 +20,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void unknownMemberAndFutureEnsembleAndHasSpaceThenStatusUnknown() throws Exception {
+    void unknownMemberAndFutureEnsembleAndHasSpaceThenStatusUnknown() throws Exception {
         Ensemble futureEnsemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberId.of(31);
 
@@ -29,7 +29,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void unknownMemberAndFutureEnsembleAndIsFullThenStatusFull() throws Exception {
+    void unknownMemberAndFutureEnsembleAndIsFullThenStatusFull() throws Exception {
         Ensemble futureEnsemble = EnsembleFactory.ensembleAtCapacityWithStartTime(2022, 1, 3, 9);
         MemberId memberIdIsUnknown = MemberId.of(33);
 
@@ -38,7 +38,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void declinedMemberAndFutureEnsembleAndHasSpaceThenStatusDeclined() throws Exception {
+    void declinedMemberAndFutureEnsembleAndHasSpaceThenStatusDeclined() throws Exception {
         Ensemble futureEnsemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberId.of(31);
         futureEnsemble.declinedBy(memberId);
@@ -48,7 +48,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void declinedMemberAndFutureEnsembleIsFullThenStatusDeclinedFull() throws Exception {
+    void declinedMemberAndFutureEnsembleIsFullThenStatusDeclinedFull() throws Exception {
         Ensemble futureFullEnsemble = EnsembleFactory.ensembleAtCapacityWithStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberId.of(31);
         futureFullEnsemble.declinedBy(memberId);
@@ -58,7 +58,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void acceptedMemberAndPastUncompletedEnsembleThenStatusPendingCompleted() throws Exception {
+    void acceptedMemberAndPastUncompletedEnsembleThenStatusPendingCompleted() throws Exception {
         Ensemble pastEnsemble = EnsembleFactory.withStartTime(2021, 11, 21, 11);
         MemberId memberId = MemberId.of(41);
         pastEnsemble.acceptedBy(memberId);
@@ -68,7 +68,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void acceptedMemberAndCompletedEnsembleThenStatusCompleted() throws Exception {
+    void acceptedMemberAndCompletedEnsembleThenStatusCompleted() throws Exception {
         Ensemble completedEnsemble = EnsembleFactory.withStartTime(2021, 11, 21, 11);
         MemberId memberId = MemberId.of(41);
         completedEnsemble.acceptedBy(memberId);
@@ -79,7 +79,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void acceptedMemberAndFutureEnsembleThenStatusAccepted() throws Exception {
+    void acceptedMemberAndFutureEnsembleThenStatusAccepted() throws Exception {
         Ensemble futureEnsemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberId.of(41);
         futureEnsemble.acceptedBy(memberId);
@@ -88,9 +88,9 @@ class EnsembleMemberEnsembleStatusTest {
                 .isEqualByComparingTo(MemberEnsembleStatus.ACCEPTED);
     }
 
-    @Test
     //   Member = Accepted,  -> IN_PROGRESS: only show Zoom link
-    public void acceptedMemberAndInProgressEnsembleThenStatusInGracePeriod() throws Exception {
+    @Test
+    void acceptedMemberAndInProgressEnsembleThenStatusInGracePeriod() throws Exception {
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 11);
         Ensemble inGracePeriodEnsemble = EnsembleFactory.withStartTime(startDateTime);
         MemberId memberId = MemberId.of(41);
@@ -102,7 +102,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void acceptedMemberAndCanceledThenStatusIsCanceled() throws Exception {
+    void acceptedMemberAndCanceledThenStatusIsCanceled() throws Exception {
         Member member = new Member("first", "username");
         member.setId(MemberId.of(11));
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
@@ -118,7 +118,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void unknownMemberEnsembleInFutureWhenCanceledThenStatusIsHidden() throws Exception {
+    void unknownMemberEnsembleInFutureWhenCanceledThenStatusIsHidden() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
         ensemble.cancel();
         MemberId memberId = MemberId.of(99);
@@ -130,7 +130,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void declinedMemberEnsembleInFutureWhenCanceledThenStatusIsHidden() throws Exception {
+    void declinedMemberEnsembleInFutureWhenCanceledThenStatusIsHidden() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberId.of(41);
         ensemble.declinedBy(memberId);
@@ -143,7 +143,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void acceptedMemberAndLaterThanGracePeriodAndNotCompletedThenStatusIsHidden() throws Exception {
+    void acceptedMemberAndLaterThanGracePeriodAndNotCompletedThenStatusIsHidden() throws Exception {
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2022, 2, 3, 16);
         Ensemble inGracePeriodEnsemble = EnsembleFactory.withStartTime(startDateTime);
         MemberId memberId = MemberId.of(41);
@@ -155,7 +155,7 @@ class EnsembleMemberEnsembleStatusTest {
     }
 
     @Test
-    public void unknownOrDeclinedWhenEnsembleStartedStatusIsHidden() throws Exception {
+    void unknownOrDeclinedWhenEnsembleStartedStatusIsHidden() throws Exception {
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2022, 2, 3, 16);
         Ensemble alreadyStartedEnsemble = EnsembleFactory.withStartTime(startDateTime);
         MemberId memberId = MemberId.of(41);

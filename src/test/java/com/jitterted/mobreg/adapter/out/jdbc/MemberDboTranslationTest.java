@@ -7,10 +7,10 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class MemberDboTranslationTest {
+class MemberDboTranslationTest {
 
     @Test
-    public void memberWithRolesTranslatedToEntityWithRoles() throws Exception {
+    void memberWithRolesTranslatedToEntityWithRoles() throws Exception {
         Member member = new Member("first", "githubuser", "ROLE_USER", "ROLE_MEMBER");
 
         MemberDbo memberDbo = MemberDbo.from(member);
@@ -20,7 +20,7 @@ public class MemberDboTranslationTest {
     }
 
     @Test
-    public void entityWithRolesTranslatedToMemberWithRoles() throws Exception {
+    void entityWithRolesTranslatedToMemberWithRoles() throws Exception {
         MemberDbo memberDbo = new MemberDbo();
         memberDbo.firstName = "first";
         memberDbo.githubUsername = "githubusername";
@@ -35,7 +35,7 @@ public class MemberDboTranslationTest {
     }
 
     @Test
-    public void entityWithEmailTranslatedToDomainMemberWithEmail() throws Exception {
+    void entityWithEmailTranslatedToDomainMemberWithEmail() throws Exception {
         MemberDbo memberDbo = new MemberDbo();
         memberDbo.email = "member@example.com";
         memberDbo.firstName = "member";
@@ -51,7 +51,7 @@ public class MemberDboTranslationTest {
     }
 
     @Test
-    public void domainMemberWithEmailTranslatedToDataEntityWithEmail() throws Exception {
+    void domainMemberWithEmailTranslatedToDataEntityWithEmail() throws Exception {
         Member member = new Member("member", "ghuser", "ROLE_THREE");
         member.changeEmailTo("ghuser@example.com");
 

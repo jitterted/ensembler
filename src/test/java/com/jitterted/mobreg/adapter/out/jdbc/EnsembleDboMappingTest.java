@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleDboMappingTest {
 
     @Test
-    public void databaseEntityToDomainIsMappedCorrectly() throws Exception {
+    void databaseEntityToDomainIsMappedCorrectly() throws Exception {
         EnsembleDbo ensembleDbo = new EnsembleDbo();
         ensembleDbo.setId(19L);
         ensembleDbo.setState("CANCELED");
@@ -55,7 +55,7 @@ class EnsembleDboMappingTest {
     }
 
     @Test
-    public void domainToDatabaseEntityIsMappedCorrectly() throws Exception {
+    void domainToDatabaseEntityIsMappedCorrectly() throws Exception {
         ZonedDateTime utc2021091316000 = ZonedDateTime.of(2021, 9, 13, 16, 0, 0, 0, ZoneOffset.UTC);
         Ensemble ensemble = new Ensemble("Domain", utc2021091316000);
         ensemble.changeConferenceDetailsTo(new ConferenceDetails("someMeetingId", URI.create("https://start.us/"), URI.create("https://join.us/")));

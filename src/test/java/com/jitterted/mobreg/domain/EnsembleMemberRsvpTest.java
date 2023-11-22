@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleMemberRsvpTest {
 
     @Test
-    public void unregisteredMemberIsRsvpUnknown() throws Exception {
+    void unregisteredMemberIsRsvpUnknown() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(73);
 
@@ -16,7 +16,7 @@ class EnsembleMemberRsvpTest {
     }
 
     @Test
-    public void registeredMemberIsRsvpAccepted() throws Exception {
+    void registeredMemberIsRsvpAccepted() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(73);
 
@@ -27,7 +27,7 @@ class EnsembleMemberRsvpTest {
     }
 
     @Test
-    public void memberWhoDeclinesIsRsvpDeclined() throws Exception {
+    void memberWhoDeclinesIsRsvpDeclined() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(97);
 
@@ -38,7 +38,7 @@ class EnsembleMemberRsvpTest {
     }
 
     @Test
-    public void acceptedMemberWhenDeclinesIsRsvpDeclined() throws Exception {
+    void acceptedMemberWhenDeclinesIsRsvpDeclined() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(97);
         ensemble.acceptedBy(memberId);
@@ -50,7 +50,7 @@ class EnsembleMemberRsvpTest {
     }
 
     @Test
-    public void declinedMemberWhenAcceptsAndSpaceAvailableIsRsvpAccepted() throws Exception {
+    void declinedMemberWhenAcceptsAndSpaceAvailableIsRsvpAccepted() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(79);
         ensemble.declinedBy(memberId);

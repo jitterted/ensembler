@@ -3,7 +3,6 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,7 +14,6 @@ public class MemberRepositoryDataJdbcAdapter implements MemberRepository {
 
     private final MemberJdbcRepository memberJdbcRepository;
 
-    @Autowired
     public MemberRepositoryDataJdbcAdapter(MemberJdbcRepository memberJdbcRepository) {
         this.memberJdbcRepository = memberJdbcRepository;
     }

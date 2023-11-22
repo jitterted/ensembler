@@ -2,13 +2,13 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.DummyMemberRepository;
-import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberFactory;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleDetailViewTest {
 
     @Test
-    public void ensembleIdIsTranslatedFromDomainIntoView() throws Exception {
+    void ensembleIdIsTranslatedFromDomainIntoView() throws Exception {
         MemberService memberService = new DefaultMemberService(new DummyMemberRepository());
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(23));
@@ -29,7 +29,7 @@ class EnsembleDetailViewTest {
     }
 
     @Test
-    public void viewContainsDetailsForAcceptedAndDeclinedMembersInEnsemble() throws Exception {
+    void viewContainsDetailsForAcceptedAndDeclinedMembersInEnsemble() throws Exception {
         Ensemble ensemble = new Ensemble("view", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(73));
         MemberRepository memberRepository = new InMemoryMemberRepository();

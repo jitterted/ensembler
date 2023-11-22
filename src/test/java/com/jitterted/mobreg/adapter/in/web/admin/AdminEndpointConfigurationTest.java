@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Tag("mvc")
 // TODO: roles aren't needed here anymore?
 @WithMockUser(username = "username", authorities = {"ROLE_MEMBER", "ROLE_ADMIN"})
-public class AdminEndpointConfigurationTest {
+class AdminEndpointConfigurationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,7 +52,7 @@ public class AdminEndpointConfigurationTest {
 
     @Disabled // need to figure out what happened to oAuth
     @Test
-    public void getOfDashboardEndpointReturns200Ok() throws Exception {
+    void getOfDashboardEndpointReturns200Ok() throws Exception {
         createStubMemberRepositoryWithMember(1L, "Ted", "tedyoung", "ROLE_MEMBER", "ROLE_ADMIN");
         mockMvc.perform(get("/admin/dashboard")
 //                                .with(OAuth2UserFactory.oAuth2User("ROLE_ADMIN"))
@@ -61,7 +61,7 @@ public class AdminEndpointConfigurationTest {
     }
 
     @Test
-    public void getOfEnsembleDetailEndpointReturns200Ok() throws Exception {
+    void getOfEnsembleDetailEndpointReturns200Ok() throws Exception {
         createStubEnsembleServiceReturningEnsembleWithIdOf(13L);
 
         mockMvc.perform(get("/admin/ensemble/13"))
@@ -69,7 +69,7 @@ public class AdminEndpointConfigurationTest {
     }
 
     @Test
-    public void postToScheduleEnsembleEndpointRedirects() throws Exception {
+    void postToScheduleEnsembleEndpointRedirects() throws Exception {
         mockMvc.perform(post("/admin/schedule")
                                 .param("name", "test")
                                 .param("zoomMeetingLink", "https://zoom.us/j/test?pwd=testy")
@@ -81,7 +81,7 @@ public class AdminEndpointConfigurationTest {
     }
 
     @Test
-    public void postToChangeEnsembleEndpointRedirects() throws Exception {
+    void postToChangeEnsembleEndpointRedirects() throws Exception {
         createStubEnsembleServiceReturningEnsembleWithIdOf(17L);
         mockMvc.perform(post("/admin/ensemble/17")
                                 .param("name", "New Name")
@@ -94,7 +94,7 @@ public class AdminEndpointConfigurationTest {
     }
 
     @Test
-    public void postToRegisterParticipantEndpointRedirects() throws Exception {
+    void postToRegisterParticipantEndpointRedirects() throws Exception {
         createStubEnsembleServiceReturningEnsembleWithIdOf(23);
         createStubMemberRepositoryWithMember(1L, "participant", "mygithub", "ROLE_USER", "ROLE_MEMBER");
         mockMvc.perform(post("/admin/register")
@@ -106,7 +106,7 @@ public class AdminEndpointConfigurationTest {
     }
 
     @Test
-    public void postToCompleteEndpointRedirects() throws Exception {
+    void postToCompleteEndpointRedirects() throws Exception {
         createStubEnsembleServiceReturningEnsembleWithIdOf(13);
         mockMvc.perform(post("/admin/ensemble/13/complete")
                                 .param("recordingLink", "https://completed.link")
@@ -115,7 +115,7 @@ public class AdminEndpointConfigurationTest {
     }
 
     @Test
-    public void postToCancelEndpointRedirects() throws Exception {
+    void postToCancelEndpointRedirects() throws Exception {
         createStubEnsembleServiceReturningEnsembleWithIdOf(11);
         mockMvc.perform(post("/admin/ensemble/11/cancel")
                                 .with(csrf()))

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.*;
 class DateTimeFormattingTest {
 
     @Test
-    public void browserFormattedDateAndTimeAreConvertedToZonedDateTime() throws Exception {
+    void browserFormattedDateAndTimeAreConvertedToZonedDateTime() throws Exception {
         String rawDate = "2021-04-30";
         String rawTime = "09:00";
 
@@ -23,7 +23,7 @@ class DateTimeFormattingTest {
     }
 
     @Test
-    public void givenDateTimeInUtcFormattedAsIso8601WithSuffixOfZ() throws Exception {
+    void givenDateTimeInUtcFormattedAsIso8601WithSuffixOfZ() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.of(2021, 4, 30, 9, 0, 0, 0);
         ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneOffset.UTC);
 
@@ -34,7 +34,7 @@ class DateTimeFormattingTest {
     }
 
     @Test
-    public void dateTimeDuringStandardTimeConvertedToUtcCorrectly() throws Exception {
+    void dateTimeDuringStandardTimeConvertedToUtcCorrectly() throws Exception {
         int hourInLocalTime = 11;
         LocalDateTime dateTimeDuringStandardTime = LocalDateTime.of(2021, 11, 8, hourInLocalTime, 0, 0, 0);
         ZonedDateTime zonedDateTimeDuringStandardTime =
@@ -48,7 +48,7 @@ class DateTimeFormattingTest {
     }
 
     @Test
-    public void dateTimeDuringDaylightSavingsConvertedToUtcCorrectly() throws Exception {
+    void dateTimeDuringDaylightSavingsConvertedToUtcCorrectly() throws Exception {
         int hourInLocalTime = 9;
         LocalDateTime dateTimeDuringDaylightSavingsTime = LocalDateTime.of(2021, 11, 1, hourInLocalTime, 0, 0, 0);
         ZonedDateTime zonedDateTimeDuringDaylightSavingsTime =

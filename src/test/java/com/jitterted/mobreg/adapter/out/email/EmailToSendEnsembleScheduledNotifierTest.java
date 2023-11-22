@@ -11,10 +11,10 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class EmailToSendEnsembleScheduledNotifierTest {
+class EmailToSendEnsembleScheduledNotifierTest {
 
     @Test
-    public void memberWithEmailWhenEnsembleScheduledThenCustomEmailSentToMember() throws Exception {
+    void memberWithEmailWhenEnsembleScheduledThenCustomEmailSentToMember() throws Exception {
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         memberBuilder.withEmail("name@example.com")
                      .withTimezone("America/Los_Angeles")
@@ -37,7 +37,7 @@ public class EmailToSendEnsembleScheduledNotifierTest {
     }
 
     @Test
-    public void membersInDifferentTimeZonesGetCustomizedEnsembleScheduledEmail() throws Exception {
+    void membersInDifferentTimeZonesGetCustomizedEnsembleScheduledEmail() throws Exception {
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         memberBuilder.withEmail("pst@example.com").withTimezone("America/Los_Angeles").buildAndSave();
         memberBuilder.withEmail("est@example.com").withTimezone("America/New_York").buildAndSave();

@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
 class GitHubAuthorityMapperTest {
 
     @Test
-    public void usernameFoundInMemberRepositoryGetsRolesFromMember() throws Exception {
+    void usernameFoundInMemberRepositoryGetsRolesFromMember() throws Exception {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member = new Member("Member", "member_username", "ROLE_MEMBER", "ROLE_USER");
         memberRepository.save(member);
@@ -31,7 +31,7 @@ class GitHubAuthorityMapperTest {
     }
 
     @Test
-    public void usernameNotInMemberRepositoryHasOnlyUserRole() throws Exception {
+    void usernameNotInMemberRepositoryHasOnlyUserRole() throws Exception {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
 
         GitHubGrantedAuthoritiesMapper gitHubGrantedAuthoritiesMapper =

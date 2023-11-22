@@ -4,7 +4,6 @@ import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -24,7 +23,6 @@ public class GitHubGrantedAuthoritiesMapper implements GrantedAuthoritiesMapper 
 
     private final MemberRepository memberRepository;
 
-    @Autowired
     public GitHubGrantedAuthoritiesMapper(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }

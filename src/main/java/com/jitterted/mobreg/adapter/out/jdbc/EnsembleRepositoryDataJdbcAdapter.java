@@ -3,7 +3,6 @@ package com.jitterted.mobreg.adapter.out.jdbc;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,7 +14,6 @@ public class EnsembleRepositoryDataJdbcAdapter implements EnsembleRepository {
 
     private final EnsembleJdbcRepository ensembleJdbcRepository;
 
-    @Autowired
     public EnsembleRepositoryDataJdbcAdapter(EnsembleJdbcRepository ensembleJdbcRepository) {
         this.ensembleJdbcRepository = ensembleJdbcRepository;
     }

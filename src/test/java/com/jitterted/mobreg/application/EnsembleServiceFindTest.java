@@ -13,10 +13,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class EnsembleServiceFindTest {
+class EnsembleServiceFindTest {
 
     @Test
-    public void whenRepositoryIsEmptyFindReturnsEmptyOptional() throws Exception {
+    void whenRepositoryIsEmptyFindReturnsEmptyOptional() throws Exception {
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(new InMemoryEnsembleRepository());
 
         assertThat(ensembleService.findById(EnsembleId.of(9999)))
@@ -24,7 +24,7 @@ public class EnsembleServiceFindTest {
     }
 
     @Test
-    public void whenRepositoryHasEnsembleFindByItsIdReturnsItInAnOptional() throws Exception {
+    void whenRepositoryHasEnsembleFindByItsIdReturnsItInAnOptional() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble savedEnsemble = ensembleRepository.save(new Ensemble("test", ZonedDateTime.now()));
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
@@ -36,7 +36,7 @@ public class EnsembleServiceFindTest {
     }
 
     @Test
-    public void allEnsemblesOrderedByDateTimeDescendingIsInCorrectOrder() throws Exception {
+    void allEnsemblesOrderedByDateTimeDescendingIsInCorrectOrder() throws Exception {
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         ensembleService.scheduleEnsemble("two", ZonedDateTime.of(2021, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()));

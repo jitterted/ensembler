@@ -29,7 +29,7 @@ class MemberControllerTest {
     private static final MemberService CRASH_TEST_DUMMY_MEMBER_SERVICE = null;
 
     @Test
-    public void ensembleFormContainsMemberIdForOAuth2User() throws Exception {
+    void ensembleFormContainsMemberIdForOAuth2User() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         ensembleRepository.save(new Ensemble("GET Test", ZonedDateTime.now()));
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
@@ -56,7 +56,7 @@ class MemberControllerTest {
     }
 
     @Test
-    public void memberRegistersForEnsembleWillBeRegisteredForThatEnsemble() throws Exception {
+    void memberRegistersForEnsembleWillBeRegisteredForThatEnsemble() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
@@ -76,7 +76,7 @@ class MemberControllerTest {
     }
 
     @Test
-    public void memberDeclinesWillBeDeclinedForEnsemble() throws Exception {
+    void memberDeclinesWillBeDeclinedForEnsemble() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
@@ -94,7 +94,7 @@ class MemberControllerTest {
     }
 
     @Test
-    public void memberJoiningAsSpectatorBecomesSpectator() throws Exception {
+    void memberJoiningAsSpectatorBecomesSpectator() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();

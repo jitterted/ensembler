@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleServiceEditExistingTest {
 
     @Test
-    public void changesToNameAndDateTimeForExistingEnsembleAreSaved() throws Exception {
+    void changesToNameAndDateTimeForExistingEnsembleAreSaved() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         Ensemble ensemble = new Ensemble("Before", URI.create("https://zoom.us/before"),
@@ -36,7 +36,7 @@ class EnsembleServiceEditExistingTest {
     }
 
     @Test
-    public void changingZoomLinkToBeBlankThenFetchesNewLinkViaSchedulerApi() throws Exception {
+    void changingZoomLinkToBeBlankThenFetchesNewLinkViaSchedulerApi() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         final URI newZoomMeetingLink = URI.create("https://us06web.zoom.us/j/83912958607?pwd=U0hNbk84a2IraEMrWi9WZ2xYalFCZz09");
         VideoConferenceScheduler videoConferenceScheduler = new StubConferenceScheduler(newZoomMeetingLink);
@@ -55,7 +55,7 @@ class EnsembleServiceEditExistingTest {
     }
 
     @Test
-    public void changingZoomLinkWithValidLinkThenStoresNewLinkDoesNotFetchFromScheduler() throws Exception {
+    void changingZoomLinkWithValidLinkThenStoresNewLinkDoesNotFetchFromScheduler() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 19, 17);

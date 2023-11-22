@@ -4,7 +4,6 @@ import com.jitterted.mobreg.adapter.in.web.GitHubUsernamePrincipalExtractor;
 import com.jitterted.mobreg.application.port.InviteRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Member;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +21,6 @@ public class InviteProcessController {
     private final MemberRepository memberRepository;
     private final InviteRepository inviteRepository;
 
-    @Autowired
     public InviteProcessController(MemberRepository memberRepository, InviteRepository inviteRepository) {
         this.memberRepository = memberRepository;
         this.inviteRepository = inviteRepository;

@@ -29,7 +29,7 @@ class PostgresqlEntityTest extends PostgresTestcontainerBase {
     MemberJdbcRepository memberJdbcRepository;
 
     @Test
-    public void ensembleEntityStoredViaJdbcIsRetrievedWithMembers() throws Exception {
+    void ensembleEntityStoredViaJdbcIsRetrievedWithMembers() throws Exception {
         Ensemble original = new Ensemble("entity", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
         original.acceptedBy(MemberId.of(4L));
         original.acceptedBy(MemberId.of(5L));
@@ -66,7 +66,7 @@ class PostgresqlEntityTest extends PostgresTestcontainerBase {
     }
 
     @Test
-    public void memberEntityStoredViaJdbcIsRetrievedAsOriginal() throws Exception {
+    void memberEntityStoredViaJdbcIsRetrievedAsOriginal() throws Exception {
         Member originalMember = new Member("firstName", "github");
         originalMember.changeEmailTo("email@example.com");
         originalMember.changeTimeZoneTo(ZoneId.of("America/Los_Angeles"));

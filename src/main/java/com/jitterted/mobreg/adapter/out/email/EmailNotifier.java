@@ -8,7 +8,6 @@ import com.jitterted.mobreg.domain.Member;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +28,6 @@ public class EmailNotifier implements Notifier {
     private final Emailer emailer;
     private final GoogleCalendarLinkCreator googleCalendarLinkCreator = new GoogleCalendarLinkCreator();
 
-    @Autowired
     public EmailNotifier(MemberService memberService, Emailer emailer) {
         this.memberService = memberService;
         this.emailer = emailer;

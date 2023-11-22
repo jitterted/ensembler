@@ -4,7 +4,6 @@ import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
 import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
-import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
@@ -14,6 +13,7 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.ZonedDateTimeFactory;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.*;
 class AdminDashboardControllerTest {
 
     @Test
-    public void givenOneEnsembleResultsInEnsembleInViewModel() throws Exception {
+    void givenOneEnsembleResultsInEnsembleInViewModel() throws Exception {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member = MemberFactory.createMember(0, "ted", "tedyoung");
         memberRepository.save(member);
@@ -51,7 +51,7 @@ class AdminDashboardControllerTest {
     }
 
     @Test
-    public void scheduleNewEnsembleResultsInEnsembleCreatedInRepository() throws Exception {
+    void scheduleNewEnsembleResultsInEnsembleCreatedInRepository() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         AdminDashboardController adminDashboardController = createAdminDashboardController(ensembleRepository);
 
@@ -65,7 +65,7 @@ class AdminDashboardControllerTest {
     }
 
     @Test
-    public void changeExistingEnsembleResultsInChangesSaved() throws Exception {
+    void changeExistingEnsembleResultsInChangesSaved() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("Old Name", ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 30, 9));
         ensembleRepository.save(ensemble);
@@ -86,7 +86,7 @@ class AdminDashboardControllerTest {
 
 
     @Test
-    public void completeEnsembleCompletesTheEnsembleWithRecordingLinkAndRedirects() throws Exception {
+    void completeEnsembleCompletesTheEnsembleWithRecordingLinkAndRedirects() throws Exception {
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("to be completed", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(19));
@@ -105,7 +105,7 @@ class AdminDashboardControllerTest {
     }
 
     @Test
-    public void cancelEnsembleThenEnsembleIsCanceled() throws Exception {
+    void cancelEnsembleThenEnsembleIsCanceled() throws Exception {
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(EnsembleFactory.withStartTimeNow());
         long ensembleId = builder.lastSavedEnsembleId().id();
@@ -123,7 +123,7 @@ class AdminDashboardControllerTest {
 
     @Test
     @Deprecated
-    public void manuallyRegisterExistingMemberForEnsemble() throws Exception {
+    void manuallyRegisterExistingMemberForEnsemble() throws Exception {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member1 = MemberFactory.createMember(0, "ted", "tedyoung");
         memberRepository.save(member1);

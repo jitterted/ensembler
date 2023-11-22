@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.*;
 class ScheduleEnsembleFormTest {
 
     @Test
-    public void formConvertsDateTimeBasedOnGivenTimezone() throws Exception {
+    void formConvertsDateTimeBasedOnGivenTimezone() throws Exception {
         ScheduleEnsembleForm form = new ScheduleEnsembleForm("test", "", "2021-09-13", "20:00", "America/Los_Angeles");
 
         ZonedDateTime dateTimeInUtc = form.getDateTimeInUtc();
@@ -24,7 +24,7 @@ class ScheduleEnsembleFormTest {
     }
 
     @Test
-    public void ensembleDateTimeConvertedToFormBasedDateAndTimeFields() throws Exception {
+    void ensembleDateTimeConvertedToFormBasedDateAndTimeFields() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTime(2021, 12, 15, 21);
 
         // Assumes this form is always in America/Los_Angeles

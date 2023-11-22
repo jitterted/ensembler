@@ -27,7 +27,7 @@ class EnsembleServiceMemberTest extends PostgresTestcontainerBase {
     MemberRepository memberRepository;
 
     @Test
-    public void existingMemberRegistersForEnsembleThenIsRegisteredMember() throws Exception {
+    void existingMemberRegistersForEnsembleThenIsRegisteredMember() throws Exception {
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository, memberRepository);
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
         EnsembleId ensembleId = ensembleRepository.save(ensemble).getId();

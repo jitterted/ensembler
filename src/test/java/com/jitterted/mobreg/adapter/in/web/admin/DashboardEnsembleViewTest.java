@@ -3,12 +3,12 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
-import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.ConcurrentModel;
@@ -19,10 +19,10 @@ import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class DashboardEnsembleViewTest {
+class DashboardEnsembleViewTest {
 
     @Test
-    public void detailViewOfExistingEnsembleByItsIdIsReturned() throws Exception {
+    void detailViewOfExistingEnsembleByItsIdIsReturned() throws Exception {
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
@@ -39,7 +39,7 @@ public class DashboardEnsembleViewTest {
     }
 
     @Test
-    public void detailViewOfExistingEnsembleWithOneParticipantReturnsEnsembleWithParticipantView() throws Exception {
+    void detailViewOfExistingEnsembleWithOneParticipantReturnsEnsembleWithParticipantView() throws Exception {
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         Member member = MemberFactory.createMember(11, "name", "github");
         memberService.save(member);
@@ -61,7 +61,7 @@ public class DashboardEnsembleViewTest {
     }
 
     @Test
-    public void detailViewOfNonExistentEnsembleReturns404NotFound() throws Exception {
+    void detailViewOfNonExistentEnsembleReturns404NotFound() throws Exception {
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);

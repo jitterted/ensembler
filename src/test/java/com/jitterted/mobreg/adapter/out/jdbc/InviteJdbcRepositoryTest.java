@@ -13,7 +13,7 @@ class InviteJdbcRepositoryTest extends PostgresTestcontainerBase {
     InviteJdbcRepository inviteJdbcRepository;
 
     @Test
-    public void existsForInviteAndUsernameWorksAsExpected() throws Exception {
+    void existsForInviteAndUsernameWorksAsExpected() throws Exception {
         InviteDbo inviteDbo = new InviteDbo();
         inviteDbo.setToken("token123");
         inviteDbo.setGithubUsername("HowlingArcticFox");
@@ -40,7 +40,7 @@ class InviteJdbcRepositoryTest extends PostgresTestcontainerBase {
     }
 
     @Test
-    public void markingInviteAsUsedWillNoLongerBeFound() throws Exception {
+    void markingInviteAsUsedWillNoLongerBeFound() throws Exception {
         InviteDbo inviteDbo = new InviteDbo();
         inviteDbo.setToken("token007");
         inviteDbo.setGithubUsername("howlingarcticfox");

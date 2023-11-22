@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.*;
 class MemberManagementControllerTest {
 
     @Test
-    public void membersViewReturnsViewsOfAllMembers() throws Exception {
+    void membersViewReturnsViewsOfAllMembers() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         memberRepository.save(new Member("First", "firstusername", "ROLE_MEMBER"));
         memberRepository.save(new Member("Second", "secondusername", "ROLE_ADMIN"));
@@ -39,7 +39,7 @@ class MemberManagementControllerTest {
     }
 
     @Test
-    public void addMemberShouldAddMemberFromFormContent() throws Exception {
+    void addMemberShouldAddMemberFromFormContent() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         MemberManagementController memberManagementController = new MemberManagementController(memberRepository);
 

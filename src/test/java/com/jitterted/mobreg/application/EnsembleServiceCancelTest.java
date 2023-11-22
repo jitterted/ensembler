@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleServiceCancelTest {
 
     @Test
-    public void canceledEnsembleIsSavedInRepositoryAsCanceled() throws Exception {
+    void canceledEnsembleIsSavedInRepositoryAsCanceled() throws Exception {
         Ensemble ensemble = new EnsembleBuilderAndSaviour().build();
         TestEnsembleServiceBuilder ensembleServiceBuilder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble);
@@ -29,7 +29,7 @@ class EnsembleServiceCancelTest {
     }
 
     @Test
-    public void canceledEnsembleDeletesVideoConferenceMeeting() throws Exception {
+    void canceledEnsembleDeletesVideoConferenceMeeting() throws Exception {
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
                 .withConferenceDetails("zoomMeetingId", "https://start.link", "https://join.link")
                 .build();
@@ -49,7 +49,7 @@ class EnsembleServiceCancelTest {
     }
 
     @Test
-    public void attemptingToCancelEnsembleWithNoMeetingIdDoesNotCallConferenceScheduler() throws Exception {
+    void attemptingToCancelEnsembleWithNoMeetingIdDoesNotCallConferenceScheduler() throws Exception {
         DeleteMeetingConferenceSchedulerMock deleteMeetingConferenceSchedulerMock = new DeleteMeetingConferenceSchedulerMock();
         TestEnsembleServiceBuilder ensembleServiceBuilder =
                 new TestEnsembleServiceBuilder()

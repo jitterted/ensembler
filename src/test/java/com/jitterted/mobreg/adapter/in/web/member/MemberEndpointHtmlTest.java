@@ -49,7 +49,7 @@ import java.util.List;
         excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = WebSecurityConfigurer.class)})
 @WithMockUser(username = "username", authorities = {"ROLE_MEMBER"})
 @Import(MyWebMvcSecurityConfiguration.class)
-public class MemberEndpointHtmlTest {
+class MemberEndpointHtmlTest {
 
     //    @Autowired
     WebClient webClient;
@@ -80,7 +80,7 @@ public class MemberEndpointHtmlTest {
     }
 
     @Test
-    public void html() throws Exception {
+    void html() throws Exception {
         HtmlPage memberRegisterPage = webClient
                 .getPage("http://localhost/member/register");
 

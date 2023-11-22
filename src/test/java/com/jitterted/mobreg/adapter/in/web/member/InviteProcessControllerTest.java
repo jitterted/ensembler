@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 class InviteProcessControllerTest {
 
     @Test
-    public void validTokenAndAuthnPrincipalCreatesNewMemberAndMarks() throws Exception {
+    void validTokenAndAuthnPrincipalCreatesNewMemberAndMarks() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         InviteRepositoryBothExistsAndMarkAsUsedCalledCorrectly inviteRepositoryMock = new InviteRepositoryBothExistsAndMarkAsUsedCalledCorrectly();
         InviteProcessController inviteProcessController = new InviteProcessController(memberRepository, inviteRepositoryMock);
@@ -42,7 +42,7 @@ class InviteProcessControllerTest {
     }
 
     @Test
-    public void nonExistentInviteReturnsInvalidInvitePage() throws Exception {
+    void nonExistentInviteReturnsInvalidInvitePage() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         InviteRepository inviteRepositoryMock = new InviteRepositoryWhereInviteNeverExists();
         InviteProcessController inviteProcessController = new InviteProcessController(memberRepository, inviteRepositoryMock);
@@ -69,7 +69,7 @@ class InviteProcessControllerTest {
 
 
     @Test
-    public void inviteeAlreadyMemberRedirectedToMemberHome() throws Exception {
+    void inviteeAlreadyMemberRedirectedToMemberHome() throws Exception {
         MemberRepository memberRepository = new InMemoryMemberRepository();
         InviteRepository inviteRepositoryMock = new InviteRepositoryWhereInviteNeverExists();
         InviteProcessController inviteProcessController = new InviteProcessController(memberRepository, inviteRepositoryMock);

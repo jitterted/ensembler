@@ -13,7 +13,7 @@ class EnsembleStateTest {
     private static final Duration ENSEMBLE_DURATION = Duration.ofHours(1).plusMinutes(55);
 
     @Test
-    public void newEnsembleIsNotCanceled() throws Exception {
+    void newEnsembleIsNotCanceled() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
         assertThat(ensemble.isCanceled())
@@ -21,7 +21,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    public void newEnsembleIsNotCompleted() throws Exception {
+    void newEnsembleIsNotCompleted() throws Exception {
         Ensemble ensemble = new Ensemble("not completed", ZonedDateTime.now());
 
         assertThat(ensemble.isCompleted())
@@ -29,7 +29,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    public void whenCompletingEnsembleThenEnsembleIsCompleted() throws Exception {
+    void whenCompletingEnsembleThenEnsembleIsCompleted() throws Exception {
         Ensemble ensemble = new Ensemble("completed", ZonedDateTime.now());
 
         ensemble.complete();
@@ -39,7 +39,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    public void whenCancelingScheduledEnsembleThenEnsembleIsCanceled() throws Exception {
+    void whenCancelingScheduledEnsembleThenEnsembleIsCanceled() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
         ensemble.cancel();
@@ -49,7 +49,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    public void cancelCompletedEnsembleThenThrowsException() throws Exception {
+    void cancelCompletedEnsembleThenThrowsException() throws Exception {
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
                 .id(-2)
                 .named("completed")
@@ -61,7 +61,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    public void canceledEnsembleWhenAcceptMemberThrowsException() throws Exception {
+    void canceledEnsembleWhenAcceptMemberThrowsException() throws Exception {
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
                 .id(-2)
                 .named("canceled")
@@ -76,7 +76,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    public void completedEnsembleWhenRegisterMemberThrowsException() throws Exception {
+    void completedEnsembleWhenRegisterMemberThrowsException() throws Exception {
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
                 .id(-2)
                 .named("completed")
@@ -89,7 +89,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    public void completingCanceledEnsembleThrowsException() throws Exception {
+    void completingCanceledEnsembleThrowsException() throws Exception {
         Ensemble ensemble = new EnsembleBuilderAndSaviour()
                 .id(-2)
                 .named("canceled")
@@ -102,7 +102,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    public void completeIsIdempotent() throws Exception {
+    void completeIsIdempotent() throws Exception {
         Ensemble ensemble = new Ensemble("completed", ZonedDateTime.now());
         ensemble.complete();
 
@@ -114,7 +114,7 @@ class EnsembleStateTest {
 
 
     @Test
-    public void uncompletedEnsembleHasNotEndedThenPendingCompletedIsFalse() throws Exception {
+    void uncompletedEnsembleHasNotEndedThenPendingCompletedIsFalse() throws Exception {
         ZonedDateTime startTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 12);
         Ensemble ensemble = EnsembleFactory.withStartTime(startTime);
 
@@ -124,7 +124,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    public void uncompletedEnsembleEndedInThePastThenPendingCompletedIsTrue() throws Exception {
+    void uncompletedEnsembleEndedInThePastThenPendingCompletedIsTrue() throws Exception {
         ZonedDateTime startTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 12);
         Ensemble ensemble = EnsembleFactory.withStartTime(startTime);
 

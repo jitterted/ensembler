@@ -1,50 +1,47 @@
 package com.jitterted.mobreg;
 
 import com.jitterted.mobreg.adapter.in.web.member.MemberDeniedRedirectToUserOnboardingHandler;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
     private final GrantedAuthoritiesMapper userAuthoritiesMapper;
 
-    @Autowired
     public WebSecurityConfig(GrantedAuthoritiesMapper userAuthoritiesMapper) {
         this.userAuthoritiesMapper = userAuthoritiesMapper;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // @formatter:off
         http
-            .authorizeRequests()
-                .mvcMatchers("/", "/error")
-                    .permitAll()
-                .mvcMatchers("/user/**", "/invite")
-                    .hasAuthority("ROLE_USER")
-                .mvcMatchers("/admin/**")
-                    .hasAuthority("ROLE_ADMIN")
-                .mvcMatchers("/member/**")
-                    .hasAuthority("ROLE_MEMBER")
-                .and()
-            .exceptionHandling()
-                .accessDeniedHandler(new MemberDeniedRedirectToUserOnboardingHandler())
-                .and()
-            .logout()
-                .logoutSuccessUrl("/")
-                    .permitAll()
-                .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true)
-                .and()
-            .oauth2Login()
-                .userInfoEndpoint()
-                    .userAuthoritiesMapper(userAuthoritiesMapper);
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/", "/error")
+                        .permitAll()
+                        .requestMatchers("/user/**", "/invite")
+                        .hasAuthority("ROLE_USER")
+                        .requestMatchers("/admin/**")
+                        .hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/member/**")
+                        .hasAuthority("ROLE_MEMBER"))
+                .exceptionHandling(handling -> handling
+                        .accessDeniedHandler(new MemberDeniedRedirectToUserOnboardingHandler()))
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                        .permitAll()
+                        .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true))
+                .oauth2Login(login -> login
+                        .userInfoEndpoint(endpoint -> endpoint
+                                .userAuthoritiesMapper(userAuthoritiesMapper)));
+        return http.build();
         // @formatter:on
     }
 

@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Member;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class MemberProfileController {
     private final MemberLookup memberLookup;
     private final MemberService memberService;
 
-    @Autowired
     public MemberProfileController(MemberService memberService) {
         this.memberLookup = new MemberLookup(memberService);
         this.memberService = memberService;

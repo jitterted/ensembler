@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleServiceMemberRegistrationNotificationTest {
 
     @Test
-    public void memberRegistersForEnsembleThenReceivesEmailWithEnsembleDetailInfo() throws Exception {
+    void memberRegistersForEnsembleThenReceivesEmailWithEnsembleDetailInfo() throws Exception {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("scheduled",
                                          URI.create("https://zoom.us"),

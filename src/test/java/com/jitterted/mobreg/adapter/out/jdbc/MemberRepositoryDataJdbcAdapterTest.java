@@ -21,7 +21,7 @@ class MemberRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
     @Test
-    public void newlyCreatedAndSavedMemberGetsIdAssigned() throws Exception {
+    void newlyCreatedAndSavedMemberGetsIdAssigned() throws Exception {
         Member member = new Member("user", "githubuser", "ROLE_USER");
 
         Member savedMember = memberRepositoryAdapter.save(member);
@@ -31,7 +31,7 @@ class MemberRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
     }
 
     @Test
-    public void memberWithRolesAreStoredThenRetrieved() throws Exception {
+    void memberWithRolesAreStoredThenRetrieved() throws Exception {
         Member member = new Member("member", "github_member", "ROLE_USER", "ROLE_MEMBER");
 
         Member savedMember = memberRepositoryAdapter.save(member);
@@ -46,7 +46,7 @@ class MemberRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
     }
 
     @Test
-    public void savedMemberCanBeFoundByItsGithubUsername() throws Exception {
+    void savedMemberCanBeFoundByItsGithubUsername() throws Exception {
         Member member = new Member("first", "ghuser");
 
         memberRepositoryAdapter.save(member);

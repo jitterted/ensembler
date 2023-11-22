@@ -5,7 +5,6 @@ import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +27,6 @@ public class AdminDashboardController {
     private final EnsembleService ensembleService;
     private final MemberService memberService;
 
-    @Autowired
     public AdminDashboardController(EnsembleService ensembleService,
                                     MemberService memberService) {
         this.ensembleService = ensembleService;
@@ -54,7 +52,7 @@ public class AdminDashboardController {
     }
 
     @GetMapping("/ensemble/{ensembleId}")
-    public String ensembleDetailView(Model model, @PathVariable("ensembleId") Long ensembleId) {
+    public String ensembleDetailView(Model model, @PathVariable Long ensembleId) {
         Ensemble ensemble = ensembleService.findById(EnsembleId.of(ensembleId))
                                            .orElseThrow(() ->
                                                new ResponseStatusException(HttpStatus.NOT_FOUND)
@@ -92,7 +90,7 @@ public class AdminDashboardController {
     }
 
     @PostMapping("/notify/{ensembleId}")
-    public String notifyEnsembleScheduled(@PathVariable("ensembleId") Long ensembleId) {
+    public String notifyEnsembleScheduled(@PathVariable Long ensembleId) {
         Ensemble ensemble = ensembleService.findById(EnsembleId.of(ensembleId))
                                            .orElseThrow(() ->
                                                new ResponseStatusException(HttpStatus.NOT_FOUND)

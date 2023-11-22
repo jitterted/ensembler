@@ -3,8 +3,8 @@ package com.jitterted.mobreg.adapter.out.zoom;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.annotation.Generated;
 
-import javax.annotation.Generated;
 import java.util.Date;
 
 /**

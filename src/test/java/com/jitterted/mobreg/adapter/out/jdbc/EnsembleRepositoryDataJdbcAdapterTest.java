@@ -27,7 +27,7 @@ class EnsembleRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
     @Test
-    public void savedEnsembleCanBeFoundByItsId() throws Exception {
+    void savedEnsembleCanBeFoundByItsId() throws Exception {
         Ensemble ensemble = createWithRegisteredMemberEnsembleNamed("test ensemble");
 
         Ensemble savedEnsemble = ensembleRepositoryAdapter.save(ensemble);
@@ -42,7 +42,7 @@ class EnsembleRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
     }
 
     @Test
-    public void newRepositoryReturnsEmptyForFindAll() throws Exception {
+    void newRepositoryReturnsEmptyForFindAll() throws Exception {
         List<Ensemble> ensembles = ensembleRepositoryAdapter.findAll();
 
         assertThat(ensembles)
@@ -50,7 +50,7 @@ class EnsembleRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
     }
 
     @Test
-    public void twoSavedEnsemblesBothReturnedByFindAll() throws Exception {
+    void twoSavedEnsemblesBothReturnedByFindAll() throws Exception {
         Ensemble one = createWithRegisteredMemberEnsembleNamed("one");
         Ensemble two = createWithRegisteredMemberEnsembleNamed("two");
 
@@ -70,7 +70,7 @@ class EnsembleRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
     }
 
     @Test
-    public void whenEnsembleMeetingLinkIsStoredThenIsRetrievedByFind() throws Exception {
+    void whenEnsembleMeetingLinkIsStoredThenIsRetrievedByFind() throws Exception {
         Ensemble zoom = new Ensemble("With Zoom", URI.create("https://zoom.us/j/123456?pwd=12345"), ZonedDateTime.now());
 
         EnsembleId savedId = ensembleRepositoryAdapter.save(zoom).getId();
@@ -85,7 +85,7 @@ class EnsembleRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
     }
 
     @Test
-    public void whenEnsembleCompletedWithRecordingLinkThenIsStoredSuccessfully() throws Exception {
+    void whenEnsembleCompletedWithRecordingLinkThenIsStoredSuccessfully() throws Exception {
         Ensemble ensemble = new Ensemble("Completed", ZonedDateTime.now());
         ensemble.complete();
         ensemble.linkToRecordingAt(URI.create("https://recording.link/database"));

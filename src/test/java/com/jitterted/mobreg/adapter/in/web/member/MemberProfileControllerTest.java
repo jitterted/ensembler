@@ -2,11 +2,11 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
 import com.jitterted.mobreg.application.DefaultMemberService;
-import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberFactory;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -18,13 +18,13 @@ import java.time.ZoneId;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class MemberProfileControllerTest {
+class MemberProfileControllerTest {
 
     private static final String GITHUB_USERNAME = "ghmember";
     private static final @NotNull DefaultOAuth2User USER_WITH_MEMBER_ROLE = OAuth2UserFactory.createOAuth2UserWithMemberRole(GITHUB_USERNAME, "ROLE_MEMBER");
 
     @Test
-    public void profilePrepareFormFullyPopulatesForm() throws Exception {
+    void profilePrepareFormFullyPopulatesForm() throws Exception {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
         Member member = MemberFactory.createMember(13, "first", GITHUB_USERNAME);
         member.changeEmailTo("member@example.com");
@@ -48,7 +48,7 @@ public class MemberProfileControllerTest {
     }
 
     @Test
-    public void changeProfileInfoOnFormUpdatesMemberProfileAndRedirectsToProfileView() throws Exception {
+    void changeProfileInfoOnFormUpdatesMemberProfileAndRedirectsToProfileView() throws Exception {
         TestMemberBuilder builder = new TestMemberBuilder()
                 .withEmail("none@nowhere")
                 .withGithubUsername(GITHUB_USERNAME)

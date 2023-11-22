@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleServiceEnsembleScheduledNotificationTest {
 
     @Test
-    public void whenEnsembleScheduledEnsembleOpenNotificationIsSent() throws Exception {
+    void whenEnsembleScheduledEnsembleOpenNotificationIsSent() throws Exception {
         MockEnsembleScheduledNotifier mockEnsembleScheduledNotifier = new MockEnsembleScheduledNotifier();
         EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),
@@ -30,7 +30,7 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
     }
 
     @Test
-    public void ensembleScheduledWithFailureToAutoCreateZoomLinkThenNotificationIsStillSent() throws Exception {
+    void ensembleScheduledWithFailureToAutoCreateZoomLinkThenNotificationIsStillSent() throws Exception {
         MockEnsembleScheduledNotifier mockEnsembleScheduledNotifier = new MockEnsembleScheduledNotifier();
         EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),
@@ -44,7 +44,7 @@ class EnsembleServiceEnsembleScheduledNotificationTest {
     }
 
     @Test
-    public void whenEnsembleScheduledWithZoomLinkEnsembleOpenNotificationIsSent() throws Exception {
+    void whenEnsembleScheduledWithZoomLinkEnsembleOpenNotificationIsSent() throws Exception {
         MockEnsembleScheduledNotifier mockEnsembleScheduledNotifier = new MockEnsembleScheduledNotifier();
         EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
                                                               new InMemoryMemberRepository(),

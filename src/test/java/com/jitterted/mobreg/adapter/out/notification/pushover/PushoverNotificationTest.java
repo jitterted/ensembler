@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.*;
 @ActiveProfiles("local")
 @Import(NoSecurityTestConfiguration.class)
 @TestPropertySource("file:/Users/tedyoung/.config/spring-boot/spring-boot-devtools.properties")
-public class PushoverNotificationTest {
+class PushoverNotificationTest {
 
 
     @Autowired
@@ -57,7 +57,7 @@ public class PushoverNotificationTest {
     PushoverApiConfig pushoverApiConfig;
 
     @Test
-    public void messageIsSent() throws Exception {
+    void messageIsSent() throws Exception {
         PushoverMessageDto pushoverMessageDto = new PushoverMessageDto(pushoverApiConfig.getToken(),
                                                                        pushoverApiConfig.getGroupKeyMob1(),
                                                                        "Hello again, from Pushover Notification Test.");

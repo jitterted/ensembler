@@ -2,7 +2,6 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.adapter.out.jdbc.InviteJdbcRepository;
 import de.huxhorn.sulky.ulid.ULID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ public class InviteEditor {
     private final InviteJdbcRepository inviteJdbcRepository;
     private final ULID ulid = new ULID();
 
-    @Autowired
     public InviteEditor(InviteJdbcRepository inviteJdbcRepository) {
         this.inviteJdbcRepository = inviteJdbcRepository;
     }

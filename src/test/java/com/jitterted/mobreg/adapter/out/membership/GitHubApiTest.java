@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 // pull in the GitHub Personal Access Token property
 @TestPropertySource("file:/Users/tedyoung/.config/spring-boot/spring-boot-devtools.properties")
-public class GitHubApiTest {
+class GitHubApiTest {
 
     @Value("${github.personal.access.token}")
     private String personalAccessToken;
@@ -29,7 +29,7 @@ public class GitHubApiTest {
     private static final String GITHUB_API_URI = "https://api.github.com/";
 
     @Test
-    public void canAccessCollaboratorsOfOwnedRepository() throws Exception {
+    void canAccessCollaboratorsOfOwnedRepository() throws Exception {
         assertThat(personalAccessToken)
                 .isNotBlank();
         URI gitHubUri = URI.create(GITHUB_API_URI);

@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.*;
 class MemberProfileChangeTest {
 
     @Test
-    public void changesToMemberProfileAreSaved() throws Exception {
+    void changesToMemberProfileAreSaved() throws Exception {
         TestMemberBuilder testMemberBuilder = new TestMemberBuilder();
         Member member = testMemberBuilder.withFirstName("")
                                          .withNoEmail()

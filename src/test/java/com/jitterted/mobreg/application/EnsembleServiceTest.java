@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleServiceTest {
 
     @Test
-    public void joinAsSpectatorDelegatesToEnsemble() {
+    void joinAsSpectatorDelegatesToEnsemble() {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         ensembleRepository.save(ensemble);

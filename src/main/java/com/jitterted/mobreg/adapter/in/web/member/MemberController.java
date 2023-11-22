@@ -6,7 +6,6 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,6 @@ public class MemberController {
     private final MemberLookup memberLookup;
     private final MemberService memberService;
 
-    @Autowired
     public MemberController(EnsembleService ensembleService, MemberService memberService) {
         this.ensembleService = ensembleService;
         this.memberLookup = new MemberLookup(memberService);

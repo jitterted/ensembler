@@ -19,8 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(MemberManagementController.class)
 @Tag("mvc")
-@WithMockUser(username = "tedyoung", authorities = {"ROLE_MEMBER","ROLE_ADMIN"})
-public class AdminMembershipEndpointTest {
+@WithMockUser(username = "tedyoung", authorities = {"ROLE_MEMBER", "ROLE_ADMIN"})
+class AdminMembershipEndpointTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -32,14 +32,14 @@ public class AdminMembershipEndpointTest {
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
     @Test
-    public void getOfMemberAdminPageIsStatus200Ok() throws Exception {
+    void getOfMemberAdminPageIsStatus200Ok() throws Exception {
         mockMvc.perform(get("/admin/members"))
                .andExpect(status().isOk());
     }
 
     @Disabled // need to post valid information
     @Test
-    public void postToAddMemberRedirects() throws Exception {
+    void postToAddMemberRedirects() throws Exception {
         mockMvc.perform(post("/admin/add-member")
                                 .with(csrf()))
                .andExpect(status().is3xxRedirection());

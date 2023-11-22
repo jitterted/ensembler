@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleEditTest {
 
     @Test
-    public void canChangeNameForExistingEnsemble() throws Exception {
+    void canChangeNameForExistingEnsemble() throws Exception {
         Ensemble before = new Ensemble("before", ZonedDateTime.now());
 
         before.changeNameTo("after");
@@ -19,7 +19,7 @@ class EnsembleEditTest {
     }
 
     @Test
-    public void changeNameToNullNotAllowed() throws Exception {
+    void changeNameToNullNotAllowed() throws Exception {
         Ensemble ensemble = new Ensemble("before", ZonedDateTime.now());
 
         assertThatThrownBy(() -> {
@@ -28,7 +28,7 @@ class EnsembleEditTest {
     }
 
     @Test
-    public void canChangeToExistingName() throws Exception {
+    void canChangeToExistingName() throws Exception {
         Ensemble before = new Ensemble("before", ZonedDateTime.now());
 
         before.changeNameTo("before");
@@ -38,7 +38,7 @@ class EnsembleEditTest {
     }
 
     @Test
-    public void canChangeNameAfterCompleted() throws Exception {
+    void canChangeNameAfterCompleted() throws Exception {
         Ensemble ensemble = new Ensemble("before", ZonedDateTime.now());
         ensemble.complete();
 
@@ -49,7 +49,7 @@ class EnsembleEditTest {
     }
 
     @Test
-    public void canChangeStartDateTime() throws Exception {
+    void canChangeStartDateTime() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
         Ensemble ensemble = new Ensemble("before", now);
 
@@ -60,7 +60,7 @@ class EnsembleEditTest {
     }
 
     @Test
-    public void changeDateTimeToNullNotAllowed() throws Exception {
+    void changeDateTimeToNullNotAllowed() throws Exception {
         Ensemble ensemble = new Ensemble("before", ZonedDateTime.now());
 
         assertThatThrownBy(() -> {
@@ -69,7 +69,7 @@ class EnsembleEditTest {
     }
 
     @Test
-    public void canChangeToExistingDateTime() throws Exception {
+    void canChangeToExistingDateTime() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
         Ensemble ensemble = new Ensemble("before", now);
 
@@ -80,7 +80,7 @@ class EnsembleEditTest {
     }
 
     @Test
-    public void canChangeDateTimeAfterCompleted() throws Exception {
+    void canChangeDateTimeAfterCompleted() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
         Ensemble ensemble = new Ensemble("before", now);
         ensemble.complete();

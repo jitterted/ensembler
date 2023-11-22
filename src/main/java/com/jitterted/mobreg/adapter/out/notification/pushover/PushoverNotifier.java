@@ -3,7 +3,6 @@ package com.jitterted.mobreg.adapter.out.notification.pushover;
 import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -19,7 +18,6 @@ public class PushoverNotifier implements Notifier {
 
     private final PushoverApiConfig pushoverApiConfig;
 
-    @Autowired
     public PushoverNotifier(PushoverApiConfig pushoverApiConfig) {
         this.pushoverApiConfig = pushoverApiConfig;
     }

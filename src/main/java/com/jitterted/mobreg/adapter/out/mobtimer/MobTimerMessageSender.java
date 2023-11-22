@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Ensemble;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -18,7 +17,6 @@ public class MobTimerMessageSender {
     private final ObjectMapper objectMapper;
     private final MemberService memberService;
 
-    @Autowired
     public MobTimerMessageSender(WebSocketSession webSocketSession, ObjectMapper objectMapper, MemberService memberService) {
         this.webSocketSession = webSocketSession;
         this.objectMapper = objectMapper;

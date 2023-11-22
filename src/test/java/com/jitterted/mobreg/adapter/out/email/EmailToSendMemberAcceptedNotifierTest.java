@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.*;
 class EmailToSendMemberAcceptedNotifierTest {
 
     @Test
-    public void memberWithEmailAcceptsThenEmailSentToMemberWithEnsembleDetails() throws Exception {
+    void memberWithEmailAcceptsThenEmailSentToMemberWithEnsembleDetails() throws Exception {
         Member member = new TestMemberBuilder().withFirstName("FirstName")
                                                .withEmail("name@example.com")
                                                .withTimezone("America/Los_Angeles")
@@ -39,7 +39,7 @@ class EmailToSendMemberAcceptedNotifierTest {
     }
 
     @Test
-    public void memberWithoutEmailRegistersThenNoEmailIsSent() throws Exception {
+    void memberWithoutEmailRegistersThenNoEmailIsSent() throws Exception {
         Member member = new TestMemberBuilder().withNoEmail().buildAndSave();
         Ensemble ensemble = new Ensemble("Doesn't matter", URI.create("https://whocar.es"), ZonedDateTime.now());
         SpyEmailer spyEmailer = new SpyEmailer();

@@ -54,7 +54,7 @@ class MobTimerMessageSenderTest {
     EnsembleRepository ensembleRepository;
 
     @Test
-    public void mobPeopleUpdated() throws Exception {
+    void mobPeopleUpdated() throws Exception {
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
         Member member = new Member("Jane", "janeuser");
         Member savedMember = memberService.save(member);

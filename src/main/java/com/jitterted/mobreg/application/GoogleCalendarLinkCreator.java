@@ -1,8 +1,8 @@
 package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.domain.Ensemble;
+import jakarta.validation.constraints.NotNull;
 
-import javax.validation.constraints.NotNull;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.time.format.DateTimeFormatter;

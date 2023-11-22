@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest({MemberController.class, MemberProfileController.class, InviteProcessController.class})
 @Tag("mvc")
 @WithMockUser(username = "username", authorities = {"ROLE_MEMBER"})
-public class MemberEndpointConfigurationTest {
+class MemberEndpointConfigurationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,7 +52,7 @@ public class MemberEndpointConfigurationTest {
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
     @Test
-    public void getOfMemberRegisterEndpointReturns200Ok() throws Exception {
+    void getOfMemberRegisterEndpointReturns200Ok() throws Exception {
         Member member = new Member("Ted", "tedyoung", "ROLE_MEMBER");
         member.setId(MemberId.of(1L));
         when(memberService.findByGithubUsername("tedyoung")).thenReturn(member);
@@ -63,7 +63,7 @@ public class MemberEndpointConfigurationTest {
     }
 
     @Test
-    public void postToRegisterRedirects() throws Exception {
+    void postToRegisterRedirects() throws Exception {
         mockMvc.perform(post("/member/accept")
                                 .param("ensembleId", "1")
                                 .param("memberId", "1")
@@ -74,7 +74,7 @@ public class MemberEndpointConfigurationTest {
     }
 
     @Test
-    public void postToDeclineRedirects() throws Exception {
+    void postToDeclineRedirects() throws Exception {
         mockMvc.perform(post("/member/decline")
                                 .param("ensembleId", "1")
                                 .param("memberId", "1")
@@ -83,7 +83,7 @@ public class MemberEndpointConfigurationTest {
     }
 
     @Test
-    public void getOfMemberProfileEndpointReturns200Ok() throws Exception {
+    void getOfMemberProfileEndpointReturns200Ok() throws Exception {
         Member member = new Member("Ted", "tedyoung", "ROLE_MEMBER");
         member.setId(MemberId.of(1L));
         when(memberService.findByGithubUsername("tedyoung")).thenReturn(member);
@@ -93,7 +93,7 @@ public class MemberEndpointConfigurationTest {
     }
 
     @Test
-    public void postToMemberProfileEndpointRedirects() throws Exception {
+    void postToMemberProfileEndpointRedirects() throws Exception {
         mockMvc.perform(post("/member/profile")
                                 .param("firstName", "1st")
                                 .param("githubUsername", "abc")
@@ -105,7 +105,7 @@ public class MemberEndpointConfigurationTest {
     }
 
     @Test
-    public void getToInviteIdEndpointIs200Ok() throws Exception {
+    void getToInviteIdEndpointIs200Ok() throws Exception {
         mockMvc.perform(get("/invite?invite_id=testing123")
                                 .with(OAuth2UserFactory.oAuth2User("ROLE_USER")))
                .andExpect(status().isOk());

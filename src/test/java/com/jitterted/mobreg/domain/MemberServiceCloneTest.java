@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.*;
 class MemberServiceCloneTest {
 
     @Test
-    public void memberReturnsMementoRepresentingInternalState() throws Exception {
+    void memberReturnsMementoRepresentingInternalState() throws Exception {
         String[] roles = {"ROLE_USER", "ROLE_MEMBER"};
         Member member = new Member("first", "github", roles);
         member.changeEmailTo("first@example.com");
@@ -32,7 +32,7 @@ class MemberServiceCloneTest {
     }
 
     @Test
-    public void memberFromMementoIsContentEqualToOriginal() throws Exception {
+    void memberFromMementoIsContentEqualToOriginal() throws Exception {
         MemberSnapshot memberSnapshot =
                 new MemberSnapshot("ted",
                                    "jitterted",

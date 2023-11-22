@@ -32,7 +32,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
                 classes = WebSecurityConfig.class)
 )
 @Tag("mvc")
-public class ThymeleafTemplateTest {
+class ThymeleafTemplateTest {
 
     @Autowired
 //    private MockMvc mockMvc;
@@ -46,7 +46,7 @@ public class ThymeleafTemplateTest {
 
     @Test
     @WithMockUser
-    void testTemplate() throws Exception {
+    void template() throws Exception {
         WebClient webClient = MockMvcWebClientBuilder
                 .webAppContextSetup(webApplicationContext, springSecurity())
 //                .mockMvcSetup(mockMvc)

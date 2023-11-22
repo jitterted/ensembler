@@ -6,10 +6,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class EnsembleMemberStateTest {
+class EnsembleMemberStateTest {
 
     @Test
-    public void newEnsembleHasZeroParticipants() throws Exception {
+    void newEnsembleHasZeroParticipants() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
         assertThat(ensemble.acceptedCount())
@@ -110,7 +110,7 @@ public class EnsembleMemberStateTest {
     }
 
     @Test
-    public void acceptMemberThenEnsembleTracksMemberAsParticipant() throws Exception {
+    void acceptMemberThenEnsembleTracksMemberAsParticipant() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(123);
 
@@ -126,7 +126,7 @@ public class EnsembleMemberStateTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2, 3, 4, 5})
-    public void acceptingMultipleMembersResultsInThatManyRegisteredMembers(int count) throws Exception {
+    void acceptingMultipleMembersResultsInThatManyRegisteredMembers(int count) throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
         EnsembleFactory.acceptCountMembersFor(count, ensemble);
@@ -137,7 +137,7 @@ public class EnsembleMemberStateTest {
 
     @ParameterizedTest
     @ValueSource(ints = {6, 7})
-    public void attemptingToRegisterMoreThanFiveMembersThrowsException(int count) throws Exception {
+    void attemptingToRegisterMoreThanFiveMembersThrowsException(int count) throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
         assertThatThrownBy(() -> {
