@@ -23,7 +23,7 @@ public class WebSecurityConfig {
         // @formatter:off
         http
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/", "/error")
+                        .requestMatchers("/**", "/error")
                         .permitAll()
                         .requestMatchers("/user/**", "/invite")
                         .hasAuthority("ROLE_USER")
