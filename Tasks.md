@@ -1,5 +1,7 @@
 # Tasks
 
+[ ] Change "participate" button color to indicate that it's disabled when the ensemble is full
+
 [ ] Replace EnsembleSummaryView.memberStatus with Links (for right-most column)
     [ ] Update all EnsembleSummaryViewTest to NOT use EnsembleSummaryView.memberStatus()
     [ ] Remove showing memberStatus from member-register.html
