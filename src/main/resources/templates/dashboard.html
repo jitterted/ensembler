@@ -80,7 +80,7 @@
     </h2>
 </div>
 
-<div th:unless="${ensembles.isEmpty}" class="flex flex-col">
+<div th:unless="${ensembles.isEmpty()}" class="flex flex-col">
     <div class="overflow-x-auto">
         <div class="align-middle inline-block min-w-full px-4 sm:px-6 lg:px-8 font-sans">
             <div class="bg-white shadow-md rounded my-6">
@@ -154,7 +154,7 @@
         </div>
     </div>
 </div>
-<div th:if="${ensembles.isEmpty}" class="mt-4 px-4 sm:px-6 lg:px-8 ">
+<div th:if="${ensembles.isEmpty()}" class="mt-4 px-4 sm:px-6 lg:px-8 ">
     <div class="rounded-md bg-yellow-50 p-4">
         <div class="flex">
             <div class="flex-shrink-0">
