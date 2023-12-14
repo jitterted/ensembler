@@ -30,7 +30,7 @@
 <form th:action="@{/admin/add-member}" action="#" method="post" th:object="${addMemberForm}">
     <div style="margin-bottom: 0.5rem;">
         <label th:for="firstName">First Name:</label>
-        <input type="text" th:field="*{firstName}" autofocus>
+        <input type="text" th:field="*{firstName}" autofocus autocomplete="false">
         <span th:if="${#fields.hasErrors('firstName')}"
               th:errors="*{firstName}"
               style="color: #CC1122;">Error</span>
