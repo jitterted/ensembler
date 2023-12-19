@@ -6,8 +6,11 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +37,9 @@ public class AdminDashboardController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboardView(Model model, @AuthenticationPrincipal AuthenticatedPrincipal principal) {
+    public String dashboardView(Model model,
+                                @AuthenticationPrincipal AuthenticatedPrincipal principal,
+                                @CurrentSecurityContext SecurityContext context) {
         if (principal instanceof OAuth2User oAuth2User) {
             String username = oAuth2User.getAttribute("login");
             Member member = memberService.findByGithubUsername(username);
@@ -42,7 +47,10 @@ public class AdminDashboardController {
             model.addAttribute("name", member.firstName());
             model.addAttribute("github_id", oAuth2User.getAttribute("id"));
         } else {
-            throw new IllegalStateException("Not an OAuth2User");
+            if (context.getAuthentication().getName().equalsIgnoreCase("anonymousUser")) {
+                throw new AccessDeniedException("Access Denied for Anonymous User");
+            }
+            throw new IllegalStateException("AuthenticationPrincipal is not an OAuth2User: " + principal);
         }
         List<Ensemble> ensembles = ensembleService.allEnsemblesByDateTimeDescending();
         List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles);

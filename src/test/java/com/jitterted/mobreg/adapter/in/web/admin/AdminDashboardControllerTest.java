@@ -18,6 +18,10 @@ import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.ZonedDateTimeFactory;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
@@ -25,6 +29,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -43,7 +48,11 @@ class AdminDashboardControllerTest {
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 
         Model model = new ConcurrentModel();
-        adminDashboardController.dashboardView(model, OAuth2UserFactory.createOAuth2UserWithMemberRole("tedyoung", "ROLE_MEMBER"));
+        OAuth2User oAuth2UserWithMemberRole = OAuth2UserFactory.createOAuth2UserWithMemberRole("tedyoung", "ROLE_MEMBER");
+        SecurityContextImpl securityContext = new SecurityContextImpl(new OAuth2AuthenticationToken(oAuth2UserWithMemberRole,
+                                                                                                    Set.of(new SimpleGrantedAuthority("ROLE_MEMBER")),
+                                                                                                    "github"));
+        adminDashboardController.dashboardView(model, oAuth2UserWithMemberRole, securityContext);
 
         List<EnsembleSummaryView> ensembleSummaryViews = (List<EnsembleSummaryView>) model.getAttribute("ensembles");
         assertThat(ensembleSummaryViews)
