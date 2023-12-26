@@ -10,11 +10,11 @@
   </parent>
   <groupId>com.jitterted</groupId>
   <artifactId>ensembler</artifactId>
-  <version>1.0.15</version>
+  <version>0.0.0</version>
   <name>ensembler</name>
   <description>Ensemble Registration Manager</description>
   <properties>
-    <java.version>21</java.version>
+    <java.version>19</java.version>
   </properties>
   <dependencies>
     <dependency>
@@ -23,11 +23,11 @@
       <version>3.7.2</version>
     </dependency>
 
-    <!--    <dependency>-->
-    <!--      <groupId>org.springframework.boot</groupId>-->
-    <!--      <artifactId>spring-boot-docker-compose</artifactId>-->
-    <!--      <optional>true</optional>-->
-    <!--    </dependency>-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-docker-compose</artifactId>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -176,6 +176,11 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.graalvm.buildtools</groupId>
+        <artifactId>native-maven-plugin</artifactId>
       </plugin>
 
       <!-- Configure Surefire to ignore and not run tests that have @Tag("manual") -->
