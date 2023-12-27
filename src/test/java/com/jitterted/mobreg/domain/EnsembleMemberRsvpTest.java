@@ -20,7 +20,7 @@ class EnsembleMemberRsvpTest {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(73);
 
-        ensemble.acceptedBy(memberId);
+        ensemble.joinAsParticipant(memberId);
 
         assertThat(ensemble.rsvpOf(memberId))
                 .isEqualByComparingTo(Rsvp.ACCEPTED);
@@ -41,7 +41,7 @@ class EnsembleMemberRsvpTest {
     void acceptedMemberWhenDeclinesIsRsvpDeclined() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(97);
-        ensemble.acceptedBy(memberId);
+        ensemble.joinAsParticipant(memberId);
 
         ensemble.declinedBy(memberId);
 
@@ -55,7 +55,7 @@ class EnsembleMemberRsvpTest {
         MemberId memberId = MemberId.of(79);
         ensemble.declinedBy(memberId);
 
-        ensemble.acceptedBy(memberId);
+        ensemble.joinAsParticipant(memberId);
 
         assertThat(ensemble.rsvpOf(memberId))
                 .isEqualByComparingTo(Rsvp.ACCEPTED);

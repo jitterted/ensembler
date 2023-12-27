@@ -62,7 +62,7 @@ public class TestEnsembleServiceBuilder {
     public TestEnsembleServiceBuilder saveMemberAndAccept(String firstName, String githubUsername) {
         Member member = new Member(firstName, githubUsername);
         MemberId memberId = memberRepository.save(member).getId();
-        lastEnsemble.acceptedBy(memberId);
+        lastEnsemble.joinAsParticipant(memberId);
         return this;
     }
 

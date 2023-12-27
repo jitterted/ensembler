@@ -103,7 +103,7 @@ class EnsembleRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
     @NotNull
     private Ensemble createWithRegisteredMemberEnsembleNamed(String name) {
         Ensemble ensemble = new Ensemble(name, ZonedDateTime.now());
-        ensemble.acceptedBy(MemberId.of(7L));
+        ensemble.joinAsParticipant(MemberId.of(7L));
         return ensemble;
     }
 }

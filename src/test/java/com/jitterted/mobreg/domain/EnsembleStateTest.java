@@ -69,7 +69,7 @@ class EnsembleStateTest {
                 .build();
 
         assertThatThrownBy(() -> {
-            ensemble.acceptedBy(DUMMY_MEMBER_ID);
+            ensemble.joinAsParticipant(DUMMY_MEMBER_ID);
         })
                 .isInstanceOf(EnsembleCanceled.class)
                 .hasMessage("Ensemble (EnsembleId=-2) is Canceled");
@@ -83,7 +83,7 @@ class EnsembleStateTest {
                 .asCompleted()
                 .build();
 
-        assertThatThrownBy(() -> ensemble.acceptedBy(DUMMY_MEMBER_ID))
+        assertThatThrownBy(() -> ensemble.joinAsParticipant(DUMMY_MEMBER_ID))
                 .isInstanceOf(EnsembleCompleted.class)
                 .hasMessage("Ensemble (EnsembleId=-2) is Completed");
     }

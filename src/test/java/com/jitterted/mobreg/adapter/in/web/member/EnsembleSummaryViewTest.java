@@ -49,7 +49,7 @@ class EnsembleSummaryViewTest {
                 .withFirstName("name")
                 .withGithubUsername("seven")
                 .buildAndSave();
-        ensemble.acceptedBy(member.getId());
+        ensemble.joinAsParticipant(member.getId());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
                 .toView(ensemble, MemberId.of(99L), memberBuilder.memberService());
@@ -69,7 +69,7 @@ class EnsembleSummaryViewTest {
                 .withFirstName("name")
                 .withGithubUsername("participant_username")
                 .buildAndSave();
-        ensemble.acceptedBy(member.getId());
+        ensemble.joinAsParticipant(member.getId());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
                 .toView(ensemble, member.getId(), memberBuilder.memberService());
@@ -125,7 +125,7 @@ class EnsembleSummaryViewTest {
             Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
             ensemble.changeMeetingLinkTo(URI.create("https://zoom.us/test"));
             MemberId memberId = MemberId.of(42);
-            ensemble.acceptedBy(memberId);
+            ensemble.joinAsParticipant(memberId);
 
             EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberId, STUB_MEMBER_SERVICE);
 
@@ -168,7 +168,7 @@ class EnsembleSummaryViewTest {
             Ensemble ensemble = new Ensemble("test", ZonedDateTime.now().minusDays(1));
             ensemble.setId(EnsembleId.of(1L));
             MemberId memberId = MemberId.of(11);
-            ensemble.acceptedBy(memberId);
+            ensemble.joinAsParticipant(memberId);
             ensemble.complete();
             ensemble.linkToRecordingAt(URI.create(recordingUrl));
             return new Fixture(ensemble, memberId);
@@ -279,8 +279,8 @@ class EnsembleSummaryViewTest {
                 .withFirstName("two")
                 .withGithubUsername("github_two")
                 .buildAndSave();
-        ensemble.acceptedBy(member1.getId());
-        ensemble.acceptedBy(member2.getId());
+        ensemble.joinAsParticipant(member1.getId());
+        ensemble.joinAsParticipant(member2.getId());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
                 .toView(ensemble, MemberId.of(member1.getId().id()), memberService);

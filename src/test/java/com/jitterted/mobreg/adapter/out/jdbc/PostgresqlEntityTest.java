@@ -31,8 +31,8 @@ class PostgresqlEntityTest extends PostgresTestcontainerBase {
     @Test
     void ensembleEntityStoredViaJdbcIsRetrievedWithMembers() throws Exception {
         Ensemble original = new Ensemble("entity", ZonedDateTime.of(2021, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()));
-        original.acceptedBy(MemberId.of(4L));
-        original.acceptedBy(MemberId.of(5L));
+        original.joinAsParticipant(MemberId.of(4L));
+        original.joinAsParticipant(MemberId.of(5L));
         original.declinedBy(MemberId.of(73L));
         original.declinedBy(MemberId.of(79L));
         original.joinAsSpectator(MemberId.of(97L));

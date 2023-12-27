@@ -58,7 +58,7 @@ public class Ensemble {
         return membersWhoAccepted.size();
     }
 
-    public void acceptedBy(MemberId memberId) {
+    public void joinAsParticipant(MemberId memberId) {
         requireNotCompleted();
         requireNotCanceled();
         requireHasSpace();

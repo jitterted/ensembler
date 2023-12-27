@@ -116,7 +116,7 @@ class MemberControllerTest {
                                    .save(new Member("participant", "ghuser", "ROLE_MEMBER"))
                                    .getId();
         Ensemble canceledParticipantEnsemble = fixture.ensemble();
-        ensembleService.acceptMember(canceledParticipantEnsemble.getId(), memberId);
+        ensembleService.joinAsParticipant(canceledParticipantEnsemble.getId(), memberId);
         ensembleService.cancel(canceledParticipantEnsemble.getId());
 
         List<EnsembleSummaryView> ensembleSummaryViews = fixture.memberController()

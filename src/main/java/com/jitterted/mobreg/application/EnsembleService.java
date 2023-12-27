@@ -113,9 +113,9 @@ public class EnsembleService {
         return ensembleRepository.findById(ensembleId);
     }
 
-    public void acceptMember(EnsembleId ensembleId, MemberId memberId) {
+    public void joinAsParticipant(EnsembleId ensembleId, MemberId memberId) {
         Ensemble savedEnsemble = execute(ensembleId,
-                                         ensemble -> ensemble.acceptedBy(memberId));
+                                         ensemble -> ensemble.joinAsParticipant(memberId));
 
         Member member = memberRepository.findById(memberId)
                                         .orElseThrow(() -> new MemberNotFoundByIdException("Member ID: " + memberId.id()));

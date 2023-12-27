@@ -72,7 +72,7 @@ public class MemberController {
         EnsembleId ensembleId = EnsembleId.of(memberRegisterForm.getEnsembleId());
         MemberId memberId = MemberId.of(memberRegisterForm.getMemberId());
 
-        ensembleService.acceptMember(ensembleId, memberId);
+        ensembleService.joinAsParticipant(ensembleId, memberId);
 
         return "redirect:/member/register";
     }

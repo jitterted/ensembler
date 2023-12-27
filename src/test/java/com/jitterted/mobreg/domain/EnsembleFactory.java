@@ -42,7 +42,7 @@ public class EnsembleFactory {
 
     public static void acceptCountMembersFor(int count, Ensemble ensemble) {
         for (int i = 0; i < count; i++) {
-            ensemble.acceptedBy(MemberId.of(i));
+            ensemble.joinAsParticipant(MemberId.of(i));
         }
     }
 

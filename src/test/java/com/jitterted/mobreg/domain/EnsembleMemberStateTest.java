@@ -57,7 +57,7 @@ class EnsembleMemberStateTest {
     void acceptedMemberWhenJoinAsSpectatorRemovesFromAccepted() {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(123);
-        ensemble.acceptedBy(memberId);
+        ensemble.joinAsParticipant(memberId);
 
         ensemble.joinAsSpectator(memberId);
 
@@ -87,7 +87,7 @@ class EnsembleMemberStateTest {
         MemberId memberId = MemberId.of(123);
         ensemble.joinAsSpectator(memberId);
 
-        ensemble.acceptedBy(memberId);
+        ensemble.joinAsParticipant(memberId);
 
         assertThat(ensemble.spectators())
                 .isEmpty();
@@ -114,7 +114,7 @@ class EnsembleMemberStateTest {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         MemberId memberId = MemberId.of(123);
 
-        ensemble.acceptedBy(memberId);
+        ensemble.joinAsParticipant(memberId);
 
         assertThat(ensemble.acceptedCount())
                 .isEqualTo(1);

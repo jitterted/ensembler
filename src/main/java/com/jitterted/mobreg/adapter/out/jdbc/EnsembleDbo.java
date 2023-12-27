@@ -76,7 +76,7 @@ class EnsembleDbo {
 
         acceptedMembers.stream()
                        .map(AcceptedMember::asMemberId)
-                       .forEach(ensemble::acceptedBy);
+                       .forEach(ensemble::joinAsParticipant);
 
         declinedMembers.stream()
                        .map(DeclinedMember::asMemberId)

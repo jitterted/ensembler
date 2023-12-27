@@ -61,7 +61,7 @@ class EnsembleMemberEnsembleStatusTest {
     void acceptedMemberAndPastUncompletedEnsembleThenStatusPendingCompleted() throws Exception {
         Ensemble pastEnsemble = EnsembleFactory.withStartTime(2021, 11, 21, 11);
         MemberId memberId = MemberId.of(41);
-        pastEnsemble.acceptedBy(memberId);
+        pastEnsemble.joinAsParticipant(memberId);
 
         assertThat(pastEnsemble.statusFor(memberId, UTC_2021_11_22_12))
                 .isEqualByComparingTo(MemberEnsembleStatus.PENDING_COMPLETED);
@@ -71,7 +71,7 @@ class EnsembleMemberEnsembleStatusTest {
     void acceptedMemberAndCompletedEnsembleThenStatusCompleted() throws Exception {
         Ensemble completedEnsemble = EnsembleFactory.withStartTime(2021, 11, 21, 11);
         MemberId memberId = MemberId.of(41);
-        completedEnsemble.acceptedBy(memberId);
+        completedEnsemble.joinAsParticipant(memberId);
         completedEnsemble.complete();
 
         assertThat(completedEnsemble.statusFor(memberId, UTC_2021_11_22_12))
@@ -82,7 +82,7 @@ class EnsembleMemberEnsembleStatusTest {
     void acceptedMemberAndFutureEnsembleThenStatusAccepted() throws Exception {
         Ensemble futureEnsemble = EnsembleFactory.withStartTime(2022, 1, 3, 9);
         MemberId memberId = MemberId.of(41);
-        futureEnsemble.acceptedBy(memberId);
+        futureEnsemble.joinAsParticipant(memberId);
 
         assertThat(futureEnsemble.statusFor(memberId, UTC_2021_11_22_12))
                 .isEqualByComparingTo(MemberEnsembleStatus.ACCEPTED);
@@ -94,7 +94,7 @@ class EnsembleMemberEnsembleStatusTest {
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 11);
         Ensemble inGracePeriodEnsemble = EnsembleFactory.withStartTime(startDateTime);
         MemberId memberId = MemberId.of(41);
-        inGracePeriodEnsemble.acceptedBy(memberId);
+        inGracePeriodEnsemble.joinAsParticipant(memberId);
 
         ZonedDateTime currentDateTime = startDateTime.plusMinutes(10).minusSeconds(1); // grace period is 10 minutes
         assertThat(inGracePeriodEnsemble.statusFor(memberId, currentDateTime))
@@ -147,7 +147,7 @@ class EnsembleMemberEnsembleStatusTest {
         ZonedDateTime startDateTime = ZonedDateTimeFactory.zoneDateTimeUtc(2022, 2, 3, 16);
         Ensemble inGracePeriodEnsemble = EnsembleFactory.withStartTime(startDateTime);
         MemberId memberId = MemberId.of(41);
-        inGracePeriodEnsemble.acceptedBy(memberId);
+        inGracePeriodEnsemble.joinAsParticipant(memberId);
 
         ZonedDateTime currentDateTime = startDateTime.plusMinutes(10).plusSeconds(1); // grace period is 10 minutes
         assertThat(inGracePeriodEnsemble.statusFor(memberId, currentDateTime))

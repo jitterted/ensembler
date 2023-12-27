@@ -47,7 +47,7 @@ class DashboardEnsembleViewTest {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
         Ensemble ensemble = new Ensemble("Ensemble #1", ZonedDateTime.now());
-        ensemble.acceptedBy(member.getId());
+        ensemble.joinAsParticipant(member.getId());
         ensembleRepository.save(ensemble);
         AdminDashboardController adminDashboardController = new AdminDashboardController(ensembleService, memberService);
 

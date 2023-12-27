@@ -60,7 +60,7 @@ class EnsembleDboMappingTest {
         Ensemble ensemble = new Ensemble("Domain", utc2021091316000);
         ensemble.changeConferenceDetailsTo(new ConferenceDetails("someMeetingId", URI.create("https://start.us/"), URI.create("https://join.us/")));
         ensemble.linkToRecordingAt(URI.create("https://recording.link/domain"));
-        ensemble.acceptedBy(MemberId.of(11L));
+        ensemble.joinAsParticipant(MemberId.of(11L));
         ensemble.declinedBy(MemberId.of(13L));
         ensemble.joinAsSpectator(MemberId.of(19L));
         ensemble.complete();

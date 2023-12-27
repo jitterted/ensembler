@@ -19,7 +19,7 @@ class MobParticipantsDtoCreationTest {
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         Member member = new Member("Participant", "");
         Member savedMember = memberService.save(member);
-        ensemble.acceptedBy(savedMember.getId());
+        ensemble.joinAsParticipant(savedMember.getId());
 
         MobParticipantsDto dto = MobParticipantsDto.from(ensemble, memberService);
 

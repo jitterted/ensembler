@@ -36,7 +36,7 @@ class EnsembleDetailViewTest {
         MemberService memberService = new DefaultMemberService(memberRepository);
         Member acceptedMember = MemberFactory.createMember(7, "Ace", "acceptated");
         memberRepository.save(acceptedMember);
-        ensemble.acceptedBy(acceptedMember.getId());
+        ensemble.joinAsParticipant(acceptedMember.getId());
         Member declinedMember = MemberFactory.createMember(9, "Declan", "declaned");
         memberRepository.save(declinedMember);
         ensemble.declinedBy(declinedMember.getId());

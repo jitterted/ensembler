@@ -58,10 +58,10 @@ class MobTimerMessageSenderTest {
         Ensemble ensemble = new Ensemble("test", ZonedDateTime.now());
         Member member = new Member("Jane", "janeuser");
         Member savedMember = memberService.save(member);
-        ensemble.acceptedBy(savedMember.getId());
+        ensemble.joinAsParticipant(savedMember.getId());
         member = new Member("Jack", "jackuser");
         savedMember = memberService.save(member);
-        ensemble.acceptedBy(savedMember.getId());
+        ensemble.joinAsParticipant(savedMember.getId());
 
         mobTimerMessageSender.updateParticipantsTo(ensemble);
     }

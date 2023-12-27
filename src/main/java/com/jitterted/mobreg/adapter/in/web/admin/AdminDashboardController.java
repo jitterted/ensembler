@@ -113,7 +113,7 @@ public class AdminDashboardController {
 
         Member member = memberService.findByGithubUsername(adminRegistrationForm.getGithubUsername());
 
-        ensembleService.acceptMember(ensembleId, member.getId());
+        ensembleService.joinAsParticipant(ensembleId, member.getId());
 
         return redirectToDetailViewFor(ensembleId);
     }

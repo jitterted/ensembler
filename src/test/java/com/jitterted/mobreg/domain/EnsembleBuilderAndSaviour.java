@@ -12,7 +12,7 @@ public class EnsembleBuilderAndSaviour {
     }
 
     public EnsembleBuilderAndSaviour accept(Member member) {
-        ensemble.acceptedBy(member.getId());
+        ensemble.joinAsParticipant(member.getId());
         return this;
     }
 

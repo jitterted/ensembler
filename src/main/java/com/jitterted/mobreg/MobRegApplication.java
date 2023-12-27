@@ -30,7 +30,7 @@ public class MobRegApplication {
         inMemoryEnsembleRepository.save(new Ensemble("Created by App Startup: Future Event", URI.create("https://zoom.us"), ZonedDateTime.now().plusHours(1)));
         Ensemble pendingComplete = new Ensemble("Created by App Startup: Pending Complete", URI.create("https://zoom.us"), ZonedDateTime.now().minusDays(1));
         Member member = memberRepository.save(new Member("Ted", "tedyoung", "ROLE_USER", "ROLE_MEMBER", "ROLE_ADMIN"));
-        pendingComplete.acceptedBy(member.getId());
+        pendingComplete.joinAsParticipant(member.getId());
         inMemoryEnsembleRepository.save(pendingComplete);
         return inMemoryEnsembleRepository;
     }
