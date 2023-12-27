@@ -50,10 +50,15 @@ public class MemberController {
         MemberRegisterForm memberRegisterForm = createRegistrationForm(member.getId());
         model.addAttribute("register", memberRegisterForm);
 
-        List<Ensemble> ensembles = ensembleService.allEnsemblesByDateTimeDescending();
-        List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles, member.getId(), memberService);
+        List<EnsembleSummaryView> ensembleSummaryViews = summaryViewsFor(member.getId());
         model.addAttribute("ensembles", ensembleSummaryViews);
         return "member-register";
+    }
+
+    public List<EnsembleSummaryView> summaryViewsFor(MemberId memberId) {
+        List<Ensemble> ensembles = ensembleService.allEnsemblesByDateTimeDescending();
+        List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles, memberId, memberService);
+        return ensembleSummaryViews;
     }
 
     private MemberRegisterForm createRegistrationForm(MemberId memberId) {

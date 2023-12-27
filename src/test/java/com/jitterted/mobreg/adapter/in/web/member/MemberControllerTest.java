@@ -9,7 +9,6 @@ import com.jitterted.mobreg.application.port.DummyNotifier;
 import com.jitterted.mobreg.application.port.DummyVideoConferenceScheduler;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
-import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberFactory;
@@ -25,6 +24,7 @@ import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
@@ -68,67 +68,94 @@ class MemberControllerTest {
 
     @Test
     void memberRegistersForEnsembleWillBeRegisteredForThatEnsemble() throws Exception {
-        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-        Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
-        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository,
-                                                              new DummyNotifier(), new DummyVideoConferenceScheduler());
-        MemberController memberController = new MemberController(ensembleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
+        Fixture fixture = createFixture(new Ensemble("Test", ZonedDateTime.now()));
 
-        MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
-        String redirectPage = memberController.accept(memberRegisterForm);
+        MemberRegisterForm memberRegisterForm = createMemberFormFor(fixture);
+        String redirectPage = fixture.memberController().accept(memberRegisterForm);
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/member/register");
 
-        assertThat(ensemble.acceptedMembers())
+        assertThat(fixture.ensemble().acceptedMembers())
                 .extracting(MemberId::id)
                 .containsOnly(memberRegisterForm.getMemberId());
     }
 
     @Test
     void memberDeclinesWillBeDeclinedForEnsemble() throws Exception {
-        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-        Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
-        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository,
-                                                              new DummyNotifier(), new DummyVideoConferenceScheduler());
-        MemberController memberController = new MemberController(ensembleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
+        Fixture fixture = createFixture(new Ensemble("Test", ZonedDateTime.now()));
 
-        MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
-        String redirectPage = memberController.decline(memberRegisterForm);
+        MemberRegisterForm memberRegisterForm = createMemberFormFor(fixture);
+        String redirectPage = fixture.memberController().decline(memberRegisterForm);
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/member/register");
-        assertThat(ensemble.memberStatusFor(MemberId.of(memberRegisterForm.getMemberId())))
+        assertThat(fixture.ensemble().memberStatusFor(MemberId.of(memberRegisterForm.getMemberId())))
                 .isEqualByComparingTo(MemberStatus.DECLINED);
     }
 
     @Test
     void memberJoiningAsSpectatorBecomesSpectator() throws Exception {
-        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-        Ensemble ensemble = ensembleRepository.save(new Ensemble("Test", ZonedDateTime.now()));
-        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository,
-                                                              new DummyNotifier(), new DummyVideoConferenceScheduler());
-        MemberController memberController = new MemberController(ensembleService, CRASH_TEST_DUMMY_MEMBER_SERVICE);
+        Fixture fixture = createFixture(new Ensemble("Test", ZonedDateTime.now()));
 
-        MemberRegisterForm memberRegisterForm = createMemberFormFor(ensemble, memberRepository);
-        String redirectPage = memberController.joinAsSpectator(memberRegisterForm);
+        MemberRegisterForm memberRegisterForm = createMemberFormFor(fixture);
+        String redirectPage = fixture.memberController().joinAsSpectator(memberRegisterForm);
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/member/register");
-        assertThat(ensemble.spectators())
+        assertThat(fixture.ensemble().spectators())
                 .containsExactly(MemberId.of(memberRegisterForm.getMemberId()));
     }
 
+    @Test
+    void showCanceledEnsemblesFromThePastForParticipants() {
+        Fixture fixture = createFixture(new Ensemble("Canceled Participant Ensemble", ZonedDateTime.now().minusDays(1)));
+        EnsembleService ensembleService = fixture.ensembleService();
+        ensembleService.scheduleEnsemble("Canceled 2", ZonedDateTime.now().minusDays(1));
+        MemberId memberId = fixture.memberService()
+                                   .save(new Member("participant", "ghuser", "ROLE_MEMBER"))
+                                   .getId();
+        Ensemble canceledParticipantEnsemble = fixture.ensemble();
+        ensembleService.acceptMember(canceledParticipantEnsemble.getId(), memberId);
+        ensembleService.cancel(canceledParticipantEnsemble.getId());
+
+        List<EnsembleSummaryView> ensembleSummaryViews = fixture.memberController()
+                                                                .summaryViewsFor(memberId);
+
+        assertThat(ensembleSummaryViews)
+                .extracting(EnsembleSummaryView::name)
+                .containsExactly("Canceled Participant Ensemble");
+    }
+
+
+
+    // -- encapsulated setup methods...
+
     @NotNull
-    private MemberRegisterForm createMemberFormFor(Ensemble ensemble, MemberRepository memberRepository) {
+    private static Fixture createFixture(Ensemble ensembleToSave) {
+        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        Ensemble ensemble = ensembleRepository.save(ensembleToSave);
+        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository,
+                                                              new DummyNotifier(), new DummyVideoConferenceScheduler());
+        DefaultMemberService memberService = new DefaultMemberService(memberRepository);
+        MemberController memberController = new MemberController(ensembleService, memberService);
+        return new Fixture(ensemble, memberService, ensembleService, memberController);
+    }
+
+    private record Fixture(Ensemble ensemble,
+                           MemberService memberService,
+                           EnsembleService ensembleService,
+                           MemberController memberController) {
+    }
+
+    @NotNull
+    private MemberRegisterForm createMemberFormFor(Fixture fixture) {
         MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
-        memberRegisterForm.setEnsembleId(ensemble.getId().id());
+        memberRegisterForm.setEnsembleId(fixture.ensemble().getId().id());
 
         Member member = MemberFactory.createMember(8, "name", "username");
-        memberRepository.save(member);
+        fixture.memberService().save(member);
         memberRegisterForm.setMemberId(member.getId().id());
 
         return memberRegisterForm;
