@@ -73,6 +73,33 @@ class EnsembleServiceTest {
                 .containsExactly("Canceled - Joined as Spectator");
     }
 
+    @Test
+    void membersSeeAllPastEnsemblesForWhichTheyJoinedAsParticipant() {
+        Fixture fixture = createFixture(new Ensemble("Past - Joined as Participant",
+                                                     ZonedDateTime.now().minusDays(1)));
+        Ensemble pastParticipantEnsemble = fixture.ensemble;
+        fixture.ensembleService()
+               .joinAsParticipant(pastParticipantEnsemble.getId(), fixture.memberId);
+
+        List<Ensemble> ensembles = fixture.ensembleService.ensemblesVisibleFor(fixture.memberId);
+
+        assertThat(ensembles)
+            .containsExactly(pastParticipantEnsemble);
+    }
+
+    @Test
+    void membersSeeAllPastEnsemblesForWhichTheyJoinedAsSpectators() {
+        Fixture fixture = createFixture(new Ensemble("Past - Joined as Spectator",
+                                                     ZonedDateTime.now().minusDays(1)));
+        Ensemble pastSpectatorEnsemble = fixture.ensemble;
+        fixture.ensembleService()
+               .joinAsSpectator(pastSpectatorEnsemble.getId(), fixture.memberId);
+
+        List<Ensemble> ensembles = fixture.ensembleService.ensemblesVisibleFor(fixture.memberId);
+
+        assertThat(ensembles)
+            .containsExactly(pastSpectatorEnsemble);
+    }
 
     //-- Encapsulated Setup Fixtures
 

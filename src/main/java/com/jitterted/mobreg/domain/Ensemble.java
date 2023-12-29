@@ -216,7 +216,7 @@ public class Ensemble {
         if (isDeclined(memberId)) {
             return Rsvp.DECLINED;
         }
-        if (isAccepted(memberId)) {
+        if (isAccepted(memberId) || isSpectator(memberId)) {
             return Rsvp.ACCEPTED;
         }
         return Rsvp.UNKNOWN;
@@ -260,6 +260,16 @@ public class Ensemble {
 
     public boolean endTimeIsInThePast(ZonedDateTime now) {
         return now.isAfter(startDateTime.plus(duration));
+    }
+
+    @Override
+    public String toString() {
+        return "Ensemble{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startDateTime=" + startDateTime +
+                ", state=" + state +
+                '}';
     }
 
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
