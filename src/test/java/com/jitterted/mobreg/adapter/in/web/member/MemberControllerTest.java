@@ -24,7 +24,6 @@ import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
@@ -106,27 +105,6 @@ class MemberControllerTest {
         assertThat(fixture.ensemble().spectators())
                 .containsExactly(MemberId.of(memberRegisterForm.getMemberId()));
     }
-
-    @Test
-    void showCanceledEnsemblesFromThePastForParticipants() {
-        Fixture fixture = createFixture(new Ensemble("Canceled Joined as Participant Ensemble", ZonedDateTime.now().minusDays(1)));
-        EnsembleService ensembleService = fixture.ensembleService();
-        ensembleService.scheduleEnsemble("Canceled Not Joined", ZonedDateTime.now().minusDays(1));
-        MemberId memberId = fixture.memberService()
-                                   .save(new Member("participant", "ghuser", "ROLE_MEMBER"))
-                                   .getId();
-        Ensemble canceledParticipantEnsemble = fixture.ensemble();
-        ensembleService.joinAsParticipant(canceledParticipantEnsemble.getId(), memberId);
-        ensembleService.cancel(canceledParticipantEnsemble.getId());
-
-        List<EnsembleSummaryView> ensembleSummaryViews = fixture.memberController()
-                                                                .summaryViewsFor(memberId);
-
-        assertThat(ensembleSummaryViews)
-                .extracting(EnsembleSummaryView::name)
-                .containsExactly("Canceled Joined as Participant Ensemble");
-    }
-
 
 
     // -- encapsulated setup methods...

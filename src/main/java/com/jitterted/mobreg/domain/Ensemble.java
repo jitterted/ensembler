@@ -184,7 +184,8 @@ public class Ensemble {
 
     public MemberEnsembleStatus statusFor(MemberId memberId, ZonedDateTime now) {
         MemberEnsembleStatus status = WhenSpaceRsvp.memberStatus(this, memberId, now);
-        if (isAccepted(memberId) && isCanceled()) {
+        if ((isAccepted(memberId) || isSpectator(memberId))
+                && isCanceled()) {
             return MemberEnsembleStatus.CANCELED;
         }
         if (isCanceled()) {

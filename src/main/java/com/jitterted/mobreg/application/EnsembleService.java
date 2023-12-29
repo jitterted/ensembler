@@ -173,9 +173,11 @@ public class EnsembleService {
 
     public List<Ensemble> ensemblesVisibleFor(MemberId memberId) {
         List<Ensemble> ensembles = allEnsemblesByDateTimeDescending()
-                                                  .stream()
-                                                  .filter(ensemble -> ensemble.statusFor(memberId, ZonedDateTime.now()) != MemberEnsembleStatus.HIDDEN)
-                                                  .toList();
+                                      .stream()
+                                      .filter(ensemble ->
+                                                      ensemble.statusFor(memberId, ZonedDateTime.now())
+                                                              != MemberEnsembleStatus.HIDDEN)
+                                      .toList();
         return ensembles;
     }
 }

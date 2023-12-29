@@ -1,10 +1,20 @@
 package com.jitterted.mobreg.application;
 
+import com.jitterted.mobreg.application.port.DummyNotifier;
+import com.jitterted.mobreg.application.port.DummyVideoConferenceScheduler;
+import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
+import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
+import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleFactory;
+import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -26,4 +36,67 @@ class EnsembleServiceTest {
         assertThat(ensembleRepository.savedEnsembles().get(0).spectators())
                 .containsExactly(memberId);
     }
+
+    @Test
+    void showCanceledEnsemblesFromThePastForJoinedParticipants() {
+        Fixture fixture = createFixture(new Ensemble("Canceled - Joined as Participant",
+                                                     ZonedDateTime.now().minusDays(1)));
+        Ensemble canceledParticipantEnsemble = fixture.ensemble();
+        EnsembleService ensembleService = fixture.ensembleService();
+        ensembleService.scheduleEnsemble("Past - Member Not Joined",
+                                         ZonedDateTime.now().minusDays(1));
+        ensembleService.joinAsParticipant(canceledParticipantEnsemble.getId(), fixture.memberId());
+        ensembleService.cancel(canceledParticipantEnsemble.getId());
+
+        List<Ensemble> ensembles = ensembleService.ensemblesVisibleFor(fixture.memberId());
+
+        assertThat(ensembles)
+                .extracting(Ensemble::name)
+                .containsExactly("Canceled - Joined as Participant");
+    }
+
+    @Test
+    void showCanceledEnsemblesFromThePastForJoinedSpectators() {
+        Fixture fixture = createFixture(new Ensemble("Canceled - Joined as Spectator",
+                                                     ZonedDateTime.now().minusDays(1)));
+        Ensemble canceledSpectatorEnsemble = fixture.ensemble();
+        EnsembleService ensembleService = fixture.ensembleService();
+        ensembleService.scheduleEnsemble("Past - Member Not Joined",
+                                         ZonedDateTime.now().minusDays(1));
+        ensembleService.joinAsSpectator(canceledSpectatorEnsemble.getId(), fixture.memberId());
+        ensembleService.cancel(canceledSpectatorEnsemble.getId());
+
+        List<Ensemble> ensembles = ensembleService.ensemblesVisibleFor(fixture.memberId());
+
+        assertThat(ensembles)
+                .extracting(Ensemble::name)
+                .containsExactly("Canceled - Joined as Spectator");
+    }
+
+
+    //-- Encapsulated Setup Fixtures
+
+    @NotNull
+    private static Fixture createFixture(Ensemble ensembleToSave) {
+        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        Ensemble ensemble = ensembleRepository.save(ensembleToSave);
+
+        MemberRepository memberRepository = new InMemoryMemberRepository();
+
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository,
+                                                              new DummyNotifier(), new DummyVideoConferenceScheduler());
+        MemberService memberService = new DefaultMemberService(memberRepository);
+
+        MemberId memberId = memberService
+                .save(new Member("participant", "ghuser", "ROLE_MEMBER"))
+                .getId();
+
+        return new Fixture(ensemble, memberId, ensembleService);
+    }
+
+    private record Fixture(Ensemble ensemble,
+                           MemberId memberId,
+                           EnsembleService ensembleService) {
+    }
+
 }
