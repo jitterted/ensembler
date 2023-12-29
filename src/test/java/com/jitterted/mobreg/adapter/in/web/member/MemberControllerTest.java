@@ -109,9 +109,9 @@ class MemberControllerTest {
 
     @Test
     void showCanceledEnsemblesFromThePastForParticipants() {
-        Fixture fixture = createFixture(new Ensemble("Canceled Participant Ensemble", ZonedDateTime.now().minusDays(1)));
+        Fixture fixture = createFixture(new Ensemble("Canceled Joined as Participant Ensemble", ZonedDateTime.now().minusDays(1)));
         EnsembleService ensembleService = fixture.ensembleService();
-        ensembleService.scheduleEnsemble("Canceled 2", ZonedDateTime.now().minusDays(1));
+        ensembleService.scheduleEnsemble("Canceled Not Joined", ZonedDateTime.now().minusDays(1));
         MemberId memberId = fixture.memberService()
                                    .save(new Member("participant", "ghuser", "ROLE_MEMBER"))
                                    .getId();
@@ -124,7 +124,7 @@ class MemberControllerTest {
 
         assertThat(ensembleSummaryViews)
                 .extracting(EnsembleSummaryView::name)
-                .containsExactly("Canceled Participant Ensemble");
+                .containsExactly("Canceled Joined as Participant Ensemble");
     }
 
 

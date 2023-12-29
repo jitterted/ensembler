@@ -56,7 +56,7 @@ public class MemberController {
     }
 
     public List<EnsembleSummaryView> summaryViewsFor(MemberId memberId) {
-        List<Ensemble> ensembles = ensembleService.allEnsemblesByDateTimeDescending();
+        List<Ensemble> ensembles = ensembleService.ensemblesVisibleFor(memberId);
         List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles, memberId, memberService);
         return ensembleSummaryViews;
     }

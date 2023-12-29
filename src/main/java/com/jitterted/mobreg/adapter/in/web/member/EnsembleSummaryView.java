@@ -5,7 +5,6 @@ import com.jitterted.mobreg.adapter.in.web.admin.MemberView;
 import com.jitterted.mobreg.application.GoogleCalendarLinkCreator;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.MemberEnsembleStatus;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberStatus;
 
@@ -28,7 +27,6 @@ public record EnsembleSummaryView(long id,
 
     public static List<EnsembleSummaryView> from(List<Ensemble> ensembles, MemberId memberId, MemberService memberService) {
         return ensembles.stream()
-                        .filter(ensemble -> ensemble.statusFor(memberId, ZonedDateTime.now()) != MemberEnsembleStatus.HIDDEN)
                         .map(ensemble -> toView(ensemble, memberId, memberService))
                         .toList();
     }
