@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.domain;
 
 import java.net.URI;
+import java.time.ZonedDateTime;
 
 public class EnsembleBuilderAndSaviour {
 
@@ -53,6 +54,11 @@ public class EnsembleBuilderAndSaviour {
 
     public EnsembleBuilderAndSaviour withConferenceDetails(String meetingId, String startUrl, String joinUrl) {
         conferenceDetails = new ConferenceDetails(meetingId, URI.create(startUrl), URI.create(joinUrl));
+        return this;
+    }
+
+    public EnsembleBuilderAndSaviour endedInThePast() {
+        ensemble = EnsembleFactory.withStartTime(ZonedDateTime.now().minusDays(1));
         return this;
     }
 }

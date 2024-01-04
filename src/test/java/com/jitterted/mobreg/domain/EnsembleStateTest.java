@@ -144,4 +144,16 @@ class EnsembleStateTest {
                 startTime.plus(ENSEMBLE_DURATION.plusMinutes(1))))
                 .isFalse();
     }
+
+    @Test
+    void canceledEnsembleEndedInThePastThenPendingCompletedIsFalse() {
+        ZonedDateTime startTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 12);
+        Ensemble ensemble = EnsembleFactory.withStartTime(startTime);
+
+        ensemble.cancel();
+
+        assertThat(ensemble.isPendingCompletedAsOf(
+                startTime.plus(ENSEMBLE_DURATION.plusMinutes(1))))
+                .isFalse();
+    }
 }

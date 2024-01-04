@@ -8,6 +8,7 @@ import com.jitterted.mobreg.application.StubMemberService;
 import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleBuilderAndSaviour;
 import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
@@ -24,6 +25,8 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleSummaryViewTest {
 
     private static final StubMemberService STUB_MEMBER_SERVICE = new StubMemberService();
+    private static final MemberId IRRELEVANT_MEMBER_ID = MemberId.of(42L);
+    private static final int IRRELEVANT_ENSEMBLE_ID = 13;
 
     @Test
     void memberStatusUnknownWhenEnsembleIsEmptyCanDoAnyAction() throws Exception {
@@ -153,7 +156,7 @@ class EnsembleSummaryViewTest {
 
         @Test
         void forCompletedEnsembleAndMemberParticipantIsRecording() throws Exception {
-            Fixture fixture = completedEnsembleWithRecordingLinkOf("https://recording.link/abc123");
+            Fixture fixture = createCompletedEnsembleWithRecordingLinkOf("https://recording.link/abc123");
 
             EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(fixture.ensemble(),
                                                                                  fixture.memberId(),
@@ -164,7 +167,36 @@ class EnsembleSummaryViewTest {
                                                      "Recording Link"));
         }
 
-        Fixture completedEnsembleWithRecordingLinkOf(String recordingUrl) {
+        @Test
+        void forPendingCompletedIsRecordingComingSoon() throws Exception {
+            Ensemble ensemble = EnsembleFactory.withStartTime(ZonedDateTime.now().minusHours(2));
+            ensemble.setId(EnsembleId.of(11));
+
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble,
+                                                                                 MemberId.of(1),
+                                                                                 STUB_MEMBER_SERVICE);
+
+            assertThat(ensembleSummaryView.links())
+                    .containsExactly(new DisplayLink("", "Recording Coming Soon..."));
+        }
+
+        @Test
+        void forCanceledAndEndedInThePastHasLinkTextOfCanceled() {
+            Ensemble canceledEnsemble = new EnsembleBuilderAndSaviour()
+                    .endedInThePast()
+                    .id(IRRELEVANT_ENSEMBLE_ID)
+                    .asCanceled()
+                    .build();
+
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(canceledEnsemble,
+                                                                                 IRRELEVANT_MEMBER_ID,
+                                                                                 STUB_MEMBER_SERVICE);
+
+            assertThat(ensembleSummaryView.links())
+                    .containsExactly(new DisplayLink("", "Ensemble Was Canceled"));
+        }
+
+        Fixture createCompletedEnsembleWithRecordingLinkOf(String recordingUrl) {
             Ensemble ensemble = new Ensemble("test", ZonedDateTime.now().minusDays(1));
             ensemble.setId(EnsembleId.of(1L));
             MemberId memberId = MemberId.of(11);
@@ -175,17 +207,6 @@ class EnsembleSummaryViewTest {
         }
 
         private record Fixture(Ensemble ensemble, MemberId memberId) {
-        }
-
-        @Test
-        void forPendingCompletedIsRecordingComingSoon() throws Exception {
-            Ensemble ensemble = EnsembleFactory.withStartTime(ZonedDateTime.now().minusHours(2));
-            ensemble.setId(EnsembleId.of(11));
-
-            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), STUB_MEMBER_SERVICE);
-
-            assertThat(ensembleSummaryView.links())
-                    .containsExactly(new DisplayLink("", "Recording Coming Soon..."));
         }
     }
 

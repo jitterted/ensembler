@@ -252,7 +252,7 @@ public class Ensemble {
     }
 
     public boolean isPendingCompletedAsOf(ZonedDateTime now) {
-        if (isCompleted()) {
+        if (isCompleted() || isCanceled()) {
             return false;
         }
         return endTimeIsInThePast(now);

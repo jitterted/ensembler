@@ -1,0 +1,15 @@
+@startuml
+title Ensemble Status for UI
+
+state "Pending Completed" as Pending
+
+[*] --> Scheduled : schedule\n ensemble
+Scheduled: Displays Zoom + Calendar links
+Scheduled --> Pending : start time + duration\n in the past
+Pending: Displays "Recording coming soon..."
+Pending --> Completed : add recording link\n click "Complete" button
+Completed: Display link to recording
+Scheduled --> Canceled : click "Cancel" button
+Canceled: Display "Ensemble Canceled""
+
+@enduml

@@ -68,6 +68,9 @@ public record EnsembleSummaryView(long id,
         if (ensemble.isPendingCompletedAsOf(ZonedDateTime.now())) {
             return List.of(new DisplayLink("", "Recording Coming Soon..."));
         }
+        if (ensemble.isCanceled()) {
+            return List.of(new DisplayLink("", "Ensemble Was Canceled"));
+        }
         return switch (memberStatusForEnsemble) {
             case UNKNOWN, DECLINED -> Collections.emptyList();
             case PARTICIPANT, SPECTATOR -> {
