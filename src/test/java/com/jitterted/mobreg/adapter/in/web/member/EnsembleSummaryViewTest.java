@@ -107,7 +107,7 @@ class EnsembleSummaryViewTest {
 
             EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(73L), STUB_MEMBER_SERVICE);
 
-            assertThat(ensembleSummaryView.links())
+            assertThat(ensembleSummaryView.status().links())
                     .isEmpty();
         }
 
@@ -119,7 +119,7 @@ class EnsembleSummaryViewTest {
 
             EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberId, STUB_MEMBER_SERVICE);
 
-            assertThat(ensembleSummaryView.links())
+            assertThat(ensembleSummaryView.status().links())
                     .isEmpty();
         }
 
@@ -138,7 +138,7 @@ class EnsembleSummaryViewTest {
             DisplayLink zoomLink = new DisplayLink(
                     "https://zoom.us/test",
                     "<i class=\"far fa-video pr-2\" aria-hidden=\"true\"></i>Zoom Link");
-            assertThat(ensembleSummaryView.links())
+            assertThat(ensembleSummaryView.status().links())
                     .containsExactly(calendarLink, zoomLink);
         }
 
@@ -150,7 +150,7 @@ class EnsembleSummaryViewTest {
 
             EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberId, STUB_MEMBER_SERVICE);
 
-            assertThat(ensembleSummaryView.links())
+            assertThat(ensembleSummaryView.status().links())
                     .hasSize(2);
         }
 
@@ -162,7 +162,7 @@ class EnsembleSummaryViewTest {
                                                                                  fixture.memberId(),
                                                                                  STUB_MEMBER_SERVICE);
 
-            assertThat(ensembleSummaryView.links())
+            assertThat(ensembleSummaryView.status().links())
                     .containsExactly(new DisplayLink("https://recording.link/abc123",
                                                      "Recording Link"));
         }
@@ -176,7 +176,7 @@ class EnsembleSummaryViewTest {
                                                                                  MemberId.of(1),
                                                                                  STUB_MEMBER_SERVICE);
 
-            assertThat(ensembleSummaryView.links())
+            assertThat(ensembleSummaryView.status().links())
                     .containsExactly(new DisplayLink("", "Recording Coming Soon..."));
         }
 
@@ -192,7 +192,7 @@ class EnsembleSummaryViewTest {
                                                                                  IRRELEVANT_MEMBER_ID,
                                                                                  STUB_MEMBER_SERVICE);
 
-            assertThat(ensembleSummaryView.links())
+            assertThat(ensembleSummaryView.status().links())
                     .containsExactly(new DisplayLink("", "Ensemble Was Canceled"));
         }
 

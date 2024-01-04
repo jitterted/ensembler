@@ -20,7 +20,7 @@ public record EnsembleSummaryView(long id,
                                   List<MemberView> participants,
                                   List<MemberView> spectators,
                                   @Deprecated String memberStatus,
-                                  List<DisplayLink> links,
+                                  Status status,
                                   boolean showActionButtons,
                                   SpectatorAction spectatorAction,
                                   ParticipantAction participantAction) {
@@ -49,7 +49,7 @@ public record EnsembleSummaryView(long id,
                 participantViews,
                 spectatorViews,
                 memberStatusAsString,
-                createLinksFor(ensemble, memberStatusForEnsemble),
+                new Status(createLinksFor(ensemble, memberStatusForEnsemble)),
                 showActionButtonsFor(ensemble),
                 spectatorAction,
                 participantAction
@@ -144,4 +144,7 @@ record ParticipantAction(String actionUrl, String buttonText, boolean disabled) 
 }
 
 record DisplayLink(String url, String text) {
+}
+
+record Status(List<DisplayLink> links) {
 }
