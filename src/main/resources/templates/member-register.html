@@ -188,6 +188,10 @@
                                     <i class="far fa-video pr-2" aria-hidden="true"></i>Some Link Here
                                 </a>
                             </div>
+                            <div th:each="text: *{messages}" th:text="${text}"
+                                 class="font-medium">
+                                Text message here
+                            </div>
                         </td>
                     </tr>
                     </tbody>

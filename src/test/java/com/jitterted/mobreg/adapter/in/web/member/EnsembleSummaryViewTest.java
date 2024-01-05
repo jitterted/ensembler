@@ -99,7 +99,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Nested
-    class Links {
+    class StatusLinksOnly {
 
         @Test
         void forUnknownMemberAreEmpty() {
@@ -108,6 +108,8 @@ class EnsembleSummaryViewTest {
             EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(73L), STUB_MEMBER_SERVICE);
 
             assertThat(ensembleSummaryView.status().links())
+                    .isEmpty();
+            assertThat(ensembleSummaryView.status().messages())
                     .isEmpty();
         }
 
@@ -120,6 +122,8 @@ class EnsembleSummaryViewTest {
             EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberId, STUB_MEMBER_SERVICE);
 
             assertThat(ensembleSummaryView.status().links())
+                    .isEmpty();
+            assertThat(ensembleSummaryView.status().messages())
                     .isEmpty();
         }
 
@@ -140,6 +144,8 @@ class EnsembleSummaryViewTest {
                     "<i class=\"far fa-video pr-2\" aria-hidden=\"true\"></i>Zoom Link");
             assertThat(ensembleSummaryView.status().links())
                     .containsExactly(calendarLink, zoomLink);
+            assertThat(ensembleSummaryView.status().messages())
+                    .isEmpty();
         }
 
         @Test
@@ -152,6 +158,8 @@ class EnsembleSummaryViewTest {
 
             assertThat(ensembleSummaryView.status().links())
                     .hasSize(2);
+            assertThat(ensembleSummaryView.status().messages())
+                    .isEmpty();
         }
 
         @Test
@@ -165,35 +173,8 @@ class EnsembleSummaryViewTest {
             assertThat(ensembleSummaryView.status().links())
                     .containsExactly(new DisplayLink("https://recording.link/abc123",
                                                      "Recording Link"));
-        }
-
-        @Test
-        void forPendingCompletedIsRecordingComingSoon() throws Exception {
-            Ensemble ensemble = EnsembleFactory.withStartTime(ZonedDateTime.now().minusHours(2));
-            ensemble.setId(EnsembleId.of(11));
-
-            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble,
-                                                                                 MemberId.of(1),
-                                                                                 STUB_MEMBER_SERVICE);
-
-            assertThat(ensembleSummaryView.status().links())
-                    .containsExactly(new DisplayLink("", "Recording Coming Soon..."));
-        }
-
-        @Test
-        void forCanceledAndEndedInThePastHasLinkTextOfCanceled() {
-            Ensemble canceledEnsemble = new EnsembleBuilderAndSaviour()
-                    .endedInThePast()
-                    .id(IRRELEVANT_ENSEMBLE_ID)
-                    .asCanceled()
-                    .build();
-
-            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(canceledEnsemble,
-                                                                                 IRRELEVANT_MEMBER_ID,
-                                                                                 STUB_MEMBER_SERVICE);
-
-            assertThat(ensembleSummaryView.status().links())
-                    .containsExactly(new DisplayLink("", "Ensemble Was Canceled"));
+            assertThat(ensembleSummaryView.status().messages())
+                    .isEmpty();
         }
 
         Fixture createCompletedEnsembleWithRecordingLinkOf(String recordingUrl) {
@@ -208,6 +189,44 @@ class EnsembleSummaryViewTest {
 
         private record Fixture(Ensemble ensemble, MemberId memberId) {
         }
+    }
+
+    @Nested
+    class StatusMessageOnly {
+
+        @Test
+        void forPendingCompletedIsRecordingComingSoon() throws Exception {
+            Ensemble ensemble = EnsembleFactory.withStartTime(ZonedDateTime.now().minusHours(2));
+            ensemble.setId(EnsembleId.of(11));
+
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble,
+                                                                                 MemberId.of(1),
+                                                                                 STUB_MEMBER_SERVICE);
+
+            assertThat(ensembleSummaryView.status().messages())
+                    .containsExactly("Recording Coming Soon...");
+            assertThat(ensembleSummaryView.status().links())
+                    .isEmpty();
+        }
+
+        @Test
+        void forCanceledAndEndedInThePastHasLinkTextOfCanceled() {
+            Ensemble canceledEnsemble = new EnsembleBuilderAndSaviour()
+                    .endedInThePast()
+                    .id(IRRELEVANT_ENSEMBLE_ID)
+                    .asCanceled()
+                    .build();
+
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(canceledEnsemble,
+                                                                                 IRRELEVANT_MEMBER_ID,
+                                                                                 STUB_MEMBER_SERVICE);
+
+            assertThat(ensembleSummaryView.status().messages())
+                    .containsExactly("Ensemble Was Canceled");
+            assertThat(ensembleSummaryView.status().links())
+                    .isEmpty();
+        }
+
     }
 
     @Nested

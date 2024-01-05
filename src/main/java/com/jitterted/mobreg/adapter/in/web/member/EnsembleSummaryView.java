@@ -11,6 +11,7 @@ import com.jitterted.mobreg.domain.MemberStatus;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public record EnsembleSummaryView(long id,
@@ -49,7 +50,7 @@ public record EnsembleSummaryView(long id,
                 participantViews,
                 spectatorViews,
                 memberStatusAsString,
-                new Status(createLinksFor(ensemble, memberStatusForEnsemble)),
+                createStatusFor(ensemble, memberStatusForEnsemble),
                 showActionButtonsFor(ensemble),
                 spectatorAction,
                 participantAction
@@ -60,19 +61,23 @@ public record EnsembleSummaryView(long id,
         return !ensemble.endTimeIsInThePast(ZonedDateTime.now());
     }
 
-    private static List<DisplayLink> createLinksFor(Ensemble ensemble, MemberStatus memberStatusForEnsemble) {
-        if (ensemble.isCompleted()) {
-            return List.of(new DisplayLink(ensemble.recordingLink().toString(),
-                                           "Recording Link"));
-        }
+    static Status createStatusFor(Ensemble ensemble, MemberStatus memberStatusForEnsemble) {
         if (ensemble.isPendingCompletedAsOf(ZonedDateTime.now())) {
-            return List.of(new DisplayLink("", "Recording Coming Soon..."));
+            return Status.messageOnly("Recording Coming Soon...");
         }
+
         if (ensemble.isCanceled()) {
-            return List.of(new DisplayLink("", "Ensemble Was Canceled"));
+            return Status.messageOnly("Ensemble Was Canceled");
         }
+
+        if (ensemble.isCompleted()) {
+            return Status.linksOnly(List.of(
+                            new DisplayLink(ensemble.recordingLink().toString(),
+                                            "Recording Link")));
+        }
+
         return switch (memberStatusForEnsemble) {
-            case UNKNOWN, DECLINED -> Collections.emptyList();
+            case UNKNOWN, DECLINED -> Status.empty();
             case PARTICIPANT, SPECTATOR -> {
                 DisplayLink calendarLink = new DisplayLink(
                         new GoogleCalendarLinkCreator().createFor(ensemble),
@@ -80,8 +85,7 @@ public record EnsembleSummaryView(long id,
                 DisplayLink zoomLink = new DisplayLink(
                         ensemble.meetingLink().toString(),
                         "<i class=\"far fa-video pr-2\" aria-hidden=\"true\"></i>Zoom Link");
-                yield List.of(calendarLink,
-                              zoomLink);
+                yield Status.linksOnly(List.of(calendarLink, zoomLink));
             }
         };
     }
@@ -146,5 +150,61 @@ record ParticipantAction(String actionUrl, String buttonText, boolean disabled) 
 record DisplayLink(String url, String text) {
 }
 
-record Status(List<DisplayLink> links) {
+class Status {
+    private final List<DisplayLink> links;
+    private final List<String> texts;
+
+    private Status(List<DisplayLink> links, List<String> texts) {
+        this.links = links;
+        this.texts = texts;
+    }
+
+    public static Status messageOnly(String message) {
+        return new Status(Collections.emptyList(),
+                          List.of(message));
+    }
+
+    public static Status linksOnly(List<DisplayLink> displayLinks) {
+        return new Status(displayLinks,
+                          Collections.emptyList());
+    }
+
+    public static Status empty() {
+        return new Status(Collections.emptyList(),
+                          Collections.emptyList());
+    }
+
+    public List<DisplayLink> links() {
+        return links;
+    }
+
+    public List<String> messages() {
+        return texts;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        var that = (Status) obj;
+        return Objects.equals(this.links, that.links) &&
+                Objects.equals(this.texts, that.texts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(links, texts);
+    }
+
+    @Override
+    public String toString() {
+        return "Status[" +
+                "links=" + links + ", " +
+                "texts=" + texts + ']';
+    }
+
 }
