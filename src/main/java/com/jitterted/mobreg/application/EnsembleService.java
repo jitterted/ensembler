@@ -110,6 +110,23 @@ public class EnsembleService {
                              .toList();
     }
 
+    public List<Ensemble> ensemblesVisibleFor(MemberId memberId) {
+        return allEnsemblesByDateTimeDescending()
+                .stream()
+                .filter(ensemble ->
+                                ensemble.statusFor(memberId, ZonedDateTime.now())
+                                        != MemberEnsembleStatus.HIDDEN)
+                .toList();
+    }
+
+    public List<Ensemble> allAvailableForRegistration(ZonedDateTime now) {
+        return allEnsembles()
+                .stream()
+                .filter(ensemble -> ensemble.availableForRegistration(now))
+                .toList();
+    }
+
+
     public Optional<Ensemble> findById(EnsembleId ensembleId) {
         return ensembleRepository.findById(ensembleId);
     }
@@ -171,13 +188,4 @@ public class EnsembleService {
                 .orElseThrow(() -> new EnsembleNotFoundException("Ensemble ID: " + ensembleId.id()));
     }
 
-    public List<Ensemble> ensemblesVisibleFor(MemberId memberId) {
-        List<Ensemble> ensembles = allEnsemblesByDateTimeDescending()
-                                      .stream()
-                                      .filter(ensemble ->
-                                                      ensemble.statusFor(memberId, ZonedDateTime.now())
-                                                              != MemberEnsembleStatus.HIDDEN)
-                                      .toList();
-        return ensembles;
-    }
 }

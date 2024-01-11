@@ -156,4 +156,22 @@ class EnsembleStateTest {
                 startTime.plus(ENSEMBLE_DURATION.plusMinutes(1))))
                 .isFalse();
     }
+
+    @Test
+    void ensembleScheduledFor1HourFromNowIsAvailableForRegistration() {
+        ZonedDateTime now = ZonedDateTimeFactory.zoneDateTimeUtc(2024, 1, 11, 8);
+        Ensemble ensembleStartsInOneHour = EnsembleFactory.withStartTime(now.plusHours(1));
+
+        assertThat(ensembleStartsInOneHour.availableForRegistration(now))
+                .isTrue();
+    }
+
+    @Test
+    void endedEnsembleIsNotAvailableForRegistration() {
+        ZonedDateTime now = ZonedDateTimeFactory.zoneDateTimeUtc(2024, 1, 11, 8);
+        Ensemble ensembleStartsInOneHour = EnsembleFactory.withStartTime(now.minusHours(2));
+
+        assertThat(ensembleStartsInOneHour.availableForRegistration(now))
+                .isFalse();
+    }
 }

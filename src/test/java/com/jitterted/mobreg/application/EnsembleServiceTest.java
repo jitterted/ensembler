@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import static com.jitterted.mobreg.domain.ZonedDateTimeFactory.zoneDateTimeUtc;
 import static org.assertj.core.api.Assertions.*;
 
 class EnsembleServiceTest {
@@ -101,6 +102,22 @@ class EnsembleServiceTest {
             .containsExactly(pastSpectatorEnsemble);
     }
 
+    @Test
+    void availableIncludesFutureEnsemblesAvailableForRegistrationByMember() {
+        // Available to register (might not be available if start time is in 15 min or less)
+        // Future = takes place (start date/time) "after" now
+        ZonedDateTime now = zoneDateTimeUtc(2024, 1, 11, 10);
+        Ensemble futureEnsemble = new Ensemble("Upcoming in 1 day - Possible for member to register", now.plusDays(1));
+        Fixture fixture = createFixture(futureEnsemble);
+        fixture.ensembleService.scheduleEnsemble("In Progress (1 Hour Ago) - Is not upcoming", now.minusHours(1));
+        fixture.ensembleService.scheduleEnsemble("Past (Yesterday) - Is not upcoming", now.minusDays(1));
+
+        List<Ensemble> ensembles = fixture.ensembleService.allAvailableForRegistration(now);
+
+        assertThat(ensembles)
+            .containsExactly(futureEnsemble);
+    }
+
     //-- Encapsulated Setup Fixtures
 
     @NotNull
@@ -110,8 +127,10 @@ class EnsembleServiceTest {
 
         MemberRepository memberRepository = new InMemoryMemberRepository();
 
-        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository,
-                                                              new DummyNotifier(), new DummyVideoConferenceScheduler());
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository,
+                                                              memberRepository,
+                                                              new DummyNotifier(),
+                                                              new DummyVideoConferenceScheduler());
         MemberService memberService = new DefaultMemberService(memberRepository);
 
         MemberId memberId = memberService
