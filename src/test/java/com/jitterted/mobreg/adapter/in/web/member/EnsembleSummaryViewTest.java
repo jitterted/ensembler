@@ -8,7 +8,7 @@ import com.jitterted.mobreg.application.StubMemberService;
 import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.EnsembleBuilderAndSaviour;
+import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
@@ -211,7 +211,7 @@ class EnsembleSummaryViewTest {
 
         @Test
         void forCanceledAndEndedInThePastHasLinkTextOfCanceled() {
-            Ensemble canceledEnsemble = new EnsembleBuilderAndSaviour()
+            Ensemble canceledEnsemble = new EnsembleBuilder()
                     .endedInThePast()
                     .id(IRRELEVANT_ENSEMBLE_ID)
                     .asCanceled()

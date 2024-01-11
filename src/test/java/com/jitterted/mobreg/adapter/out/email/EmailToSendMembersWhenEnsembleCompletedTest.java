@@ -5,7 +5,7 @@ import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.EnsembleBuilderAndSaviour;
+import com.jitterted.mobreg.domain.EnsembleBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -15,7 +15,7 @@ class EmailToSendMembersWhenEnsembleCompletedTest {
     // emails are only sent to Ensemble.acceptedMembers()
     @Test
     void emailsOnlySentToAcceptedMembers() throws Exception {
-        EnsembleBuilderAndSaviour ensembleBuilder = new EnsembleBuilderAndSaviour();
+        EnsembleBuilder ensembleBuilder = new EnsembleBuilder();
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         Ensemble ensemble = ensembleBuilder.accept(memberBuilder.withEmail("accepted@example.com").buildAndSave())
                                            .accept(memberBuilder.withEmail("accepted2@example.com").buildAndSave())
@@ -33,7 +33,7 @@ class EmailToSendMembersWhenEnsembleCompletedTest {
 
     @Test
     void emailContentIsFormattedCorrectly() throws Exception {
-        EnsembleBuilderAndSaviour ensembleBuilder = new EnsembleBuilderAndSaviour();
+        EnsembleBuilder ensembleBuilder = new EnsembleBuilder();
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         Ensemble darkMode = ensembleBuilder
                 .named("Ensemble #982")

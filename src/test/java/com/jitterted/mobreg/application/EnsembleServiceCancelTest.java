@@ -4,7 +4,7 @@ import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
 import com.jitterted.mobreg.domain.ConferenceDetails;
 import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.EnsembleBuilderAndSaviour;
+import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleId;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class EnsembleServiceCancelTest {
 
     @Test
     void canceledEnsembleIsSavedInRepositoryAsCanceled() throws Exception {
-        Ensemble ensemble = new EnsembleBuilderAndSaviour().build();
+        Ensemble ensemble = new EnsembleBuilder().build();
         TestEnsembleServiceBuilder ensembleServiceBuilder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble);
         EnsembleId ensembleId = ensembleServiceBuilder.lastSavedEnsembleId();
@@ -30,7 +30,7 @@ class EnsembleServiceCancelTest {
 
     @Test
     void canceledEnsembleDeletesVideoConferenceMeeting() throws Exception {
-        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+        Ensemble ensemble = new EnsembleBuilder()
                 .withConferenceDetails("zoomMeetingId", "https://start.link", "https://join.link")
                 .build();
         VideoConferenceScheduler succeedsIfMeetingIdMatchesEnsemble =
@@ -54,7 +54,7 @@ class EnsembleServiceCancelTest {
         TestEnsembleServiceBuilder ensembleServiceBuilder =
                 new TestEnsembleServiceBuilder()
                         .withVideoConferenceScheduler(deleteMeetingConferenceSchedulerMock)
-                        .saveEnsemble(new EnsembleBuilderAndSaviour().build());
+                        .saveEnsemble(new EnsembleBuilder().build());
         EnsembleId ensembleId = ensembleServiceBuilder.lastSavedEnsembleId();
         EnsembleService ensembleService = ensembleServiceBuilder.build();
 

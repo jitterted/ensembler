@@ -3,21 +3,21 @@ package com.jitterted.mobreg.domain;
 import java.net.URI;
 import java.time.ZonedDateTime;
 
-public class EnsembleBuilderAndSaviour {
+public class EnsembleBuilder {
 
     private Ensemble ensemble;
     private ConferenceDetails conferenceDetails;
 
-    public EnsembleBuilderAndSaviour() {
+    public EnsembleBuilder() {
         ensemble = EnsembleFactory.withStartTimeNow();
     }
 
-    public EnsembleBuilderAndSaviour accept(Member member) {
+    public EnsembleBuilder accept(Member member) {
         ensemble.joinAsParticipant(member.getId());
         return this;
     }
 
-    public EnsembleBuilderAndSaviour decline(Member member) {
+    public EnsembleBuilder decline(Member member) {
         ensemble.declinedBy(member.getId());
         return this;
     }
@@ -32,32 +32,32 @@ public class EnsembleBuilderAndSaviour {
         return ensembleToReturn;
     }
 
-    public EnsembleBuilderAndSaviour named(String name) {
+    public EnsembleBuilder named(String name) {
         ensemble.changeNameTo(name);
         return this;
     }
 
-    public EnsembleBuilderAndSaviour id(int id) {
+    public EnsembleBuilder id(int id) {
         ensemble.setId(EnsembleId.of(id));
         return this;
     }
 
-    public EnsembleBuilderAndSaviour asCompleted() {
+    public EnsembleBuilder asCompleted() {
         ensemble.complete();
         return this;
     }
 
-    public EnsembleBuilderAndSaviour asCanceled() {
+    public EnsembleBuilder asCanceled() {
         ensemble.cancel();
         return this;
     }
 
-    public EnsembleBuilderAndSaviour withConferenceDetails(String meetingId, String startUrl, String joinUrl) {
+    public EnsembleBuilder withConferenceDetails(String meetingId, String startUrl, String joinUrl) {
         conferenceDetails = new ConferenceDetails(meetingId, URI.create(startUrl), URI.create(joinUrl));
         return this;
     }
 
-    public EnsembleBuilderAndSaviour endedInThePast() {
+    public EnsembleBuilder endedInThePast() {
         ensemble = EnsembleFactory.withStartTime(ZonedDateTime.now().minusDays(1));
         return this;
     }

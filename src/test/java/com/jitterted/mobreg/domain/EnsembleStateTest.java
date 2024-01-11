@@ -50,7 +50,7 @@ class EnsembleStateTest {
 
     @Test
     void cancelCompletedEnsembleThenThrowsException() throws Exception {
-        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+        Ensemble ensemble = new EnsembleBuilder()
                 .id(-2)
                 .named("completed")
                 .asCompleted()
@@ -62,7 +62,7 @@ class EnsembleStateTest {
 
     @Test
     void canceledEnsembleWhenAcceptMemberThrowsException() throws Exception {
-        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+        Ensemble ensemble = new EnsembleBuilder()
                 .id(-2)
                 .named("canceled")
                 .asCanceled()
@@ -77,7 +77,7 @@ class EnsembleStateTest {
 
     @Test
     void completedEnsembleWhenRegisterMemberThrowsException() throws Exception {
-        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+        Ensemble ensemble = new EnsembleBuilder()
                 .id(-2)
                 .named("completed")
                 .asCompleted()
@@ -90,7 +90,7 @@ class EnsembleStateTest {
 
     @Test
     void completingCanceledEnsembleThrowsException() throws Exception {
-        Ensemble ensemble = new EnsembleBuilderAndSaviour()
+        Ensemble ensemble = new EnsembleBuilder()
                 .id(-2)
                 .named("canceled")
                 .asCanceled()
