@@ -1,5 +1,11 @@
 # Tasks
 
+[X] - 1. Put Upcoming and Past ensemble summary views into separate Model attributes ("upcomingEnsembles" and "pastEnsembles")
+[X] - 2. In member-register.html, duplicate ensembles table into two: one for upcoming, one for past
+[X] - 3. Update member-register.html to add header above second table: "Past Ensembles"
+[X] - 4. Tidy up the Past Ensembles table: removing support for buttons
+[ ] - 5. Update the "if ensembles = empty" section to look at both upcoming and past
+
 [ ] Change "participate" button color to indicate that it's disabled when the ensemble is full
 
 [ ] Replace EnsembleSummaryView.memberStatus with Links (for right-most column)
@@ -14,8 +20,6 @@
 [ ] Start writing HTML tests??
 
 [ ] Add notification when joining as spectator
-
-[ ] Update RSVP enum to also have SPECTATOR
 
 [ ] Admin Ensemble details screen: move a Member between Participant, Spectator, and Declined
 

@@ -74,7 +74,7 @@
     </h2>
 </div>
 
-<div th:unless="${ensembles.isEmpty()}" class="flex flex-col">
+<div th:unless="${pastEnsembles.isEmpty()}" class="flex flex-col">
     <div class="overflow-x-auto">
         <div class="align-middle min-w-4/5 px-4 sm:px-6 lg:px-8 font-sans">
             <div class="bg-white shadow-md rounded my-6">
@@ -89,7 +89,7 @@
                     </tr>
                     </thead>
                     <tbody class="text-gray-800 text-med font-light">
-                    <tr th:each="ensemble: ${ensembles}"
+                    <tr th:each="ensemble: ${pastEnsembles}"
                         class="border-b border-gray-200 even:bg-gray-50 hover:bg-gray-100">
                         <td class="py-3 px-6 text-left whitespace-nowrap">
                             <div class="flex items-center">
@@ -179,6 +179,110 @@
 <!-- UNCOMMENT TO SHOW MEMBER STATUS -->
 <!--                                <p th:text="${ensemble.memberStatus}">Member Status</p>-->
                             </form>
+                        </td>
+
+                        <td class="py-3 px-6 text-center" th:object="${ensemble.status}">
+                            <div th:each="link : *{links}">
+                                <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
+                                   href="#" th:href="${link.url}" th:utext="${link.text}">
+                                    <i class="far fa-video pr-2" aria-hidden="true"></i>Some Link Here
+                                </a>
+                            </div>
+                            <div th:each="text: *{messages}" th:text="${text}"
+                                 class="font-medium">
+                                Text message here
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="min-w-0 mt-10 px-4 sm:px-6 lg:px-8">
+    <h2 class="text-xl font-medium leading-7 text-gray-900 sm:text-2xl sm:truncate">
+        Past Ensembles
+    </h2>
+</div>
+
+<div th:unless="${pastEnsembles.isEmpty()}" class="flex flex-col">
+    <div class="overflow-x-auto">
+        <div class="align-middle min-w-4/5 px-4 sm:px-6 lg:px-8 font-sans">
+            <div class="bg-white shadow-md rounded my-6">
+                <table class="min-w-full divide-y">
+                    <thead>
+                    <tr class="bg-gray-200 text-black uppercase text-med leading-normal">
+                        <th class="py-3 px-6 text-left">Description</th>
+                        <th class="py-3 px-6 text-center">Date/Time</th>
+                        <th class="py-3 px-6 text-center">Participants</th>
+                        <th class="py-3 px-6 text-center">Spectators</th>
+                        <th class="py-3 px-6 text-center">Links</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-gray-800 text-med font-light">
+                    <tr th:each="ensemble: ${pastEnsembles}"
+                        class="border-b border-gray-200 even:bg-gray-50 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-left whitespace-nowrap">
+                            <div class="flex items-center">
+                                <span th:text="${ensemble.name}" class="font-medium">Ensemble #14</span>
+                            </div>
+                        </td>
+                        <td class="py-3 px-6 text-center">
+                            <div class="flex flex-row justify-center font-medium">
+                                <span class="datetimeutc" th:text="${ensemble.dateTime}">2021-09-17T16:00:00Z</span>
+                            </div>
+                        </td>
+
+                        <!-- PARTICIPANTS -->
+                        <td class="py-3 px-6 text-center" th:switch="${ensemble.memberEnsembleStatus}">
+                            <div class="flex items-center justify-center">
+                                <!-- Participant Count -->
+                                <span class="text-3xl font-bold text-purple-600"
+                                      th:text="${ensemble.participantCount}">4</span>
+                                <span class="text-xl font-bold text-purple-400 mr-2">/5</span>
+                                <!-- Avatar stack -->
+                                <div th:each="member: ${ensemble.participants}"
+                                     class="group mr-1">
+                                    <img class="w-6 h-6 rounded-full border-gray-200 border transform group-hover:scale-125"
+                                         src="https://avatars.githubusercontent.com/tedyoung"
+                                         th:src="@{https://avatars.githubusercontent.com/{githubusername}(githubusername=${member.githubUsername})}"
+                                    >
+                                    <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
+                                          th:text="${member.firstName}">First Name</span>
+                                </div>
+
+                                <div th:if="${ensemble.participantCount} &lt; 5 and ${ensemble.showActionButtons}"
+                                    th:each="i : ${#numbers.sequence(__${ensemble.participantCount}__, 4)}"
+                                    class="group mr-1">
+                                    <img class="w-6 h-6 rounded-full border-green-300 border-4 group-hover:block"
+                                         src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">
+                                    <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- SPECTATORS -->
+                        <td class="py-3 px-6 text-center">
+                            <div class="flex items-center justify-center mb-4">
+                                <div th:each="member: ${ensemble.spectators}"
+                                     class="group mr-1">
+                                    <img class="w-6 h-6 rounded-full border-gray-200 border transform group-hover:scale-125"
+                                         src="https://avatars.githubusercontent.com/tedyoung"
+                                         th:src="@{https://avatars.githubusercontent.com/{githubusername}(githubusername=${member.githubUsername})}"
+                                    >
+                                    <span class="hidden absolute text-sm text-gray-700 font-bold group-hover:block z-50 -mt-12"
+                                          th:text="${member.firstName}">First Name</span>
+                                </div>
+
+                                <div th:if="${ensemble.showActionButtons}"
+                                     class="group mr-1">
+                                    <img class="w-6 h-6 rounded-full border-green-300 border-4 group-hover:block"
+                                         src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">
+                                    <span class="hidden absolute text-sm text-green-600 font-bold group-hover:block z-50 -ml-4 -mt-12">available</span>
+                                </div>
+                            </div>
                         </td>
 
                         <td class="py-3 px-6 text-center" th:object="${ensemble.status}">

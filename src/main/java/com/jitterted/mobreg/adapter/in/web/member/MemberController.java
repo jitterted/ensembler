@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Controller
@@ -50,15 +51,23 @@ public class MemberController {
         MemberRegisterForm memberRegisterForm = createRegistrationForm(member.getId());
         model.addAttribute("register", memberRegisterForm);
 
-        List<EnsembleSummaryView> ensembleSummaryViews = summaryViewsFor(member.getId());
-        model.addAttribute("ensembles", ensembleSummaryViews);
+        addEnsemblesToModel(model, member);
         return "member-register";
     }
 
-    public List<EnsembleSummaryView> summaryViewsFor(MemberId memberId) {
+    public void addEnsemblesToModel(Model model, Member member) {
+        MemberId memberId = member.getId();
         List<Ensemble> ensembles = ensembleService.ensemblesVisibleFor(memberId);
         List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles, memberId, memberService);
-        return ensembleSummaryViews;
+        model.addAttribute("ensembles", ensembleSummaryViews);
+
+        List<Ensemble> availableEnsembles = ensembleService.allAvailableForRegistration(ZonedDateTime.now());
+        List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(availableEnsembles, memberId, memberService);
+        model.addAttribute("upcomingEnsembles", availableEnsembleSummaryViews);
+
+        List<Ensemble> pastEnsembles = ensembleService.allAvailableForRegistration(ZonedDateTime.now());
+        List<EnsembleSummaryView> pastEnsembleSummaryViews = EnsembleSummaryView.from(pastEnsembles, memberId, memberService);
+        model.addAttribute("pastEnsembles", pastEnsembleSummaryViews);
     }
 
     private MemberRegisterForm createRegistrationForm(MemberId memberId) {
