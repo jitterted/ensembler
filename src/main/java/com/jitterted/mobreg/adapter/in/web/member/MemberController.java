@@ -65,7 +65,7 @@ public class MemberController {
         List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(availableEnsembles, memberId, memberService);
         model.addAttribute("upcomingEnsembles", availableEnsembleSummaryViews);
 
-        List<Ensemble> pastEnsembles = ensembleService.allAvailableForRegistration(ZonedDateTime.now());
+        List<Ensemble> pastEnsembles = ensembleService.allInThePastFor(memberId, ZonedDateTime.now());
         List<EnsembleSummaryView> pastEnsembleSummaryViews = EnsembleSummaryView.from(pastEnsembles, memberId, memberService);
         model.addAttribute("pastEnsembles", pastEnsembleSummaryViews);
     }

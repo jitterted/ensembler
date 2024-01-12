@@ -74,7 +74,7 @@
     </h2>
 </div>
 
-<div th:unless="${pastEnsembles.isEmpty()}" class="flex flex-col">
+<div th:unless="${upcomingEnsembles.isEmpty()}" class="flex flex-col">
     <div class="overflow-x-auto">
         <div class="align-middle min-w-4/5 px-4 sm:px-6 lg:px-8 font-sans">
             <div class="bg-white shadow-md rounded my-6">
@@ -89,7 +89,7 @@
                     </tr>
                     </thead>
                     <tbody class="text-gray-800 text-med font-light">
-                    <tr th:each="ensemble: ${pastEnsembles}"
+                    <tr th:each="ensemble: ${upcomingEnsembles}"
                         class="border-b border-gray-200 even:bg-gray-50 hover:bg-gray-100">
                         <td class="py-3 px-6 text-left whitespace-nowrap">
                             <div class="flex items-center">

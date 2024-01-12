@@ -5,6 +5,7 @@
 [X] - 3. Update member-register.html to add header above second table: "Past Ensembles"
 [X] - 4. Tidy up the Past Ensembles table: removing support for buttons
 [ ] - 5. Update the "if ensembles = empty" section to look at both upcoming and past
+[ ] - 6. Add more tests for MemberController showEnsemblesForUser, checking the model for past and upcoming ensembles
 
 [ ] Change "participate" button color to indicate that it's disabled when the ensemble is full
 
