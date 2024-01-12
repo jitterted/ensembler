@@ -279,6 +279,10 @@ public class Ensemble {
         return startDateTime.isAfter(now);
     }
 
+    public boolean isRegistered(MemberId memberId) {
+        return isAccepted(memberId) || isSpectator(memberId);
+    }
+
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
         // @formatter: off
         private static final Map<WhenSpaceRsvp, MemberEnsembleStatus> STATE_TO_STATUS = Map.ofEntries(

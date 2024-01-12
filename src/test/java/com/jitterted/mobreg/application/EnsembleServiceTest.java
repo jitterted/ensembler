@@ -85,7 +85,7 @@ class EnsembleServiceTest {
         List<Ensemble> ensembles = fixture.ensembleService.ensemblesVisibleFor(fixture.memberId);
 
         assertThat(ensembles)
-            .containsExactly(pastParticipantEnsemble);
+                .containsExactly(pastParticipantEnsemble);
     }
 
     @Test
@@ -93,13 +93,13 @@ class EnsembleServiceTest {
         Fixture fixture = createFixture(new Ensemble("Past - Joined as Spectator",
                                                      ZonedDateTime.now().minusDays(1)));
         Ensemble pastSpectatorEnsemble = fixture.ensemble;
-        fixture.ensembleService()
-               .joinAsSpectator(pastSpectatorEnsemble.getId(), fixture.memberId);
+        fixture.ensembleService
+                .joinAsSpectator(pastSpectatorEnsemble.getId(), fixture.memberId);
 
         List<Ensemble> ensembles = fixture.ensembleService.ensemblesVisibleFor(fixture.memberId);
 
         assertThat(ensembles)
-            .containsExactly(pastSpectatorEnsemble);
+                .containsExactly(pastSpectatorEnsemble);
     }
 
     @Test
@@ -109,22 +109,42 @@ class EnsembleServiceTest {
         ZonedDateTime now = zoneDateTimeUtc(2024, 1, 11, 10);
         Ensemble futureEnsemble = new Ensemble("Upcoming in 1 day - Available for member to register", now.plusDays(1));
         Fixture fixture = createFixture(futureEnsemble);
-//        fixture.ensembleService.scheduleEnsemble("Canceled, by scheduled to start in 1 day - is NOT available", now.minusDays(1));
+        Ensemble canceledEnsemble = fixture.ensembleService
+                .scheduleEnsemble("Canceled, but future scheduled to start in 1 day - is NOT available", now.minusDays(1));
+        fixture.ensembleService.cancel(canceledEnsemble.getId());
         fixture.ensembleService.scheduleEnsemble("In Progress (1 Hour Ago) - is NOT available", now.minusHours(1));
         fixture.ensembleService.scheduleEnsemble("Past (Yesterday) - is NOT available", now.minusDays(1));
 
         List<Ensemble> ensembles = fixture.ensembleService.allAvailableForRegistration(now);
 
         assertThat(ensembles)
-            .containsExactly(futureEnsemble);
+                .containsExactly(futureEnsemble);
     }
 
-//    @Test
-//    void pastEnsemblesForMemberShowOnlyThoseForWhichMemberRegisteredRegardlessOfCancelStatus() {
-//        // past ensemble: registered + not-canceled         SHOWS
-//        // past ensemble: registered + canceled             SHOWS
-//        // past ensemble: NOT registered + not-canceled     HIDDEN
-//    }
+    @Test
+    void pastEnsemblesForMemberShowOnlyThoseForWhichMemberRegisteredAndNotCanceled() {
+        // past ensemble: NOT registered + not-canceled     HIDDEN
+        ZonedDateTime now = zoneDateTimeUtc(2024, 1, 11, 10);
+        Ensemble hiddenEnsemble = new Ensemble("in the past - not canceled - not registered = HIDDEN", now.minusDays(1));
+        Fixture fixture = createFixture(hiddenEnsemble);
+        // past ensemble: registered + canceled             HIDDEN
+        EnsembleService ensembleService = fixture.ensembleService;
+        Ensemble participantButCanceledEnsemble = ensembleService
+                .scheduleEnsemble("in the past - CANCELED - REGISTERED = HIDDEN", now.minusDays(1));
+        ensembleService.joinAsParticipant(participantButCanceledEnsemble.getId(),
+                                          fixture.memberId);
+        ensembleService.cancel(participantButCanceledEnsemble.getId());
+        // past ensemble: registered + not-canceled         SHOWS
+        Ensemble registeredNotCanceledEnsemble = ensembleService
+                .scheduleEnsemble("in the past - no canceled - REGISTERED = SHOWN", now.minusDays(1));
+        ensembleService.joinAsSpectator(registeredNotCanceledEnsemble.getId(),
+                                        fixture.memberId);
+
+        List<Ensemble> pastEnsembles = ensembleService.allInThePastFor(fixture.memberId, now);
+
+        assertThat(pastEnsembles)
+                .containsExactly(registeredNotCanceledEnsemble);
+    }
 
 
     //

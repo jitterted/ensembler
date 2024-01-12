@@ -185,4 +185,5 @@ class EnsembleStateTest {
                 .as("Expected to NOT be available for registration")
                 .isFalse();
     }
+
 }

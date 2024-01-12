@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static java.util.function.Predicate.not;
+
 @SuppressWarnings("ClassCanBeRecord")
 public class EnsembleService {
     private final EnsembleRepository ensembleRepository;
@@ -126,6 +128,14 @@ public class EnsembleService {
                 .toList();
     }
 
+    public List<Ensemble> allInThePastFor(MemberId memberId, ZonedDateTime now) {
+        return allEnsembles()
+                .stream()
+                .filter(not(Ensemble::isCanceled))
+                .filter(ensemble -> ensemble.isRegistered(memberId))
+                .filter(ensemble -> ensemble.endTimeIsInThePast(now))
+                .toList();
+    }
 
     public Optional<Ensemble> findById(EnsembleId ensembleId) {
         return ensembleRepository.findById(ensembleId);
