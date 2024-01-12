@@ -103,14 +103,15 @@ class EnsembleServiceTest {
     }
 
     @Test
-    void availableIncludesFutureEnsemblesAvailableForRegistrationByMember() {
+    void availableIncludesNonCanceledFutureEnsemblesAvailableForRegistrationByMember() {
         // Available to register (might not be available if start time is in 15 min or less)
         // Future = takes place (start date/time) "after" now
         ZonedDateTime now = zoneDateTimeUtc(2024, 1, 11, 10);
-        Ensemble futureEnsemble = new Ensemble("Upcoming in 1 day - Possible for member to register", now.plusDays(1));
+        Ensemble futureEnsemble = new Ensemble("Upcoming in 1 day - Available for member to register", now.plusDays(1));
         Fixture fixture = createFixture(futureEnsemble);
-        fixture.ensembleService.scheduleEnsemble("In Progress (1 Hour Ago) - Is not upcoming", now.minusHours(1));
-        fixture.ensembleService.scheduleEnsemble("Past (Yesterday) - Is not upcoming", now.minusDays(1));
+//        fixture.ensembleService.scheduleEnsemble("Canceled, by scheduled to start in 1 day - is NOT available", now.minusDays(1));
+        fixture.ensembleService.scheduleEnsemble("In Progress (1 Hour Ago) - is NOT available", now.minusHours(1));
+        fixture.ensembleService.scheduleEnsemble("Past (Yesterday) - is NOT available", now.minusDays(1));
 
         List<Ensemble> ensembles = fixture.ensembleService.allAvailableForRegistration(now);
 
@@ -118,7 +119,17 @@ class EnsembleServiceTest {
             .containsExactly(futureEnsemble);
     }
 
+//    @Test
+//    void pastEnsemblesForMemberShowOnlyThoseForWhichMemberRegisteredRegardlessOfCancelStatus() {
+//        // past ensemble: registered + not-canceled         SHOWS
+//        // past ensemble: registered + canceled             SHOWS
+//        // past ensemble: NOT registered + not-canceled     HIDDEN
+//    }
+
+
+    //
     //-- Encapsulated Setup Fixtures
+    //
 
     @NotNull
     private static Fixture createFixture(Ensemble ensembleToSave) {

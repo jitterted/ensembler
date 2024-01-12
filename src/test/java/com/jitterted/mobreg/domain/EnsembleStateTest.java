@@ -174,4 +174,15 @@ class EnsembleStateTest {
         assertThat(ensembleStartsInOneHour.availableForRegistration(now))
                 .isFalse();
     }
+
+    @Test
+    void ensembleScheduledForFutureButCanceledIsNotAvailableForRegistration() {
+        ZonedDateTime now = ZonedDateTimeFactory.zoneDateTimeUtc(2024, 1, 11, 8);
+        Ensemble ensemble = EnsembleFactory.withStartTime(now.plusHours(1));
+        ensemble.cancel();
+
+        assertThat(ensemble.availableForRegistration(now))
+                .as("Expected to NOT be available for registration")
+                .isFalse();
+    }
 }

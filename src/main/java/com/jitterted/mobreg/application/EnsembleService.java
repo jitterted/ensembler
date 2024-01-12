@@ -43,9 +43,9 @@ public class EnsembleService {
         saveAndNotifyEnsembleScheduled(ensemble);
     }
 
-    public void scheduleEnsemble(String name, ZonedDateTime startDateTime) {
+    public Ensemble scheduleEnsemble(String name, ZonedDateTime startDateTime) {
         Ensemble ensemble = new Ensemble(name, startDateTime);
-        saveAndNotifyEnsembleScheduled(ensemble);
+        return saveAndNotifyEnsembleScheduled(ensemble);
     }
 
     public void scheduleEnsembleWithVideoConference(String name, ZonedDateTime startDateTime) {
