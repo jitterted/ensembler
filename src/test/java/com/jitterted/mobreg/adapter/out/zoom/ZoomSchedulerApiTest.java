@@ -1,8 +1,6 @@
 package com.jitterted.mobreg.adapter.out.zoom;
 
 import com.jitterted.mobreg.NoSecurityTestConfiguration;
-import com.jitterted.mobreg.WebSecurityConfig;
-import com.jitterted.mobreg.adapter.in.web.admin.AdminDashboardController;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.ConferenceDetails;
@@ -11,10 +9,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -34,12 +29,13 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.*;
 
 @Tag("manual")
-@WebMvcTest(
-        controllers = AdminDashboardController.class,
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                classes = WebSecurityConfig.class)
-)
+//@WebMvcTest(
+//        controllers = AdminDashboardController.class
+//        ,
+//        excludeFilters = @ComponentScan.Filter(
+//                type = FilterType.ASSIGNABLE_TYPE,
+//                classes = WebSecurityConfig.class)
+//)
 @Import({NoSecurityTestConfiguration.class, ZoomScheduler.class})
 @TestPropertySource("file:/Users/tedyoung/.config/spring-boot/spring-boot-devtools.properties")
 @ContextConfiguration

@@ -21,15 +21,17 @@ public class InviteProcessController {
     private final MemberRepository memberRepository;
     private final InviteRepository inviteRepository;
 
-    public InviteProcessController(MemberRepository memberRepository, InviteRepository inviteRepository) {
+    public InviteProcessController(MemberRepository memberRepository,
+                                   InviteRepository inviteRepository) {
         this.memberRepository = memberRepository;
         this.inviteRepository = inviteRepository;
     }
 
     @GetMapping("/invite")
-    public String processInvitation(@RequestParam(value = "invite_token", defaultValue = "") String token,
-                                    @AuthenticationPrincipal AuthenticatedPrincipal authenticatedPrincipal,
-                                    Model model) {
+    public String processInvitation(
+            @RequestParam(value = "invite_token", defaultValue = "") String token,
+            @AuthenticationPrincipal AuthenticatedPrincipal authenticatedPrincipal,
+            Model model) {
         String githubUsername = GitHubUsernamePrincipalExtractor.usernameFrom(authenticatedPrincipal);
         if (memberRepository.findByGithubUsername(githubUsername.toLowerCase())
                             .stream()

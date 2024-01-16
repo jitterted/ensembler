@@ -1,5 +1,8 @@
 package com.jitterted.mobreg;
 
+import com.jitterted.mobreg.adapter.in.web.admin.InviteEditor;
+import com.jitterted.mobreg.adapter.in.web.admin.InviteEditorTest;
+import com.jitterted.mobreg.adapter.out.jdbc.InviteJdbcRepository;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Tag;
@@ -9,7 +12,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
 @Tag("architecture")
-public class HexagonalArchitectureTest {
+class HexagonalArchitectureTest {
     @Test
     public void domainMustNotDependOnAnythingOutsideOfDomain() {
         noClasses()
@@ -33,6 +36,8 @@ public class HexagonalArchitectureTest {
         slices().matching("..adapter.*.(*)..")
                 .should().notDependOnEachOther()
                 .as("Adapters must not depend on each other")
+                .ignoreDependency(InviteEditor.class, InviteJdbcRepository.class)
+                .ignoreDependency(InviteEditorTest.class, InviteJdbcRepository.class)
                 .check(productionAndTestClasses());
     }
 

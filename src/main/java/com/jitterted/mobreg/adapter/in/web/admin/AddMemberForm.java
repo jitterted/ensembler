@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class AddMemberForm {
+class AddMemberForm {
     @NotBlank
     private String firstName;
     @NotBlank

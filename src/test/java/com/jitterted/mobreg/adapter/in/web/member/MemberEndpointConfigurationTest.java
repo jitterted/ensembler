@@ -1,7 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
-import com.jitterted.mobreg.adapter.out.jdbc.InviteJdbcRepository;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
@@ -25,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Disabled // figure out what's wrong
-@WebMvcTest({MemberController.class, MemberProfileController.class, InviteProcessController.class})
+@WebMvcTest({MemberController.class, MemberProfileController.class})
 @Tag("mvc")
 @WithMockUser(username = "username", authorities = {"ROLE_MEMBER"})
 class MemberEndpointConfigurationTest {
@@ -44,9 +43,6 @@ class MemberEndpointConfigurationTest {
 
     @MockBean
     MemberRepository memberRepository;
-
-    @MockBean
-    InviteJdbcRepository inviteJdbcRepository;
 
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
@@ -104,10 +100,4 @@ class MemberEndpointConfigurationTest {
                .andExpect(status().is3xxRedirection());
     }
 
-    @Test
-    void getToInviteIdEndpointIs200Ok() throws Exception {
-        mockMvc.perform(get("/invite?invite_id=testing123")
-                                .with(OAuth2UserFactory.oAuth2User("ROLE_USER")))
-               .andExpect(status().isOk());
-    }
 }

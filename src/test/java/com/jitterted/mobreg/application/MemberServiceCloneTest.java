@@ -1,6 +1,8 @@
-package com.jitterted.mobreg.domain;
+package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.application.TestMemberBuilder;
+import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberId;
+import com.jitterted.mobreg.domain.MemberSnapshot;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;

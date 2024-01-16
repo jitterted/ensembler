@@ -2,7 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.domain.EnsembleId;
 
-public class AdminRegistrationForm {
+class AdminRegistrationForm {
     private String name;
     private String githubUsername;
     private String discordUsername;

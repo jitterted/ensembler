@@ -8,7 +8,7 @@ import com.jitterted.mobreg.domain.MemberId;
 import java.util.List;
 import java.util.stream.Stream;
 
-public record EnsembleDetailView(long id,
+record EnsembleDetailView(long id,
                                  String name,
                                  String startDateTime,
                                  String duration,
