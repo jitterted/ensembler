@@ -16,5 +16,5 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: maven
-      - name: Build and Test with Maven
-        run: mvn -B verify
+      - name: Maven Verify (build and test)
+        run: mvn --batch-mode --no-transfer-progress verify
