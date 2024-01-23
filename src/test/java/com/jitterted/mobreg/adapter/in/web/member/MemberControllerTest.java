@@ -15,6 +15,7 @@ import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.MemberStatus;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -24,88 +25,122 @@ import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
+@SuppressWarnings("unchecked")
 class MemberControllerTest {
 
-    private static final MemberService CRASH_TEST_DUMMY_MEMBER_SERVICE = null;
+    @Nested
+    class ViewModels {
 
-    @Test
-    void ensembleFormContainsMemberIdForOAuth2User() throws Exception {
-        InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-        ensembleRepository.save(new Ensemble("GET Test", ZonedDateTime.now()));
-        EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
+        @Test
+        void registerViewShowsPastAndFutureEnsembles() {
+            Fixture fixture = createFixture(new Ensemble("Future Ensemble",
+                                                         ZonedDateTime.now().plusDays(2)));
+            AuthFixture authFixture = createAuthUser(fixture.memberService);
+            Ensemble ensemble1 = fixture.ensembleService.scheduleEnsemble("Past Ensemble 1",
+                                                                          ZonedDateTime.now()
+                                                                                       .minusDays(12));
+            fixture.ensembleService.joinAsParticipant(ensemble1.getId(), authFixture.memberId);
+            Ensemble ensemble2 = fixture.ensembleService.scheduleEnsemble("Past Ensemble 2",
+                                                                          ZonedDateTime.now()
+                                                                                       .minusDays(5));
+            fixture.ensembleService.joinAsSpectator(ensemble2.getId(), authFixture.memberId);
 
-        InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        Member member = MemberFactory.createMember(11, "name", "ghuser");
-        memberRepository.save(member);
-        MemberService memberService = new DefaultMemberService(memberRepository);
+            Model model = new ConcurrentModel();
+            fixture.memberController.showEnsemblesForUser(model,
+                                                          authFixture.oAuth2UserWithMemberRole(),
+                                                          authFixture.securityContext());
 
-        MemberController memberController = new MemberController(ensembleService, memberService);
+            List<EnsembleSummaryView> upcomingEnsembles = (List<EnsembleSummaryView>) model.getAttribute("upcomingEnsembles");
+            assertThat(upcomingEnsembles)
+                    .as("Should be 1 Upcoming Ensemble in the Model")
+                    .hasSize(1);
+            List<EnsembleSummaryView> pastEnsembles = (List<EnsembleSummaryView>) model.getAttribute("pastEnsembles");
+            assertThat(pastEnsembles)
+                    .as("Should be 2 Past Ensembles in the Model")
+                    .hasSize(2);
+            assertThat(((List<EnsembleSummaryView>) model.getAttribute("ensembles")))
+                    .hasSize(3);
+        }
 
-        Model model = new ConcurrentModel();
-        OAuth2User oAuth2UserWithMemberRole = OAuth2UserFactory.createOAuth2UserWithMemberRole("ghuser", "ROLE_MEMBER");
-        SecurityContextImpl securityContext = new SecurityContextImpl(new OAuth2AuthenticationToken(oAuth2UserWithMemberRole,
-                                                                                                    Set.of(new SimpleGrantedAuthority("ROLE_MEMBER")),
-                                                                                                    "github"));
-        memberController.showEnsemblesForUser(model,
-                                              oAuth2UserWithMemberRole,
-                                              securityContext);
+        @Test
+        void ensembleFormContainsMemberIdForOAuth2User() throws Exception {
+            InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+            ensembleRepository.save(new Ensemble("GET Test", ZonedDateTime.now()));
+            EnsembleService ensembleService = EnsembleServiceFactory.createServiceWith(ensembleRepository);
 
-        assertThat((String) model.getAttribute("firstName"))
-                .isEqualTo("name");
-        assertThat((String) model.getAttribute("githubUsername"))
-                .isEqualTo("ghuser");
+            InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
+            MemberService memberService = new DefaultMemberService(memberRepository);
 
-        MemberRegisterForm memberRegisterForm = (MemberRegisterForm) model.getAttribute("register");
+            MemberController memberController = new MemberController(ensembleService, memberService);
 
-        assertThat(memberRegisterForm.getMemberId())
-                .isEqualTo(11);
+            Model model = new ConcurrentModel();
+            AuthFixture authFixture = createAuthUser(memberService);
+            memberController.showEnsemblesForUser(model,
+                                                  authFixture.oAuth2UserWithMemberRole(),
+                                                  authFixture.securityContext());
+
+            assertThat((String) model.getAttribute("firstName"))
+                    .isEqualTo("name");
+            assertThat((String) model.getAttribute("githubUsername"))
+                    .isEqualTo("ghuser");
+
+            MemberRegisterForm memberRegisterForm = (MemberRegisterForm) model.getAttribute("register");
+
+            assertThat(memberRegisterForm.getMemberId())
+                    .isEqualTo(11);
+        }
     }
 
-    @Test
-    void memberRegistersForEnsembleWillBeRegisteredForThatEnsemble() throws Exception {
-        Fixture fixture = createFixture(new Ensemble("Test", ZonedDateTime.now()));
+    @Nested
+    class Commands {
 
-        MemberRegisterForm memberRegisterForm = createMemberFormFor(fixture);
-        String redirectPage = fixture.memberController().accept(memberRegisterForm);
+        @Test
+        void memberRegistersForEnsembleWillBeRegisteredForThatEnsemble() throws Exception {
+            Fixture fixture = createFixture(new Ensemble("Test", ZonedDateTime.now()));
 
-        assertThat(redirectPage)
-                .isEqualTo("redirect:/member/register");
+            MemberRegisterForm memberRegisterForm = createMemberFormFor(fixture);
+            String redirectPage = fixture.memberController().accept(memberRegisterForm);
 
-        assertThat(fixture.ensemble().acceptedMembers())
-                .extracting(MemberId::id)
-                .containsOnly(memberRegisterForm.getMemberId());
+            assertThat(redirectPage)
+                    .isEqualTo("redirect:/member/register");
+
+            assertThat(fixture.ensemble().acceptedMembers())
+                    .extracting(MemberId::id)
+                    .containsOnly(memberRegisterForm.getMemberId());
+        }
+
+        @Test
+        void memberDeclinesWillBeDeclinedForEnsemble() throws Exception {
+            Fixture fixture = createFixture(new Ensemble("Test", ZonedDateTime.now()));
+
+            MemberRegisterForm memberRegisterForm = createMemberFormFor(fixture);
+            String redirectPage = fixture.memberController().decline(memberRegisterForm);
+
+            assertThat(redirectPage)
+                    .isEqualTo("redirect:/member/register");
+            assertThat(fixture.ensemble()
+                              .memberStatusFor(MemberId.of(memberRegisterForm.getMemberId())))
+                    .isEqualByComparingTo(MemberStatus.DECLINED);
+        }
+
+        @Test
+        void memberJoiningAsSpectatorBecomesSpectator() throws Exception {
+            Fixture fixture = createFixture(new Ensemble("Test", ZonedDateTime.now()));
+
+            MemberRegisterForm memberRegisterForm = createMemberFormFor(fixture);
+            String redirectPage = fixture.memberController().joinAsSpectator(memberRegisterForm);
+
+            assertThat(redirectPage)
+                    .isEqualTo("redirect:/member/register");
+            assertThat(fixture.ensemble().spectators())
+                    .containsExactly(MemberId.of(memberRegisterForm.getMemberId()));
+        }
     }
-
-    @Test
-    void memberDeclinesWillBeDeclinedForEnsemble() throws Exception {
-        Fixture fixture = createFixture(new Ensemble("Test", ZonedDateTime.now()));
-
-        MemberRegisterForm memberRegisterForm = createMemberFormFor(fixture);
-        String redirectPage = fixture.memberController().decline(memberRegisterForm);
-
-        assertThat(redirectPage)
-                .isEqualTo("redirect:/member/register");
-        assertThat(fixture.ensemble().memberStatusFor(MemberId.of(memberRegisterForm.getMemberId())))
-                .isEqualByComparingTo(MemberStatus.DECLINED);
-    }
-
-    @Test
-    void memberJoiningAsSpectatorBecomesSpectator() throws Exception {
-        Fixture fixture = createFixture(new Ensemble("Test", ZonedDateTime.now()));
-
-        MemberRegisterForm memberRegisterForm = createMemberFormFor(fixture);
-        String redirectPage = fixture.memberController().joinAsSpectator(memberRegisterForm);
-
-        assertThat(redirectPage)
-                .isEqualTo("redirect:/member/register");
-        assertThat(fixture.ensemble().spectators())
-                .containsExactly(MemberId.of(memberRegisterForm.getMemberId()));
-    }
-
 
     // -- encapsulated setup methods...
 
@@ -114,8 +149,10 @@ class MemberControllerTest {
         InMemoryEnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = ensembleRepository.save(ensembleToSave);
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
-        EnsembleService ensembleService = new EnsembleService(ensembleRepository, memberRepository,
-                                                              new DummyNotifier(), new DummyVideoConferenceScheduler());
+        EnsembleService ensembleService = new EnsembleService(ensembleRepository,
+                                                              memberRepository,
+                                                              new DummyNotifier(),
+                                                              new DummyVideoConferenceScheduler());
         DefaultMemberService memberService = new DefaultMemberService(memberRepository);
         MemberController memberController = new MemberController(ensembleService, memberService);
         return new Fixture(ensemble, memberService, ensembleService, memberController);
@@ -138,5 +175,20 @@ class MemberControllerTest {
 
         return memberRegisterForm;
     }
+
+
+    private static AuthFixture createAuthUser(MemberService memberService) {
+        Member member = MemberFactory.createMember(11, "name", "ghuser");
+        memberService.save(member);
+        OAuth2User oAuth2UserWithMemberRole = OAuth2UserFactory.createOAuth2UserWithMemberRole("ghuser", "ROLE_MEMBER");
+        SecurityContextImpl securityContext = new SecurityContextImpl(new OAuth2AuthenticationToken(oAuth2UserWithMemberRole,
+                                                                                                    Set.of(new SimpleGrantedAuthority("ROLE_MEMBER")),
+                                                                                                    "github"));
+        return new AuthFixture(member.getId(), oAuth2UserWithMemberRole, securityContext);
+    }
+
+    private record AuthFixture(MemberId memberId,
+                               OAuth2User oAuth2UserWithMemberRole,
+                               SecurityContextImpl securityContext) { }
 
 }
