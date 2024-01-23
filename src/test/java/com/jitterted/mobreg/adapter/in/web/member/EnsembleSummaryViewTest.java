@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -36,16 +37,13 @@ class EnsembleSummaryViewTest {
         void ensemblesSortedDescendingByDate() {
             Ensemble ensembleYesterday = new EnsembleBuilder()
                     .scheduled(ZonedDateTime.now().minusDays(1))
-                    .id(7).named("Yesterday")
-                    .build();
+                    .id(7).named("Yesterday").build();
             Ensemble ensembleLastWeek = new EnsembleBuilder()
                     .scheduled(ZonedDateTime.now().minusWeeks(1))
-                    .id(3).named("Last Week")
-                    .build();
+                    .id(3).named("Last Week").build();
             Ensemble ensembleLastMonth = new EnsembleBuilder()
                     .scheduled(ZonedDateTime.now().minusMonths(1))
-                    .id(5).named("Last Month")
-                    .build();
+                    .id(5).named("Last Month").build();
             List<Ensemble> ensembles = List.of(ensembleLastWeek, ensembleYesterday, ensembleLastMonth);
             MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
             MemberId memberId = MemberId.of(71L);
@@ -54,7 +52,7 @@ class EnsembleSummaryViewTest {
 
             assertThat(viewsDescending)
                     .extracting(EnsembleSummaryView::dateTime)
-                    .isSorted();
+                    .isSortedAccordingTo(Comparator.reverseOrder());
         }
     }
 

@@ -10,6 +10,7 @@ import com.jitterted.mobreg.domain.MemberStatus;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -28,6 +29,7 @@ public record EnsembleSummaryView(long id,
 
     public static List<EnsembleSummaryView> from(List<Ensemble> ensembles, MemberId memberId, MemberService memberService) {
         return ensembles.stream()
+                        .sorted(Comparator.comparing(Ensemble::startDateTime).reversed())
                         .map(ensemble -> toView(ensemble, memberId, memberService))
                         .toList();
     }
@@ -72,8 +74,8 @@ public record EnsembleSummaryView(long id,
 
         if (ensemble.isCompleted()) {
             return Status.linksOnly(List.of(
-                            new DisplayLink(ensemble.recordingLink().toString(),
-                                            "Recording Link")));
+                    new DisplayLink(ensemble.recordingLink().toString(),
+                                    "Recording Link")));
         }
 
         return switch (memberStatusForEnsemble) {
