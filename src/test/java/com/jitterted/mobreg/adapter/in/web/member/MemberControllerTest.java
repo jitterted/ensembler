@@ -63,8 +63,6 @@ class MemberControllerTest {
             assertThat(pastEnsembles)
                     .as("Should be 2 Past Ensembles in the Model")
                     .hasSize(2);
-            assertThat(((List<EnsembleSummaryView>) model.getAttribute("ensembles")))
-                    .hasSize(3);
         }
 
         @Test
@@ -181,14 +179,16 @@ class MemberControllerTest {
         Member member = MemberFactory.createMember(11, "name", "ghuser");
         memberService.save(member);
         OAuth2User oAuth2UserWithMemberRole = OAuth2UserFactory.createOAuth2UserWithMemberRole("ghuser", "ROLE_MEMBER");
-        SecurityContextImpl securityContext = new SecurityContextImpl(new OAuth2AuthenticationToken(oAuth2UserWithMemberRole,
-                                                                                                    Set.of(new SimpleGrantedAuthority("ROLE_MEMBER")),
-                                                                                                    "github"));
+        SecurityContextImpl securityContext = new SecurityContextImpl(
+                new OAuth2AuthenticationToken(oAuth2UserWithMemberRole,
+                                              Set.of(new SimpleGrantedAuthority("ROLE_MEMBER")),
+                                              "github"));
         return new AuthFixture(member.getId(), oAuth2UserWithMemberRole, securityContext);
     }
 
     private record AuthFixture(MemberId memberId,
                                OAuth2User oAuth2UserWithMemberRole,
-                               SecurityContextImpl securityContext) { }
+                               SecurityContextImpl securityContext) {
+    }
 
 }

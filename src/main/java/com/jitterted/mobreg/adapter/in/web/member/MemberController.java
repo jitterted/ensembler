@@ -57,9 +57,6 @@ public class MemberController {
 
     public void addEnsemblesToModel(Model model, Member member) {
         MemberId memberId = member.getId();
-        List<Ensemble> ensembles = ensembleService.ensemblesVisibleFor(memberId);
-        List<EnsembleSummaryView> ensembleSummaryViews = EnsembleSummaryView.from(ensembles, memberId, memberService);
-        model.addAttribute("ensembles", ensembleSummaryViews);
 
         List<Ensemble> availableEnsembles = ensembleService.allAvailableForRegistration(ZonedDateTime.now());
         List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(availableEnsembles, memberId, memberService);
