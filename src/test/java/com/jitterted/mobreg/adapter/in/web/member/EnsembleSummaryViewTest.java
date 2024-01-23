@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -27,6 +28,35 @@ class EnsembleSummaryViewTest {
     private static final StubMemberService STUB_MEMBER_SERVICE = new StubMemberService();
     private static final MemberId IRRELEVANT_MEMBER_ID = MemberId.of(42L);
     private static final int IRRELEVANT_ENSEMBLE_ID = 13;
+
+    @Nested
+    class AllViews {
+
+        @Test
+        void ensemblesSortedDescendingByDate() {
+            Ensemble ensembleYesterday = new EnsembleBuilder()
+                    .scheduled(ZonedDateTime.now().minusDays(1))
+                    .id(7).named("Yesterday")
+                    .build();
+            Ensemble ensembleLastWeek = new EnsembleBuilder()
+                    .scheduled(ZonedDateTime.now().minusWeeks(1))
+                    .id(3).named("Last Week")
+                    .build();
+            Ensemble ensembleLastMonth = new EnsembleBuilder()
+                    .scheduled(ZonedDateTime.now().minusMonths(1))
+                    .id(5).named("Last Month")
+                    .build();
+            List<Ensemble> ensembles = List.of(ensembleLastWeek, ensembleYesterday, ensembleLastMonth);
+            MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
+            MemberId memberId = MemberId.of(71L);
+
+            List<EnsembleSummaryView> viewsDescending = EnsembleSummaryView.from(ensembles, memberId, memberService);
+
+            assertThat(viewsDescending)
+                    .extracting(EnsembleSummaryView::dateTime)
+                    .isSorted();
+        }
+    }
 
     @Test
     void memberStatusUnknownWhenEnsembleIsEmptyCanDoAnyAction() throws Exception {

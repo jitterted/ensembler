@@ -2,53 +2,77 @@ package com.jitterted.mobreg.domain;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EnsembleBuilder {
 
-    private Ensemble ensemble;
     private ConferenceDetails conferenceDetails;
+    private ZonedDateTime startDateTime;
+    private final List<MemberId> participantMemberIds = new ArrayList<>();
+    private final List<MemberId> declinedMemberIds = new ArrayList<>();
+    private String name;
+    private boolean markAsCompleted;
+    private Integer id;
+    private boolean markAsCanceled;
 
     public EnsembleBuilder() {
-        ensemble = EnsembleFactory.withStartTimeNow();
     }
 
     public EnsembleBuilder accept(Member member) {
-        ensemble.joinAsParticipant(member.getId());
+        participantMemberIds.add(member.getId());
         return this;
     }
 
     public EnsembleBuilder decline(Member member) {
-        ensemble.declinedBy(member.getId());
+        declinedMemberIds.add(member.getId());
         return this;
     }
 
     public Ensemble build() {
-        Ensemble ensembleToReturn = ensemble;
+        Ensemble ensemble = EnsembleFactory.withStartTimeNow();
         if (conferenceDetails != null) {
             ensemble.changeConferenceDetailsTo(conferenceDetails);
         }
-        // reset ensemble for next build (TODO: apply all properties upon build, not along the way)
-        ensemble = null;
-        return ensembleToReturn;
+        if (startDateTime != null) {
+            ensemble.changeStartDateTimeTo(startDateTime);
+        }
+        if (name != null) {
+            ensemble.changeNameTo(name);
+        }
+        if (markAsCompleted) {
+            ensemble.complete();
+        }
+        if (markAsCanceled) {
+            ensemble.cancel();
+        }
+        if (id != null) {
+            ensemble.setId(EnsembleId.of(id));
+        }
+
+        participantMemberIds.forEach(ensemble::joinAsParticipant);
+        declinedMemberIds.forEach(ensemble::declinedBy);
+
+        return ensemble;
     }
 
     public EnsembleBuilder named(String name) {
-        ensemble.changeNameTo(name);
+        this.name = name;
         return this;
     }
 
     public EnsembleBuilder id(int id) {
-        ensemble.setId(EnsembleId.of(id));
+        this.id = id;
         return this;
     }
 
     public EnsembleBuilder asCompleted() {
-        ensemble.complete();
+        markAsCompleted = true;
         return this;
     }
 
     public EnsembleBuilder asCanceled() {
-        ensemble.cancel();
+        markAsCanceled = true;
         return this;
     }
 
@@ -58,7 +82,11 @@ public class EnsembleBuilder {
     }
 
     public EnsembleBuilder endedInThePast() {
-        ensemble = EnsembleFactory.withStartTime(ZonedDateTime.now().minusDays(1));
+        return scheduled(ZonedDateTime.now().minusDays(1));
+    }
+
+    public EnsembleBuilder scheduled(ZonedDateTime startDateTime) {
+        this.startDateTime = startDateTime;
         return this;
     }
 }
