@@ -59,11 +59,11 @@ public class MemberController {
         MemberId memberId = member.getId();
 
         List<Ensemble> availableEnsembles = ensembleService.allAvailableForRegistration(ZonedDateTime.now());
-        List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(availableEnsembles, memberId, memberService);
+        List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(availableEnsembles, memberId, memberService, EnsembleSortOrder.ASCENDING_ORDER);
         model.addAttribute("upcomingEnsembles", availableEnsembleSummaryViews);
 
         List<Ensemble> pastEnsembles = ensembleService.allInThePastFor(memberId, ZonedDateTime.now());
-        List<EnsembleSummaryView> pastEnsembleSummaryViews = EnsembleSummaryView.from(pastEnsembles, memberId, memberService);
+        List<EnsembleSummaryView> pastEnsembleSummaryViews = EnsembleSummaryView.from(pastEnsembles, memberId, memberService, EnsembleSortOrder.DESCENDING_ORDER);
         model.addAttribute("pastEnsembles", pastEnsembleSummaryViews);
     }
 

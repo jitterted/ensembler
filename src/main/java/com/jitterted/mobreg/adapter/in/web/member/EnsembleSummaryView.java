@@ -10,7 +10,6 @@ import com.jitterted.mobreg.domain.MemberStatus;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -27,9 +26,9 @@ public record EnsembleSummaryView(long id,
                                   SpectatorAction spectatorAction,
                                   ParticipantAction participantAction) {
 
-    public static List<EnsembleSummaryView> from(List<Ensemble> ensembles, MemberId memberId, MemberService memberService) {
+    public static List<EnsembleSummaryView> from(List<Ensemble> ensembles, MemberId memberId, MemberService memberService, EnsembleSortOrder sortOrder) {
         return ensembles.stream()
-                        .sorted(Comparator.comparing(Ensemble::startDateTime).reversed())
+                        .sorted(sortOrder.comparator())
                         .map(ensemble -> toView(ensemble, memberId, memberService))
                         .toList();
     }

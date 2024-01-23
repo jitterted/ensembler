@@ -29,12 +29,14 @@ class EnsembleSummaryViewTest {
     private static final StubMemberService STUB_MEMBER_SERVICE = new StubMemberService();
     private static final MemberId IRRELEVANT_MEMBER_ID = MemberId.of(42L);
     private static final int IRRELEVANT_ENSEMBLE_ID = 13;
+    private static final Comparator<Ensemble> ASCENDING_ORDER = Comparator.comparing(Ensemble::startDateTime);
+    private static final Comparator<Ensemble> DESCENDING_ORDER = Comparator.comparing(Ensemble::startDateTime).reversed();
 
     @Nested
     class AllViews {
 
         @Test
-        void ensemblesSortedDescendingByDate() {
+        void pastEnsemblesAreSortedDescendingByDate() {
             Ensemble ensembleYesterday = new EnsembleBuilder()
                     .scheduled(ZonedDateTime.now().minusDays(1))
                     .id(7).named("Yesterday").build();
@@ -48,11 +50,35 @@ class EnsembleSummaryViewTest {
             MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
             MemberId memberId = MemberId.of(71L);
 
-            List<EnsembleSummaryView> viewsDescending = EnsembleSummaryView.from(ensembles, memberId, memberService);
+            List<EnsembleSummaryView> viewsDescending = EnsembleSummaryView.from(ensembles, memberId, memberService, EnsembleSortOrder.DESCENDING_ORDER);
 
             assertThat(viewsDescending)
                     .extracting(EnsembleSummaryView::dateTime)
+                    .as("Not sorted Descending")
                     .isSortedAccordingTo(Comparator.reverseOrder());
+        }
+
+        @Test
+        void upcomingEnsemblesAreSortedAscendingByDate() {
+            Ensemble ensembleTomorrow = new EnsembleBuilder()
+                    .scheduled(ZonedDateTime.now().plusDays(1))
+                    .id(7).named("Tomorrow").build();
+            Ensemble ensembleNextWeek = new EnsembleBuilder()
+                    .scheduled(ZonedDateTime.now().plusWeeks(1))
+                    .id(3).named("Next Week").build();
+            Ensemble ensembleNextMonth = new EnsembleBuilder()
+                    .scheduled(ZonedDateTime.now().plusMonths(1))
+                    .id(5).named("Next Month").build();
+            List<Ensemble> ensembles = List.of(ensembleNextMonth, ensembleTomorrow, ensembleNextWeek);
+            MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
+            MemberId memberId = MemberId.of(71L);
+
+            List<EnsembleSummaryView> viewsAscending = EnsembleSummaryView.from(ensembles, memberId, memberService, EnsembleSortOrder.ASCENDING_ORDER);
+
+            assertThat(viewsAscending)
+                    .extracting(EnsembleSummaryView::dateTime)
+                    .as("Not sorted Ascending")
+                    .isSortedAccordingTo(Comparator.naturalOrder());
         }
     }
 
