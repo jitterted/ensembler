@@ -115,7 +115,7 @@ class EnsembleServiceTest {
         fixture.ensembleService.scheduleEnsemble("In Progress (1 Hour Ago) - is NOT available", now.minusHours(1));
         fixture.ensembleService.scheduleEnsemble("Past (Yesterday) - is NOT available", now.minusDays(1));
 
-        List<Ensemble> ensembles = fixture.ensembleService.allAvailableForRegistration(now);
+        List<Ensemble> ensembles = fixture.ensembleService.allUpcomingEnsembles(now);
 
         assertThat(ensembles)
                 .containsExactly(futureEnsemble);

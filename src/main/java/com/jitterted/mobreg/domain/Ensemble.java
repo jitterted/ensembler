@@ -263,7 +263,7 @@ public class Ensemble {
         return now.isAfter(startDateTime.plus(duration));
     }
 
-    public boolean availableForRegistration(ZonedDateTime now) {
+    public boolean isUpcoming(ZonedDateTime now) {
         if (isCanceled()) {
             return false;
         }

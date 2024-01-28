@@ -58,7 +58,7 @@ public class MemberController {
     public void addEnsemblesToModel(Model model, Member member) {
         MemberId memberId = member.getId();
 
-        List<Ensemble> availableEnsembles = ensembleService.allAvailableForRegistration(ZonedDateTime.now());
+        List<Ensemble> availableEnsembles = ensembleService.allUpcomingEnsembles(ZonedDateTime.now());
         List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(availableEnsembles, memberId, memberService, EnsembleSortOrder.ASCENDING_ORDER);
         model.addAttribute("upcomingEnsembles", availableEnsembleSummaryViews);
 

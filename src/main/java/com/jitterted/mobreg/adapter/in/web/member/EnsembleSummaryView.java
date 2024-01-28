@@ -23,7 +23,8 @@ public record EnsembleSummaryView(long id,
                                   Status status,
                                   boolean showActionButtons,
                                   SpectatorAction spectatorAction,
-                                  ParticipantAction participantAction) {
+                                  ParticipantAction participantAction,
+                                  boolean inProgress) {
 
     public static List<EnsembleSummaryView> from(List<Ensemble> ensembles, MemberId memberId, MemberService memberService, EnsembleSortOrder sortOrder) {
         return ensembles.stream()
@@ -36,7 +37,6 @@ public record EnsembleSummaryView(long id,
         List<MemberView> participantViews = transform(memberService, ensemble.acceptedMembers());
         List<MemberView> spectatorViews = transform(memberService, ensemble.spectators());
 
-        String memberStatusAsString = memberStatusToViewString(ensemble, memberId);
         MemberStatus memberStatusForEnsemble = ensemble.memberStatusFor(memberId);
         SpectatorAction spectatorAction = SpectatorAction.from(memberStatusForEnsemble);
         ParticipantAction participantAction = ParticipantAction.from(memberStatusForEnsemble,
@@ -52,8 +52,8 @@ public record EnsembleSummaryView(long id,
                 createStatusFor(ensemble, memberStatusForEnsemble),
                 showActionButtonsFor(ensemble),
                 spectatorAction,
-                participantAction
-        );
+                participantAction,
+                false);
     }
 
     private static boolean showActionButtonsFor(Ensemble ensemble) {

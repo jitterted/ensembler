@@ -121,10 +121,10 @@ public class EnsembleService {
                 .toList();
     }
 
-    public List<Ensemble> allAvailableForRegistration(ZonedDateTime now) {
+    public List<Ensemble> allUpcomingEnsembles(ZonedDateTime now) {
         return allEnsembles()
                 .stream()
-                .filter(ensemble -> ensemble.availableForRegistration(now))
+                .filter(ensemble -> ensemble.isUpcoming(now))
                 .toList();
     }
 

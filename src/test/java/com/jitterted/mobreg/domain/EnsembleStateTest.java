@@ -162,7 +162,7 @@ class EnsembleStateTest {
         ZonedDateTime now = ZonedDateTimeFactory.zoneDateTimeUtc(2024, 1, 11, 8);
         Ensemble ensembleStartsInOneHour = EnsembleFactory.withStartTime(now.plusHours(1));
 
-        assertThat(ensembleStartsInOneHour.availableForRegistration(now))
+        assertThat(ensembleStartsInOneHour.isUpcoming(now))
                 .isTrue();
     }
 
@@ -171,7 +171,7 @@ class EnsembleStateTest {
         ZonedDateTime now = ZonedDateTimeFactory.zoneDateTimeUtc(2024, 1, 11, 8);
         Ensemble ensembleStartsInOneHour = EnsembleFactory.withStartTime(now.minusHours(2));
 
-        assertThat(ensembleStartsInOneHour.availableForRegistration(now))
+        assertThat(ensembleStartsInOneHour.isUpcoming(now))
                 .isFalse();
     }
 
@@ -181,7 +181,7 @@ class EnsembleStateTest {
         Ensemble ensemble = EnsembleFactory.withStartTime(now.plusHours(1));
         ensemble.cancel();
 
-        assertThat(ensemble.availableForRegistration(now))
+        assertThat(ensemble.isUpcoming(now))
                 .as("Expected to NOT be available for registration")
                 .isFalse();
     }
