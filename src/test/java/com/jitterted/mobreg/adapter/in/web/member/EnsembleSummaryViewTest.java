@@ -83,7 +83,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    void memberStatusUnknownWhenEnsembleIsEmptyCanDoAnyAction() throws Exception {
+    void memberNotRegisteredWhenEnsembleIsNotFullCanDoAnyAction() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
         MemberId memberId = MemberId.of(97L);
@@ -99,7 +99,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    void withAnotherAcceptedMemberThenMemberAcceptedIsFalse() throws Exception {
+    void joinedAsParticipantIsInParticipantList() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         TestMemberBuilder memberBuilder = new TestMemberBuilder();
         Member member = memberBuilder
@@ -113,26 +113,8 @@ class EnsembleSummaryViewTest {
 
         assertThat(ensembleSummaryView.participantCount())
                 .isEqualTo(1);
-
-        assertThat(ensembleSummaryView.memberStatus())
-                .isEqualTo("unknown");
-    }
-
-    @Test
-    void memberAcceptedIsTrueWhenMemberEnsembleParticipant() throws Exception {
-        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        TestMemberBuilder memberBuilder = new TestMemberBuilder();
-        Member member = memberBuilder
-                .withFirstName("name")
-                .withGithubUsername("participant_username")
-                .buildAndSave();
-        ensemble.joinAsParticipant(member.getId());
-
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
-                .toView(ensemble, member.getId(), memberBuilder.memberService());
-
-        assertThat(ensembleSummaryView.memberStatus())
-                .isEqualTo("accepted");
+        assertThat(ensembleSummaryView.participants())
+                .containsExactly(MemberView.from(member));
     }
 
     @Test
@@ -312,40 +294,32 @@ class EnsembleSummaryViewTest {
 
     }
 
+    @Nested
+    class FullEnsemble {
 
-    @Test
-    void unknownMemberWhenEnsembleIsFullThenParticipateIsDisabled() throws Exception {
-        Ensemble ensemble = EnsembleFactory.fullEnsembleOneDayInTheFuture();
+        @Test
+        void whenEnsembleIsFullThenParticipateActionIsDisabled() throws Exception {
+            Ensemble ensemble = EnsembleFactory.fullEnsembleOneDayInTheFuture();
 
-        MemberId memberIdOfUnknownMember = MemberId.of(99L);
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberIdOfUnknownMember, STUB_MEMBER_SERVICE);
+            MemberId memberIdOfNonRegisteredMember = MemberId.of(99L);
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberIdOfNonRegisteredMember, STUB_MEMBER_SERVICE);
 
-        assertThat(ensembleSummaryView.memberStatus())
-                .isEqualTo("full");
-        assertThat(ensembleSummaryView.participantAction().disabled())
-                .isTrue();
-    }
+            assertThat(ensembleSummaryView.participantAction().disabled())
+                    .isTrue();
+        }
 
-    @Test
-    void participatingMemberWhenEnsembleIsFullThenLeaveParticipantsIsEnabled() {
-        Ensemble ensemble = EnsembleFactory.fullEnsembleOneDayInTheFuture();
-        MemberId memberId = ensemble.acceptedMembers().findFirst().orElseThrow();
+        @Test
+        void participatingMemberCanLeaveParticipants() {
+            Ensemble ensemble = EnsembleFactory.fullEnsembleOneDayInTheFuture();
+            MemberId memberId = ensemble.acceptedMembers().findFirst().orElseThrow();
 
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberId, STUB_MEMBER_SERVICE);
+            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberId, STUB_MEMBER_SERVICE);
 
-        assertThat(ensembleSummaryView.participantAction())
-                .isEqualTo(ParticipantAction.from(MemberStatus.PARTICIPANT, false));
-    }
+            assertThat(ensembleSummaryView.participantAction().disabled())
+                    .as("Participant Leave Action should be enabled")
+                    .isFalse();
+        }
 
-    @Test
-    void viewIndicatesCanAcceptIfEnsembleIsNotFull() throws Exception {
-        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        EnsembleFactory.acceptCountMembersFor(2, ensemble);
-
-        EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(1), STUB_MEMBER_SERVICE);
-
-        assertThat(ensembleSummaryView.memberStatus())
-                .isEqualTo("accepted");
     }
 
     @Test
