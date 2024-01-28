@@ -2,14 +2,17 @@
 title Ensemble Status for UI
 
 state "Pending Completed" as Pending
+state "In-Progress" as InProgress
 
 [*] --> Scheduled : schedule\n ensemble
-Scheduled: Displays Zoom + Calendar links
-Scheduled --> Pending : start time + duration\n in the past
-Pending: Displays "Recording coming soon..."
-Pending --> Completed : add recording link\n click "Complete" button
-Completed: Display link to recording
-Scheduled --> Canceled : click "Cancel" button
-Canceled: Display "Ensemble Canceled""
+Scheduled: Displays Zoom + Calendar links\nAppears in "Upcoming Ensembles" list
+Scheduled --> InProgress : start-time in the past,\nstart-time+duration in the future
+InProgress --> Pending : start-time + duration\n in the past
+InProgress : Displays "In Progress"\nHas different background color\nNo calendar link\nAppears in "Upcoming Ensembles" list
+Pending: Displays "Recording coming soon..."\nShows in list of Past Ensembles
+Pending --> Completed : [Admin] Add recording link\n click "Complete" button
+Completed: Display link to recording\nShows in list of Past Ensembles
+Scheduled --> Canceled : [Admin] Click "Cancel" button
+Canceled: Display "Ensemble Canceled"\nCurrent does not appear anywhere
 
 @enduml
