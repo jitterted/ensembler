@@ -71,7 +71,7 @@ public class Ensemble {
         return ImmutableSet.copyOf(membersWhoAccepted).stream();
     }
 
-    private boolean isAccepted(MemberId memberId) {
+    private boolean isParticipant(MemberId memberId) {
         return membersWhoAccepted.contains(memberId);
     }
 
@@ -104,7 +104,7 @@ public class Ensemble {
     }
 
     public MemberStatus memberStatusFor(MemberId memberId) {
-        if (isAccepted(memberId)) {
+        if (isParticipant(memberId)) {
             return MemberStatus.PARTICIPANT;
         } else if (isSpectator(memberId)) {
             return MemberStatus.SPECTATOR;
@@ -182,9 +182,10 @@ public class Ensemble {
         startDateTime = newStartDateTime;
     }
 
+    @Deprecated // this information is now included in other functions
     public MemberEnsembleStatus statusFor(MemberId memberId, ZonedDateTime now) {
         MemberEnsembleStatus status = WhenSpaceRsvp.memberStatus(this, memberId, now);
-        if ((isAccepted(memberId) || isSpectator(memberId))
+        if ((isParticipant(memberId) || isSpectator(memberId))
                 && isCanceled()) {
             return MemberEnsembleStatus.CANCELED;
         }
@@ -216,7 +217,7 @@ public class Ensemble {
         if (isDeclined(memberId)) {
             return Rsvp.DECLINED;
         }
-        if (isAccepted(memberId) || isSpectator(memberId)) {
+        if (isParticipant(memberId) || isSpectator(memberId)) {
             return Rsvp.ACCEPTED;
         }
         return Rsvp.UNKNOWN;
@@ -262,16 +263,6 @@ public class Ensemble {
         return now.isAfter(startDateTime.plus(duration));
     }
 
-    @Override
-    public String toString() {
-        return "Ensemble{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", startDateTime=" + startDateTime +
-                ", state=" + state +
-                '}';
-    }
-
     public boolean availableForRegistration(ZonedDateTime now) {
         if (isCanceled()) {
             return false;
@@ -280,7 +271,17 @@ public class Ensemble {
     }
 
     public boolean isRegistered(MemberId memberId) {
-        return isAccepted(memberId) || isSpectator(memberId);
+        return isParticipant(memberId) || isSpectator(memberId);
+    }
+
+    @Override
+    public String toString() {
+        return "Ensemble{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startDateTime=" + startDateTime +
+                ", state=" + state +
+                '}';
     }
 
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {

@@ -29,8 +29,6 @@ class EnsembleSummaryViewTest {
     private static final StubMemberService STUB_MEMBER_SERVICE = new StubMemberService();
     private static final MemberId IRRELEVANT_MEMBER_ID = MemberId.of(42L);
     private static final int IRRELEVANT_ENSEMBLE_ID = 13;
-    private static final Comparator<Ensemble> ASCENDING_ORDER = Comparator.comparing(Ensemble::startDateTime);
-    private static final Comparator<Ensemble> DESCENDING_ORDER = Comparator.comparing(Ensemble::startDateTime).reversed();
 
     @Nested
     class AllViews {
@@ -100,45 +98,69 @@ class EnsembleSummaryViewTest {
 
     @Test
     void joinedAsParticipantIsInParticipantList() throws Exception {
-        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        TestMemberBuilder memberBuilder = new TestMemberBuilder();
-        Member member = memberBuilder
-                .withFirstName("name")
-                .withGithubUsername("seven")
-                .buildAndSave();
-        ensemble.joinAsParticipant(member.getId());
+        FutureEnsembleMemberFixture fixture = createEnsemble1DayInFutureAndCreateMember();
+        fixture.ensemble().joinAsParticipant(fixture.member().getId());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
-                .toView(ensemble, MemberId.of(99L), memberBuilder.memberService());
+                .toView(fixture.ensemble(), fixture.member().getId(), fixture.memberService());
 
         assertThat(ensembleSummaryView.participantCount())
                 .isEqualTo(1);
         assertThat(ensembleSummaryView.participants())
-                .containsExactly(MemberView.from(member));
+                .containsExactly(MemberView.from(fixture.member()));
     }
 
     @Test
     void spectatorIsInSpectatorList() throws Exception {
-        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-        TestMemberBuilder memberBuilder = new TestMemberBuilder();
-        Member member = memberBuilder
-                .withFirstName("name")
-                .withGithubUsername("participant_username")
-                .buildAndSave();
-        ensemble.joinAsSpectator(member.getId());
+        FutureEnsembleMemberFixture fixture = createEnsemble1DayInFutureAndCreateMember();
+        fixture.ensemble().joinAsSpectator(fixture.member().getId());
 
         EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
-                .toView(ensemble, member.getId(), memberBuilder.memberService());
+                .toView(fixture.ensemble(), fixture.member().getId(), fixture.memberService());
 
         assertThat(ensembleSummaryView.spectators())
-                .containsExactly(MemberView.from(member));
+                .containsExactly(MemberView.from(fixture.member()));
+    }
+
+    private static FutureEnsembleMemberFixture createEnsemble1DayInFutureAndCreateMember() {
+        Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+        TestMemberBuilder memberBuilder = new TestMemberBuilder();
+        Member member = memberBuilder.buildAndSave();
+        MemberService memberService = memberBuilder.memberService();
+        return new FutureEnsembleMemberFixture(ensemble, member, memberService);
+    }
+
+    private record FutureEnsembleMemberFixture(Ensemble ensemble, Member member, MemberService memberService) {
+    }
+
+    @Nested
+    class InProgressEnsemble {
+
+        // in "Upcoming Ensemble" list: appears as In-Progress only if NOW is after start time, NOW is before end time, only if member (POV) is REGISTERED
+
+        @Test
+        void startsInTheFutureIsNotInProgress() {
+            Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
+            
+
+        }
+
+//        @Test
+//        void startTimeInThePastEndTimeInTheFutureIsInProgress() {
+//
+//        }
+//
+//        @Test
+//        void endTimeIsInThePastIsNotInProgress() {
+//
+//        }
     }
 
     @Nested
     class StatusLinksOnly {
 
         @Test
-        void forUnknownMemberAreEmpty() {
+        void forUnregisteredMemberAreEmpty() {
             Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
 
             EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, MemberId.of(73L), STUB_MEMBER_SERVICE);
@@ -295,10 +317,10 @@ class EnsembleSummaryViewTest {
     }
 
     @Nested
-    class FullEnsemble {
+    class EnsembleFull {
 
         @Test
-        void whenEnsembleIsFullThenParticipateActionIsDisabled() throws Exception {
+        void thenParticipateActionIsDisabled() throws Exception {
             Ensemble ensemble = EnsembleFactory.fullEnsembleOneDayInTheFuture();
 
             MemberId memberIdOfNonRegisteredMember = MemberId.of(99L);
@@ -309,7 +331,7 @@ class EnsembleSummaryViewTest {
         }
 
         @Test
-        void participatingMemberCanLeaveParticipants() {
+        void thenParticipatingMemberCanLeaveParticipants() {
             Ensemble ensemble = EnsembleFactory.fullEnsembleOneDayInTheFuture();
             MemberId memberId = ensemble.acceptedMembers().findFirst().orElseThrow();
 
@@ -323,7 +345,7 @@ class EnsembleSummaryViewTest {
     }
 
     @Test
-    void ensembleWithNoOneAcceptedShowsNoAcceptedMembers() throws Exception {
+    void ensembleWithNoOneParticipatingShowsNoParticipants() throws Exception {
         Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
         MemberService memberService = new DefaultMemberService(new InMemoryMemberRepository());
 
