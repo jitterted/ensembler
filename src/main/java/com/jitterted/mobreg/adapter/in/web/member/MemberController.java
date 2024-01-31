@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class MemberController {
@@ -58,8 +59,13 @@ public class MemberController {
     public void addEnsemblesToModel(Model model, Member member) {
         MemberId memberId = member.getId();
 
-        List<Ensemble> availableEnsembles = ensembleService.allUpcomingEnsembles(ZonedDateTime.now());
-        List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(availableEnsembles, memberId, memberService, EnsembleSortOrder.ASCENDING_ORDER);
+        Optional<InProgressEnsembleView> inProgressEnsemble =
+                ensembleService.inProgressEnsemble(ZonedDateTime.now(), memberId)
+                               .map(ensemble -> InProgressEnsembleView.from(ensemble, memberService));
+        model.addAttribute("inProgressEnsembleViewOptional", inProgressEnsemble);
+
+        List<Ensemble> upcomingEnsembles = ensembleService.allUpcomingEnsembles(ZonedDateTime.now());
+        List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(upcomingEnsembles, memberId, memberService, EnsembleSortOrder.ASCENDING_ORDER);
         model.addAttribute("upcomingEnsembles", availableEnsembleSummaryViews);
 
         List<Ensemble> pastEnsembles = ensembleService.allInThePastFor(memberId, ZonedDateTime.now());

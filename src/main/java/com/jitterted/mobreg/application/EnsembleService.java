@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static java.util.function.Predicate.not;
 
@@ -102,6 +103,7 @@ public class EnsembleService {
         LOGGER.info("Done notifying for Ensemble {}", ensemble.name());
     }
 
+    // TODO: return Stream<> instead of List<>
     public List<Ensemble> allEnsembles() {
         return ensembleRepository.findAll();
     }
@@ -129,12 +131,23 @@ public class EnsembleService {
     }
 
     public List<Ensemble> allInThePastFor(MemberId memberId, ZonedDateTime now) {
-        return allEnsembles()
-                .stream()
-                .filter(not(Ensemble::isCanceled))
+        return allEnsemblesNotCanceled()
                 .filter(ensemble -> ensemble.isRegistered(memberId))
                 .filter(ensemble -> ensemble.endTimeIsInThePast(now))
                 .toList();
+    }
+
+    public Stream<Ensemble> allEnsemblesNotCanceled() {
+        return allEnsembles()
+                .stream()
+                .filter(not(Ensemble::isCanceled));
+    }
+
+    public Optional<Ensemble> inProgressEnsemble(ZonedDateTime now, MemberId memberId) {
+        return allEnsemblesNotCanceled()
+                .filter(ensemble -> ensemble.isInProgress(now))
+                .filter(ensemble -> ensemble.isRegistered(memberId))
+                .findFirst();
     }
 
     public Optional<Ensemble> findById(EnsembleId ensembleId) {

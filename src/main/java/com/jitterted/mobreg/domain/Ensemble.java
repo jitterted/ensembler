@@ -284,6 +284,11 @@ public class Ensemble {
                 '}';
     }
 
+    public boolean isInProgress(ZonedDateTime now) {
+        return now.isAfter(startDateTime()) && now.isBefore(startDateTime()
+                                                                             .plus(duration));
+    }
+
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
         // @formatter: off
         private static final Map<WhenSpaceRsvp, MemberEnsembleStatus> STATE_TO_STATUS = Map.ofEntries(

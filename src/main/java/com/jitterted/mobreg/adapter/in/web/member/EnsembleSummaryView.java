@@ -89,12 +89,6 @@ public record EnsembleSummaryView(long id,
         };
     }
 
-    private static String memberStatusToViewString(Ensemble ensemble, MemberId memberId) {
-        return ensemble.statusFor(memberId, ZonedDateTime.now())
-                       .toString()
-                       .toLowerCase();
-    }
-
     private static List<MemberView> transform(MemberService memberService, Stream<MemberId> memberIdStream) {
         return memberIdStream
                 .map(memberService::findById)

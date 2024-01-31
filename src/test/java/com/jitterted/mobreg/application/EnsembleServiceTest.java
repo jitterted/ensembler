@@ -11,10 +11,12 @@ import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.jitterted.mobreg.domain.ZonedDateTimeFactory.zoneDateTimeUtc;
 import static org.assertj.core.api.Assertions.*;
@@ -144,6 +146,48 @@ class EnsembleServiceTest {
 
         assertThat(pastEnsembles)
                 .containsExactly(registeredNotCanceledEnsemble);
+    }
+
+    @Nested
+    class InProgressEnsemble {
+        @Test
+        void isEmptyWhenNoEnsembleIsInProgress() {
+            Fixture fixture = createFixture(EnsembleFactory.withIdOf1AndOneDayInTheFuture());
+            fixture.ensembleService().scheduleEnsemble("In The Past", ZonedDateTime.now().minusDays(1));
+
+            Optional<Ensemble> optionalEnsemble = fixture.ensembleService()
+                                                         .inProgressEnsemble(ZonedDateTime.now(), fixture.memberId());
+
+            assertThat(optionalEnsemble)
+                    .isEmpty();
+        }
+
+        @Test
+        void isEmptyWhenEnsembleInProgressAndMemberNotRegistered() {
+            ZonedDateTime startDateTime = ZonedDateTime.now().plusMinutes(1);
+            Fixture fixture = createFixture(EnsembleFactory.withStartTime(startDateTime));
+
+            ZonedDateTime now = startDateTime.plusSeconds(1);
+            Optional<Ensemble> optionalEnsemble = fixture.ensembleService()
+                                                         .inProgressEnsemble(now, fixture.memberId());
+
+            assertThat(optionalEnsemble)
+                    .isEmpty();
+        }
+
+        @Test
+        void isPresentWhenInProgressAndMemberIsRegistered() {
+            ZonedDateTime startDateTime = ZonedDateTime.now().plusMinutes(1);
+            Fixture fixture = createFixture(EnsembleFactory.withStartTime(startDateTime));
+            fixture.ensembleService().joinAsParticipant(fixture.ensemble().getId(), fixture.memberId());
+
+            ZonedDateTime now = startDateTime.plusSeconds(1);
+            Optional<Ensemble> optionalEnsemble = fixture.ensembleService()
+                                                         .inProgressEnsemble(now, fixture.memberId());
+
+            assertThat(optionalEnsemble)
+                    .isPresent();
+        }
     }
 
 

@@ -134,33 +134,6 @@ class EnsembleSummaryViewTest {
     }
 
     @Nested
-    class InProgressEnsemble {
-
-        // in "Upcoming Ensemble" list: appears as In-Progress only if NOW is after start time, NOW is before end time, only if member (POV) is REGISTERED
-
-        @Test
-        void startsInTheFutureRegardlessOfMemberIsNotInProgress() {
-            Ensemble ensemble = EnsembleFactory.withIdOf1AndOneDayInTheFuture();
-
-            EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView
-                    .toView(ensemble, IRRELEVANT_MEMBER_ID, STUB_MEMBER_SERVICE);
-
-            assertThat(ensembleSummaryView.inProgress())
-                    .isFalse();
-        }
-
-        @Test
-        void startTimeInThePastEndTimeInTheFutureIsInProgress() {
-
-        }
-
-//        @Test
-//        void endTimeIsInThePastIsNotInProgress() {
-//
-//        }
-    }
-
-    @Nested
     class StatusLinksOnly {
 
         @Test

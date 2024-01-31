@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
@@ -37,18 +38,24 @@ class MemberControllerTest {
     class ViewModels {
 
         @Test
-        void registerViewShowsPastAndFutureEnsembles() {
-            Fixture fixture = createFixture(new Ensemble("Future Ensemble",
-                                                         ZonedDateTime.now().plusDays(2)));
+        void registerViewShowsInProgressAndPastAndFutureEnsembles() {
+            Ensemble upcomingEnsemble = new Ensemble("Future Ensemble",
+                                                     ZonedDateTime.now().plusDays(2));
+            Fixture fixture = createFixture(upcomingEnsemble);
             AuthFixture authFixture = createAuthUser(fixture.memberService);
-            Ensemble ensemble1 = fixture.ensembleService.scheduleEnsemble("Past Ensemble 1",
-                                                                          ZonedDateTime.now()
-                                                                                       .minusDays(12));
-            fixture.ensembleService.joinAsParticipant(ensemble1.getId(), authFixture.memberId);
-            Ensemble ensemble2 = fixture.ensembleService.scheduleEnsemble("Past Ensemble 2",
-                                                                          ZonedDateTime.now()
-                                                                                       .minusDays(5));
-            fixture.ensembleService.joinAsSpectator(ensemble2.getId(), authFixture.memberId);
+            Ensemble ensemble1 = fixture.ensembleService()
+                                        .scheduleEnsemble("Past Ensemble 1",
+                                                          ZonedDateTime.now().minusDays(12));
+            fixture.ensembleService().joinAsParticipant(ensemble1.getId(), authFixture.memberId);
+            Ensemble ensemble2 = fixture.ensembleService()
+                                        .scheduleEnsemble("Past Ensemble 2",
+                                                          ZonedDateTime.now().minusDays(5));
+            fixture.ensembleService().joinAsSpectator(ensemble2.getId(), authFixture.memberId);
+            Ensemble inProgressEnsemble = fixture.ensembleService()
+                                                 .scheduleEnsemble("In Progress",
+                                                                   ZonedDateTime.now().minusMinutes(5));
+            fixture.ensembleService()
+                   .joinAsParticipant(inProgressEnsemble.getId(), authFixture.memberId);
 
             Model model = new ConcurrentModel();
             fixture.memberController.showEnsemblesForUser(model,
@@ -63,6 +70,11 @@ class MemberControllerTest {
             assertThat(pastEnsembles)
                     .as("Should be 2 Past Ensembles in the Model")
                     .hasSize(2);
+            Optional<InProgressEnsembleView> inProgressEnsembleViewOptional = (Optional<InProgressEnsembleView>) model.getAttribute("inProgressEnsembleViewOptional");
+            assertThat(inProgressEnsembleViewOptional)
+                    .isPresent()
+                    .get()
+                    .isExactlyInstanceOf(InProgressEnsembleView.class);
         }
 
         @Test

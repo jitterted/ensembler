@@ -68,6 +68,34 @@
     </div>
 </div>
 
+<div th:if="${inProgressEnsembleViewOptional.isPresent()}" th:object="${inProgressEnsembleViewOptional.get()}"
+        class="min-w-0 mt-10 px-4 sm:px-6 lg:px-8">
+    <h2 class="text-xl font-medium leading-7 text-green-800 sm:text-2xl sm:truncate">
+        In Progress
+    </h2>
+    <div class="grid grid-cols-3 min-w-0 mt-4 p-4 border shadow-sm bg-green-50">
+        <div class="text-xl font-semibold">
+            <p th:text="*{name}">Ensemble Name</p>
+            <p class="mt-4">
+                <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
+                   href="#" th:href="*{url}">
+                    Zoom Link
+                </a>
+            </p>
+            <p class="mt-4">Started At <span th:text="*{startTime}">9:00am</span></p>
+        </div>
+        <div>
+            <h2 class="font-semibold">PARTICIPANTS</h2>
+            <p th:each="name: *{participants}" th:text="${name}">Participant</p>
+        </div>
+        <div>
+            <h2 class="font-semibold">SPECTATORS</h2>
+            <p th:each="name: *{spectators}" th:text="${name}">Spectator</p>
+        </div>
+    </div>
+
+</div>
+
 <div class="min-w-0 mt-10 px-4 sm:px-6 lg:px-8">
     <h2 class="text-xl font-medium leading-7 text-gray-900 sm:text-2xl sm:truncate">
         Upcoming Ensembles
