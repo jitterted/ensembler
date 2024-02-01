@@ -41,7 +41,7 @@ class EnsembleServiceMemberTest extends PostgresTestcontainerBase {
 
         assertThat(foundEnsemble)
                 .isPresent();
-        assertThat(foundEnsemble.get().acceptedMembers())
+        assertThat(foundEnsemble.get().participants())
                 .containsOnly(memberId);
     }
 

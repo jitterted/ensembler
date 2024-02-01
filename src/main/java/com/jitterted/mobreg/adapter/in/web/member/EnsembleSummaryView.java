@@ -34,7 +34,7 @@ public record EnsembleSummaryView(long id,
     }
 
     public static EnsembleSummaryView toView(Ensemble ensemble, MemberId memberId, MemberService memberService) {
-        List<MemberView> participantViews = transform(memberService, ensemble.acceptedMembers());
+        List<MemberView> participantViews = transform(memberService, ensemble.participants());
         List<MemberView> spectatorViews = transform(memberService, ensemble.spectators());
 
         MemberStatus memberStatusForEnsemble = ensemble.memberStatusFor(memberId);

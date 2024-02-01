@@ -61,10 +61,10 @@ class EnsembleRepositoryDataJdbcAdapterTest extends PostgresTestcontainerBase {
         assertThat(allEnsembles)
                 .hasSize(2);
 
-        assertThat(allEnsembles.get(0).acceptedMembers())
+        assertThat(allEnsembles.get(0).participants())
                 .hasSize(1)
                 .containsOnly(MemberId.of(7L));
-        assertThat(allEnsembles.get(1).acceptedMembers())
+        assertThat(allEnsembles.get(1).participants())
                 .hasSize(1)
                 .containsOnly(MemberId.of(7L));
     }

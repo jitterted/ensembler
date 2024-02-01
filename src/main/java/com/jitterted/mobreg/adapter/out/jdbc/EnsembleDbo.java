@@ -51,7 +51,7 @@ class EnsembleDbo {
         ensembleDbo.setState(ensemble.state().toString());
         ensembleDbo.setRecordingLink(ensemble.recordingLink().toString());
         ensembleDbo.setAcceptedMembers(
-                ensemble.acceptedMembers()
+                ensemble.participants()
                         .map(AcceptedMember::toEntityId)
                         .collect(Collectors.toSet()));
         ensembleDbo.setDeclinedMembers(

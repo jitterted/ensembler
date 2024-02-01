@@ -19,7 +19,7 @@ record EnsembleDetailView(long id,
                                  List<MemberView> declinedMembers) {
 
     static EnsembleDetailView from(Ensemble ensemble, MemberService memberService) {
-        List<MemberView> acceptedMembers = transform(memberService, ensemble.acceptedMembers());
+        List<MemberView> acceptedMembers = transform(memberService, ensemble.participants());
         List<MemberView> declinedMembers = transform(memberService, ensemble.declinedMembers());
         return new EnsembleDetailView(ensemble.getId().id(),
                                       ensemble.name(),

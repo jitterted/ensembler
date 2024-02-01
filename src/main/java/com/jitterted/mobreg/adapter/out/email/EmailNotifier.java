@@ -67,7 +67,7 @@ public class EmailNotifier implements Notifier {
 
     @Override
     public void ensembleCompleted(Ensemble ensemble) {
-        ensemble.acceptedMembers()
+        ensemble.participants()
                 .map(memberService::findById)
                 .filter(Member::hasEmail)
                 .map(member -> emailForCompletedEnsemble(ensemble, member))

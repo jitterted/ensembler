@@ -20,7 +20,7 @@ public record InProgressEnsembleView(String name,
                                           ensemble.startDateTime()
                                                   .toLocalTime()
                                                   .format(DateTimeFormatter.ofPattern("hh:mm a")),
-                                          namesOf(ensemble.acceptedMembers(), memberService),
+                                          namesOf(ensemble.participants(), memberService),
                                           namesOf(ensemble.spectators(), memberService));
     }
 

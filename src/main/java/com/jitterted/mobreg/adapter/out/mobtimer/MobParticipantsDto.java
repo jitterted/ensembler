@@ -16,7 +16,7 @@ class MobParticipantsDto {
 
     public static MobParticipantsDto from(Ensemble ensemble, MemberService memberService) {
         List<PersonDto> personDtos =
-                ensemble.acceptedMembers()
+                ensemble.participants()
                         .map(memberService::findById)
                         .map(Member::firstName)
                         .map(PersonDto::new)

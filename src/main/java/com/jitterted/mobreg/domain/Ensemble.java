@@ -67,7 +67,7 @@ public class Ensemble {
         membersAsSpectators.remove(memberId);
     }
 
-    public Stream<MemberId> acceptedMembers() {
+    public Stream<MemberId> participants() {
         return ImmutableSet.copyOf(membersWhoAccepted).stream();
     }
 

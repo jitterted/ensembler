@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ensembler Rotation Timer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+<div class="flex flex-col items-center justify-center min-h-screen">
+    <div class="text-center">
+        <h1 class="text-2xl font-bold mb-4">Time Left</h1>
+        <div id="timer" class="text-4xl font-mono mb-6">4:00</div>
+        <button
+                id="startBtn"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
+        >
+            Start
+        </button>
+        <button
+                id="pauseBtn"
+                class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2"
+        >
+            Pause
+        </button>
+    </div>
+</div>
+
+<div>
+
+</div>
+
+<script>
+    let countdownDurationSeconds = 4 * 60; // 4 minutes
+    let countdownIntervalId;
+    let secondsLeft;
+    const timerDisplay = document.getElementById("timer");
+    const startBtn = document.getElementById("startBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+
+    function timer(seconds) {
+        clearInterval(countdownIntervalId);
+        const now = Date.now();
+        const then = now + seconds * 1000;
+        displayTimeLeft(seconds);
+
+        countdownIntervalId = setInterval(() => {
+            secondsLeft = Math.round((then - Date.now()) / 1000);
+            if (secondsLeft < 0) {
+                clearInterval(countdownIntervalId);
+                return;
+            }
+            displayTimeLeft(secondsLeft);
+        }, 1000);
+    }
+
+    function displayTimeLeft(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainderSeconds = seconds % 60;
+        timerDisplay.textContent = `${minutes}:${
+                remainderSeconds < 10 ? "0" : ""
+        }${remainderSeconds}`;
+    }
+
+    startBtn.addEventListener("click", () => timer(countdownDurationSeconds));
+    pauseBtn.addEventListener("click", () => {
+        if (countdownIntervalId != null) {
+            clearInterval(countdownIntervalId);
+            countdownIntervalId = null;
+            pauseBtn.innerText = "Resume";
+            pauseBtn.classList.replace('bg-yellow-500', 'bg-blue-500');
+            pauseBtn.classList.replace('hover:bg-yellow-700', 'hover:bg-blue-700');
+        } else {
+            pauseBtn.innerText = "Pause";
+            pauseBtn.classList.replace('bg-blue-500', 'bg-yellow-500');
+            pauseBtn.classList.replace('hover:bg-blue-700', 'hover:bg-yellow-700');
+            timer(secondsLeft);
+        }
+    });
+</script>
+
+</body>
+</html>

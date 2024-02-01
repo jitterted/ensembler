@@ -16,6 +16,7 @@ import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberFactory;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.ZonedDateTimeFactory;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -131,6 +132,29 @@ class AdminDashboardControllerTest {
     }
 
     @Test
+    void timerPageShufflesNamesOfParticipants() {
+        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                .saveEnsemble(EnsembleFactory.withStartTimeNow())
+                .saveMemberAndAccept("First", "gh1")
+                .saveMemberAndAccept("Second", "gh2")
+                .saveMemberAndAccept("Third", "gh3")
+                .saveMemberAndAccept("Fourth", "gh4");
+        Ensemble ensemble = builder.lastSavedEnsemble();
+        AdminDashboardController adminDashboardController = new AdminDashboardController(builder.build(), builder.memberService());
+
+        ConcurrentModel model = new ConcurrentModel();
+        String viewName = adminDashboardController.timerView(model, ensemble.getId().id());
+
+        assertThat(viewName)
+                .isEqualTo("ensemble-timer");
+        assertThat(model)
+                .containsKey("participants");
+        assertThat(model)
+                .extracting("participants", InstanceOfAssertFactories.list(String.class))
+                .containsExactly("First", "Second", "Third", "Fourth");
+    }
+
+    @Test
     @Deprecated
     void manuallyRegisterExistingMemberForEnsemble() throws Exception {
         InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
@@ -150,7 +174,7 @@ class AdminDashboardControllerTest {
         form.setGithubUsername("githubtwo");
         adminDashboardController.registerParticipant(form);
 
-        assertThat(ensemble.acceptedMembers())
+        assertThat(ensemble.participants())
                 .containsExactly(MemberId.of(1));
     }
 

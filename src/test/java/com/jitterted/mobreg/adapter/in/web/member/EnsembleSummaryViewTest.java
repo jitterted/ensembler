@@ -310,7 +310,7 @@ class EnsembleSummaryViewTest {
         @Test
         void thenParticipatingMemberCanLeaveParticipants() {
             Ensemble ensemble = EnsembleFactory.fullEnsembleOneDayInTheFuture();
-            MemberId memberId = ensemble.acceptedMembers().findFirst().orElseThrow();
+            MemberId memberId = ensemble.participants().findFirst().orElseThrow();
 
             EnsembleSummaryView ensembleSummaryView = EnsembleSummaryView.toView(ensemble, memberId, STUB_MEMBER_SERVICE);
 

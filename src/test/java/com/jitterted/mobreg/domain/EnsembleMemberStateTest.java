@@ -14,7 +14,7 @@ class EnsembleMemberStateTest {
 
         assertThat(ensemble.acceptedCount())
                 .isZero();
-        assertThat(ensemble.acceptedMembers())
+        assertThat(ensemble.participants())
                 .isEmpty();
         assertThat(ensemble.spectators())
                 .isEmpty();
@@ -61,7 +61,7 @@ class EnsembleMemberStateTest {
 
         ensemble.joinAsSpectator(memberId);
 
-        assertThat(ensemble.acceptedMembers())
+        assertThat(ensemble.participants())
                 .isEmpty();
         assertThat(ensemble.spectators())
                 .containsExactly(memberId);
@@ -91,7 +91,7 @@ class EnsembleMemberStateTest {
 
         assertThat(ensemble.spectators())
                 .isEmpty();
-        assertThat(ensemble.acceptedMembers())
+        assertThat(ensemble.participants())
                 .containsExactly(memberId);
     }
 
@@ -118,7 +118,7 @@ class EnsembleMemberStateTest {
 
         assertThat(ensemble.acceptedCount())
                 .isEqualTo(1);
-        assertThat(ensemble.acceptedMembers())
+        assertThat(ensemble.participants())
                 .containsOnly(memberId);
         assertThat(ensemble.memberStatusFor(memberId))
                 .isEqualByComparingTo(MemberStatus.PARTICIPANT);

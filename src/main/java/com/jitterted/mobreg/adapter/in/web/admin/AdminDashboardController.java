@@ -63,7 +63,7 @@ public class AdminDashboardController {
     public String ensembleDetailView(Model model, @PathVariable Long ensembleId) {
         Ensemble ensemble = ensembleService.findById(EnsembleId.of(ensembleId))
                                            .orElseThrow(() ->
-                                               new ResponseStatusException(HttpStatus.NOT_FOUND)
+                                                                new ResponseStatusException(HttpStatus.NOT_FOUND)
                                            );
 
         EnsembleDetailView ensembleDetailView = EnsembleDetailView.from(ensemble, memberService);
@@ -101,7 +101,7 @@ public class AdminDashboardController {
     public String notifyEnsembleScheduled(@PathVariable Long ensembleId) {
         Ensemble ensemble = ensembleService.findById(EnsembleId.of(ensembleId))
                                            .orElseThrow(() ->
-                                               new ResponseStatusException(HttpStatus.NOT_FOUND)
+                                                                new ResponseStatusException(HttpStatus.NOT_FOUND)
                                            );
         ensembleService.triggerEnsembleScheduledNotification(ensemble);
         return "redirect:/admin/dashboard";
@@ -131,6 +131,17 @@ public class AdminDashboardController {
         EnsembleId ensembleId = EnsembleId.of(id);
         ensembleService.cancel(ensembleId);
         return redirectToDetailViewFor(ensembleId);
+    }
+
+    public String timerView(Model model, long id) {
+        EnsembleId ensembleId = EnsembleId.of(id);
+        Ensemble ensemble = ensembleService.findById(ensembleId).get();
+        List<String> participantNames = ensemble.participants()
+                                                .map(memberService::findById)
+                                                .map(Member::firstName)
+                                                .toList();
+        model.addAttribute("participants", participantNames);
+        return "ensemble-timer";
     }
 
     private String redirectToDetailViewFor(EnsembleId ensembleId) {

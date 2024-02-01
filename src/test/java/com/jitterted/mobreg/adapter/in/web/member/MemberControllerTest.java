@@ -119,7 +119,7 @@ class MemberControllerTest {
             assertThat(redirectPage)
                     .isEqualTo("redirect:/member/register");
 
-            assertThat(fixture.ensemble().acceptedMembers())
+            assertThat(fixture.ensemble().participants())
                     .extracting(MemberId::id)
                     .containsOnly(memberRegisterForm.getMemberId());
         }
