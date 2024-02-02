@@ -3,6 +3,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Member;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,5 +51,29 @@ public class MemberManagementController {
                                                        .map(MemberView::from)
                                                        .toList();
         model.addAttribute("members", memberViews);
+    }
+
+}
+
+class AddMemberForm {
+    @NotBlank
+    private String firstName;
+    @NotBlank
+    private String githubUsername;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getGithubUsername() {
+        return githubUsername;
+    }
+
+    public void setGithubUsername(String githubUsername) {
+        this.githubUsername = githubUsername;
     }
 }
