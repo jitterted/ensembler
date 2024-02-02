@@ -4,7 +4,6 @@ import com.jitterted.mobreg.adapter.in.web.TestAdminConfiguration;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleFactory;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ class EnsembleTimerControllerMvcTest {
                .andExpect(redirectedUrl("/admin/timer-view/47"));
     }
 
-    @Disabled
+    @Test
     void getForTimerViewEndpointReturns200OK() throws Exception {
         createAndSaveEnsembleInRepositoryForId(113);
         mockMvc.perform(get("/admin/timer-view/113"))
