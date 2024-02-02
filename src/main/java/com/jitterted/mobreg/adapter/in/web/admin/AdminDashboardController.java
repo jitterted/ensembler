@@ -133,17 +133,6 @@ public class AdminDashboardController {
         return redirectToDetailViewFor(ensembleId);
     }
 
-    public String timerView(Model model, long id) {
-        EnsembleId ensembleId = EnsembleId.of(id);
-        Ensemble ensemble = ensembleService.findById(ensembleId).get();
-        List<String> participantNames = ensemble.participants()
-                                                .map(memberService::findById)
-                                                .map(Member::firstName)
-                                                .toList();
-        model.addAttribute("participants", participantNames);
-        return "ensemble-timer";
-    }
-
     private String redirectToDetailViewFor(EnsembleId ensembleId) {
         return "redirect:/admin/ensemble/" + ensembleId.id();
     }
