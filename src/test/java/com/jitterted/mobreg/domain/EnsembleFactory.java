@@ -60,7 +60,7 @@ public class EnsembleFactory {
     }
 
     @NotNull
-    public static Ensemble withStartTimeNowAndIdOf(int id) {
+    public static Ensemble withStartTimeNowAndIdOf(long id) {
         Ensemble ensemble = new Ensemble("Starts Now", ZonedDateTime.now());
         ensemble.setId(EnsembleId.of(id));
         return ensemble;

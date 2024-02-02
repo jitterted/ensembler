@@ -1,83 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
 <head>
-    <meta charset="UTF-8">
-    <title>Ensembler Rotation Timer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
     <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png"><!-- 180×180 -->
+    <link rel="manifest" href="/site.webmanifest">
+
+    <style>
+        .circle {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid darkgreen;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: conic-gradient(lightgreen 0% 100%, black 100% 100%);
+        }
+
+        .progress-ring {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .progress-circle {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 20;
+        }
+
+        .timer-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: darkgreen;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            z-index: 2;
+        }
+
+        #timer {
+            z-index: 3;
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        .button-container {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .start-button,
+        .pause-resume-button {
+            padding: 10px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            width: 100px; /* Set a fixed width */
+            box-sizing: border-box; /* Include padding and border in the width */
+        }
+
+        .start-button {
+            background-color: blue;
+            color: white;
+        }
+
+        .pause-resume-button {
+            background-color: yellow;
+            color: black;
+        }
+
+        .resume-button {
+            background-color: green;
+            color: white;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-<div class="flex flex-col items-center justify-center min-h-screen">
-    <div class="text-center">
-        <h1 class="text-2xl font-bold mb-4">Time Left</h1>
-        <div id="timer" class="text-4xl font-mono mb-6">4:00</div>
-        <button
-                id="startBtn"
-                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
-        >
-            Start
-        </button>
-        <button
-                id="pauseBtn"
-                class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2"
-        >
+
+<body class="grid grid-cols-3 gap-4">
+
+<div id="timer-container"
+     class="col-span-1 flex flex-col justify-center items-center p-4 bg-gray-100">
+    <div class="circle">
+        <svg class="progress-ring">
+            <circle class="progress-circle"/>
+        </svg>
+        <div class="timer-circle">
+            <div id="timer" class="font-bold">5:00</div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button class="start-button" onclick="startTimer()">Start</button>
+        <button class="pause-resume-button" onclick="pauseResumeTimer()">
             Pause
         </button>
+        <div id="secondary-timer" class="font-bold text-red-900 text-4xl hidden">
+            0:00
+        </div>
     </div>
 </div>
 
-<div>
-
+<div id="participants-container"
+     class="col-span-2">
+    <h1 class="font-bold text-sm text-gray-600 uppercase">Participants</h1>
+    <p th:each="participantName: ${participantNames}" th:text="${participantName}">Jane Participant</p>
 </div>
 
+
 <script>
-    let countdownDurationSeconds = 4 * 60; // 4 minutes
-    let countdownIntervalId;
-    let secondsLeft;
-    const timerDisplay = document.getElementById("timer");
-    const startBtn = document.getElementById("startBtn");
-    const pauseBtn = document.getElementById("pauseBtn");
+    let mainTimerInterval;
+    let secondaryTimerInterval;
+    let isPaused = false;
+    let initialTime = 300; // 5 minutes
+    let timeRemaining = initialTime;
+    let secondaryTime = 0;
+    const timerElement = document.getElementById("timer");
+    const secondaryTimerElement = document.getElementById("secondary-timer");
+    const circle = document.querySelector(".circle");
+    const pauseResumeButton = document.querySelector(".pause-resume-button");
 
-    function timer(seconds) {
-        clearInterval(countdownIntervalId);
-        const now = Date.now();
-        const then = now + seconds * 1000;
-        displayTimeLeft(seconds);
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        timerElement.textContent = `${String(minutes)}:${String(seconds).padStart(2, "0")}`;
+    }
 
-        countdownIntervalId = setInterval(() => {
-            secondsLeft = Math.round((then - Date.now()) / 1000);
-            if (secondsLeft < 0) {
-                clearInterval(countdownIntervalId);
-                return;
+    function updateSecondaryTimerDisplay() {
+        const minutes = Math.floor(secondaryTime / 60);
+        const seconds = secondaryTime % 60;
+        secondaryTimerElement.textContent = `${String(minutes)}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function updateConicGradient() {
+        const progress = timeRemaining / initialTime;
+        const gradient = `conic-gradient(lightgreen 0% ${
+                progress * 100
+        }%, black ${progress * 100}% 100%)`;
+        circle.style.background = gradient;
+    }
+
+    function startTimer() {
+        clearInterval(mainTimerInterval);
+        clearInterval(secondaryTimerInterval);
+        isPaused = false;
+        secondaryTime = 0;
+        updateTimerDisplay();
+        updateSecondaryTimerDisplay();
+        updateConicGradient();
+
+        mainTimerInterval = setInterval(() => {
+            timeRemaining--;
+
+            if (timeRemaining < 0) {
+                clearInterval(mainTimerInterval);
+                timeRemaining = 0;
             }
-            displayTimeLeft(secondsLeft);
+
+            updateTimerDisplay();
+            updateConicGradient();
         }, 1000);
     }
 
-    function displayTimeLeft(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const remainderSeconds = seconds % 60;
-        timerDisplay.textContent = `${minutes}:${
-                remainderSeconds < 10 ? "0" : ""
-        }${remainderSeconds}`;
-    }
-
-    startBtn.addEventListener("click", () => timer(countdownDurationSeconds));
-    pauseBtn.addEventListener("click", () => {
-        if (countdownIntervalId != null) {
-            clearInterval(countdownIntervalId);
-            countdownIntervalId = null;
-            pauseBtn.innerText = "Resume";
-            pauseBtn.classList.replace('bg-yellow-500', 'bg-blue-500');
-            pauseBtn.classList.replace('hover:bg-yellow-700', 'hover:bg-blue-700');
+    function pauseResumeTimer() {
+        if (isPaused) {
+            isPaused = false;
+            secondaryTimerElement.classList.add("hidden");
+            pauseResumeButton.innerText = "Pause";
+            pauseResumeButton.classList.remove("resume-button");
+            startTimer();
         } else {
-            pauseBtn.innerText = "Pause";
-            pauseBtn.classList.replace('bg-blue-500', 'bg-yellow-500');
-            pauseBtn.classList.replace('hover:bg-blue-700', 'hover:bg-yellow-700');
-            timer(secondsLeft);
+            isPaused = true;
+            pauseResumeButton.innerText = "Resume";
+            pauseResumeButton.classList.add("resume-button");
+            clearInterval(mainTimerInterval);
+            secondaryTimerElement.classList.remove("hidden");
+            secondaryTimerInterval = setInterval(() => {
+                secondaryTime++;
+                updateSecondaryTimerDisplay();
+            }, 1000);
         }
-    });
+    }
 </script>
-
 </body>
 </html>
