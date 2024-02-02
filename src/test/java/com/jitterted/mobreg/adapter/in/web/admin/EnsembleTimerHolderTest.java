@@ -19,6 +19,16 @@ import static org.assertj.core.api.Assertions.*;
 public class EnsembleTimerHolderTest {
 
     @Test
+    void newTimerHolderHasNoTimerForId() {
+        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository);
+
+        assertThat(ensembleTimerHolder.hasTimerFor(EnsembleId.of(62)))
+                .isFalse();
+    }
+
+    @Test
     void whenNoTimerExistsForEnsembleOneIsCreated() {
         Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(77));
         EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository());
@@ -29,6 +39,8 @@ public class EnsembleTimerHolderTest {
                 .isEqualTo(EnsembleId.of(77));
         assertThat(ensembleTimer.participants())
                 .containsExactlyElementsOf(fixture.participants());
+        assertThat(ensembleTimerHolder.hasTimerFor(EnsembleId.of(77)))
+                .isTrue();
     }
 
     @Test

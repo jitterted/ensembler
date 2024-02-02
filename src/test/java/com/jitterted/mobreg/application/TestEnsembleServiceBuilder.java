@@ -70,11 +70,11 @@ public class TestEnsembleServiceBuilder {
         return lastEnsembleId;
     }
 
-    public MemberRepository withMemberRepository() {
+    public MemberRepository memberRepository() {
         return memberRepository;
     }
 
-    public EnsembleRepository withEnsembleRepository() {
+    public EnsembleRepository ensembleRepository() {
         return ensembleRepository;
     }
 

@@ -18,7 +18,7 @@ class EnsembleServiceCancelTest {
         TestEnsembleServiceBuilder ensembleServiceBuilder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble);
         EnsembleId ensembleId = ensembleServiceBuilder.lastSavedEnsembleId();
-        EnsembleRepository ensembleRepository = ensembleServiceBuilder.withEnsembleRepository();
+        EnsembleRepository ensembleRepository = ensembleServiceBuilder.ensembleRepository();
         EnsembleService ensembleService = ensembleServiceBuilder.build();
 
         ensembleService.cancel(ensembleId);
