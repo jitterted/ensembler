@@ -91,7 +91,7 @@
     <dependency>
       <groupId>com.spotify</groupId>
       <artifactId>github-client</artifactId>
-      <version>0.1.59</version>
+      <version>0.2.14</version>
     </dependency>
 
     <dependency>
