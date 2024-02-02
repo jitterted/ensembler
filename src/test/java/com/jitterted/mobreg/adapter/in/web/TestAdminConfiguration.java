@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.in.web;
 
 import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
+import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.DummyNotifier;
 import com.jitterted.mobreg.application.port.DummyVideoConferenceScheduler;
@@ -53,6 +54,11 @@ public class TestAdminConfiguration {
                                    memberRepository,
                                    notifier,
                                    videoConferenceScheduler);
+    }
+
+    @Bean
+    public EnsembleTimerHolder createEnsembleTimerHolder(EnsembleRepository ensembleRepository) {
+        return new EnsembleTimerHolder(ensembleRepository);
     }
 
     // TODO: remove this once member registration works

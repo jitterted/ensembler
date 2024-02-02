@@ -1,7 +1,7 @@
 package com.jitterted.mobreg;
 
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 //@Configuration
 //@ConditionalOnProperty(value = "ignore.security", havingValue = "true")
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@Configuration
+@TestConfiguration
 public class NoSecurityTestConfiguration {
     @Bean
     WebSecurityCustomizer webSecurityCustomizer() {

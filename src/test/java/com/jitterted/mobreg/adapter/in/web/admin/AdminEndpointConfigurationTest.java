@@ -130,8 +130,7 @@ class AdminEndpointConfigurationTest {
 
     private void createStubEnsembleServiceReturningEnsembleWithIdOf(long id) {
         Ensemble dummyEnsemble = new Ensemble("dummy", URI.create("https://dummy.link"), ZonedDateTime.now());
-        EnsembleId ensembleId = EnsembleId.of(id);
-        dummyEnsemble.setId(ensembleId);
+        dummyEnsemble.setId(EnsembleId.of(id));
         ensembleRepository.save(dummyEnsemble);
     }
 
