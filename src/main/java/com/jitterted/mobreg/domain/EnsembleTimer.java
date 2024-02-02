@@ -5,10 +5,14 @@ import java.util.stream.Stream;
 
 public class EnsembleTimer {
     private final EnsembleId ensembleId;
+    private final String ensembleName;
     private final Stream<MemberId> participants;
 
-    public EnsembleTimer(EnsembleId ensembleId, Stream<MemberId> participants) {
+    public EnsembleTimer(EnsembleId ensembleId,
+                         String ensembleName,
+                         Stream<MemberId> participants) {
         this.ensembleId = ensembleId;
+        this.ensembleName = ensembleName;
         this.participants = participants;
     }
 
@@ -18,6 +22,10 @@ public class EnsembleTimer {
 
     public Stream<MemberId> participants() {
         return participants;
+    }
+
+    public String ensembleName() {
+        return ensembleName;
     }
 
     @Override

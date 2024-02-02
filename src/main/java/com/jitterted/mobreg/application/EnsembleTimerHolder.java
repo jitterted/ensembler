@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.application.port.EnsembleRepository;
+import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import org.jetbrains.annotations.NotNull;
@@ -21,9 +22,11 @@ public class EnsembleTimerHolder {
     }
 
     private EnsembleTimer createTimerFor(EnsembleId id) {
-        return new EnsembleTimer(id, ensembleRepository.findById(id)
-                                                       .orElseThrow()
-                                                       .participants());
+        Ensemble ensemble = ensembleRepository.findById(id)
+                                              .orElseThrow();
+        return new EnsembleTimer(id,
+                                 ensemble.name(),
+                                 ensemble.participants());
     }
 
     public boolean hasTimerFor(EnsembleId ensembleId) {

@@ -65,4 +65,10 @@ public class EnsembleFactory {
         ensemble.setId(EnsembleId.of(id));
         return ensemble;
     }
+
+    public static Ensemble withStartTimeNowAndIdAndName(long ensembleId, String name) {
+        Ensemble ensemble = new Ensemble(name, ZonedDateTime.now());
+        ensemble.setId(EnsembleId.of(ensembleId));
+        return ensemble;
+    }
 }
