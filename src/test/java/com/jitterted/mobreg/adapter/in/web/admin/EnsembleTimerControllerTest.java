@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
+import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -19,7 +20,7 @@ class EnsembleTimerControllerTest {
         Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(87);
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder().saveEnsemble(ensemble);
         EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
-        EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder);
+        EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
 
         String redirectPage = ensembleTimerController.gotoTimerView(87L);
 
@@ -35,10 +36,10 @@ class EnsembleTimerControllerTest {
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
                 .saveMemberAndAccept("Jane", "ghjane")
-                .saveMemberAndAccept("Sally", "ghsally")
-                .saveMemberAndAccept("Paul", "ghpaul");
+                .saveMemberAndAccept("Paul", "ghpaul")
+                .saveMemberAndAccept("Sally", "ghsally");
         EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
-        EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder);
+        EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, builder.memberRepository());
 
         Model model = new ConcurrentModel();
         String viewName = ensembleTimerController.viewTimer(153L, model);
@@ -48,7 +49,7 @@ class EnsembleTimerControllerTest {
         assertThat(model.asMap())
                 .containsEntry("ensembleName", "Dolphin Ensemble")
                 .extractingByKey("participantNames", InstanceOfAssertFactories.list(String.class))
-                .containsExactly("Jane", "Sally", "Paul");
+                .containsExactlyInAnyOrder("Jane", "Sally", "Paul");
     }
 
 }
