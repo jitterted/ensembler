@@ -25,7 +25,7 @@ public record EnsembleSummaryView(long id,
                                        ensemble.meetingLink().toString(),
                                        DateTimeFormatting.formatAsDateTimeForCommonIso8601(ensemble.startDateTime()),
                                        ensemble.state().toString().toLowerCase(),
-                                       ensemble.acceptedCount(),
+                                       ensemble.participantCount(),
                                        ensemble.declinedCount());
     }
 }

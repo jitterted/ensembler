@@ -12,7 +12,7 @@ class EnsembleMemberStateTest {
     void newEnsembleHasZeroParticipants() throws Exception {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
-        assertThat(ensemble.acceptedCount())
+        assertThat(ensemble.participantCount())
                 .isZero();
         assertThat(ensemble.participants())
                 .isEmpty();
@@ -116,7 +116,7 @@ class EnsembleMemberStateTest {
 
         ensemble.joinAsParticipant(memberId);
 
-        assertThat(ensemble.acceptedCount())
+        assertThat(ensemble.participantCount())
                 .isEqualTo(1);
         assertThat(ensemble.participants())
                 .containsOnly(memberId);
@@ -131,7 +131,7 @@ class EnsembleMemberStateTest {
 
         EnsembleFactory.acceptCountMembersFor(count, ensemble);
 
-        assertThat(ensemble.acceptedCount())
+        assertThat(ensemble.participantCount())
                 .isEqualTo(count);
     }
 

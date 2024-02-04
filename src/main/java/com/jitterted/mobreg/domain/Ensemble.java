@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 // This is the Aggregate Root for Ensembles
 public class Ensemble {
-    private static final int MAX_ACCEPTED_MEMBERS = 5;
+    private static final int MAX_PARTICIPANTS = 5;
     private static final TemporalAmount IN_PROGRESS_GRACE_PERIOD_MINUTES = Duration.ofMinutes(10);
 
     private EnsembleId id;
@@ -22,7 +22,7 @@ public class Ensemble {
     private ZonedDateTime startDateTime; // PRIMITIVE OBSESSION
     private Duration duration = Duration.ofHours(1).plusMinutes(55);
     private ConferenceDetails conferenceDetails;
-    private final Set<MemberId> membersWhoAccepted = new HashSet<>();
+    private final Set<MemberId> membersAsParticipants = new HashSet<>();
     private final Set<MemberId> membersWhoDeclined = new HashSet<>();
     private final Set<MemberId> membersAsSpectators = new HashSet<>();
     private EnsembleState state = EnsembleState.SCHEDULED;
@@ -54,30 +54,30 @@ public class Ensemble {
         return startDateTime;
     }
 
-    public int acceptedCount() {
-        return membersWhoAccepted.size();
+    public int participantCount() {
+        return membersAsParticipants.size();
     }
 
     public void joinAsParticipant(MemberId memberId) {
         requireNotCompleted();
         requireNotCanceled();
         requireHasSpace();
-        membersWhoAccepted.add(memberId);
+        membersAsParticipants.add(memberId);
         membersWhoDeclined.remove(memberId);
         membersAsSpectators.remove(memberId);
     }
 
     public Stream<MemberId> participants() {
-        return ImmutableSet.copyOf(membersWhoAccepted).stream();
+        return ImmutableSet.copyOf(membersAsParticipants).stream();
     }
 
     private boolean isParticipant(MemberId memberId) {
-        return membersWhoAccepted.contains(memberId);
+        return membersAsParticipants.contains(memberId);
     }
 
     public void joinAsSpectator(MemberId memberId) {
         membersAsSpectators.add(memberId);
-        membersWhoAccepted.remove(memberId);
+        membersAsParticipants.remove(memberId);
         membersWhoDeclined.remove(memberId);
     }
 
@@ -91,7 +91,7 @@ public class Ensemble {
 
     public void declinedBy(MemberId memberId) {
         membersWhoDeclined.add(memberId);
-        membersWhoAccepted.remove(memberId);
+        membersAsParticipants.remove(memberId);
         membersAsSpectators.remove(memberId);
     }
 
@@ -123,16 +123,12 @@ public class Ensemble {
 
     private void requireHasSpace() {
         if (isFull()) {
-            throw new EnsembleFullException("Currently have " + acceptedCount() + " registered.");
+            throw new EnsembleFullException("Currently have " + participantCount() + " registered.");
         }
     }
 
-    public boolean canAccept() {
-        return !isFull();
-    }
-
     public boolean isFull() {
-        return acceptedCount() == MAX_ACCEPTED_MEMBERS;
+        return participantCount() == MAX_PARTICIPANTS;
     }
 
     public URI meetingLink() {
@@ -213,6 +209,7 @@ public class Ensemble {
         return now.isAfter(startDateTime);
     }
 
+    @Deprecated
     public Rsvp rsvpOf(MemberId memberId) {
         if (isDeclined(memberId)) {
             return Rsvp.DECLINED;
@@ -285,10 +282,11 @@ public class Ensemble {
     }
 
     public boolean isInProgress(ZonedDateTime now) {
-        return now.isAfter(startDateTime()) && now.isBefore(startDateTime()
-                                                                             .plus(duration));
+        return now.isAfter(startDateTime())
+                && now.isBefore(startDateTime().plus(duration));
     }
 
+    @Deprecated
     record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
         // @formatter: off
         private static final Map<WhenSpaceRsvp, MemberEnsembleStatus> STATE_TO_STATUS = Map.ofEntries(
@@ -323,6 +321,7 @@ public class Ensemble {
             return ensemble.isFull() ? Space.FULL : Space.AVAILABLE;
         }
 
+        @Deprecated
         private static MemberEnsembleStatus memberStatus(Ensemble ensemble, MemberId memberId, ZonedDateTime now) {
             When when = when(ensemble, now);
             Space space = space(ensemble);
