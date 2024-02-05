@@ -22,7 +22,7 @@ class EnsembleTimerControllerTest {
         EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
 
-        String redirectPage = ensembleTimerController.gotoTimerView(87L);
+        String redirectPage = ensembleTimerController.createTimerView(87L);
 
         assertThat(redirectPage)
                 .isEqualTo("redirect:/admin/timer-view/87");
@@ -31,7 +31,7 @@ class EnsembleTimerControllerTest {
     }
 
     @Test
-    void viewTimerHasParticipantsInTheViewModelFromTheSpecifiedEnsemble() {
+    void viewTimerHasParticipantsInTheViewModelFromTheSpecifiedEnsembleAndTimerNotStarted() {
         Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdAndName(153, "Dolphin Ensemble");
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
@@ -50,6 +50,21 @@ class EnsembleTimerControllerTest {
                 .containsEntry("ensembleName", "Dolphin Ensemble")
                 .extractingByKey("participantNames", InstanceOfAssertFactories.list(String.class))
                 .containsExactlyInAnyOrder("Jane", "Sally", "Paul");
+        assertThat(ensembleTimerHolder.hasTimerStartedFor(EnsembleId.of(153L)))
+                .isFalse();
     }
 
+    @Test
+    void startTimerStartsTheSpecifiedEnsembleTimer() {
+        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(279);
+        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder().saveEnsemble(ensemble);
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
+        EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
+        ensembleTimerController.createTimerView(279L);
+
+        ensembleTimerController.startTimer(279L);
+
+        assertThat(ensembleTimerHolder.hasTimerStartedFor(EnsembleId.of(279L)))
+                .isTrue();
+    }
 }

@@ -30,7 +30,7 @@ public class EnsembleTimerController {
     }
 
     @PostMapping("/timer-view/{ensembleId}")
-    public String gotoTimerView(@PathVariable("ensembleId") Long id) {
+    public String createTimerView(@PathVariable("ensembleId") Long id) {
         ensembleTimerHolder.timerFor(EnsembleId.of(id));
         return "redirect:/admin/timer-view/" + id;
     }
@@ -44,12 +44,12 @@ public class EnsembleTimerController {
     }
 
     @PostMapping("/start-timer/{ensembleId}")
-    public ResponseEntity<Void> startTimer(@PathVariable("ensembleId") String ensembleId) {
+    public ResponseEntity<Void> startTimer(@PathVariable("ensembleId") Long id) {
+        ensembleTimerHolder.startTimerFor(EnsembleId.of(id));
         return ResponseEntity.noContent().build();
     }
 
-
-    List<String> firstNamesOfParticipantsIn(EnsembleTimer ensembleTimer) {
+    private List<String> firstNamesOfParticipantsIn(EnsembleTimer ensembleTimer) {
         return ensembleTimer.participants()
                             .map(memberRepository::findById)
                             .flatMap(Optional::stream)

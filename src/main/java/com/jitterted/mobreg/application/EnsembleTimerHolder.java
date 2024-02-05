@@ -21,16 +21,36 @@ public class EnsembleTimerHolder {
         return ensembleTimers.computeIfAbsent(ensembleId, this::createTimerFor);
     }
 
-    private EnsembleTimer createTimerFor(EnsembleId id) {
-        Ensemble ensemble = ensembleRepository.findById(id)
+    private EnsembleTimer createTimerFor(EnsembleId ensembleId) {
+        Ensemble ensemble = ensembleRepository.findById(ensembleId)
                                               .orElseThrow();
-        return new EnsembleTimer(id,
+        return new EnsembleTimer(ensembleId,
                                  ensemble.name(),
                                  ensemble.participants());
     }
 
     public boolean hasTimerFor(EnsembleId ensembleId) {
         return ensembleTimers.containsKey(ensembleId);
+    }
+
+    public boolean hasTimerStartedFor(EnsembleId ensembleId) {
+        requireTimerToExistFor(ensembleId);
+        return ensembleTimers
+                .get(ensembleId)
+                .hasTimerStarted();
+    }
+
+    public void startTimerFor(EnsembleId ensembleId) {
+        requireTimerToExistFor(ensembleId);
+        ensembleTimers.get(ensembleId)
+                      .startTimer();
+    }
+
+    private void requireTimerToExistFor(EnsembleId ensembleId) {
+        if (!hasTimerFor(ensembleId)) {
+            throw new IllegalArgumentException(
+                    "No timer for Ensemble ID %d exists.".formatted(ensembleId.id()));
+        }
     }
 
     static class SingletonHashMap<K, V> extends HashMap<K, V> {

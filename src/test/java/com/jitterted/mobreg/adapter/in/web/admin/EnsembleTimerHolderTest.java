@@ -55,6 +55,24 @@ public class EnsembleTimerHolderTest {
                 .isSameAs(createdEnsemblerTimer);
     }
 
+    @Test
+    void askingTimerStartedThrowsExceptionIfTimerDoesNotExistForEnsemble() {
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository());
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> ensembleTimerHolder.hasTimerStartedFor(EnsembleId.of(444)))
+                .withMessage("No timer for Ensemble ID 444 exists.");
+    }
+
+    @Test
+    void startTimerThrowsExceptionIfTimerDoesNotExistForEnsemble() {
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository());
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> ensembleTimerHolder.startTimerFor(EnsembleId.of(333)))
+                .withMessage("No timer for Ensemble ID 333 exists.");
+    }
+
     private static Fixture createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId ensembleId) {
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("Current", ZonedDateTime.now());

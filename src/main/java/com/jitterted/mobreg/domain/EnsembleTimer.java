@@ -7,6 +7,7 @@ public class EnsembleTimer {
     private final EnsembleId ensembleId;
     private final String ensembleName;
     private final Stream<MemberId> participants;
+    private boolean hasStarted = false;
 
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,
@@ -26,6 +27,14 @@ public class EnsembleTimer {
 
     public String ensembleName() {
         return ensembleName;
+    }
+
+    public boolean hasTimerStarted() {
+        return hasStarted;
+    }
+
+    public void startTimer() {
+        hasStarted = true;
     }
 
     @Override
