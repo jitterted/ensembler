@@ -6,6 +6,7 @@ import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/admin/timer-view/")
+@RequestMapping("/admin")
 public class EnsembleTimerController {
     private final EnsembleTimerHolder ensembleTimerHolder;
     private final MemberRepository memberRepository;
@@ -28,19 +29,25 @@ public class EnsembleTimerController {
         this.memberRepository = memberRepository;
     }
 
-    @PostMapping("{ensembleId}")
+    @PostMapping("/timer-view/{ensembleId}")
     public String gotoTimerView(@PathVariable("ensembleId") Long id) {
         ensembleTimerHolder.timerFor(EnsembleId.of(id));
         return "redirect:/admin/timer-view/" + id;
     }
 
-    @GetMapping("{ensembleId}")
+    @GetMapping("/timer-view/{ensembleId}")
     public String viewTimer(@PathVariable("ensembleId") Long id, Model model) {
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(id));
         model.addAttribute("ensembleName", ensembleTimer.ensembleName());
         model.addAttribute("participantNames", firstNamesOfParticipantsIn(ensembleTimer));
         return "ensemble-timer";
     }
+
+    @PostMapping("/start-timer/{ensembleId}")
+    public ResponseEntity<Void> startTimer(@PathVariable("ensembleId") String ensembleId) {
+        return ResponseEntity.noContent().build();
+    }
+
 
     List<String> firstNamesOfParticipantsIn(EnsembleTimer ensembleTimer) {
         return ensembleTimer.participants()

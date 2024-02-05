@@ -46,6 +46,14 @@ class EnsembleTimerControllerMvcTest {
                .andExpect(status().isOk());
     }
 
+    @Test
+    void postToStartTimerEndpointReturns204NoContent() throws Exception {
+        createAndSaveEnsembleInRepositoryForId(353);
+        mockMvc.perform(post("/admin/start-timer/353")
+                                .with(csrf()))
+               .andExpect(status().isNoContent());
+    }
+
     private void createAndSaveEnsembleInRepositoryForId(long ensembleId) {
         Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(ensembleId);
         ensembleRepository.save(ensemble);

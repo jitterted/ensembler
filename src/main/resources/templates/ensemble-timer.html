@@ -11,7 +11,10 @@
     <link rel="icon" href="/favicon-16x16.png" sizes="16x16">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png"><!-- 180×180 -->
     <link rel="manifest" href="/site.webmanifest">
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
 
+    <title>Ensemble Timer</title>
     <style>
         .circle {
             position: relative;
@@ -23,7 +26,6 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: conic-gradient(lightgreen 0% 100%, black 100% 100%);
         }
 
         .progress-ring {
@@ -56,67 +58,35 @@
             color: white;
             font-size: 2.5rem;
         }
-
-        .button-container {
-            display: flex;
-            margin-top: 20px;
-        }
-
-        .start-button,
-        .pause-resume-button {
-            padding: 10px;
-            margin: 0 10px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 5px;
-            outline: none;
-            width: 100px; /* Set a fixed width */
-            box-sizing: border-box; /* Include padding and border in the width */
-        }
-
-        .start-button {
-            background-color: blue;
-            color: white;
-        }
-
-        .pause-resume-button {
-            background-color: yellow;
-            color: black;
-        }
-
-        .resume-button {
-            background-color: green;
-            color: white;
-        }
     </style>
 </head>
 
 <body class="grid grid-cols-3 gap-4">
-
-<div id="timer-container"
-     class="col-span-1 flex flex-col justify-center items-center p-4 bg-gray-100">
-    <div class="circle">
-        <svg class="progress-ring">
-            <circle class="progress-circle"/>
-        </svg>
-        <div class="timer-circle">
-            <div id="timer" class="font-bold">5:00</div>
+<div id="timer-and-control" class="col-span-1">
+    <div
+            class="flex flex-col justify-center items-center p-4"
+            hx-ext="ws"
+            ws-connect="/ws/timer"
+            hx-swap-oob="innerHtml"
+    >
+        <div id="timer-container"
+             class="circle" style="background: conic-gradient(lightgreen 0% 100%, black 100% 100%);">
+            <svg class="progress-ring">
+                <circle class="progress-circle"/>
+            </svg>
+            <div class="timer-circle">
+                <div id="timer" class="font-bold">4:00</div>
+            </div>
         </div>
     </div>
-
-    <div class="button-container">
-        <button class="start-button" onclick="startTimer()">Start</button>
-        <button class="pause-resume-button" onclick="pauseResumeTimer()">
-            Pause
+    <div>
+        <h2 class="text-xl font-bold">Timer Control</h2>
+        <button hx-post="/start-timer" hx-swap="none"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >Start Timer
         </button>
-        <div id="secondary-timer" class="font-bold text-red-900 text-4xl hidden">
-            0:00
-        </div>
     </div>
 </div>
-
 <div id="participants-container"
      class="col-span-2">
     <h1 class="font-bold text-sm text-gray-600 uppercase">Participants</h1>
@@ -124,79 +94,5 @@
 </div>
 
 
-<script>
-    let mainTimerInterval;
-    let secondaryTimerInterval;
-    let isPaused = false;
-    let initialTime = 300; // 5 minutes
-    let timeRemaining = initialTime;
-    let secondaryTime = 0;
-    const timerElement = document.getElementById("timer");
-    const secondaryTimerElement = document.getElementById("secondary-timer");
-    const circle = document.querySelector(".circle");
-    const pauseResumeButton = document.querySelector(".pause-resume-button");
-
-    function updateTimerDisplay() {
-        const minutes = Math.floor(timeRemaining / 60);
-        const seconds = timeRemaining % 60;
-        timerElement.textContent = `${String(minutes)}:${String(seconds).padStart(2, "0")}`;
-    }
-
-    function updateSecondaryTimerDisplay() {
-        const minutes = Math.floor(secondaryTime / 60);
-        const seconds = secondaryTime % 60;
-        secondaryTimerElement.textContent = `${String(minutes)}:${String(seconds).padStart(2, "0")}`;
-    }
-
-    function updateConicGradient() {
-        const progress = timeRemaining / initialTime;
-        const gradient = `conic-gradient(lightgreen 0% ${
-                progress * 100
-        }%, black ${progress * 100}% 100%)`;
-        circle.style.background = gradient;
-    }
-
-    function startTimer() {
-        clearInterval(mainTimerInterval);
-        clearInterval(secondaryTimerInterval);
-        isPaused = false;
-        secondaryTime = 0;
-        updateTimerDisplay();
-        updateSecondaryTimerDisplay();
-        updateConicGradient();
-
-        mainTimerInterval = setInterval(() => {
-            timeRemaining--;
-
-            if (timeRemaining < 0) {
-                clearInterval(mainTimerInterval);
-                timeRemaining = 0;
-            }
-
-            updateTimerDisplay();
-            updateConicGradient();
-        }, 1000);
-    }
-
-    function pauseResumeTimer() {
-        if (isPaused) {
-            isPaused = false;
-            secondaryTimerElement.classList.add("hidden");
-            pauseResumeButton.innerText = "Pause";
-            pauseResumeButton.classList.remove("resume-button");
-            startTimer();
-        } else {
-            isPaused = true;
-            pauseResumeButton.innerText = "Resume";
-            pauseResumeButton.classList.add("resume-button");
-            clearInterval(mainTimerInterval);
-            secondaryTimerElement.classList.remove("hidden");
-            secondaryTimerInterval = setInterval(() => {
-                secondaryTime++;
-                updateSecondaryTimerDisplay();
-            }, 1000);
-        }
-    }
-</script>
 </body>
 </html>
