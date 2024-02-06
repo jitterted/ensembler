@@ -2,6 +2,7 @@ package com.jitterted.mobreg.domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
@@ -36,8 +37,21 @@ class EnsembleTimerTest {
                 .withMessage("Can't Start Timer when Running");
     }
 
+    @Test
+    void timerTickWhenWaitingToStartThrowsException() {
+        EnsembleTimer ensembleTimer = createTimer();
+
+        assertThatIllegalStateException()
+                .isThrownBy(() -> ensembleTimer.tick(Instant.now()));
+    }
+
+    //    @Test
+//    void whenNowIsBeforeTimerEndTimeThenStillRunning() {
+//
+//    }
+
     // Timer is FINISHED when the tick is on or later than its internal "end time"
-    // COMMAND: timer.timeUpdate(now)
+    // COMMAND: timer.tick(now)
     // QUERY: timer.hasFinished() --> timer.state(): WAITING_TO_START, RUNNING, FINISHED
 
     // Test that throws exception if startTimer() called when in FINISHED state

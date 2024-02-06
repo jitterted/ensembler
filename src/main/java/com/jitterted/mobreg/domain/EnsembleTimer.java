@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.domain;
 
 import java.text.MessageFormat;
+import java.time.Instant;
 import java.util.stream.Stream;
 
 public class EnsembleTimer {
@@ -73,6 +74,10 @@ public class EnsembleTimer {
     @Override
     public int hashCode() {
         return ensembleId.hashCode();
+    }
+
+    public void tick(Instant now) {
+        throw new IllegalStateException();
     }
 
     public enum TimerState {
