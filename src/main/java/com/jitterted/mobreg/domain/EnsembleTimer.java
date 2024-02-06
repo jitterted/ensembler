@@ -34,7 +34,14 @@ public class EnsembleTimer {
     }
 
     public void startTimer() {
+        requireNotStarted();
         hasStarted = true;
+    }
+
+    private void requireNotStarted() {
+        if (hasStarted) {
+            throw new IllegalStateException("Can't Start Timer when Already Started");
+        }
     }
 
     @Override
