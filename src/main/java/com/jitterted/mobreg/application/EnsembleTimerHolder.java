@@ -6,6 +6,7 @@ import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Instant;
 import java.util.HashMap;
 
 public class EnsembleTimerHolder {
@@ -43,7 +44,7 @@ public class EnsembleTimerHolder {
     public void startTimerFor(EnsembleId ensembleId) {
         requireTimerToExistFor(ensembleId);
         ensembleTimers.get(ensembleId)
-                      .startTimer();
+                      .startTimerAt(Instant.now());
     }
 
     private void requireTimerToExistFor(EnsembleId ensembleId) {
