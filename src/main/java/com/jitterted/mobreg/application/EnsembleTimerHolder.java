@@ -33,11 +33,11 @@ public class EnsembleTimerHolder {
         return ensembleTimers.containsKey(ensembleId);
     }
 
-    public boolean hasTimerStartedFor(EnsembleId ensembleId) {
+    public boolean isTimerRunningFor(EnsembleId ensembleId) {
         requireTimerToExistFor(ensembleId);
         return ensembleTimers
                 .get(ensembleId)
-                .hasTimerStarted();
+                .state() == EnsembleTimer.TimerState.RUNNING;
     }
 
     public void startTimerFor(EnsembleId ensembleId) {

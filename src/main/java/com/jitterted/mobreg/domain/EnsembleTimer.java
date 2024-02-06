@@ -7,7 +7,7 @@ public class EnsembleTimer {
     private final EnsembleId ensembleId;
     private final String ensembleName;
     private final Stream<MemberId> participants;
-    private boolean hasStarted = false;
+    private TimerState currentState;
 
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,
@@ -15,6 +15,7 @@ public class EnsembleTimer {
         this.ensembleId = ensembleId;
         this.ensembleName = ensembleName;
         this.participants = participants;
+        this.currentState = TimerState.WAITING_TO_START;
     }
 
     public EnsembleId ensembleId() {
@@ -29,19 +30,23 @@ public class EnsembleTimer {
         return ensembleName;
     }
 
-    public boolean hasTimerStarted() {
-        return hasStarted;
+    public TimerState state() {
+        return currentState;
     }
 
     public void startTimer() {
-        requireNotStarted();
-        hasStarted = true;
+        requireNotRunning();
+        currentState = TimerState.RUNNING;
     }
 
-    private void requireNotStarted() {
-        if (hasStarted) {
-            throw new IllegalStateException("Can't Start Timer when Already Started");
+    private void requireNotRunning() {
+        if (isRunning()) {
+            throw new IllegalStateException("Can't Start Timer when Running");
         }
+    }
+
+    private boolean isRunning() {
+        return currentState == TimerState.RUNNING;
     }
 
     @Override
@@ -68,5 +73,9 @@ public class EnsembleTimer {
     @Override
     public int hashCode() {
         return ensembleId.hashCode();
+    }
+
+    public enum TimerState {
+        RUNNING, WAITING_TO_START
     }
 }

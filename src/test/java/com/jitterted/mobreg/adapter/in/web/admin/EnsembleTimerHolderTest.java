@@ -60,7 +60,7 @@ public class EnsembleTimerHolderTest {
         EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository());
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> ensembleTimerHolder.hasTimerStartedFor(EnsembleId.of(444)))
+                .isThrownBy(() -> ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(444)))
                 .withMessage("No timer for Ensemble ID 444 exists.");
     }
 

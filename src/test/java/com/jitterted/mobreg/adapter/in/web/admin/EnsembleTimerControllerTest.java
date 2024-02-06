@@ -50,7 +50,7 @@ class EnsembleTimerControllerTest {
                 .containsEntry("ensembleName", "Dolphin Ensemble")
                 .extractingByKey("participantNames", InstanceOfAssertFactories.list(String.class))
                 .containsExactlyInAnyOrder("Jane", "Sally", "Paul");
-        assertThat(ensembleTimerHolder.hasTimerStartedFor(EnsembleId.of(153L)))
+        assertThat(ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(153L)))
                 .isFalse();
     }
 
@@ -64,7 +64,7 @@ class EnsembleTimerControllerTest {
 
         ensembleTimerController.startTimer(279L);
 
-        assertThat(ensembleTimerHolder.hasTimerStartedFor(EnsembleId.of(279L)))
+        assertThat(ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(279L)))
                 .isTrue();
     }
 }

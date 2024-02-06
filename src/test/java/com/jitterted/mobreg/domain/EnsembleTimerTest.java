@@ -9,11 +9,11 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleTimerTest {
 
     @Test
-    void newTimerIsNotRunning() {
+    void newTimerIsWaitingToStart() {
         EnsembleTimer ensembleTimer = createTimer();
 
-        assertThat(ensembleTimer.hasTimerStarted())
-                .isFalse();
+        assertThat(ensembleTimer.state())
+                .isEqualByComparingTo(EnsembleTimer.TimerState.WAITING_TO_START);
     }
 
     @Test
@@ -22,8 +22,8 @@ class EnsembleTimerTest {
 
         ensembleTimer.startTimer();
 
-        assertThat(ensembleTimer.hasTimerStarted())
-                .isTrue();
+        assertThat(ensembleTimer.state())
+                .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
     }
 
     @Test
@@ -33,12 +33,14 @@ class EnsembleTimerTest {
 
         assertThatIllegalStateException()
                 .isThrownBy(ensembleTimer::startTimer)
-                .withMessage("Can't Start Timer when Already Started");
+                .withMessage("Can't Start Timer when Running");
     }
 
-    // how much time is left?
-    // determines whether the timer is FINISHED or not
+    // Timer is FINISHED when the tick is on or later than its internal "end time"
+    // COMMAND: timer.timeUpdate(now)
+    // QUERY: timer.hasFinished() --> timer.state(): WAITING_TO_START, RUNNING, FINISHED
 
+    // Test that throws exception if startTimer() called when in FINISHED state
 
     private EnsembleTimer createTimer() {
         return new EnsembleTimer(EnsembleId.of(53), "Test", Stream.of(MemberId.of(7)));
