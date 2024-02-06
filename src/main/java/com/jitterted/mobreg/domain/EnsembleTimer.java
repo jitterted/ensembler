@@ -7,12 +7,14 @@ import java.util.stream.Stream;
 
 public class EnsembleTimer {
     private static final Duration DEFAULT_TIMER_DURATION = Duration.ofMinutes(4);
+
     private final EnsembleId ensembleId;
     private final String ensembleName;
     private final Stream<MemberId> participants;
-    private final Duration timerDuration;
+
     private TimerState currentState;
-    private Instant startedAt;
+    private final Duration timerDuration;
+    private Instant timerEnd;
 
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,
@@ -46,18 +48,36 @@ public class EnsembleTimer {
 
     public void startTimerAt(Instant timeStarted) {
         requireNotRunning();
-        startedAt = timeStarted;
+        timerEnd = timeStarted.plus(timerDuration);
         currentState = TimerState.RUNNING;
     }
 
+    public void tick(Instant now) {
+        requireRunning(now);
+        if (isAtOrAfterTimerEnd(now)) {
+            currentState = TimerState.FINISHED;
+        }
+    }
+
+    private void requireRunning(Instant now) {
+        if (currentState != TimerState.RUNNING) {
+            throw new IllegalStateException("Tick received at %s after Timer already Finished at %s."
+                                                    .formatted(now, timerEnd));
+        }
+    }
+
     private void requireNotRunning() {
-        if (isRunning()) {
+        if (currentState == TimerState.RUNNING) {
             throw new IllegalStateException("Can't Start Timer when Running");
         }
     }
 
-    private boolean isRunning() {
-        return currentState == TimerState.RUNNING;
+    private boolean isAtOrAfterTimerEnd(Instant now) {
+        return !now.isBefore(timerEnd);
+    }
+
+    public enum TimerState {
+        RUNNING, FINISHED, WAITING_TO_START
     }
 
     @Override
@@ -84,13 +104,5 @@ public class EnsembleTimer {
     @Override
     public int hashCode() {
         return ensembleId.hashCode();
-    }
-
-    public void tick(Instant now) {
-        throw new IllegalStateException();
-    }
-
-    public enum TimerState {
-        RUNNING, WAITING_TO_START
     }
 }

@@ -12,6 +12,7 @@ class EnsembleTimerTest {
 
     private static final EnsembleId IRRELEVANT_ENSEMBLE_ID = EnsembleId.of(53);
     private static final MemberId IRRELEVANT_MEMBER_ID = MemberId.of(7);
+    private static final String IRRELEVANT_NAME = "Test";
 
     @Test
     void newTimerIsWaitingToStart() {
@@ -51,21 +52,79 @@ class EnsembleTimerTest {
 
     @Test
     void isRunningWhenTickTimeBeforeEndTime() {
-        EnsembleTimer ensembleTimer = new EnsembleTimer(IRRELEVANT_ENSEMBLE_ID,
-                                                        "Test",
-                                                        Stream.of(IRRELEVANT_MEMBER_ID),
-                                                        Duration.ofMinutes(4));
+        EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
+        Instant timerStartedAt = Instant.now();
+        ensembleTimer.startTimerAt(timerStartedAt);
 
-//        ensembleTimer.startTimerAt(Instant.now())
+        Instant oneMilliBeforeEnd = timerStartedAt.plus(Duration.ofMinutes(4).minusMillis(1));
+        ensembleTimer.tick(oneMilliBeforeEnd);
+
+        assertThat(ensembleTimer.state())
+                .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
     }
 
-    // Timer is FINISHED when the tick is on or later than its internal "end time"
-    // COMMAND: timer.tick(now)
-    // QUERY: timer.hasFinished() --> timer.state(): WAITING_TO_START, RUNNING, FINISHED
+    @Test
+    void isFinishedWhenTickTimeAtEndTime() {
+        EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
+        Instant timerStartedAt = Instant.now();
+        ensembleTimer.startTimerAt(timerStartedAt);
 
-    // Test that throws exception if startTimer() called when in FINISHED state
+        Instant timerFinishedAt = timerStartedAt.plus(Duration.ofMinutes(4));
+        ensembleTimer.tick(timerFinishedAt);
+
+        assertThat(ensembleTimer.state())
+                .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
+    }
+
+    @Test
+    void isFinishedWhenTickTimeAfterEndTime() {
+        EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
+        Instant timerStartedAt = Instant.now();
+        ensembleTimer.startTimerAt(timerStartedAt);
+
+        Instant oneMilliAfterEnd = timerStartedAt.plus(Duration.ofMinutes(4).plusMillis(1));
+        ensembleTimer.tick(oneMilliAfterEnd);
+
+        assertThat(ensembleTimer.state())
+                .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
+    }
+
+    @Test
+    void tickWhenFinishedThrowsException() {
+        Fixture fixture = create4MinuteTimerInFinishedState();
+
+        Instant finishedAt = fixture.timerStartedAt().plus(Duration.ofMinutes(4));
+        Instant finishedAtPlus20Millis = finishedAt.plusMillis(20);
+        assertThatIllegalStateException()
+                .isThrownBy(() -> fixture.ensembleTimer().tick(finishedAtPlus20Millis))
+                .withMessage("Tick received at %s after Timer already Finished at %s."
+                                     .formatted(finishedAtPlus20Millis, finishedAt));
+    }
+
+
+
+
+    // -- ENCAPSULATED SETUP
+
+    private Fixture create4MinuteTimerInFinishedState() {
+        EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
+        Instant timerStartedAt = Instant.now();
+        ensembleTimer.startTimerAt(timerStartedAt);
+        ensembleTimer.tick(timerStartedAt.plus(Duration.ofMinutes(4).plusMillis(1)));
+        return new Fixture(ensembleTimer, timerStartedAt);
+    }
+
+    private record Fixture(EnsembleTimer ensembleTimer, Instant timerStartedAt) {
+    }
+
+    private EnsembleTimer createTimerWith4MinuteDuration() {
+        return new EnsembleTimer(IRRELEVANT_ENSEMBLE_ID,
+                                 IRRELEVANT_NAME,
+                                 Stream.of(IRRELEVANT_MEMBER_ID),
+                                 Duration.ofMinutes(4));
+    }
 
     private EnsembleTimer createTimer() {
-        return new EnsembleTimer(IRRELEVANT_ENSEMBLE_ID, "Test", Stream.of(IRRELEVANT_MEMBER_ID));
+        return new EnsembleTimer(IRRELEVANT_ENSEMBLE_ID, IRRELEVANT_NAME, Stream.of(IRRELEVANT_MEMBER_ID));
     }
 }
