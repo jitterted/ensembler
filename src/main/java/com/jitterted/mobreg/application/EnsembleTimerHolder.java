@@ -47,6 +47,11 @@ public class EnsembleTimerHolder {
                       .startTimerAt(Instant.now());
     }
 
+    public void handleTickFor(EnsembleId ensembleId) {
+
+    }
+
+
     private void requireTimerToExistFor(EnsembleId ensembleId) {
         if (!hasTimerFor(ensembleId)) {
             throw new IllegalArgumentException(

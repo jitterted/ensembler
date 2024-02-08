@@ -2,12 +2,15 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.TestMemberBuilder;
+import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.MemberId;
+import com.jitterted.mobreg.domain.TimeRemaining;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
@@ -73,6 +76,27 @@ public class EnsembleTimerHolderTest {
                 .withMessage("No timer for Ensemble ID 333 exists.");
     }
 
+    @Test
+    @Disabled("Waiting for EnsembleTimer.timeRemaining() to be implemented")
+    void onTickWhileRunningBroadcastsCurrentTimerState() {
+        MockBroadcaster mockBroadcaster = new MockBroadcaster();
+        Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(515));
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository());
+
+        ensembleTimerHolder.handleTickFor(EnsembleId.of(515));
+
+        // check broadcast was called with the correct timer
+        assertThat(mockBroadcaster.wasSendCalled())
+                .as("Expected sendCurrentTimer() to have been called on the Broadcaster")
+                .isTrue();
+    }
+
+    void onTickWhenFinishedBroadcastsTimerFinished() {
+
+    }
+
+    // ---- ENCAPSULATED SETUP
+    
     private static Fixture createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId ensembleId) {
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         Ensemble ensemble = new Ensemble("Current", ZonedDateTime.now());
@@ -96,4 +120,24 @@ public class EnsembleTimerHolderTest {
     private record Fixture(EnsembleRepository ensembleRepository, List<MemberId> participants) {
     }
 
+    private static class MockBroadcaster implements Broadcaster {
+        private boolean wasCalled;
+
+        @Override
+        public void sendCurrentTimer(EnsembleTimer ensembleTimer) {
+            assertThat(ensembleTimer.state())
+                    .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+            assertThat(ensembleTimer.ensembleId())
+                    .isEqualTo(EnsembleId.of(515));
+            assertThat(ensembleTimer.timeRemaining())
+                    /* minutesRemaining, secondsRemaining, percentRemaining  */
+                    .isEqualTo(new TimeRemaining(3, 59, 99));
+            wasCalled = true;
+        }
+
+        boolean wasSendCalled() {
+            return wasCalled;
+        }
+
+    }
 }

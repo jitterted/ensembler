@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.domain;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -15,11 +16,13 @@ class EnsembleTimerTest {
     private static final String IRRELEVANT_NAME = "Test";
 
     @Test
-    void newTimerIsWaitingToStart() {
+    void newTimerIsWaitingToStartHasFullTimeRemaining() {
         EnsembleTimer ensembleTimer = createTimer();
 
         assertThat(ensembleTimer.state())
                 .isEqualByComparingTo(EnsembleTimer.TimerState.WAITING_TO_START);
+        assertThat(ensembleTimer.timeRemaining())
+                .isEqualTo(new TimeRemaining(4, 0, 100));
     }
 
     @Test
@@ -30,28 +33,12 @@ class EnsembleTimerTest {
 
         assertThat(ensembleTimer.state())
                 .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+        assertThat(ensembleTimer.timeRemaining())
+                .isEqualTo(new TimeRemaining(4, 0, 100));
     }
 
     @Test
-    void startTimerThrowsExceptionIfAlreadyRunning() {
-        EnsembleTimer ensembleTimer = createTimer();
-        ensembleTimer.startTimerAt(Instant.now());
-
-        assertThatIllegalStateException()
-                .isThrownBy(() -> ensembleTimer.startTimerAt(Instant.now()))
-                .withMessage("Can't Start Timer when Running");
-    }
-
-    @Test
-    void timerTickWhenWaitingToStartThrowsException() {
-        EnsembleTimer ensembleTimer = createTimer();
-
-        assertThatIllegalStateException()
-                .isThrownBy(() -> ensembleTimer.tick(Instant.now()));
-    }
-
-    @Test
-    void isRunningWhenTickTimeBeforeEndTime() {
+    void timerRemainsRunningWhenTickTimeBeforeEndTime() {
         EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
         Instant timerStartedAt = Instant.now();
         ensembleTimer.startTimerAt(timerStartedAt);
@@ -61,6 +48,8 @@ class EnsembleTimerTest {
 
         assertThat(ensembleTimer.state())
                 .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+        assertThat(ensembleTimer.timeRemaining())
+                .isEqualTo(new TimeRemaining(0, 0, 0));
     }
 
     @Test
@@ -89,16 +78,40 @@ class EnsembleTimerTest {
                 .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
     }
 
-    @Test
-    void tickWhenFinishedThrowsException() {
-        Fixture fixture = create4MinuteTimerInFinishedState();
 
-        Instant finishedAt = fixture.timerStartedAt().plus(Duration.ofMinutes(4));
-        Instant finishedAtPlus20Millis = finishedAt.plusMillis(20);
-        assertThatIllegalStateException()
-                .isThrownBy(() -> fixture.ensembleTimer().tick(finishedAtPlus20Millis))
-                .withMessage("Tick received at %s after Timer already Finished at %s."
-                                     .formatted(finishedAtPlus20Millis, finishedAt));
+    @Nested
+    class UnhappyScenarios {
+
+        @Test
+        void startTimerThrowsExceptionIfAlreadyRunning() {
+            EnsembleTimer ensembleTimer = createTimer();
+            ensembleTimer.startTimerAt(Instant.now());
+
+            assertThatIllegalStateException()
+                    .isThrownBy(() -> ensembleTimer.startTimerAt(Instant.now()))
+                    .withMessage("Can't Start Timer when Running");
+        }
+
+        @Test
+        void timerTickWhenWaitingToStartThrowsException() {
+            EnsembleTimer ensembleTimer = createTimer();
+
+            assertThatIllegalStateException()
+                    .isThrownBy(() -> ensembleTimer.tick(Instant.now()));
+        }
+
+        @Test
+        void tickWhenFinishedThrowsException() {
+            Fixture fixture = create4MinuteTimerInFinishedState();
+
+            Instant finishedAt = fixture.timerStartedAt().plus(Duration.ofMinutes(4));
+            Instant finishedAtPlus20Millis = finishedAt.plusMillis(20);
+            assertThatIllegalStateException()
+                    .isThrownBy(() -> fixture.ensembleTimer().tick(finishedAtPlus20Millis))
+                    .withMessage("Tick received at %s after Timer already Finished at %s."
+                                         .formatted(finishedAtPlus20Millis, finishedAt));
+        }
+
     }
 
 

@@ -15,6 +15,7 @@ public class EnsembleTimer {
     private TimerState currentState;
     private final Duration timerDuration;
     private Instant timerEnd;
+    private Instant lastTick;
 
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,
@@ -48,15 +49,34 @@ public class EnsembleTimer {
 
     public void startTimerAt(Instant timeStarted) {
         requireNotRunning();
+        lastTick = timeStarted;
         timerEnd = timeStarted.plus(timerDuration);
         currentState = TimerState.RUNNING;
     }
 
     public void tick(Instant now) {
         requireRunning(now);
+        lastTick = now;
         if (isAtOrAfterTimerEnd(now)) {
             currentState = TimerState.FINISHED;
         }
+    }
+
+    public TimeRemaining timeRemaining() {
+        if (currentState == TimerState.WAITING_TO_START) {
+            return new TimeRemaining(timerDuration.toMinutesPart(),
+                                     timerDuration.toSecondsPart(),
+                                     100);
+        }
+        return computeRunningTimeRemaining();
+    }
+
+    private TimeRemaining computeRunningTimeRemaining() {
+        Duration remainingDuration = Duration.between(lastTick, timerEnd);
+        int remainingMinutes = (int) remainingDuration.toMinutes();
+        int remainingSeconds = (int) remainingDuration.minusMinutes(remainingMinutes).getSeconds();
+        int percentRemaining = (int) (remainingDuration.toMillis() * 100 / timerDuration.toMillis());
+        return new TimeRemaining(remainingMinutes, remainingSeconds, percentRemaining);
     }
 
     private void requireRunning(Instant now) {
