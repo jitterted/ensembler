@@ -77,7 +77,9 @@ public class EnsembleTimer {
     }
 
     public enum TimerState {
-        RUNNING, FINISHED, WAITING_TO_START
+        WAITING_TO_START,
+        RUNNING,
+        FINISHED
     }
 
     @Override
