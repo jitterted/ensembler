@@ -70,9 +70,13 @@ public class EnsembleTimer {
     }
 
     private void requireRunning(Instant now) {
-        if (currentState != TimerState.RUNNING) {
-            throw new IllegalStateException("Tick received at %s after Timer already Finished at %s."
-                                                    .formatted(now, timerEnd));
+        switch (currentState) {
+            case FINISHED ->
+                    throw new IllegalStateException("Tick received at %s after Timer already Finished at %s."
+                            .formatted(now, timerEnd));
+            case WAITING_TO_START ->
+                    throw new IllegalStateException("Timer is Waiting to Start, but Tick was received at %s."
+                            .formatted(now));
         }
     }
 

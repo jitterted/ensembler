@@ -113,8 +113,11 @@ class EnsembleTimerTest {
         void timerTickWhenWaitingToStartThrowsException() {
             EnsembleTimer ensembleTimer = createTimer();
 
+            Instant tickAtNow = Instant.now();
             assertThatIllegalStateException()
-                    .isThrownBy(() -> ensembleTimer.tick(Instant.now()));
+                    .isThrownBy(() -> ensembleTimer.tick(tickAtNow))
+                    .withMessage("Timer is Waiting to Start, but Tick was received at %s."
+                                         .formatted(tickAtNow));
         }
 
         @Test
@@ -130,8 +133,6 @@ class EnsembleTimerTest {
         }
 
     }
-
-
 
 
     // -- ENCAPSULATED SETUP
