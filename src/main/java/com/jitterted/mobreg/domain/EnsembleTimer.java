@@ -63,20 +63,10 @@ public class EnsembleTimer {
     }
 
     public TimeRemaining timeRemaining() {
-        if (currentState == TimerState.WAITING_TO_START) {
-            return new TimeRemaining(timerDuration.toMinutesPart(),
-                                     timerDuration.toSecondsPart(),
-                                     100);
-        }
-        return computeRunningTimeRemaining();
-    }
-
-    private TimeRemaining computeRunningTimeRemaining() {
-        Duration remainingDuration = Duration.between(lastTick, timerEnd);
-        int remainingMinutes = (int) remainingDuration.toMinutes();
-        int remainingSeconds = (int) remainingDuration.minusMinutes(remainingMinutes).getSeconds();
-        int percentRemaining = (int) (remainingDuration.toMillis() * 100 / timerDuration.toMillis());
-        return new TimeRemaining(remainingMinutes, remainingSeconds, percentRemaining);
+        return switch (currentState) {
+            case WAITING_TO_START -> TimeRemaining.beforeStarted(timerDuration);
+            case RUNNING, FINISHED -> TimeRemaining.whileRunning(lastTick, timerEnd, timerDuration);
+        };
     }
 
     private void requireRunning(Instant now) {

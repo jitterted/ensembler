@@ -38,6 +38,19 @@ class EnsembleTimerTest {
     }
 
     @Test
+    void timeRemainingIsHalfWhenLastTickIsHalfOfDuration() {
+        EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
+        Instant timerStartedAt = Instant.now();
+        ensembleTimer.startTimerAt(timerStartedAt);
+
+        Instant halfway = timerStartedAt.plus(Duration.ofMinutes(2));
+        ensembleTimer.tick(halfway);
+
+        assertThat(ensembleTimer.timeRemaining())
+                .isEqualTo(new TimeRemaining(2, 0, 50));
+    }
+
+    @Test
     void timerRemainsRunningWhenTickTimeBeforeEndTime() {
         EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
         Instant timerStartedAt = Instant.now();
@@ -63,6 +76,8 @@ class EnsembleTimerTest {
 
         assertThat(ensembleTimer.state())
                 .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
+        assertThat(ensembleTimer.timeRemaining())
+                .isEqualTo(new TimeRemaining(0, 0, 0));
     }
 
     @Test
@@ -76,6 +91,8 @@ class EnsembleTimerTest {
 
         assertThat(ensembleTimer.state())
                 .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
+        assertThat(ensembleTimer.timeRemaining())
+                .isEqualTo(new TimeRemaining(0, 0, 0));
     }
 
 
