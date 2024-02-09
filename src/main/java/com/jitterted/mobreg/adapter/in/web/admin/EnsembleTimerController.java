@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class EnsembleTimerController {
 
     @PostMapping("/start-timer/{ensembleId}")
     public ResponseEntity<Void> startTimer(@PathVariable("ensembleId") Long id) {
-        ensembleTimerHolder.startTimerFor(EnsembleId.of(id));
+        ensembleTimerHolder.startTimerFor(EnsembleId.of(id), Instant.now());
         return ResponseEntity.noContent().build();
     }
 

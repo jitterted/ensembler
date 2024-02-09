@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.application;
 
+import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -11,10 +12,17 @@ import java.util.HashMap;
 
 public class EnsembleTimerHolder {
     private final EnsembleRepository ensembleRepository;
+    private final Broadcaster broadcaster;
     private final SingletonHashMap<EnsembleId, EnsembleTimer> ensembleTimers = new SingletonHashMap<>();
 
     public EnsembleTimerHolder(EnsembleRepository ensembleRepository) {
         this.ensembleRepository = ensembleRepository;
+        this.broadcaster = ensembleTimer -> {};
+    }
+
+    public EnsembleTimerHolder(EnsembleRepository ensembleRepository, Broadcaster broadcaster) {
+        this.ensembleRepository = ensembleRepository;
+        this.broadcaster = broadcaster;
     }
 
     @NotNull
@@ -41,14 +49,16 @@ public class EnsembleTimerHolder {
                 .state() == EnsembleTimer.TimerState.RUNNING;
     }
 
-    public void startTimerFor(EnsembleId ensembleId) {
+    public void startTimerFor(EnsembleId ensembleId, Instant timeStarted) {
         requireTimerToExistFor(ensembleId);
         ensembleTimers.get(ensembleId)
-                      .startTimerAt(Instant.now());
+                      .startTimerAt(timeStarted);
     }
 
-    public void handleTickFor(EnsembleId ensembleId) {
-
+    public void handleTickFor(EnsembleId ensembleId, Instant now) {
+        EnsembleTimer ensembleTimer = timerFor(ensembleId);
+        ensembleTimer.tick(now);
+        broadcaster.sendCurrentTimer(ensembleTimer);
     }
 
 

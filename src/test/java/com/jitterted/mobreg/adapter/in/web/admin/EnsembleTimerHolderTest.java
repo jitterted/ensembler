@@ -6,13 +6,14 @@ import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.TimeRemaining;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,23 +73,24 @@ public class EnsembleTimerHolderTest {
         EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository());
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> ensembleTimerHolder.startTimerFor(EnsembleId.of(333)))
+                .isThrownBy(() -> ensembleTimerHolder.startTimerFor(EnsembleId.of(333), Instant.now()))
                 .withMessage("No timer for Ensemble ID 333 exists.");
     }
 
     @Test
-    @Disabled("Waiting for EnsembleTimer.timeRemaining() to be implemented")
     void onTickWhileRunningBroadcastsCurrentTimerState() {
         MockBroadcaster mockBroadcaster = new MockBroadcaster();
-        Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(515));
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository());
+        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(515);
+        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        ensembleRepository.save(ensemble);
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster);
+        ensembleTimerHolder.timerFor(EnsembleId.of(515));
+        Instant timerStartedAt = Instant.now();
+        ensembleTimerHolder.startTimerFor(EnsembleId.of(515), timerStartedAt);
 
-        ensembleTimerHolder.handleTickFor(EnsembleId.of(515));
+        ensembleTimerHolder.handleTickFor(EnsembleId.of(515), timerStartedAt.plusSeconds(1));
 
-        // check broadcast was called with the correct timer
-        assertThat(mockBroadcaster.wasSendCalled())
-                .as("Expected sendCurrentTimer() to have been called on the Broadcaster")
-                .isTrue();
+        mockBroadcaster.verify();
     }
 
     void onTickWhenFinishedBroadcastsTimerFinished() {
@@ -135,9 +137,10 @@ public class EnsembleTimerHolderTest {
             wasCalled = true;
         }
 
-        boolean wasSendCalled() {
-            return wasCalled;
+        private void verify() {
+            assertThat(wasCalled)
+                    .as("Expected sendCurrentTimer() to have been called on the Broadcaster")
+                    .isTrue();
         }
-
     }
 }
