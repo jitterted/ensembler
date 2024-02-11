@@ -11,6 +11,7 @@ import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.TimeRemaining;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -74,29 +75,35 @@ public class EnsembleTimerHolderTest {
 
     @Test
     void onTickWhileRunningBroadcastsCurrentTimerState() {
-        MockBroadcaster mockBroadcaster = new MockBroadcaster(515, EnsembleTimer.TimerState.RUNNING, new TimeRemaining(3, 59, 99));
-        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(515);
-        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-        ensembleRepository.save(ensemble);
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster);
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(515));
-        Instant timerStartedAt = Instant.now();
-        ensembleTimerHolder.startTimerFor(EnsembleId.of(515), timerStartedAt);
+        BroadcastFixture fixture = createBroadcastFixture(515,
+                                                          EnsembleTimer.TimerState.RUNNING,
+                                                          new TimeRemaining(3, 59, 99));
 
-        ensembleTimerHolder.handleTickFor(EnsembleId.of(515), timerStartedAt.plusSeconds(1));
+        fixture.ensembleTimerHolder()
+               .handleTickFor(EnsembleId.of(515), fixture.timerStartedAt().plusSeconds(1));
 
-        mockBroadcaster.verifyTimerStateSent();
+        fixture.mockBroadcaster().verifyTimerStateSent();
     }
 
+    @Test
     void onTickWhenFinishedBroadcastsTimerFinished() {
+        BroadcastFixture fixture = createBroadcastFixture(737,
+                                                          EnsembleTimer.TimerState.FINISHED,
+                                                          new TimeRemaining(0, 0, 0));
 
+        fixture.ensembleTimerHolder()
+               .handleTickFor(EnsembleId.of(737),
+                              fixture.timerStartedAt()
+                                     .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
+
+        fixture.mockBroadcaster().verifyTimerStateSent();
     }
 
     void onTimerCreationBroadcastsTimerWaitingToStart() {
 
     }
 
-    void onEnsembleEndedRemoveAssociatedTimer () {
+    void onEnsembleEndedRemoveAssociatedTimer() {
 
     }
 
@@ -125,6 +132,24 @@ public class EnsembleTimerHolderTest {
     private record Fixture(EnsembleRepository ensembleRepository, List<MemberId> participants) {
     }
 
+
+    private BroadcastFixture createBroadcastFixture(int ensembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
+        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(ensembleId);
+        MockBroadcaster mockBroadcaster = new MockBroadcaster(ensembleId, expectedTimerState, expectedTimeRemaining);
+        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        ensembleRepository.save(ensemble);
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster);
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
+        Instant timerStartedAt = Instant.now();
+        ensembleTimerHolder.startTimerFor(EnsembleId.of(ensembleId), timerStartedAt);
+        return new BroadcastFixture(mockBroadcaster, ensembleTimerHolder, timerStartedAt);
+    }
+
+    private record BroadcastFixture(MockBroadcaster mockBroadcaster,
+                                    EnsembleTimerHolder ensembleTimerHolder, Instant timerStartedAt) {
+    }
+
+
     private static class MockBroadcaster implements Broadcaster {
         private boolean wasCalled;
         private final int expectedEnsembleId;
@@ -139,13 +164,15 @@ public class EnsembleTimerHolderTest {
 
         @Override
         public void sendCurrentTimer(EnsembleTimer ensembleTimer) {
-            assertThat(ensembleTimer.state())
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThat(ensembleTimer.state())
                     .isEqualByComparingTo(expectedTimerState);
-            assertThat(ensembleTimer.ensembleId())
+            softly.assertThat(ensembleTimer.ensembleId())
                     .isEqualTo(EnsembleId.of(expectedEnsembleId));
-            assertThat(ensembleTimer.timeRemaining())
+            softly.assertThat(ensembleTimer.timeRemaining())
                     /* minutesRemaining, secondsRemaining, percentRemaining  */
                     .isEqualTo(expectedTimeRemaining);
+            softly.assertAll();
             wasCalled = true;
         }
 
