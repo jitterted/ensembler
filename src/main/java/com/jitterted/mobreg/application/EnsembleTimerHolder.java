@@ -27,15 +27,20 @@ public class EnsembleTimerHolder {
 
     @NotNull
     public EnsembleTimer timerFor(EnsembleId ensembleId) {
-        return ensembleTimers.computeIfAbsent(ensembleId, this::createTimerFor);
+        if (!ensembleTimers.containsKey(ensembleId)) {
+            throw new IllegalStateException("No Ensemble Timer exists for Ensemble %d.".formatted(ensembleId.id()));
+        }
+        return ensembleTimers.get(ensembleId);
     }
 
-    private EnsembleTimer createTimerFor(EnsembleId ensembleId) {
+    public EnsembleTimer createTimerFor(EnsembleId ensembleId) {
         Ensemble ensemble = ensembleRepository.findById(ensembleId)
                                               .orElseThrow();
-        return new EnsembleTimer(ensembleId,
-                                 ensemble.name(),
-                                 ensemble.participants());
+        EnsembleTimer ensembleTimer = new EnsembleTimer(ensembleId,
+                                                        ensemble.name(),
+                                                        ensemble.participants());
+        ensembleTimers.put(ensembleId, ensembleTimer);
+        return ensembleTimer;
     }
 
     public boolean hasTimerFor(EnsembleId ensembleId) {

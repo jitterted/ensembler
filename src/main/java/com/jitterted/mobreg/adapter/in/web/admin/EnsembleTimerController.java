@@ -32,7 +32,7 @@ public class EnsembleTimerController {
 
     @PostMapping("/timer-view/{ensembleId}")
     public String createTimerView(@PathVariable("ensembleId") Long id) {
-        ensembleTimerHolder.timerFor(EnsembleId.of(id));
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(id));
         return "redirect:/admin/timer-view/" + id;
     }
 

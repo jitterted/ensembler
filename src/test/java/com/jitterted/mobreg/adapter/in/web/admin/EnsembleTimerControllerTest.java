@@ -40,6 +40,7 @@ class EnsembleTimerControllerTest {
                 .saveMemberAndAccept("Sally", "ghsally");
         EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, builder.memberRepository());
+        ensembleTimerController.createTimerView(153L);
 
         Model model = new ConcurrentModel();
         String viewName = ensembleTimerController.viewTimer(153L, model);
