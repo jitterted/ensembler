@@ -74,7 +74,7 @@ public class EnsembleTimerHolderTest {
 
     @Test
     void onTickWhileRunningBroadcastsCurrentTimerState() {
-        MockBroadcaster mockBroadcaster = new MockBroadcaster();
+        MockBroadcaster mockBroadcaster = new MockBroadcaster(515, EnsembleTimer.TimerState.RUNNING, new TimeRemaining(3, 59, 99));
         Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(515);
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         ensembleRepository.save(ensemble);
@@ -85,7 +85,7 @@ public class EnsembleTimerHolderTest {
 
         ensembleTimerHolder.handleTickFor(EnsembleId.of(515), timerStartedAt.plusSeconds(1));
 
-        mockBroadcaster.verify();
+        mockBroadcaster.verifyTimerStateSent();
     }
 
     void onTickWhenFinishedBroadcastsTimerFinished() {
@@ -127,20 +127,29 @@ public class EnsembleTimerHolderTest {
 
     private static class MockBroadcaster implements Broadcaster {
         private boolean wasCalled;
+        private final int expectedEnsembleId;
+        private final EnsembleTimer.TimerState expectedTimerState;
+        private final TimeRemaining expectedTimeRemaining;
+
+        public MockBroadcaster(int expectedEnsembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
+            this.expectedEnsembleId = expectedEnsembleId;
+            this.expectedTimerState = expectedTimerState;
+            this.expectedTimeRemaining = expectedTimeRemaining;
+        }
 
         @Override
         public void sendCurrentTimer(EnsembleTimer ensembleTimer) {
             assertThat(ensembleTimer.state())
-                    .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+                    .isEqualByComparingTo(expectedTimerState);
             assertThat(ensembleTimer.ensembleId())
-                    .isEqualTo(EnsembleId.of(515));
+                    .isEqualTo(EnsembleId.of(expectedEnsembleId));
             assertThat(ensembleTimer.timeRemaining())
                     /* minutesRemaining, secondsRemaining, percentRemaining  */
-                    .isEqualTo(new TimeRemaining(3, 59, 99));
+                    .isEqualTo(expectedTimeRemaining);
             wasCalled = true;
         }
 
-        private void verify() {
+        private void verifyTimerStateSent() {
             assertThat(wasCalled)
                     .as("Expected sendCurrentTimer() to have been called on the Broadcaster")
                     .isTrue();
