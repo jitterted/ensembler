@@ -99,8 +99,18 @@ public class EnsembleTimerHolderTest {
         fixture.mockBroadcaster().verifyTimerStateSent();
     }
 
+//    @Test
     void onTimerCreationBroadcastsTimerWaitingToStart() {
+        TimeRemaining expectedTimeRemaining = new TimeRemaining(4, 0, 100);
+        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(475);
+        MockBroadcaster mockBroadcaster = new MockBroadcaster(475, EnsembleTimer.TimerState.WAITING_TO_START, expectedTimeRemaining);
+        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        ensembleRepository.save(ensemble);
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster);
 
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(475));
+
+        mockBroadcaster.verifyTimerStateSent();
     }
 
     void onEnsembleEndedRemoveAssociatedTimer() {
@@ -155,6 +165,9 @@ public class EnsembleTimerHolderTest {
         private final int expectedEnsembleId;
         private final EnsembleTimer.TimerState expectedTimerState;
         private final TimeRemaining expectedTimeRemaining;
+        private EnsembleTimer.TimerState lastState;
+        private EnsembleId lastEnsembleId;
+        private TimeRemaining lastTimeRemaining;
 
         public MockBroadcaster(int expectedEnsembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
             this.expectedEnsembleId = expectedEnsembleId;
@@ -164,22 +177,25 @@ public class EnsembleTimerHolderTest {
 
         @Override
         public void sendCurrentTimer(EnsembleTimer ensembleTimer) {
-            SoftAssertions softly = new SoftAssertions();
-            softly.assertThat(ensembleTimer.state())
-                    .isEqualByComparingTo(expectedTimerState);
-            softly.assertThat(ensembleTimer.ensembleId())
-                    .isEqualTo(EnsembleId.of(expectedEnsembleId));
-            softly.assertThat(ensembleTimer.timeRemaining())
-                    /* minutesRemaining, secondsRemaining, percentRemaining  */
-                    .isEqualTo(expectedTimeRemaining);
-            softly.assertAll();
             wasCalled = true;
+            lastState = ensembleTimer.state();
+            lastEnsembleId = ensembleTimer.ensembleId();
+            lastTimeRemaining = ensembleTimer.timeRemaining();
         }
 
         private void verifyTimerStateSent() {
             assertThat(wasCalled)
                     .as("Expected sendCurrentTimer() to have been called on the Broadcaster")
                     .isTrue();
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThat(lastState)
+                  .isEqualByComparingTo(expectedTimerState);
+            softly.assertThat(lastEnsembleId)
+                  .isEqualTo(EnsembleId.of(expectedEnsembleId));
+            softly.assertThat(lastTimeRemaining)
+                  .isEqualTo(expectedTimeRemaining);
+            softly.assertAll();
+
         }
     }
 }
