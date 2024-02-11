@@ -40,7 +40,7 @@ public class EnsembleTimerHolder {
                                                         ensemble.name(),
                                                         ensemble.participants());
         ensembleTimers.put(ensembleId, ensembleTimer);
-//        broadcaster.sendCurrentTimer(ensembleTimer);
+        broadcaster.sendCurrentTimer(ensembleTimer);
         return ensembleTimer;
     }
 

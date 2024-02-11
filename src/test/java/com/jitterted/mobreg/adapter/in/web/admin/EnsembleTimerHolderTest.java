@@ -99,7 +99,7 @@ public class EnsembleTimerHolderTest {
         fixture.mockBroadcaster().verifyTimerStateSent();
     }
 
-//    @Test
+    @Test
     void onTimerCreationBroadcastsTimerWaitingToStart() {
         TimeRemaining expectedTimeRemaining = new TimeRemaining(4, 0, 100);
         Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(475);
