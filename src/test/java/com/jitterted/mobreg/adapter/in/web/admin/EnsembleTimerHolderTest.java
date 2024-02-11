@@ -96,6 +96,10 @@ public class EnsembleTimerHolderTest {
 
     }
 
+    void onEnsembleEndedRemoveAssociatedTimer () {
+
+    }
+
     // ---- ENCAPSULATED SETUP
 
     private static Fixture createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId ensembleId) {

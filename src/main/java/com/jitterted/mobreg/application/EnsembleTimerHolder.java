@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class EnsembleTimerHolder {
     private final EnsembleRepository ensembleRepository;
     private final Broadcaster broadcaster;
-    private final SingletonHashMap<EnsembleId, EnsembleTimer> ensembleTimers = new SingletonHashMap<>();
+    private final SingleEntryHashMap<EnsembleId, EnsembleTimer> ensembleTimers = new SingleEntryHashMap<>();
 
     public EnsembleTimerHolder(EnsembleRepository ensembleRepository) {
         this.ensembleRepository = ensembleRepository;
@@ -74,11 +74,12 @@ public class EnsembleTimerHolder {
         }
     }
 
-    static class SingletonHashMap<K, V> extends HashMap<K, V> {
+    static class SingleEntryHashMap<K, V> extends HashMap<K, V> {
         @Override
         public V put(K key, V value) {
             if (this.size() == 1 && !this.containsKey(key)) {
-                throw new IllegalStateException("A SingletonHashMap cannot have more than one entry");
+                throw new IllegalStateException("A SingleEntryHashMap cannot have more than one entry, has entry for %s, attempting to add entry for %s"
+                                                        .formatted(keySet().iterator().next(), key));
             }
             return super.put(key, value);
         }

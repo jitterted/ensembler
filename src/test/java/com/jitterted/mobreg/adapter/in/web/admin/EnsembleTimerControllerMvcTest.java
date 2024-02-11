@@ -33,16 +33,18 @@ class EnsembleTimerControllerMvcTest {
 
     @Test
     void postToTimerViewRedirects() throws Exception {
-        createAndSaveEnsembleInRepositoryForId(47);
-        mockMvc.perform(post("/admin/timer-view/47")
+        createAndSaveEnsembleInRepositoryForId(113);
+        mockMvc.perform(post("/admin/timer-view/113")
                                 .with(csrf()))
                .andExpect(status().is3xxRedirection())
-               .andExpect(redirectedUrl("/admin/timer-view/47"));
+               .andExpect(redirectedUrl("/admin/timer-view/113"));
     }
 
     @Test
     void getForTimerViewEndpointReturns200OK() throws Exception {
         createAndSaveEnsembleInRepositoryForId(113);
+        mockMvc.perform(post("/admin/timer-view/113").with(csrf()));
+
         mockMvc.perform(get("/admin/timer-view/113"))
                .andExpect(status().isOk());
     }
@@ -50,8 +52,8 @@ class EnsembleTimerControllerMvcTest {
     @Test
     @Disabled("Until we properly create the timer before starting: see EnsembleTimerHolderTest.whenNoTimerExistsForEnsembleOneIsCreated")
     void postToStartTimerEndpointReturns204NoContent() throws Exception {
-        createAndSaveEnsembleInRepositoryForId(353);
-        mockMvc.perform(post("/admin/start-timer/353")
+        createAndSaveEnsembleInRepositoryForId(113);
+        mockMvc.perform(post("/admin/start-timer/113")
                                 .with(csrf()))
                .andExpect(status().isNoContent());
     }
