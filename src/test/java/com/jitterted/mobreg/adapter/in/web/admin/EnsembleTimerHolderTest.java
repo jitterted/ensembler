@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.DoNothingSecondsTicker;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
+import com.jitterted.mobreg.application.EnsembleTimerTickHandler;
 import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
@@ -281,7 +282,7 @@ public class EnsembleTimerHolderTest {
         private boolean stopWasCalled;
 
         @Override
-        public void start(EnsembleId ensembleId) {
+        public void start(EnsembleId ensembleId, EnsembleTimerTickHandler ensembleTimerTickHandler) {
             startWasCalled = true;
             startEnsembleId = ensembleId.id();
         }

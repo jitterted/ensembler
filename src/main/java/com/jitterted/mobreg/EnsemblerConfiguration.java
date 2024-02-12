@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MobRegConfiguration {
+public class EnsemblerConfiguration {
 
     @Bean
     public MemberService memberService(MemberRepository memberRepository) {

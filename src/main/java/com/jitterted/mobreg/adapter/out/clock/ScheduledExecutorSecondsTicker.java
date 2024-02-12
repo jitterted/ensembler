@@ -12,15 +12,13 @@ import java.util.concurrent.TimeUnit;
 
 public class ScheduledExecutorSecondsTicker implements SecondsTicker {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private final EnsembleTimerTickHandler ensembleTimerTickHandler;
     private ScheduledFuture<?> countdownHandle;
 
-    public ScheduledExecutorSecondsTicker(EnsembleTimerTickHandler ensembleTimerTickHandler) {
-        this.ensembleTimerTickHandler = ensembleTimerTickHandler;
+    public ScheduledExecutorSecondsTicker() {
     }
 
     @Override
-    public void start(EnsembleId ensembleId) {
+    public void start(EnsembleId ensembleId, EnsembleTimerTickHandler ensembleTimerTickHandler) {
         Runnable tickHandlerTask = () ->
                 ensembleTimerTickHandler.handleTickFor(ensembleId, Instant.now());
 

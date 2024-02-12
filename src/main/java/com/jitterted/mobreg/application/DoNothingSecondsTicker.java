@@ -5,7 +5,7 @@ import com.jitterted.mobreg.domain.EnsembleId;
 
 public class DoNothingSecondsTicker implements SecondsTicker {
     @Override
-    public void start(EnsembleId ensembleId) {}
+    public void start(EnsembleId ensembleId, EnsembleTimerTickHandler ensembleTimerTickHandler) {}
 
     @Override
     public void stop() {}

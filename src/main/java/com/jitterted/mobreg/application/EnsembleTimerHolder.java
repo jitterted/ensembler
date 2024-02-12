@@ -65,7 +65,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
         ensembleTimers.get(ensembleId)
                       .startTimerAt(timeStarted);
 
-        secondsTicker.start(ensembleId);
+        secondsTicker.start(ensembleId, this);
     }
 
     @Override
