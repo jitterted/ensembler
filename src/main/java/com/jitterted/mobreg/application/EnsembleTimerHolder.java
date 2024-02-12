@@ -65,7 +65,7 @@ public class EnsembleTimerHolder {
         ensembleTimers.get(ensembleId)
                       .startTimerAt(timeStarted);
 
-        secondsTicker.start();
+        secondsTicker.start(ensembleId);
     }
 
     public void handleTickFor(EnsembleId ensembleId, Instant now) {

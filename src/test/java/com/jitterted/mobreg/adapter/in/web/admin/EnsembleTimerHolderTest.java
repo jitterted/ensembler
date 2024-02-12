@@ -65,7 +65,8 @@ public class EnsembleTimerHolderTest {
 
             ensembleTimerHolder.startTimerFor(EnsembleId.of(679), Instant.now());
 
-            mockSecondsTicker.verifyStartWasCalled();
+
+            mockSecondsTicker.verifyStartWasCalledFor(679);
 
             assertThat(ensembleTimer.state())
                     .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
@@ -105,7 +106,7 @@ public class EnsembleTimerHolderTest {
                                               timerStartedAt
                                                      .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
 
-            mockSecondsTicker.verifyStartThenStopWasCalled();
+            mockSecondsTicker.verifyStartThenStopWasCalledFor(235);
         }
 
     }
@@ -276,11 +277,13 @@ public class EnsembleTimerHolderTest {
 
     static class MockSecondsTicker implements SecondsTicker {
         private boolean startWasCalled;
+        private long startEnsembleId;
         private boolean stopWasCalled;
 
         @Override
-        public void start() {
+        public void start(EnsembleId ensembleId) {
             startWasCalled = true;
+            startEnsembleId = ensembleId.id();
         }
 
         @Override
@@ -288,16 +291,17 @@ public class EnsembleTimerHolderTest {
             stopWasCalled = true;
         }
 
-        void verifyStartWasCalled() {
+        void verifyStartWasCalledFor(long ensembleId) {
             assertThat(startWasCalled)
                     .as("Expected SecondsTicker.start() to be called, but was not.")
                     .isTrue();
+            assertThat(startEnsembleId)
+                    .as("Expected start() to be called with the correct Ensemble ID")
+                    .isEqualTo(ensembleId);
         }
 
-        void verifyStartThenStopWasCalled() {
-            assertThat(startWasCalled)
-                    .as("SecondsTicker.start() must be called before stop() is called, but was not.")
-                    .isTrue();
+        void verifyStartThenStopWasCalledFor(long ensembleId) {
+            verifyStartWasCalledFor(ensembleId);
             assertThat(stopWasCalled)
                     .as("Expected SecondsTicker.stop() to be called, but was not.")
                     .isTrue();
