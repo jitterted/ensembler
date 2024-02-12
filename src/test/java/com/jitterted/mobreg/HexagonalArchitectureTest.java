@@ -8,6 +8,11 @@ import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
@@ -38,6 +43,21 @@ class HexagonalArchitectureTest {
                 .as("Adapters must not depend on each other")
                 .ignoreDependency(InviteEditor.class, InviteJdbcRepository.class)
                 .ignoreDependency(InviteEditorTest.class, InviteJdbcRepository.class)
+                .check(productionAndTestClasses());
+    }
+
+    @Test
+    void domainAndApplicationMustNotAccessSystemTime() {
+        noClasses()
+                .that().resideInAPackage("..domain..")
+                .or().resideInAPackage("..application..")
+
+                .should().callMethod(Clock.class, "instant")
+                .orShould().callMethod(Instant.class, "now")
+                .orShould().callMethod(ZonedDateTime.class, "now")
+                .orShould().callMethod(LocalDateTime.class, "now")
+
+                .as("Application and Domain must not access System Time.")
                 .check(productionAndTestClasses());
     }
 
