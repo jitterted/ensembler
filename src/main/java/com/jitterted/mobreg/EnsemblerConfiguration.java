@@ -1,5 +1,6 @@
 package com.jitterted.mobreg;
 
+import com.jitterted.mobreg.adapter.out.clock.ScheduledExecutorSecondsTicker;
 import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
@@ -34,7 +35,13 @@ public class EnsemblerConfiguration {
 
     @Bean
     public EnsembleTimerHolder createEnsembleTimerHolder(EnsembleRepository ensembleRepository) {
-        return new EnsembleTimerHolder(ensembleRepository);
+        return new EnsembleTimerHolder(ensembleRepository,
+                                       ensembleTimer -> System.out.printf(
+                                               "BROADCASTER: %s, %s",
+                                               ensembleTimer.ensembleId(),
+                                               ensembleTimer.timeRemaining()
+                                       ),
+                                       new ScheduledExecutorSecondsTicker());
     }
 
     // TODO: remove this once member registration works

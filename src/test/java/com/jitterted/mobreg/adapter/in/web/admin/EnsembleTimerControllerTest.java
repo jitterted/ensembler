@@ -43,7 +43,8 @@ class EnsembleTimerControllerTest {
         ensembleTimerController.createTimerView(153L);
 
         Model model = new ConcurrentModel();
-        String viewName = ensembleTimerController.viewTimer(153L, model);
+        ensembleTimerController.viewTimer(153L, model);
+        String viewName = ensembleTimerController.viewTimer(153L, model); // ensure refreshable page
 
         assertThat(viewName)
                 .isEqualTo("ensemble-timer");

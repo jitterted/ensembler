@@ -39,6 +39,7 @@ public class EnsembleTimerController {
     @GetMapping("/timer-view/{ensembleId}")
     public String viewTimer(@PathVariable("ensembleId") Long id, Model model) {
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(id));
+        model.addAttribute("ensembleId", id);
         model.addAttribute("ensembleName", ensembleTimer.ensembleName());
         model.addAttribute("participantNames", firstNamesOfParticipantsIn(ensembleTimer));
         return "ensemble-timer";

@@ -3,6 +3,7 @@ package com.jitterted.mobreg.domain;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class EnsembleTimer {
@@ -10,7 +11,7 @@ public class EnsembleTimer {
 
     private final EnsembleId ensembleId;
     private final String ensembleName;
-    private final Stream<MemberId> participants;
+    private final List<MemberId> participants;
 
     private TimerState currentState;
     private final Duration timerDuration;
@@ -26,7 +27,7 @@ public class EnsembleTimer {
     public EnsembleTimer(EnsembleId ensembleId, String ensembleName, Stream<MemberId> participants, Duration timerDuration) {
         this.ensembleId = ensembleId;
         this.ensembleName = ensembleName;
-        this.participants = participants;
+        this.participants = participants.toList();
         this.timerDuration = timerDuration;
         this.currentState = TimerState.WAITING_TO_START;
     }
@@ -36,7 +37,7 @@ public class EnsembleTimer {
     }
 
     public Stream<MemberId> participants() {
-        return participants;
+        return participants.stream();
     }
 
     public String ensembleName() {

@@ -4,14 +4,16 @@
       xmlns:th="http://www.thymeleaf.org"
 >
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" href="/favicon-32x32.png" sizes="32x32">
     <link rel="icon" href="/favicon-16x16.png" sizes="16x16">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png"><!-- 180×180 -->
     <link rel="manifest" href="/site.webmanifest">
-    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+            integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+            crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
 
     <title>Ensemble Timer</title>
@@ -62,26 +64,28 @@
 </head>
 
 <body class="grid grid-cols-3 gap-4">
+<h1 class="text-xl font-bold py-2"
+    th:text="${ensembleName}">Ensemble Name</h1>
 <div id="timer-and-control" class="col-span-1">
-    <div
-            class="flex flex-col justify-center items-center p-4"
-            hx-ext="ws"
-            ws-connect="/ws/timer"
-            hx-swap-oob="innerHtml"
-    >
-        <div id="timer-container"
-             class="circle" style="background: conic-gradient(lightgreen 0% 100%, black 100% 100%);">
-            <svg class="progress-ring">
-                <circle class="progress-circle"/>
-            </svg>
-            <div class="timer-circle">
-                <div id="timer" class="font-bold">4:00</div>
-            </div>
-        </div>
-    </div>
-    <div>
+<!--    <div-->
+<!--            class="flex flex-col justify-center items-center p-4"-->
+<!--            hx-ext="ws"-->
+<!--            ws-connect="/ws/timer"-->
+<!--            hx-swap-oob="innerHtml"-->
+<!--    >-->
+<!--        <div id="timer-container"-->
+<!--             class="circle" style="background: conic-gradient(lightgreen 0% 100%, black 100% 100%);">-->
+<!--            <svg class="progress-ring">-->
+<!--                <circle class="progress-circle"/>-->
+<!--            </svg>-->
+<!--            <div class="timer-circle">-->
+<!--                <div id="timer" class="font-bold">4:00</div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="mt-2">
         <h2 class="text-xl font-bold">Timer Control</h2>
-        <button hx-post="/start-timer" hx-swap="none"
+        <button th:hx-post="@{/admin/start-timer/__${ensembleId}__}" hx-swap="none"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >Start Timer
         </button>
