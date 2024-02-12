@@ -1,6 +1,6 @@
 package com.jitterted.mobreg.adapter.out.clock;
 
-import com.jitterted.mobreg.application.EnsembleTimerHolder;
+import com.jitterted.mobreg.application.EnsembleTimerTickHandler;
 import com.jitterted.mobreg.application.port.SecondsTicker;
 import com.jitterted.mobreg.domain.EnsembleId;
 
@@ -12,17 +12,17 @@ import java.util.concurrent.TimeUnit;
 
 public class ScheduledExecutorSecondsTicker implements SecondsTicker {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private final EnsembleTimerHolder ensembleTimerHolder;
+    private final EnsembleTimerTickHandler ensembleTimerTickHandler;
     private ScheduledFuture<?> countdownHandle;
 
-    public ScheduledExecutorSecondsTicker(EnsembleTimerHolder ensembleTimerHolder) {
-        this.ensembleTimerHolder = ensembleTimerHolder;
+    public ScheduledExecutorSecondsTicker(EnsembleTimerTickHandler ensembleTimerTickHandler) {
+        this.ensembleTimerTickHandler = ensembleTimerTickHandler;
     }
 
     @Override
     public void start(EnsembleId ensembleId) {
         Runnable tickHandlerTask = () ->
-                ensembleTimerHolder.handleTickFor(ensembleId, Instant.now());
+                ensembleTimerTickHandler.handleTickFor(ensembleId, Instant.now());
 
         countdownHandle = scheduler.scheduleAtFixedRate(tickHandlerTask, 0, 1, TimeUnit.SECONDS);
     }

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Instant;
 import java.util.HashMap;
 
-public class EnsembleTimerHolder {
+public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     private final EnsembleRepository ensembleRepository;
     private final Broadcaster broadcaster;
     private final SingleEntryHashMap<EnsembleId, EnsembleTimer> ensembleTimers = new SingleEntryHashMap<>();
@@ -68,6 +68,7 @@ public class EnsembleTimerHolder {
         secondsTicker.start(ensembleId);
     }
 
+    @Override
     public void handleTickFor(EnsembleId ensembleId, Instant now) {
         EnsembleTimer ensembleTimer = timerFor(ensembleId);
         ensembleTimer.tick(now);
