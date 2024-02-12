@@ -2,6 +2,7 @@ package com.jitterted.mobreg.application;
 
 import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
+import com.jitterted.mobreg.application.port.SecondsTicker;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
@@ -14,16 +15,17 @@ public class EnsembleTimerHolder {
     private final EnsembleRepository ensembleRepository;
     private final Broadcaster broadcaster;
     private final SingleEntryHashMap<EnsembleId, EnsembleTimer> ensembleTimers = new SingleEntryHashMap<>();
+    private final SecondsTicker secondsTicker;
 
     @Deprecated // Must use the constructor that takes a Broadcaster implementation
     public EnsembleTimerHolder(EnsembleRepository ensembleRepository) {
-        this.ensembleRepository = ensembleRepository;
-        this.broadcaster = ensembleTimer -> {};
+        this(ensembleRepository, ensembleTimer -> {}, new DoNothingSecondsTicker());
     }
 
-    public EnsembleTimerHolder(EnsembleRepository ensembleRepository, Broadcaster broadcaster) {
+    public EnsembleTimerHolder(EnsembleRepository ensembleRepository, Broadcaster broadcaster, SecondsTicker secondsTicker) {
         this.ensembleRepository = ensembleRepository;
         this.broadcaster = broadcaster;
+        this.secondsTicker = secondsTicker;
     }
 
     @NotNull
@@ -59,13 +61,21 @@ public class EnsembleTimerHolder {
 
     public void startTimerFor(EnsembleId ensembleId, Instant timeStarted) {
         requireTimerToExistFor(ensembleId);
+
         ensembleTimers.get(ensembleId)
                       .startTimerAt(timeStarted);
+
+        secondsTicker.start();
     }
 
     public void handleTickFor(EnsembleId ensembleId, Instant now) {
         EnsembleTimer ensembleTimer = timerFor(ensembleId);
         ensembleTimer.tick(now);
+
+        if (ensembleTimer.state() == EnsembleTimer.TimerState.FINISHED) {
+            secondsTicker.stop();
+        }
+
         broadcaster.sendCurrentTimer(ensembleTimer);
     }
 
@@ -87,4 +97,5 @@ public class EnsembleTimerHolder {
             return super.put(key, value);
         }
     }
+
 }

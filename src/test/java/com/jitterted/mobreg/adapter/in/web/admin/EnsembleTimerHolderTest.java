@@ -1,10 +1,12 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
+import com.jitterted.mobreg.application.DoNothingSecondsTicker;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
+import com.jitterted.mobreg.application.port.SecondsTicker;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -24,13 +26,14 @@ import static org.assertj.core.api.Assertions.*;
 
 public class EnsembleTimerHolderTest {
 
-    private static final Broadcaster DUMMY_BROADCASTER = ensembleTimer -> {};
+    private static final Broadcaster DUMMY_BROADCASTER = ensembleTimer -> {
+    };
 
     @Test
     void newTimerHolderHasNoTimerForId() {
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
 
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER);
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER, new DoNothingSecondsTicker());
 
         assertThat(ensembleTimerHolder.hasTimerFor(EnsembleId.of(62)))
                 .isFalse();
@@ -39,7 +42,7 @@ public class EnsembleTimerHolderTest {
     @Test
     void existingTimerIsReturnedWhenHolderHasTimerForSpecificEnsemble() {
         Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(63));
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository(), DUMMY_BROADCASTER);
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository(), DUMMY_BROADCASTER, new DoNothingSecondsTicker());
         EnsembleTimer createdEnsemblerTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(63));
 
         EnsembleTimer foundEnsembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(63));
@@ -48,18 +51,63 @@ public class EnsembleTimerHolderTest {
                 .isSameAs(createdEnsemblerTimer);
     }
 
-    @Test
-    void startTimerChangesStateToTimerRunning() {
-        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(679);
-        ensembleRepository.save(ensemble);
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER);
-        EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(679));
+    @Nested
+    class Ticker {
 
-        ensembleTimerHolder.startTimerFor(EnsembleId.of(679), Instant.now());
+        @Test
+        void startTimerStartsSecondsTicker() {
+            EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+            Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(679);
+            ensembleRepository.save(ensemble);
+            MockSecondsTicker mockSecondsTicker = new MockSecondsTicker();
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER, mockSecondsTicker);
+            EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(679));
 
-        assertThat(ensembleTimer.state())
-                .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+            ensembleTimerHolder.startTimerFor(EnsembleId.of(679), Instant.now());
+
+            mockSecondsTicker.verifyStartWasCalled();
+
+            assertThat(ensembleTimer.state())
+                    .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+        }
+
+        @Test
+        void timerRunningNotFinishedDoesNotStopTicker() {
+            EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+            Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(63);
+            ensembleRepository.save(ensemble);
+            MockSecondsTicker mockSecondsTicker = new MockSecondsTicker();
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER, mockSecondsTicker);
+            ensembleTimerHolder.createTimerFor(EnsembleId.of(63));
+            Instant timerStartedAt = Instant.now();
+            ensembleTimerHolder.startTimerFor(EnsembleId.of(63), timerStartedAt);
+
+            ensembleTimerHolder.handleTickFor(EnsembleId.of(63),
+                                              timerStartedAt
+                                                      .plus(EnsembleTimer.DEFAULT_TIMER_DURATION)
+                                                      .minusSeconds(1));
+
+            mockSecondsTicker.verifyStopNotCalled();
+        }
+
+        @Test
+        void timerFinishedStopsSecondsTicker() {
+            EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+            Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(235);
+            ensembleRepository.save(ensemble);
+            MockSecondsTicker mockSecondsTicker = new MockSecondsTicker();
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER, mockSecondsTicker);
+            ensembleTimerHolder.createTimerFor(EnsembleId.of(235));
+            Instant timerStartedAt = Instant.now();
+            ensembleTimerHolder.startTimerFor(EnsembleId.of(235), timerStartedAt);
+
+            ensembleTimerHolder.handleTickFor(EnsembleId.of(235),
+                                              timerStartedAt
+                                                     .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
+
+            mockSecondsTicker.verifyStartThenStopWasCalled();
+        }
+
     }
 
     @Nested
@@ -68,7 +116,7 @@ public class EnsembleTimerHolderTest {
         @Test
         void whenNoTimerExistsForEnsembleExceptionIsThrown() {
             Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(77));
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository());
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository(), DUMMY_BROADCASTER, new DoNothingSecondsTicker());
 
             assertThatIllegalStateException()
                     .isThrownBy(() -> ensembleTimerHolder.timerFor(EnsembleId.of(77)))
@@ -77,7 +125,7 @@ public class EnsembleTimerHolderTest {
 
         @Test
         void askingTimerStartedThrowsExceptionIfTimerDoesNotExistForEnsemble() {
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository());
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository(), DUMMY_BROADCASTER, new DoNothingSecondsTicker());
 
             assertThatIllegalArgumentException()
                     .isThrownBy(() -> ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(444)))
@@ -86,7 +134,7 @@ public class EnsembleTimerHolderTest {
 
         @Test
         void startTimerThrowsExceptionIfTimerDoesNotExistForEnsemble() {
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository());
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository(), DUMMY_BROADCASTER, new DoNothingSecondsTicker());
 
             assertThatIllegalArgumentException()
                     .isThrownBy(() -> ensembleTimerHolder.startTimerFor(EnsembleId.of(333), Instant.now()))
@@ -132,7 +180,7 @@ public class EnsembleTimerHolderTest {
             MockBroadcaster mockBroadcaster = new MockBroadcaster(475, EnsembleTimer.TimerState.WAITING_TO_START, expectedTimeRemaining);
             EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
             ensembleRepository.save(ensemble);
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster);
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster, new DoNothingSecondsTicker());
 
             ensembleTimerHolder.createTimerFor(EnsembleId.of(475));
 
@@ -175,7 +223,7 @@ public class EnsembleTimerHolderTest {
         MockBroadcaster mockBroadcaster = new MockBroadcaster(ensembleId, expectedTimerState, expectedTimeRemaining);
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
         ensembleRepository.save(ensemble);
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster);
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster, new DoNothingSecondsTicker());
         ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
         Instant timerStartedAt = Instant.now();
         ensembleTimerHolder.startTimerFor(EnsembleId.of(ensembleId), timerStartedAt);
@@ -225,4 +273,41 @@ public class EnsembleTimerHolderTest {
 
         }
     }
+
+    static class MockSecondsTicker implements SecondsTicker {
+        private boolean startWasCalled;
+        private boolean stopWasCalled;
+
+        @Override
+        public void start() {
+            startWasCalled = true;
+        }
+
+        @Override
+        public void stop() {
+            stopWasCalled = true;
+        }
+
+        void verifyStartWasCalled() {
+            assertThat(startWasCalled)
+                    .as("Expected SecondsTicker.start() to be called, but was not.")
+                    .isTrue();
+        }
+
+        void verifyStartThenStopWasCalled() {
+            assertThat(startWasCalled)
+                    .as("SecondsTicker.start() must be called before stop() is called, but was not.")
+                    .isTrue();
+            assertThat(stopWasCalled)
+                    .as("Expected SecondsTicker.stop() to be called, but was not.")
+                    .isTrue();
+        }
+
+        void verifyStopNotCalled() {
+            assertThat(stopWasCalled)
+                    .as("Expected SecondsTicker.stop() to NOT be called, but it was")
+                    .isFalse();
+        }
+    }
+
 }
