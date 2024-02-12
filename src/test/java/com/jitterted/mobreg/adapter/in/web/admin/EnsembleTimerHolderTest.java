@@ -12,6 +12,7 @@ import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.TimeRemaining;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -23,30 +24,22 @@ import static org.assertj.core.api.Assertions.*;
 
 public class EnsembleTimerHolderTest {
 
+    private static final Broadcaster DUMMY_BROADCASTER = ensembleTimer -> {};
+
     @Test
     void newTimerHolderHasNoTimerForId() {
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
 
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository);
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER);
 
         assertThat(ensembleTimerHolder.hasTimerFor(EnsembleId.of(62)))
                 .isFalse();
     }
 
     @Test
-    void whenNoTimerExistsForEnsembleExceptionIsThrown() {
-        Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(77));
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository());
-
-        assertThatIllegalStateException()
-                .isThrownBy(() -> ensembleTimerHolder.timerFor(EnsembleId.of(77)))
-                .withMessage("No Ensemble Timer exists for Ensemble 77.");
-    }
-
-    @Test
     void existingTimerIsReturnedWhenHolderHasTimerForSpecificEnsemble() {
         Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(63));
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository(), DUMMY_BROADCASTER);
         EnsembleTimer createdEnsemblerTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(63));
 
         EnsembleTimer foundEnsembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(63));
@@ -56,65 +49,99 @@ public class EnsembleTimerHolderTest {
     }
 
     @Test
-    void askingTimerStartedThrowsExceptionIfTimerDoesNotExistForEnsemble() {
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository());
-
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(444)))
-                .withMessage("No timer for Ensemble ID 444 exists.");
-    }
-
-    @Test
-    void startTimerThrowsExceptionIfTimerDoesNotExistForEnsemble() {
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository());
-
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> ensembleTimerHolder.startTimerFor(EnsembleId.of(333), Instant.now()))
-                .withMessage("No timer for Ensemble ID 333 exists.");
-    }
-
-    @Test
-    void onTickWhileRunningBroadcastsCurrentTimerState() {
-        BroadcastFixture fixture = createBroadcastFixture(515,
-                                                          EnsembleTimer.TimerState.RUNNING,
-                                                          new TimeRemaining(3, 59, 99));
-
-        fixture.ensembleTimerHolder()
-               .handleTickFor(EnsembleId.of(515), fixture.timerStartedAt().plusSeconds(1));
-
-        fixture.mockBroadcaster().verifyTimerStateSent();
-    }
-
-    @Test
-    void onTickWhenFinishedBroadcastsTimerFinished() {
-        BroadcastFixture fixture = createBroadcastFixture(737,
-                                                          EnsembleTimer.TimerState.FINISHED,
-                                                          new TimeRemaining(0, 0, 0));
-
-        fixture.ensembleTimerHolder()
-               .handleTickFor(EnsembleId.of(737),
-                              fixture.timerStartedAt()
-                                     .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
-
-        fixture.mockBroadcaster().verifyTimerStateSent();
-    }
-
-    @Test
-    void onTimerCreationBroadcastsTimerWaitingToStart() {
-        TimeRemaining expectedTimeRemaining = new TimeRemaining(4, 0, 100);
-        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(475);
-        MockBroadcaster mockBroadcaster = new MockBroadcaster(475, EnsembleTimer.TimerState.WAITING_TO_START, expectedTimeRemaining);
+    void startTimerChangesStateToTimerRunning() {
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(679);
         ensembleRepository.save(ensemble);
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster);
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER);
+        EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(679));
 
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(475));
+        ensembleTimerHolder.startTimerFor(EnsembleId.of(679), Instant.now());
 
-        mockBroadcaster.verifyTimerStateSent();
+        assertThat(ensembleTimer.state())
+                .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
     }
 
-    void onEnsembleEndedRemoveAssociatedTimer() {
+    @Nested
+    class UnhappyScenarios {
 
+        @Test
+        void whenNoTimerExistsForEnsembleExceptionIsThrown() {
+            Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(77));
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository());
+
+            assertThatIllegalStateException()
+                    .isThrownBy(() -> ensembleTimerHolder.timerFor(EnsembleId.of(77)))
+                    .withMessage("No Ensemble Timer exists for Ensemble 77.");
+        }
+
+        @Test
+        void askingTimerStartedThrowsExceptionIfTimerDoesNotExistForEnsemble() {
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository());
+
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(444)))
+                    .withMessage("No timer for Ensemble ID 444 exists.");
+        }
+
+        @Test
+        void startTimerThrowsExceptionIfTimerDoesNotExistForEnsemble() {
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository());
+
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> ensembleTimerHolder.startTimerFor(EnsembleId.of(333), Instant.now()))
+                    .withMessage("No timer for Ensemble ID 333 exists.");
+        }
+
+
+    }
+
+    @Nested
+    class BroadcastEvents {
+
+        @Test
+        void onTickWhileRunningBroadcastsCurrentTimerState() {
+            BroadcastFixture fixture = createBroadcastFixture(515,
+                                                              EnsembleTimer.TimerState.RUNNING,
+                                                              new TimeRemaining(3, 59, 99));
+
+            fixture.ensembleTimerHolder()
+                   .handleTickFor(EnsembleId.of(515), fixture.timerStartedAt().plusSeconds(1));
+
+            fixture.mockBroadcaster().verifyTimerStateSent();
+        }
+
+        @Test
+        void onTickWhenFinishedBroadcastsTimerFinished() {
+            BroadcastFixture fixture = createBroadcastFixture(737,
+                                                              EnsembleTimer.TimerState.FINISHED,
+                                                              new TimeRemaining(0, 0, 0));
+
+            fixture.ensembleTimerHolder()
+                   .handleTickFor(EnsembleId.of(737),
+                                  fixture.timerStartedAt()
+                                         .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
+
+            fixture.mockBroadcaster().verifyTimerStateSent();
+        }
+
+        @Test
+        void onTimerCreationBroadcastsTimerWaitingToStart() {
+            TimeRemaining expectedTimeRemaining = new TimeRemaining(4, 0, 100);
+            Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(475);
+            MockBroadcaster mockBroadcaster = new MockBroadcaster(475, EnsembleTimer.TimerState.WAITING_TO_START, expectedTimeRemaining);
+            EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+            ensembleRepository.save(ensemble);
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster);
+
+            ensembleTimerHolder.createTimerFor(EnsembleId.of(475));
+
+            mockBroadcaster.verifyTimerStateSent();
+        }
+
+        void onEnsembleEndedRemoveAssociatedTimer() {
+
+        }
     }
 
     // ---- ENCAPSULATED SETUP

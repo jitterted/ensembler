@@ -15,6 +15,7 @@ public class EnsembleTimerHolder {
     private final Broadcaster broadcaster;
     private final SingleEntryHashMap<EnsembleId, EnsembleTimer> ensembleTimers = new SingleEntryHashMap<>();
 
+    @Deprecated // Must use the constructor that takes a Broadcaster implementation
     public EnsembleTimerHolder(EnsembleRepository ensembleRepository) {
         this.ensembleRepository = ensembleRepository;
         this.broadcaster = ensembleTimer -> {};
@@ -33,6 +34,7 @@ public class EnsembleTimerHolder {
         return ensembleTimers.get(ensembleId);
     }
 
+    @NotNull
     public EnsembleTimer createTimerFor(EnsembleId ensembleId) {
         Ensemble ensemble = ensembleRepository.findById(ensembleId)
                                               .orElseThrow();
