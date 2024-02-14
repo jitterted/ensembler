@@ -82,22 +82,22 @@
 <h1 class="text-xl font-bold py-2"
     th:text="${ensembleName}">Ensemble Name</h1>
 <div id="timer-and-control" class="col-span-1">
-<!--    <div-->
-<!--            class="flex flex-col justify-center items-center p-4"-->
-<!--            hx-ext="ws"-->
-<!--            ws-connect="/ws/timer"-->
-<!--            hx-swap-oob="innerHtml"-->
-<!--    >-->
-<!--        <div id="timer-container"-->
-<!--             class="circle" style="background: conic-gradient(lightgreen 0% 100%, black 100% 100%);">-->
-<!--            <svg class="progress-ring">-->
-<!--                <circle class="progress-circle"/>-->
-<!--            </svg>-->
-<!--            <div class="timer-circle">-->
-<!--                <div id="timer" class="font-bold">4:00</div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <div
+            class="flex flex-col justify-center items-center p-4"
+            hx-ext="ws"
+            ws-connect="/admin/ws/timer"
+            hx-swap-oob="innerHtml"
+    >
+        <div id="timer-container"
+             class="circle" style="background: conic-gradient(lightgreen 0% 100%, black 100% 100%);">
+            <svg class="progress-ring">
+                <circle class="progress-circle"/>
+            </svg>
+            <div class="timer-circle">
+                <div id="timer" class="font-bold">4:00</div>
+            </div>
+        </div>
+    </div>
     <div class="mt-2">
 <!--                th:hx-headers="'{' + ${_csrf.parameterName} + ': ' + ${_csrf.token} + '}'" -->
         <h2 class="text-xl font-bold">Timer Control</h2>

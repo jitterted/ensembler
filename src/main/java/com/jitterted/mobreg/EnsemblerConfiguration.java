@@ -5,6 +5,7 @@ import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.MemberService;
+import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.application.port.Notifier;
@@ -34,13 +35,9 @@ public class EnsemblerConfiguration {
     }
 
     @Bean
-    public EnsembleTimerHolder createEnsembleTimerHolder(EnsembleRepository ensembleRepository) {
+    public EnsembleTimerHolder createEnsembleTimerHolder(EnsembleRepository ensembleRepository, Broadcaster broadcaster) {
         return new EnsembleTimerHolder(ensembleRepository,
-                                       ensembleTimer -> System.out.printf(
-                                               "BROADCASTER: %s, %s",
-                                               ensembleTimer.ensembleId(),
-                                               ensembleTimer.timeRemaining()
-                                       ),
+                                       broadcaster,
                                        new ScheduledExecutorSecondsTicker());
     }
 
