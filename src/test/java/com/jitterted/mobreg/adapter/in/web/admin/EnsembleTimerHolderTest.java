@@ -153,10 +153,10 @@ public class EnsembleTimerHolderTest {
         void onTickWhileRunningBroadcastsCurrentTimerState() {
             BroadcastFixture fixture = createBroadcastFixture(515,
                                                               EnsembleTimer.TimerState.RUNNING,
-                                                              new TimeRemaining(3, 59, 99));
+                                                              new TimeRemaining(3, 0, 75.0));
 
             fixture.ensembleTimerHolder()
-                   .handleTickFor(EnsembleId.of(515), fixture.timerStartedAt().plusSeconds(1));
+                   .handleTickFor(EnsembleId.of(515), fixture.timerStartedAt().plusSeconds(60));
 
             fixture.mockBroadcaster().verifyTimerStateSent();
         }
@@ -272,7 +272,6 @@ public class EnsembleTimerHolderTest {
             softly.assertThat(lastTimeRemaining)
                   .isEqualTo(expectedTimeRemaining);
             softly.assertAll();
-
         }
     }
 

@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.domain;
 
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -56,8 +57,12 @@ class EnsembleTimerTest {
 
         assertThat(ensembleTimer.state())
                 .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
-        assertThat(ensembleTimer.timeRemaining())
-                .isEqualTo(new TimeRemaining(0, 0, 0));
+        assertThat(ensembleTimer.timeRemaining().minutes())
+                .isZero();
+        assertThat(ensembleTimer.timeRemaining().seconds())
+                .isZero();
+        assertThat(ensembleTimer.timeRemaining().percent())
+                .isCloseTo(0, Offset.offset(.001));
     }
 
     @Test
