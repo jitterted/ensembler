@@ -11,90 +11,93 @@ import static org.assertj.core.api.Assertions.*;
 
 class EnsembleTimerTest {
 
-    @Test
-    void newTimerIsWaitingToStartHasFullTimeRemaining() {
-        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
+    @Nested
+    class TimerStates {
+        @Test
+        void newTimerIsWaitingToStartHasFullTimeRemaining() {
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
 
-        assertThat(ensembleTimer.state())
-                .isEqualByComparingTo(EnsembleTimer.TimerState.WAITING_TO_START);
-        assertThat(ensembleTimer.timeRemaining())
-                .isEqualTo(new TimeRemaining(4, 0, 100));
+            assertThat(ensembleTimer.state())
+                    .isEqualByComparingTo(EnsembleTimer.TimerState.WAITING_TO_START);
+            assertThat(ensembleTimer.timeRemaining())
+                    .isEqualTo(new TimeRemaining(4, 0, 100));
+        }
+
+        @Test
+        void startedTimerIsRunning() {
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
+
+            ensembleTimer.startTimerAt(Instant.now());
+
+            assertThat(ensembleTimer.state())
+                    .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+            assertThat(ensembleTimer.timeRemaining())
+                    .isEqualTo(new TimeRemaining(4, 0, 100));
+        }
+
+        @Test
+        void timeRemainingIsHalfWhenLastTickIsHalfOfDuration() {
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
+            Instant timerStartedAt = Instant.now();
+            ensembleTimer.startTimerAt(timerStartedAt);
+
+            Instant halfway = timerStartedAt.plus(Duration.ofMinutes(2));
+            ensembleTimer.tick(halfway);
+
+            assertThat(ensembleTimer.timeRemaining())
+                    .isEqualTo(new TimeRemaining(2, 0, 50));
+        }
+
+        @Test
+        void timerRemainsRunningWhenTickTimeBeforeEndTime() {
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
+            Instant timerStartedAt = Instant.now();
+            ensembleTimer.startTimerAt(timerStartedAt);
+
+            Instant oneMilliBeforeEnd = timerStartedAt.plus(Duration.ofMinutes(4).minusMillis(1));
+            ensembleTimer.tick(oneMilliBeforeEnd);
+
+            assertThat(ensembleTimer.state())
+                    .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+            assertThat(ensembleTimer.timeRemaining().minutes())
+                    .isZero();
+            assertThat(ensembleTimer.timeRemaining().seconds())
+                    .isZero();
+            assertThat(ensembleTimer.timeRemaining().percent())
+                    .isCloseTo(0, Offset.offset(.001));
+        }
+
+        @Test
+        void isFinishedWhenTickTimeAtEndTime() {
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
+            Instant timerStartedAt = Instant.now();
+            ensembleTimer.startTimerAt(timerStartedAt);
+
+            Instant timerFinishedAt = timerStartedAt.plus(Duration.ofMinutes(4));
+            ensembleTimer.tick(timerFinishedAt);
+
+            assertThat(ensembleTimer.state())
+                    .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
+            assertThat(ensembleTimer.timeRemaining())
+                    .isEqualTo(new TimeRemaining(0, 0, 0));
+        }
+
+        @Test
+        void isFinishedWhenTickTimeAfterEndTime() {
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
+            Instant timerStartedAt = Instant.now();
+            ensembleTimer.startTimerAt(timerStartedAt);
+
+            Instant oneMilliAfterEnd = timerStartedAt.plus(Duration.ofMinutes(4).plusMillis(1));
+            ensembleTimer.tick(oneMilliAfterEnd);
+
+            assertThat(ensembleTimer.state())
+                    .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
+            assertThat(ensembleTimer.timeRemaining())
+                    .isEqualTo(new TimeRemaining(0, 0, 0));
+        }
+        
     }
-
-    @Test
-    void startedTimerIsRunning() {
-        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
-
-        ensembleTimer.startTimerAt(Instant.now());
-
-        assertThat(ensembleTimer.state())
-                .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
-        assertThat(ensembleTimer.timeRemaining())
-                .isEqualTo(new TimeRemaining(4, 0, 100));
-    }
-
-    @Test
-    void timeRemainingIsHalfWhenLastTickIsHalfOfDuration() {
-        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
-        Instant timerStartedAt = Instant.now();
-        ensembleTimer.startTimerAt(timerStartedAt);
-
-        Instant halfway = timerStartedAt.plus(Duration.ofMinutes(2));
-        ensembleTimer.tick(halfway);
-
-        assertThat(ensembleTimer.timeRemaining())
-                .isEqualTo(new TimeRemaining(2, 0, 50));
-    }
-
-    @Test
-    void timerRemainsRunningWhenTickTimeBeforeEndTime() {
-        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
-        Instant timerStartedAt = Instant.now();
-        ensembleTimer.startTimerAt(timerStartedAt);
-
-        Instant oneMilliBeforeEnd = timerStartedAt.plus(Duration.ofMinutes(4).minusMillis(1));
-        ensembleTimer.tick(oneMilliBeforeEnd);
-
-        assertThat(ensembleTimer.state())
-                .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
-        assertThat(ensembleTimer.timeRemaining().minutes())
-                .isZero();
-        assertThat(ensembleTimer.timeRemaining().seconds())
-                .isZero();
-        assertThat(ensembleTimer.timeRemaining().percent())
-                .isCloseTo(0, Offset.offset(.001));
-    }
-
-    @Test
-    void isFinishedWhenTickTimeAtEndTime() {
-        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
-        Instant timerStartedAt = Instant.now();
-        ensembleTimer.startTimerAt(timerStartedAt);
-
-        Instant timerFinishedAt = timerStartedAt.plus(Duration.ofMinutes(4));
-        ensembleTimer.tick(timerFinishedAt);
-
-        assertThat(ensembleTimer.state())
-                .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
-        assertThat(ensembleTimer.timeRemaining())
-                .isEqualTo(new TimeRemaining(0, 0, 0));
-    }
-
-    @Test
-    void isFinishedWhenTickTimeAfterEndTime() {
-        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
-        Instant timerStartedAt = Instant.now();
-        ensembleTimer.startTimerAt(timerStartedAt);
-
-        Instant oneMilliAfterEnd = timerStartedAt.plus(Duration.ofMinutes(4).plusMillis(1));
-        ensembleTimer.tick(oneMilliAfterEnd);
-
-        assertThat(ensembleTimer.state())
-                .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
-        assertThat(ensembleTimer.timeRemaining())
-                .isEqualTo(new TimeRemaining(0, 0, 0));
-    }
-
 
     @Nested
     class UnhappyScenarios {
@@ -134,4 +137,12 @@ class EnsembleTimerTest {
 
     }
 
+    @Nested
+    class ParticipantRotation {
+
+        @Test
+        void rolesAssignedUponCreation() {
+
+        }
+    }
 }

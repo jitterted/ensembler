@@ -20,14 +20,17 @@ public class EnsembleTimer {
 
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,
-                         Stream<MemberId> participants) {
+                         List<MemberId> participants) {
         this(ensembleId, ensembleName, participants, DEFAULT_TIMER_DURATION);
     }
 
-    public EnsembleTimer(EnsembleId ensembleId, String ensembleName, Stream<MemberId> participants, Duration timerDuration) {
+    public EnsembleTimer(EnsembleId ensembleId,
+                         String ensembleName,
+                         List<MemberId> participants,
+                         Duration timerDuration) {
         this.ensembleId = ensembleId;
         this.ensembleName = ensembleName;
-        this.participants = participants.toList();
+        this.participants = participants;
         this.timerDuration = timerDuration;
         this.currentState = TimerState.WAITING_TO_START;
     }

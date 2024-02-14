@@ -42,7 +42,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
                                               .orElseThrow();
         EnsembleTimer ensembleTimer = new EnsembleTimer(ensembleId,
                                                         ensemble.name(),
-                                                        ensemble.participants());
+                                                        ensemble.participants().toList());
         ensembleTimers.put(ensembleId, ensembleTimer);
         broadcaster.sendCurrentTimer(ensembleTimer);
         return ensembleTimer;
