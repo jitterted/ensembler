@@ -5,19 +5,14 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
 
 class EnsembleTimerTest {
 
-    private static final EnsembleId IRRELEVANT_ENSEMBLE_ID = EnsembleId.of(53);
-    private static final MemberId IRRELEVANT_MEMBER_ID = MemberId.of(7);
-    private static final String IRRELEVANT_NAME = "Test";
-
     @Test
     void newTimerIsWaitingToStartHasFullTimeRemaining() {
-        EnsembleTimer ensembleTimer = createTimer();
+        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
 
         assertThat(ensembleTimer.state())
                 .isEqualByComparingTo(EnsembleTimer.TimerState.WAITING_TO_START);
@@ -27,7 +22,7 @@ class EnsembleTimerTest {
 
     @Test
     void startedTimerIsRunning() {
-        EnsembleTimer ensembleTimer = createTimer();
+        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
 
         ensembleTimer.startTimerAt(Instant.now());
 
@@ -39,7 +34,7 @@ class EnsembleTimerTest {
 
     @Test
     void timeRemainingIsHalfWhenLastTickIsHalfOfDuration() {
-        EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
+        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
         Instant timerStartedAt = Instant.now();
         ensembleTimer.startTimerAt(timerStartedAt);
 
@@ -52,7 +47,7 @@ class EnsembleTimerTest {
 
     @Test
     void timerRemainsRunningWhenTickTimeBeforeEndTime() {
-        EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
+        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
         Instant timerStartedAt = Instant.now();
         ensembleTimer.startTimerAt(timerStartedAt);
 
@@ -67,7 +62,7 @@ class EnsembleTimerTest {
 
     @Test
     void isFinishedWhenTickTimeAtEndTime() {
-        EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
+        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
         Instant timerStartedAt = Instant.now();
         ensembleTimer.startTimerAt(timerStartedAt);
 
@@ -82,7 +77,7 @@ class EnsembleTimerTest {
 
     @Test
     void isFinishedWhenTickTimeAfterEndTime() {
-        EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
+        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
         Instant timerStartedAt = Instant.now();
         ensembleTimer.startTimerAt(timerStartedAt);
 
@@ -101,7 +96,7 @@ class EnsembleTimerTest {
 
         @Test
         void startTimerThrowsExceptionIfAlreadyRunning() {
-            EnsembleTimer ensembleTimer = createTimer();
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
             ensembleTimer.startTimerAt(Instant.now());
 
             assertThatIllegalStateException()
@@ -111,7 +106,7 @@ class EnsembleTimerTest {
 
         @Test
         void timerTickWhenWaitingToStartThrowsException() {
-            EnsembleTimer ensembleTimer = createTimer();
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
 
             Instant tickAtNow = Instant.now();
             assertThatIllegalStateException()
@@ -122,7 +117,7 @@ class EnsembleTimerTest {
 
         @Test
         void tickWhenFinishedThrowsException() {
-            Fixture fixture = create4MinuteTimerInFinishedState();
+            EnsembleTimerFactory.Fixture fixture = EnsembleTimerFactory.create4MinuteTimerInFinishedState();
 
             Instant finishedAt = fixture.timerStartedAt().plus(Duration.ofMinutes(4));
             Instant finishedAtPlus20Millis = finishedAt.plusMillis(20);
@@ -134,28 +129,4 @@ class EnsembleTimerTest {
 
     }
 
-
-    // -- ENCAPSULATED SETUP
-
-    private Fixture create4MinuteTimerInFinishedState() {
-        EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();
-        Instant timerStartedAt = Instant.now();
-        ensembleTimer.startTimerAt(timerStartedAt);
-        ensembleTimer.tick(timerStartedAt.plus(Duration.ofMinutes(4).plusMillis(1)));
-        return new Fixture(ensembleTimer, timerStartedAt);
-    }
-
-    private record Fixture(EnsembleTimer ensembleTimer, Instant timerStartedAt) {
-    }
-
-    private EnsembleTimer createTimerWith4MinuteDuration() {
-        return new EnsembleTimer(IRRELEVANT_ENSEMBLE_ID,
-                                 IRRELEVANT_NAME,
-                                 Stream.of(IRRELEVANT_MEMBER_ID),
-                                 Duration.ofMinutes(4));
-    }
-
-    private EnsembleTimer createTimer() {
-        return new EnsembleTimer(IRRELEVANT_ENSEMBLE_ID, IRRELEVANT_NAME, Stream.of(IRRELEVANT_MEMBER_ID));
-    }
 }
