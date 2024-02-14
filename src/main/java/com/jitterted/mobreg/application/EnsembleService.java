@@ -9,7 +9,6 @@ import com.jitterted.mobreg.domain.ConferenceDetails;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberEnsembleStatus;
 import com.jitterted.mobreg.domain.MemberId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,15 +111,6 @@ public class EnsembleService {
         return allEnsembles().stream()
                              .sorted(Comparator.comparing(Ensemble::startDateTime).reversed())
                              .toList();
-    }
-
-    public List<Ensemble> ensemblesVisibleFor(MemberId memberId) {
-        return allEnsemblesByDateTimeDescending()
-                .stream()
-                .filter(ensemble ->
-                                ensemble.statusFor(memberId, ZonedDateTime.now())
-                                        != MemberEnsembleStatus.HIDDEN)
-                .toList();
     }
 
     public List<Ensemble> allUpcomingEnsembles(ZonedDateTime now) {

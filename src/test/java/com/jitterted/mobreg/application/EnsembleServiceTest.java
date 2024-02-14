@@ -41,42 +41,6 @@ class EnsembleServiceTest {
     }
 
     @Test
-    void showCanceledEnsemblesFromThePastForJoinedParticipants() {
-        Fixture fixture = createFixture(new Ensemble("Canceled - Joined as Participant",
-                                                     ZonedDateTime.now().minusDays(1)));
-        Ensemble canceledParticipantEnsemble = fixture.ensemble();
-        EnsembleService ensembleService = fixture.ensembleService();
-        ensembleService.scheduleEnsemble("Past - Member Not Joined",
-                                         ZonedDateTime.now().minusDays(1));
-        ensembleService.joinAsParticipant(canceledParticipantEnsemble.getId(), fixture.memberId());
-        ensembleService.cancel(canceledParticipantEnsemble.getId());
-
-        List<Ensemble> ensembles = ensembleService.ensemblesVisibleFor(fixture.memberId());
-
-        assertThat(ensembles)
-                .extracting(Ensemble::name)
-                .containsExactly("Canceled - Joined as Participant");
-    }
-
-    @Test
-    void showCanceledEnsemblesFromThePastForJoinedSpectators() {
-        Fixture fixture = createFixture(new Ensemble("Canceled - Joined as Spectator",
-                                                     ZonedDateTime.now().minusDays(1)));
-        Ensemble canceledSpectatorEnsemble = fixture.ensemble();
-        EnsembleService ensembleService = fixture.ensembleService();
-        ensembleService.scheduleEnsemble("Past - Member Not Joined",
-                                         ZonedDateTime.now().minusDays(1));
-        ensembleService.joinAsSpectator(canceledSpectatorEnsemble.getId(), fixture.memberId());
-        ensembleService.cancel(canceledSpectatorEnsemble.getId());
-
-        List<Ensemble> ensembles = ensembleService.ensemblesVisibleFor(fixture.memberId());
-
-        assertThat(ensembles)
-                .extracting(Ensemble::name)
-                .containsExactly("Canceled - Joined as Spectator");
-    }
-
-    @Test
     void membersSeeAllPastEnsemblesForWhichTheyJoinedAsParticipant() {
         Fixture fixture = createFixture(new Ensemble("Past - Joined as Participant",
                                                      ZonedDateTime.now().minusDays(1)));
@@ -84,7 +48,8 @@ class EnsembleServiceTest {
         fixture.ensembleService()
                .joinAsParticipant(pastParticipantEnsemble.getId(), fixture.memberId);
 
-        List<Ensemble> ensembles = fixture.ensembleService.ensemblesVisibleFor(fixture.memberId);
+        List<Ensemble> ensembles = fixture.ensembleService()
+                                          .allInThePastFor(fixture.memberId(), ZonedDateTime.now());
 
         assertThat(ensembles)
                 .containsExactly(pastParticipantEnsemble);
@@ -98,7 +63,8 @@ class EnsembleServiceTest {
         fixture.ensembleService
                 .joinAsSpectator(pastSpectatorEnsemble.getId(), fixture.memberId);
 
-        List<Ensemble> ensembles = fixture.ensembleService.ensemblesVisibleFor(fixture.memberId);
+        List<Ensemble> ensembles = fixture.ensembleService()
+                                          .allInThePastFor(fixture.memberId(), ZonedDateTime.now());
 
         assertThat(ensembles)
                 .containsExactly(pastSpectatorEnsemble);

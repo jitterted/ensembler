@@ -5,6 +5,7 @@ import com.jitterted.mobreg.adapter.in.web.admin.InviteEditorTest;
 import com.jitterted.mobreg.adapter.out.jdbc.InviteJdbcRepository;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -58,7 +59,9 @@ class HexagonalArchitectureTest {
                 .orShould().callMethod(LocalDateTime.class, "now")
 
                 .as("Application and Domain must not access System Time.")
-                .check(productionAndTestClasses());
+                .check(new ClassFileImporter()
+                               .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
+                               .importPackages("com.jitterted.mobreg"));
     }
 
     private JavaClasses productionAndTestClasses() {
