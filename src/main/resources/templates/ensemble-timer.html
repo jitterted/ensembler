@@ -15,7 +15,22 @@
             integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
             crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}" />-->
+<!--    <meta name="_csrf" th:content="${_csrf.token}" />-->
+<!--    <script>-->
+<!--        document.body.addEventListener("htmx:configRequest", function (evt) {-->
+<!--            evt.detail.headers["accept"] = "text/html-partial";-->
 
+<!--            if (evt.detail.verb !== "get") {-->
+<!--                const csrfHeaderName = document-->
+<!--                        .querySelector("meta[name='_csrf_header']")-->
+<!--                        .getAttribute("content");-->
+<!--                evt.detail.headers[csrfHeaderName] = document-->
+<!--                        .querySelector("meta[name='_csrf']")-->
+<!--                        .getAttribute("content");-->
+<!--            }-->
+<!--        });-->
+<!--    </script>-->
     <title>Ensemble Timer</title>
     <style>
         .circle {
@@ -84,8 +99,10 @@
 <!--        </div>-->
 <!--    </div>-->
     <div class="mt-2">
+<!--                th:hx-headers="'{' + ${_csrf.parameterName} + ': ' + ${_csrf.token} + '}'" -->
         <h2 class="text-xl font-bold">Timer Control</h2>
-        <button th:hx-post="@{/admin/start-timer/__${ensembleId}__}" hx-swap="none"
+        <button th:hx-post="@{/admin/start-timer/__${ensembleId}__}"
+                hx-swap="none"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >Start Timer
         </button>

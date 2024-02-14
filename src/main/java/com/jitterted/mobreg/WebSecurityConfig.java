@@ -54,6 +54,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // @formatter:off
         http
+                .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/**", "/error").permitAll()
                         .requestMatchers("/user/**", "/invite").hasAuthority("ROLE_USER")
