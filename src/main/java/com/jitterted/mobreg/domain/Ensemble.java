@@ -5,16 +5,13 @@ import com.google.common.collect.ImmutableSet;
 import java.net.URI;
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.time.temporal.TemporalAmount;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
 // This is the Aggregate Root for Ensembles
 public class Ensemble {
     private static final int MAX_PARTICIPANTS = 5;
-    private static final TemporalAmount IN_PROGRESS_GRACE_PERIOD_MINUTES = Duration.ofMinutes(10);
 
     private EnsembleId id;
 
@@ -178,38 +175,6 @@ public class Ensemble {
         startDateTime = newStartDateTime;
     }
 
-    @Deprecated // this information is now included in other functions
-    public MemberEnsembleStatus statusFor(MemberId memberId, ZonedDateTime now) {
-        MemberEnsembleStatus status = WhenSpaceRsvp.memberStatus(this, memberId, now);
-        if ((isParticipant(memberId) || isSpectator(memberId))
-                && isCanceled()) {
-            return MemberEnsembleStatus.CANCELED;
-        }
-        if (isCanceled()) {
-            return MemberEnsembleStatus.HIDDEN;
-        }
-        if (isInGracePeriod(now) && status != MemberEnsembleStatus.HIDDEN) {
-            return MemberEnsembleStatus.IN_GRACE_PERIOD;
-        }
-        if (isBetweenExclusive(now, startDateTime.plus(IN_PROGRESS_GRACE_PERIOD_MINUTES), startDateTime.plus(duration))) {
-            status = MemberEnsembleStatus.HIDDEN;
-        }
-        return status;
-    }
-
-    private boolean isInGracePeriod(ZonedDateTime now) {
-        return isBetweenExclusive(now, startDateTime, startDateTime.plus(IN_PROGRESS_GRACE_PERIOD_MINUTES));
-    }
-
-    private boolean isBetweenExclusive(ZonedDateTime now, ZonedDateTime start, ZonedDateTime end) {
-        return now.isAfter(start) && now.isBefore(end);
-    }
-
-    private boolean isAfterStartTime(ZonedDateTime now) {
-        return now.isAfter(startDateTime);
-    }
-
-    @Deprecated
     public Rsvp rsvpOf(MemberId memberId) {
         if (isDeclined(memberId)) {
             return Rsvp.DECLINED;
@@ -271,6 +236,11 @@ public class Ensemble {
         return isParticipant(memberId) || isSpectator(memberId);
     }
 
+    public boolean isInProgress(ZonedDateTime now) {
+        return now.isAfter(startDateTime())
+                && now.isBefore(startDateTime().plus(duration));
+    }
+
     @Override
     public String toString() {
         return "Ensemble{" +
@@ -279,70 +249,6 @@ public class Ensemble {
                 ", startDateTime=" + startDateTime +
                 ", state=" + state +
                 '}';
-    }
-
-    public boolean isInProgress(ZonedDateTime now) {
-        return now.isAfter(startDateTime())
-                && now.isBefore(startDateTime().plus(duration));
-    }
-
-    @Deprecated
-    record WhenSpaceRsvp(When when, Space space, Rsvp rsvp) {
-        // @formatter: off
-        private static final Map<WhenSpaceRsvp, MemberEnsembleStatus> STATE_TO_STATUS = Map.ofEntries(
-                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.AVAILABLE, Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.UNKNOWN), MemberEnsembleStatus.UNKNOWN),
-                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.FULL, Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.UNKNOWN), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.UNKNOWN), MemberEnsembleStatus.FULL),
-                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.AVAILABLE, Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.DECLINED), MemberEnsembleStatus.DECLINED),
-                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.FULL, Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.DECLINED), MemberEnsembleStatus.HIDDEN),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.DECLINED), MemberEnsembleStatus.DECLINED_FULL),
-                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.AVAILABLE, Rsvp.ACCEPTED), MemberEnsembleStatus.PENDING_COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.AVAILABLE, Rsvp.ACCEPTED), MemberEnsembleStatus.COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.AVAILABLE, Rsvp.ACCEPTED), MemberEnsembleStatus.ACCEPTED),
-                Map.entry(new WhenSpaceRsvp(When.STARTED, Space.FULL, Rsvp.ACCEPTED), MemberEnsembleStatus.PENDING_COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.COMPLETED, Space.FULL, Rsvp.ACCEPTED), MemberEnsembleStatus.COMPLETED),
-                Map.entry(new WhenSpaceRsvp(When.FUTURE, Space.FULL, Rsvp.ACCEPTED), MemberEnsembleStatus.ACCEPTED));
-
-        // @formatter:on
-        private static When when(Ensemble ensemble, ZonedDateTime now) {
-            if (ensemble.isCompleted()) {
-                return When.COMPLETED;
-            }
-            return ensemble.isAfterStartTime(now) ? When.STARTED : When.FUTURE;
-        }
-
-        private static Space space(Ensemble ensemble) {
-            return ensemble.isFull() ? Space.FULL : Space.AVAILABLE;
-        }
-
-        @Deprecated
-        private static MemberEnsembleStatus memberStatus(Ensemble ensemble, MemberId memberId, ZonedDateTime now) {
-            When when = when(ensemble, now);
-            Space space = space(ensemble);
-            Rsvp rsvp = ensemble.rsvpOf(memberId);
-            WhenSpaceRsvp key = new WhenSpaceRsvp(when, space, rsvp);
-            if (!STATE_TO_STATUS.containsKey(key)) {
-                throw new IllegalStateException("No such state: " + key);
-            }
-            return STATE_TO_STATUS.get(key);
-        }
-
-        enum When {
-            STARTED,
-            COMPLETED,
-            FUTURE
-        }
-
-        enum Space {
-            FULL,
-            AVAILABLE
-        }
     }
 
 }
