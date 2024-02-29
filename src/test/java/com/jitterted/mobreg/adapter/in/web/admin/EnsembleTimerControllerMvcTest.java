@@ -1,10 +1,10 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.adapter.in.web.TestAdminConfiguration;
+import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.EnsembleFactory;
-import org.junit.jupiter.api.Disabled;
+import com.jitterted.mobreg.domain.EnsembleBuilder;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,16 +50,22 @@ class EnsembleTimerControllerMvcTest {
     }
 
     @Test
-    @Disabled("Until we properly create the timer before starting: see EnsembleTimerHolderTest.whenNoTimerExistsForEnsembleOneIsCreated")
     void postToStartTimerEndpointReturns204NoContent() throws Exception {
         createAndSaveEnsembleInRepositoryForId(113);
+        mockMvc.perform(post("/admin/timer-view/113").with(csrf()));
+
         mockMvc.perform(post("/admin/start-timer/113")
                                 .with(csrf()))
                .andExpect(status().isNoContent());
     }
 
     private void createAndSaveEnsembleInRepositoryForId(long ensembleId) {
-        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(ensembleId);
-        ensembleRepository.save(ensemble);
+        Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
+                                                 .startsNow()
+                                                 .build();
+        new TestEnsembleServiceBuilder()
+                .withEnsembleRepository(ensembleRepository)
+                .saveEnsemble(ensemble)
+                .withThreeParticipants();
     }
 }

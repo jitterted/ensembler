@@ -101,7 +101,7 @@ public class EnsembleTimer {
     }
 
     public void rotateRoles() {
-
+        rotation.rotate();
     }
 
     public enum TimerState {

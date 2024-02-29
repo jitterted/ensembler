@@ -1,7 +1,6 @@
 package com.jitterted.mobreg.domain;
 
 import org.assertj.core.data.Offset;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -144,33 +143,36 @@ class EnsembleTimerTest {
 
         @Test
         void rolesAssignedUponCreation() {
-            MemberId driverId = MemberId.of(3L);
-            MemberId navigatorId = MemberId.of(7L);
-            MemberId nextDriverId = MemberId.of(2L);
-            MemberId participantId1 = MemberId.of(1L);
-            MemberId participantId2 = MemberId.of(9L);
-            EnsembleTimer ensembleTimer = new EnsembleTimer(EnsembleTimerFactory.IRRELEVANT_ENSEMBLE_ID,
-                                                            EnsembleTimerFactory.IRRELEVANT_NAME,
-                                                            List.of(nextDriverId,
-                                                                    driverId,
-                                                                    navigatorId,
-                                                                    participantId1,
-                                                                    participantId2));
+            RotationFixture fixture = createParticipantRotation();
 
-            assertThat(ensembleTimer.rotation().driver())
-                    .as("Expected rotation.driver() to be " + driverId)
-                    .isEqualTo(driverId);
-        }
-
-        void rolesDoNotRotateWhenTimerFinishes() {
-
-            // .as("rotate should not happen until we invoke #nextRound() explicitly")
-
+            assertThat(fixture.ensembleTimer().rotation().driver())
+                    .as("Expected rotation.driver() to be " + fixture.driverId())
+                    .isEqualTo(fixture.driverId());
         }
 
         @Test
-        @Disabled
+        void rolesDoNotRotateWhenTimerFinishes() {
+            RotationFixture fixture = createParticipantRotation();
+
+            pushTimerToFinishedState(fixture.ensembleTimer());
+
+            assertThat(fixture.ensembleTimer().rotation().driver())
+                    .as("rotate should not happen until we invoke #nextRound() explicitly")
+                    .isEqualTo(fixture.driverId());
+        }
+
+        @Test
         void rolesRotateWhenNextRoundInvokedOnFinishedTimer() {
+            RotationFixture fixture = createParticipantRotation();
+            pushTimerToFinishedState(fixture.ensembleTimer());
+
+            fixture.ensembleTimer().rotateRoles();
+
+            assertThat(fixture.ensembleTimer().rotation().driver())
+                    .isEqualTo(fixture.nextDriverId());
+        }
+
+        private RotationFixture createParticipantRotation() {
             MemberId nextDriverId = MemberId.of(1L);
             MemberId driverId = MemberId.of(2L);
             MemberId navigatorId = MemberId.of(3L);
@@ -179,14 +181,13 @@ class EnsembleTimerTest {
             EnsembleTimer ensembleTimer = new EnsembleTimer(
                     EnsembleTimerFactory.IRRELEVANT_ENSEMBLE_ID,
                     EnsembleTimerFactory.IRRELEVANT_NAME,
-                    List.of(driverId, navigatorId, nextDriverId, participantId1, participantId2),
+                    List.of(nextDriverId, driverId, navigatorId, participantId1, participantId2),
                     Duration.ofMinutes(4));
-            pushTimerToFinishedState(ensembleTimer);
+            return new RotationFixture(driverId, nextDriverId, ensembleTimer);
+        }
 
-            ensembleTimer.rotateRoles();
-
-            assertThat(ensembleTimer.rotation().driver())
-                    .isEqualTo(nextDriverId);
+        private record RotationFixture(MemberId driverId, MemberId nextDriverId,
+                                       EnsembleTimer ensembleTimer) {
         }
 
         private void pushTimerToFinishedState(EnsembleTimer ensembleTimer) {

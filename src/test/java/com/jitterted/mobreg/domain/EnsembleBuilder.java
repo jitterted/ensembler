@@ -13,7 +13,7 @@ public class EnsembleBuilder {
     private final List<MemberId> declinedMemberIds = new ArrayList<>();
     private String name;
     private boolean markAsCompleted;
-    private Integer id;
+    private Long id;
     private boolean markAsCanceled;
 
     public EnsembleBuilder() {
@@ -61,7 +61,7 @@ public class EnsembleBuilder {
         return this;
     }
 
-    public EnsembleBuilder id(int id) {
+    public EnsembleBuilder id(long id) {
         this.id = id;
         return this;
     }
