@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -142,7 +143,48 @@ class EnsembleTimerTest {
 
         @Test
         void rolesAssignedUponCreation() {
+            MemberId driverId = MemberId.of(3L);
+            MemberId navigatorId = MemberId.of(7L);
+            MemberId nextDriverId = MemberId.of(2L);
+            MemberId participantId1 = MemberId.of(1L);
+            MemberId participantId2 = MemberId.of(9L);
+            EnsembleTimer ensembleTimer = new EnsembleTimer(EnsembleTimerFactory.IRRELEVANT_ENSEMBLE_ID,
+                                                            EnsembleTimerFactory.IRRELEVANT_NAME,
+                                                            List.of(driverId, navigatorId, nextDriverId,
+                                                                    participantId1, participantId2));
 
+            assertThat(ensembleTimer.rotation().driver())
+                    .isEqualTo(driverId);
+        }
+
+        void rolesDoNotRotateWhenTimerFinishes() {
+
+        }
+
+        void rolesRotateWhenNextRoundInvokedOnFinishedTimer() {
+            MemberId driverId = MemberId.of(3L);
+            MemberId navigatorId = MemberId.of(7L);
+            MemberId nextDriverId = MemberId.of(2L);
+            MemberId participantId1 = MemberId.of(1L);
+            MemberId participantId2 = MemberId.of(9L);
+            EnsembleTimer ensembleTimer = new EnsembleTimer(EnsembleTimerFactory.IRRELEVANT_ENSEMBLE_ID,
+                                                            EnsembleTimerFactory.IRRELEVANT_NAME,
+                                                            List.of(driverId, navigatorId, nextDriverId,
+                                                                    participantId1, participantId2),
+                                                            Duration.ofMinutes(4));
+            pushTimerToFinishedState(ensembleTimer);
+
+            // rotate should not happen until we invoke .nextRound()
+
+            assertThat(ensembleTimer.rotation().driver())
+                    .isEqualTo(nextDriverId);
+        }
+
+        private void pushTimerToFinishedState(EnsembleTimer ensembleTimer) {
+            Instant timerStartedAt = Instant.now();
+            ensembleTimer.startTimerAt(timerStartedAt);
+            Instant timerFinishedAt = timerStartedAt.plus(Duration.ofMinutes(4));
+            ensembleTimer.tick(timerFinishedAt);
         }
     }
 }

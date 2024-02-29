@@ -94,6 +94,10 @@ public class EnsembleTimer {
         return !now.isBefore(timerEnd);
     }
 
+    public Rotation rotation() {
+        return new Rotation(participants);
+    }
+
     public enum TimerState {
         WAITING_TO_START,
         RUNNING,

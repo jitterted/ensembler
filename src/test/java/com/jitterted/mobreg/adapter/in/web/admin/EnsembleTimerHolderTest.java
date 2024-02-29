@@ -14,7 +14,6 @@ import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.TimeRemaining;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class EnsembleTimerHolderTest {
 
@@ -105,7 +105,7 @@ public class EnsembleTimerHolderTest {
 
             ensembleTimerHolder.handleTickFor(EnsembleId.of(235),
                                               timerStartedAt
-                                                     .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
+                                                      .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
 
             mockSecondsTicker.verifyStartThenStopWasCalledFor(235);
         }
@@ -264,14 +264,15 @@ public class EnsembleTimerHolderTest {
             assertThat(wasCalled)
                     .as("Expected sendCurrentTimer() to have been called on the Broadcaster")
                     .isTrue();
-            SoftAssertions softly = new SoftAssertions();
-            softly.assertThat(lastState)
-                  .isEqualByComparingTo(expectedTimerState);
-            softly.assertThat(lastEnsembleId)
-                  .isEqualTo(EnsembleId.of(expectedEnsembleId));
-            softly.assertThat(lastTimeRemaining)
-                  .isEqualTo(expectedTimeRemaining);
-            softly.assertAll();
+            assertAll(
+                    "Timer State",
+                    () -> assertThat(lastState)
+                            .isEqualByComparingTo(expectedTimerState),
+                    () -> assertThat(lastEnsembleId)
+                            .isEqualTo(EnsembleId.of(expectedEnsembleId)),
+                    () -> assertThat(lastTimeRemaining)
+                            .isEqualTo(expectedTimeRemaining)
+            );
         }
     }
 

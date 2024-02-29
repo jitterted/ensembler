@@ -5,9 +5,9 @@ import java.time.Instant;
 import java.util.List;
 
 public class EnsembleTimerFactory {
-    private static final EnsembleId IRRELEVANT_ENSEMBLE_ID = EnsembleId.of(53);
+    public static final EnsembleId IRRELEVANT_ENSEMBLE_ID = EnsembleId.of(53);
     private static final MemberId IRRELEVANT_MEMBER_ID = MemberId.of(7);
-    private static final String IRRELEVANT_NAME = "Test";
+    public static final String IRRELEVANT_NAME = "Test";
 
     public static Fixture create4MinuteTimerInFinishedState() {
         EnsembleTimer ensembleTimer = createTimerWith4MinuteDuration();

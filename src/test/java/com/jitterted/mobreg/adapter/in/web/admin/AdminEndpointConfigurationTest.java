@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
+import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
 import com.jitterted.mobreg.adapter.in.web.TestAdminConfiguration;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
@@ -8,7 +9,6 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberFactory;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(TestAdminConfiguration.class)
 @Tag("mvc")
 // TODO: roles aren't needed here anymore?
-@WithMockUser(username = "username", authorities = {"ROLE_MEMBER", "ROLE_ADMIN"})
+@WithMockUser(username = "tedyoung", authorities = {"ROLE_MEMBER", "ROLE_ADMIN"})
 class AdminEndpointConfigurationTest {
 
     @Autowired
@@ -50,12 +50,11 @@ class AdminEndpointConfigurationTest {
     @MockBean
     GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
-    @Disabled // need to figure out what happened to oAuth
     @Test
     void getOfDashboardEndpointReturns200Ok() throws Exception {
         createStubMemberRepositoryWithMember(1L, "Ted", "tedyoung", "ROLE_MEMBER", "ROLE_ADMIN");
         mockMvc.perform(get("/admin/dashboard")
-//                                .with(OAuth2UserFactory.oAuth2User("ROLE_ADMIN"))
+                                .with(OAuth2UserFactory.oAuth2User("ROLE_ADMIN"))
                )
                .andExpect(status().isOk());
     }
