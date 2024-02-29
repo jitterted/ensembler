@@ -36,9 +36,14 @@ class RotationTest {
                 .containsExactlyElementsOf(List.of(participantId1, participantId2));
     }
 
+    @Test
     void rotationThrowsExceptionIfFewerThan3Participants() {
-//        assertThatExceptionOfType(NotEnoughParticipants)
-//                .isThrownBy(() -> new Rotation(List.of(MemberId.of(1L), MemberId.of(67L))))
-//                .withMessage("")
+        assertThatExceptionOfType(NotEnoughParticipants.class)
+                .isThrownBy(RotationTest::createRotationWithTwoParticipants)
+                .withMessage("2 is too few participants, requires minimum of 3 participants.");
+    }
+
+    private static Rotation createRotationWithTwoParticipants() {
+        return new Rotation(List.of(MemberId.of(1L), MemberId.of(67L)));
     }
 }
