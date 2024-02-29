@@ -66,6 +66,12 @@ public class TestEnsembleServiceBuilder {
         return this;
     }
 
+    public TestEnsembleServiceBuilder withThreeParticipants() {
+        return saveMemberAndAccept("Jane", "ghjane")
+                .saveMemberAndAccept("Paul", "ghpaul")
+                .saveMemberAndAccept("Sally", "ghsally");
+    }
+
     public EnsembleId lastSavedEnsembleId() {
         return lastEnsembleId;
     }

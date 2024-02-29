@@ -89,4 +89,9 @@ public class EnsembleBuilder {
         this.startDateTime = startDateTime;
         return this;
     }
+
+    public EnsembleBuilder startsNow() {
+        this.startDateTime = ZonedDateTime.now();
+        return this;
+    }
 }

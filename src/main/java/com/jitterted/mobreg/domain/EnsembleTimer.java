@@ -12,6 +12,7 @@ public class EnsembleTimer {
     private final EnsembleId ensembleId;
     private final String ensembleName;
     private final List<MemberId> participants;
+    private final Rotation rotation;
 
     private TimerState currentState;
     private final Duration timerDuration;
@@ -33,6 +34,7 @@ public class EnsembleTimer {
         this.participants = participants;
         this.timerDuration = timerDuration;
         this.currentState = TimerState.WAITING_TO_START;
+        rotation = new Rotation(participants);
     }
 
     public EnsembleId ensembleId() {
@@ -95,7 +97,7 @@ public class EnsembleTimer {
     }
 
     public Rotation rotation() {
-        return new Rotation(participants);
+        return rotation;
     }
 
     public void rotateRoles() {

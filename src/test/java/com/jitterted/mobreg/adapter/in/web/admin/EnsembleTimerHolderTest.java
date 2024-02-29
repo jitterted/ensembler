@@ -3,13 +3,14 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 import com.jitterted.mobreg.application.DoNothingSecondsTicker;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.EnsembleTimerTickHandler;
+import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.SecondsTicker;
 import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.EnsembleFactory;
+import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.MemberId;
@@ -57,57 +58,56 @@ public class EnsembleTimerHolderTest {
 
         @Test
         void startTimerStartsSecondsTicker() {
-            EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-            Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(679);
-            ensembleRepository.save(ensemble);
-            MockSecondsTicker mockSecondsTicker = new MockSecondsTicker();
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER, mockSecondsTicker);
-            EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(679));
+            TimerFixture fixture = createTimerFixture(679);
+            fixture.ensembleTimerHolder().startTimerFor(EnsembleId.of(679), Instant.now());
 
-            ensembleTimerHolder.startTimerFor(EnsembleId.of(679), Instant.now());
+            fixture.mockSecondsTicker().verifyStartWasCalledFor(679);
 
-
-            mockSecondsTicker.verifyStartWasCalledFor(679);
-
-            assertThat(ensembleTimer.state())
+            assertThat(fixture.ensembleTimer().state())
                     .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
         }
 
         @Test
         void timerRunningNotFinishedDoesNotStopTicker() {
-            EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-            Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(63);
-            ensembleRepository.save(ensemble);
-            MockSecondsTicker mockSecondsTicker = new MockSecondsTicker();
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER, mockSecondsTicker);
-            ensembleTimerHolder.createTimerFor(EnsembleId.of(63));
+            TimerFixture fixture = createTimerFixture(63);
             Instant timerStartedAt = Instant.now();
-            ensembleTimerHolder.startTimerFor(EnsembleId.of(63), timerStartedAt);
+            fixture.ensembleTimerHolder().startTimerFor(EnsembleId.of(63), timerStartedAt);
 
-            ensembleTimerHolder.handleTickFor(EnsembleId.of(63),
+            fixture.ensembleTimerHolder().handleTickFor(EnsembleId.of(63),
                                               timerStartedAt
                                                       .plus(EnsembleTimer.DEFAULT_TIMER_DURATION)
                                                       .minusSeconds(1));
 
-            mockSecondsTicker.verifyStopNotCalled();
+            fixture.mockSecondsTicker().verifyStopNotCalled();
         }
 
         @Test
         void timerFinishedStopsSecondsTicker() {
-            EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-            Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(235);
-            ensembleRepository.save(ensemble);
-            MockSecondsTicker mockSecondsTicker = new MockSecondsTicker();
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER, mockSecondsTicker);
-            ensembleTimerHolder.createTimerFor(EnsembleId.of(235));
+            TimerFixture fixture = createTimerFixture(235);
             Instant timerStartedAt = Instant.now();
-            ensembleTimerHolder.startTimerFor(EnsembleId.of(235), timerStartedAt);
+            fixture.ensembleTimerHolder().startTimerFor(EnsembleId.of(235), timerStartedAt);
 
-            ensembleTimerHolder.handleTickFor(EnsembleId.of(235),
+            fixture.ensembleTimerHolder().handleTickFor(EnsembleId.of(235),
                                               timerStartedAt
                                                       .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
 
-            mockSecondsTicker.verifyStartThenStopWasCalledFor(235);
+            fixture.mockSecondsTicker().verifyStartThenStopWasCalledFor(235);
+        }
+
+        private TimerFixture createTimerFixture(int ensembleId) {
+            Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
+                                                     .startsNow()
+                                                     .build();
+            TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                    .saveEnsemble(ensemble)
+                    .withThreeParticipants();
+            MockSecondsTicker mockSecondsTicker = new MockSecondsTicker();
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(), DUMMY_BROADCASTER, mockSecondsTicker);
+            EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
+            return new TimerFixture(mockSecondsTicker, ensembleTimerHolder, ensembleTimer);
+        }
+
+        private record TimerFixture(MockSecondsTicker mockSecondsTicker, EnsembleTimerHolder ensembleTimerHolder, EnsembleTimer ensembleTimer) {
         }
 
     }
@@ -178,11 +178,14 @@ public class EnsembleTimerHolderTest {
         @Test
         void onTimerCreationBroadcastsTimerWaitingToStart() {
             TimeRemaining expectedTimeRemaining = new TimeRemaining(4, 0, 100);
-            Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(475);
+            Ensemble ensemble = new EnsembleBuilder().id(475)
+                                                     .startsNow()
+                                                     .build();
+            TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                    .saveEnsemble(ensemble)
+                    .withThreeParticipants();
             MockBroadcaster mockBroadcaster = new MockBroadcaster(475, EnsembleTimer.TimerState.WAITING_TO_START, expectedTimeRemaining);
-            EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-            ensembleRepository.save(ensemble);
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster, new DoNothingSecondsTicker());
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(), mockBroadcaster, new DoNothingSecondsTicker());
 
             ensembleTimerHolder.createTimerFor(EnsembleId.of(475));
 
@@ -221,11 +224,15 @@ public class EnsembleTimerHolderTest {
 
 
     private BroadcastFixture createBroadcastFixture(int ensembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
-        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(ensembleId);
+        Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
+                                                 .startsNow()
+                                                 .build();
+        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                .saveEnsemble(ensemble)
+                .withThreeParticipants();
         MockBroadcaster mockBroadcaster = new MockBroadcaster(ensembleId, expectedTimerState, expectedTimeRemaining);
-        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-        ensembleRepository.save(ensemble);
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, mockBroadcaster, new DoNothingSecondsTicker());
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(),
+                                                                          mockBroadcaster, new DoNothingSecondsTicker());
         ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
         Instant timerStartedAt = Instant.now();
         ensembleTimerHolder.startTimerFor(EnsembleId.of(ensembleId), timerStartedAt);

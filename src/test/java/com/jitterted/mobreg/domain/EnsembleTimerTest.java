@@ -169,13 +169,13 @@ class EnsembleTimerTest {
         }
 
         @Test
-        @Disabled("Until Rotation#rotate is implemented")
+        @Disabled
         void rolesRotateWhenNextRoundInvokedOnFinishedTimer() {
-            MemberId driverId = MemberId.of(3L);
-            MemberId navigatorId = MemberId.of(7L);
-            MemberId nextDriverId = MemberId.of(2L);
-            MemberId participantId1 = MemberId.of(1L);
-            MemberId participantId2 = MemberId.of(9L);
+            MemberId nextDriverId = MemberId.of(1L);
+            MemberId driverId = MemberId.of(2L);
+            MemberId navigatorId = MemberId.of(3L);
+            MemberId participantId1 = MemberId.of(4L);
+            MemberId participantId2 = MemberId.of(5L);
             EnsembleTimer ensembleTimer = new EnsembleTimer(
                     EnsembleTimerFactory.IRRELEVANT_ENSEMBLE_ID,
                     EnsembleTimerFactory.IRRELEVANT_NAME,

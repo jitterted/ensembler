@@ -4,6 +4,7 @@ import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
+import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
 import org.assertj.core.api.InstanceOfAssertFactories;
@@ -17,8 +18,12 @@ class EnsembleTimerControllerTest {
 
     @Test
     void createAndRedirectToTimerSessionForSpecificEnsemble() {
-        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(87);
-        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder().saveEnsemble(ensemble);
+        Ensemble ensemble = new EnsembleBuilder().id(87)
+                .startsNow()
+                .build();
+        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                .saveEnsemble(ensemble)
+                .withThreeParticipants();
         EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
 
@@ -58,8 +63,12 @@ class EnsembleTimerControllerTest {
 
     @Test
     void startTimerStartsTheSpecifiedEnsembleTimer() {
-        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(279);
-        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder().saveEnsemble(ensemble);
+        Ensemble ensemble = new EnsembleBuilder().id(279)
+                                                 .startsNow()
+                                                 .build();
+        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                .saveEnsemble(ensemble)
+                .withThreeParticipants();
         EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
         ensembleTimerController.createTimerView(279L);
