@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.domain;
 
 import org.assertj.core.data.Offset;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -97,7 +98,7 @@ class EnsembleTimerTest {
             assertThat(ensembleTimer.timeRemaining())
                     .isEqualTo(new TimeRemaining(0, 0, 0));
         }
-        
+
     }
 
     @Nested
@@ -150,31 +151,39 @@ class EnsembleTimerTest {
             MemberId participantId2 = MemberId.of(9L);
             EnsembleTimer ensembleTimer = new EnsembleTimer(EnsembleTimerFactory.IRRELEVANT_ENSEMBLE_ID,
                                                             EnsembleTimerFactory.IRRELEVANT_NAME,
-                                                            List.of(driverId, navigatorId, nextDriverId,
-                                                                    participantId1, participantId2));
+                                                            List.of(nextDriverId,
+                                                                    driverId,
+                                                                    navigatorId,
+                                                                    participantId1,
+                                                                    participantId2));
 
             assertThat(ensembleTimer.rotation().driver())
+                    .as("Expected rotation.driver() to be " + driverId)
                     .isEqualTo(driverId);
         }
 
         void rolesDoNotRotateWhenTimerFinishes() {
 
+            // .as("rotate should not happen until we invoke #nextRound() explicitly")
+
         }
 
+        @Test
+        @Disabled("Until Rotation#rotate is implemented")
         void rolesRotateWhenNextRoundInvokedOnFinishedTimer() {
             MemberId driverId = MemberId.of(3L);
             MemberId navigatorId = MemberId.of(7L);
             MemberId nextDriverId = MemberId.of(2L);
             MemberId participantId1 = MemberId.of(1L);
             MemberId participantId2 = MemberId.of(9L);
-            EnsembleTimer ensembleTimer = new EnsembleTimer(EnsembleTimerFactory.IRRELEVANT_ENSEMBLE_ID,
-                                                            EnsembleTimerFactory.IRRELEVANT_NAME,
-                                                            List.of(driverId, navigatorId, nextDriverId,
-                                                                    participantId1, participantId2),
-                                                            Duration.ofMinutes(4));
+            EnsembleTimer ensembleTimer = new EnsembleTimer(
+                    EnsembleTimerFactory.IRRELEVANT_ENSEMBLE_ID,
+                    EnsembleTimerFactory.IRRELEVANT_NAME,
+                    List.of(driverId, navigatorId, nextDriverId, participantId1, participantId2),
+                    Duration.ofMinutes(4));
             pushTimerToFinishedState(ensembleTimer);
 
-            // rotate should not happen until we invoke .nextRound()
+            ensembleTimer.rotateRoles();
 
             assertThat(ensembleTimer.rotation().driver())
                     .isEqualTo(nextDriverId);

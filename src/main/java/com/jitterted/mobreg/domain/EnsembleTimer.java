@@ -98,6 +98,10 @@ public class EnsembleTimer {
         return new Rotation(participants);
     }
 
+    public void rotateRoles() {
+
+    }
+
     public enum TimerState {
         WAITING_TO_START,
         RUNNING,
