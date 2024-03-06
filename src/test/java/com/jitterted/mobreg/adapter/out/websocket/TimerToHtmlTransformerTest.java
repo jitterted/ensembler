@@ -18,17 +18,20 @@ class TimerToHtmlTransformerTest {
 
         assertThat(timerHtml)
                 .isEqualTo("""
-                            <div id="timer-container"
-                                 class="circle circle-running"
-                                 style="background: conic-gradient(lightgreen 0% 100.000000%, black 100.000000% 100%);">
-                                <svg class="progress-ring">
-                                    <circle class="progress-circle"/>
-                                </svg>
-                                <div class="timer-text-container timer-running">
-                                    <div class="timer-text">4:00</div>
-                                </div>
-                            </div>
-                            """);
+                           <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
+                                Start Timer
+                           </swap-container>
+                           <div id="timer-container"
+                                class="circle circle-running"
+                                style="background: conic-gradient(lightgreen 0% 100.000000%, black 100.000000% 100%);">
+                               <svg class="progress-ring">
+                                   <circle class="progress-circle"/>
+                               </svg>
+                               <div class="timer-text-container timer-running">
+                                   <div class="timer-text">4:00</div>
+                               </div>
+                           </div>
+                           """);
     }
 
     @Test
@@ -41,18 +44,38 @@ class TimerToHtmlTransformerTest {
         String timerHtml = TimerToHtmlTransformer.htmlFor(ensembleTimer);
 
         assertThat(timerHtml)
-                .isEqualTo("""                            
-                            <div id="timer-container"
-                                 class="circle circle-running"
-                                 style="background: conic-gradient(lightgreen 0% 87.500000%, black 87.500000% 100%);">
-                                <svg class="progress-ring">
-                                    <circle class="progress-circle"/>
-                                </svg>
-                                <div class="timer-text-container timer-running">
-                                    <div class="timer-text">3:30</div>
-                                </div>
-                            </div>
-                            """);
+                .isEqualTo("""    
+                           <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
+                                Pause Timer
+                           </swap-container>                        
+                           <div id="timer-container"
+                                class="circle circle-running"
+                                style="background: conic-gradient(lightgreen 0% 87.500000%, black 87.500000% 100%);">
+                               <svg class="progress-ring">
+                                   <circle class="progress-circle"/>
+                               </svg>
+                               <div class="timer-text-container timer-running">
+                                   <div class="timer-text">3:30</div>
+                               </div>
+                           </div>
+                           """);
+    }
 
+    @Test
+    void timerFinishedHtmlIsCorrect() {
+        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
+        EnsembleTimerFactory.pushTimerToFinishedState(ensembleTimer);
+
+        String timerHtml = TimerToHtmlTransformer.htmlFor(ensembleTimer);
+
+        assertThat(timerHtml)
+                .isEqualTo("""
+                           <div id="timer-container"
+                                class="circle circle-finished">
+                               <div class="timer-text-container timer-finished">
+                                   <div class="timer-text">next</div>
+                               </div>
+                           </div>
+                           """);
     }
 }

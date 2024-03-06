@@ -33,6 +33,13 @@ public class EnsembleTimerFactory {
                                  List.of(IRRELEVANT_MEMBER_ID1, IRRELEVANT_MEMBER_ID2, IRRELEVANT_MEMBER_ID3));
     }
 
+    public static void pushTimerToFinishedState(EnsembleTimer ensembleTimer) {
+        Instant timerStartedAt = Instant.now();
+        ensembleTimer.startTimerAt(timerStartedAt);
+        Instant timerFinishedAt = timerStartedAt.plus(Duration.ofMinutes(4));
+        ensembleTimer.tick(timerFinishedAt);
+    }
+
     public record Fixture(EnsembleTimer ensembleTimer, Instant timerStartedAt) {
     }
 }

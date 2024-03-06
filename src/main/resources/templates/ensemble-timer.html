@@ -105,7 +105,6 @@
             class="flex flex-col justify-center items-center p-4"
             hx-ext="ws"
             ws-connect="/admin/ws/timer"
-            hx-swap-oob="innerHtml"
     >
         <div id="timer-container"
              class="circle circle-running"
@@ -130,6 +129,7 @@
         <h2 class="text-xl font-bold">Timer Control</h2>
         <button th:hx-post="@{/admin/start-timer/__${ensembleId}__}"
                 hx-swap="none"
+                id="timer-control-button"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >Start Timer
         </button>
@@ -140,7 +140,6 @@
     <h1 class="font-bold text-sm text-gray-600 uppercase">Participants</h1>
     <p th:each="participantName: ${participantNames}" th:text="${participantName}">Jane Participant</p>
 </div>
-
 
 </body>
 </html>

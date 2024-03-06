@@ -154,7 +154,7 @@ class EnsembleTimerTest {
         void rolesDoNotRotateWhenTimerFinishes() {
             RotationFixture fixture = createParticipantRotation();
 
-            pushTimerToFinishedState(fixture.ensembleTimer());
+            EnsembleTimerFactory.pushTimerToFinishedState(fixture.ensembleTimer());
 
             assertThat(fixture.ensembleTimer().rotation().driver())
                     .as("rotate should not happen until we invoke #nextRound() explicitly")
@@ -164,7 +164,7 @@ class EnsembleTimerTest {
         @Test
         void rolesRotateWhenNextRoundInvokedOnFinishedTimer() {
             RotationFixture fixture = createParticipantRotation();
-            pushTimerToFinishedState(fixture.ensembleTimer());
+            EnsembleTimerFactory.pushTimerToFinishedState(fixture.ensembleTimer());
 
             fixture.ensembleTimer().rotateRoles();
 
@@ -190,11 +190,5 @@ class EnsembleTimerTest {
                                        EnsembleTimer ensembleTimer) {
         }
 
-        private void pushTimerToFinishedState(EnsembleTimer ensembleTimer) {
-            Instant timerStartedAt = Instant.now();
-            ensembleTimer.startTimerAt(timerStartedAt);
-            Instant timerFinishedAt = timerStartedAt.plus(Duration.ofMinutes(4));
-            ensembleTimer.tick(timerFinishedAt);
-        }
     }
 }

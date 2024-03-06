@@ -1,5 +1,7 @@
 package com.jitterted.mobreg.domain;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -49,6 +51,7 @@ public class EnsembleTimer {
         return ensembleName;
     }
 
+    @NotNull
     public TimerState state() {
         return currentState;
     }
