@@ -10,13 +10,13 @@ public class TimerToHtmlTransformer {
         double percentRemaining = timeRemaining.percent();
         return """
                 <div id="timer-container"
-                     class="circle"
+                     class="circle circle-running"
                      style="background: conic-gradient(lightgreen 0%% %f%%, black %f%% 100%%);">
                     <svg class="progress-ring">
                         <circle class="progress-circle"/>
                     </svg>
-                    <div class="timer-circle">
-                       <div id="timer" class="font-bold">%d:%02d</div>
+                    <div class="timer-text-container timer-running">
+                        <div class="timer-text">%d:%02d</div>
                     </div>
                 </div>
                 """.formatted(percentRemaining, percentRemaining,

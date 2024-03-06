@@ -38,11 +38,19 @@
             width: 200px;
             height: 200px;
             border-radius: 50%;
-            border: 4px solid darkgreen;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+        }
+
+        .circle-running {
+            border: 4px solid darkgreen;
+        }
+
+        .circle-finished {
+            border: 4px solid #E91E63;
+            background: pink;
         }
 
         .progress-ring {
@@ -58,11 +66,10 @@
             stroke-width: 20;
         }
 
-        .timer-circle {
+        .timer-text-container {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: darkgreen;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -70,10 +77,22 @@
             z-index: 2;
         }
 
-        #timer {
-            z-index: 3;
+        .timer-finished {
+            background: pink;
+            color: black;
+            font-size: 4rem;
+            padding-bottom: .75rem;
+        }
+
+        .timer-running {
+            background: darkgreen;
             color: white;
             font-size: 2.5rem;
+        }
+
+        .timer-text {
+            z-index: 3;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -89,14 +108,22 @@
             hx-swap-oob="innerHtml"
     >
         <div id="timer-container"
-             class="circle" style="background: conic-gradient(lightgreen 0% 100%, black 100% 100%);">
+             class="circle circle-running"
+             style="background: conic-gradient(lightgreen 0% 90%, black 90% 100%);">
             <svg class="progress-ring">
                 <circle class="progress-circle"/>
             </svg>
-            <div class="timer-circle">
-                <div id="timer" class="font-bold">4:00</div>
+            <div class="timer-text-container timer-running">
+                <div class="timer-text">3:45</div>
             </div>
         </div>
+<!--  Timer when finished      -->
+<!--        <div id="timer-container"-->
+<!--             class="circle circle-finished">-->
+<!--            <div class="timer-text-container timer-finished">-->
+<!--                <div class="timer-text">next</div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
     <div class="mt-2">
 <!--                th:hx-headers="'{' + ${_csrf.parameterName} + ': ' + ${_csrf.token} + '}'" -->
