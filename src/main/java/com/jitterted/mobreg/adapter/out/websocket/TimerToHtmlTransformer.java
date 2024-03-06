@@ -56,6 +56,9 @@ public class TimerToHtmlTransformer {
     // language=html
     private static String htmlForFinished() {
         return """
+               <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
+                    Next Rotation
+               </swap-container>
                <div id="timer-container"
                     class="circle circle-finished">
                    <div class="timer-text-container timer-finished">

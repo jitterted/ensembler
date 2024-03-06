@@ -47,7 +47,7 @@ class TimerToHtmlTransformerTest {
                 .isEqualTo("""    
                            <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
                                 Pause Timer
-                           </swap-container>                        
+                           </swap-container>
                            <div id="timer-container"
                                 class="circle circle-running"
                                 style="background: conic-gradient(lightgreen 0% 87.500000%, black 87.500000% 100%);">
@@ -70,6 +70,9 @@ class TimerToHtmlTransformerTest {
 
         assertThat(timerHtml)
                 .isEqualTo("""
+                           <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
+                                Next Rotation
+                           </swap-container>
                            <div id="timer-container"
                                 class="circle circle-finished">
                                <div class="timer-text-container timer-finished">
