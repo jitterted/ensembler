@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.adapter.out.websocket;
 
+import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.EnsembleTimerFactory;
 import org.junit.jupiter.api.Test;
@@ -12,15 +13,19 @@ class TimerToHtmlTransformerTest {
 
     @Test
     void waitingToStartTimerHtmlIsCorrect() {
-        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
+        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDurationAndIdOf(EnsembleId.of(57));
 
         String timerHtml = TimerToHtmlTransformer.htmlFor(ensembleTimer);
 
         assertThat(timerHtml)
                 .isEqualTo("""
-                           <swap-container id='timer-control-button' hx-swap-oob='innerHTML'>
+                           <button id="timer-control-button"
+                                    hx-swap-oob="outerHTML"
+                                    hx-swap="none"
+                                    hx-post="/admin/start-timer/57"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Start Timer
-                           </swap-container>
+                           </button>
                            <div id="timer-container"
                                 class="circle circle-running"
                                 style="background: conic-gradient(lightgreen 0% 100.000000%, black 100.000000% 100%);">

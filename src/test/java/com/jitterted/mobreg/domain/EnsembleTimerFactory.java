@@ -21,7 +21,11 @@ public class EnsembleTimerFactory {
     }
 
     public static EnsembleTimer createTimerWith4MinuteDuration() {
-        return new EnsembleTimer(IRRELEVANT_ENSEMBLE_ID,
+        return createTimerWith4MinuteDurationAndIdOf(IRRELEVANT_ENSEMBLE_ID);
+    }
+
+    public static EnsembleTimer createTimerWith4MinuteDurationAndIdOf(EnsembleId ensembleId) {
+        return new EnsembleTimer(ensembleId,
                                  IRRELEVANT_NAME,
                                  List.of(IRRELEVANT_MEMBER_ID1, IRRELEVANT_MEMBER_ID2, IRRELEVANT_MEMBER_ID3),
                                  Duration.ofMinutes(4));
