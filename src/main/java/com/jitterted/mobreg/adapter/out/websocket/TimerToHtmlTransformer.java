@@ -16,7 +16,7 @@ public class TimerToHtmlTransformer {
     // language=html
     private static String htmlForWaitingToStart(EnsembleTimer ensembleTimer) {
         return """
-               <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
+               <swap-container id='timer-control-button' hx-swap-oob='innerHTML'>
                     Start Timer
                </swap-container>
                """
@@ -26,7 +26,7 @@ public class TimerToHtmlTransformer {
     // language=html
     private static String htmlForRunning(EnsembleTimer ensembleTimer) {
         return """
-               <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
+               <swap-container id='timer-control-button' hx-swap-oob='innerHTML'>
                     Pause Timer
                </swap-container>
                """
@@ -56,7 +56,7 @@ public class TimerToHtmlTransformer {
     // language=html
     private static String htmlForFinished() {
         return """
-               <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
+               <swap-container id='timer-control-button' hx-swap-oob='innerHTML'>
                     Next Rotation
                </swap-container>
                <div id="timer-container"

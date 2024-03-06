@@ -18,7 +18,7 @@ class TimerToHtmlTransformerTest {
 
         assertThat(timerHtml)
                 .isEqualTo("""
-                           <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
+                           <swap-container id='timer-control-button' hx-swap-oob='innerHTML'>
                                 Start Timer
                            </swap-container>
                            <div id="timer-container"
@@ -45,7 +45,7 @@ class TimerToHtmlTransformerTest {
 
         assertThat(timerHtml)
                 .isEqualTo("""    
-                           <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
+                           <swap-container id='timer-control-button' hx-swap-oob='innerHTML'>
                                 Pause Timer
                            </swap-container>
                            <div id="timer-container"
@@ -70,7 +70,7 @@ class TimerToHtmlTransformerTest {
 
         assertThat(timerHtml)
                 .isEqualTo("""
-                           <swap-container id='timer-control-button' hx-swap-oob='innerHtml'>
+                           <swap-container id='timer-control-button' hx-swap-oob='innerHTML'>
                                 Next Rotation
                            </swap-container>
                            <div id="timer-container"
