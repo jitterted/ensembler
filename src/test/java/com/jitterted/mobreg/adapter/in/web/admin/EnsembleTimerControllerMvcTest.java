@@ -42,8 +42,7 @@ class EnsembleTimerControllerMvcTest {
 
     @Test
     void getForTimerViewEndpointReturns200OK() throws Exception {
-        createAndSaveEnsembleInRepositoryForId(113);
-        mockMvc.perform(post("/admin/timer-view/113").with(csrf()));
+        createAndStartTimerForEnsembleWithId(113);
 
         mockMvc.perform(get("/admin/timer-view/113"))
                .andExpect(status().isOk());
@@ -51,12 +50,24 @@ class EnsembleTimerControllerMvcTest {
 
     @Test
     void postToStartTimerEndpointReturns204NoContent() throws Exception {
-        createAndSaveEnsembleInRepositoryForId(113);
-        mockMvc.perform(post("/admin/timer-view/113").with(csrf()));
+        createAndStartTimerForEnsembleWithId(113);
 
         mockMvc.perform(post("/admin/start-timer/113")
                                 .with(csrf()))
                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void postToNextRotationEndpointReturns204NoContent() throws Exception {
+        createAndStartTimerForEnsembleWithId(375);
+
+        mockMvc.perform(post("/admin/rotate-timer/375").with(csrf()))
+                .andExpect(status().isNoContent());
+    }
+
+    private void createAndStartTimerForEnsembleWithId(int ensembleId) throws Exception {
+        createAndSaveEnsembleInRepositoryForId(ensembleId);
+        mockMvc.perform(post("/admin/timer-view/113").with(csrf()));
     }
 
     private void createAndSaveEnsembleInRepositoryForId(long ensembleId) {

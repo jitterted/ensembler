@@ -30,12 +30,6 @@ public class EnsembleTimerController {
         this.memberRepository = memberRepository;
     }
 
-    @PostMapping("/timer-view/{ensembleId}")
-    public String createTimerView(@PathVariable("ensembleId") Long id) {
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(id));
-        return "redirect:/admin/timer-view/" + id;
-    }
-
     @GetMapping("/timer-view/{ensembleId}")
     public String viewTimer(@PathVariable("ensembleId") Long id, Model model) {
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(id));
@@ -45,9 +39,20 @@ public class EnsembleTimerController {
         return "ensemble-timer";
     }
 
+    @PostMapping("/timer-view/{ensembleId}")
+    public String createTimerView(@PathVariable("ensembleId") Long id) {
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(id));
+        return "redirect:/admin/timer-view/" + id;
+    }
+
     @PostMapping("/start-timer/{ensembleId}")
     public ResponseEntity<Void> startTimer(@PathVariable("ensembleId") Long id) {
         ensembleTimerHolder.startTimerFor(EnsembleId.of(id), Instant.now());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/rotate-timer/{ensembleId}")
+    public ResponseEntity<Void> rotateTimer(@PathVariable("ensembleId") Long id) {
         return ResponseEntity.noContent().build();
     }
 

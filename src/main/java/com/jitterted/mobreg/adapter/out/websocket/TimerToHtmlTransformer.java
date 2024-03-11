@@ -7,9 +7,9 @@ public class TimerToHtmlTransformer {
 
     public static String htmlFor(EnsembleTimer ensembleTimer) {
         return switch (ensembleTimer.state()) {
-            case FINISHED -> htmlForFinished();
             case WAITING_TO_START -> htmlForWaitingToStart(ensembleTimer);
             case RUNNING -> htmlForRunning(ensembleTimer);
+            case FINISHED -> htmlForFinished(ensembleTimer);
         };
     }
 
@@ -17,11 +17,11 @@ public class TimerToHtmlTransformer {
     private static String htmlForWaitingToStart(EnsembleTimer ensembleTimer) {
         return """
                <button id="timer-control-button"
-                        hx-swap-oob="outerHTML"
-                        hx-swap="none"
-                        hx-post="/admin/start-timer/%s"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Start Timer
+                       hx-swap-oob="outerHTML"
+                       hx-swap="none"
+                       hx-post="/admin/start-timer/%s"
+                       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                   Start Timer
                </button>
                """.formatted(ensembleTimer.ensembleId().id())
                 + htmlForTimerContainer(ensembleTimer);
@@ -58,11 +58,18 @@ public class TimerToHtmlTransformer {
     }
 
     // language=html
-    private static String htmlForFinished() {
+    private static String htmlForFinished(EnsembleTimer ensembleTimer) {
         return """
-               <swap-container id='timer-control-button' hx-swap-oob='innerHTML'>
-                    Next Rotation
-               </swap-container>
+               <button id="timer-control-button"
+                       hx-swap-oob="outerHTML"
+                       hx-swap="none"
+                       hx-post="/admin/rotate-timer/%s"
+                       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                   Next Rotation
+               </button>
+               """.formatted(ensembleTimer.ensembleId().id())
+               +
+               """ 
                <div id="timer-container"
                     class="circle circle-finished">
                    <div class="timer-text-container timer-finished">
