@@ -40,7 +40,7 @@ public class EnsembleTimerFactory {
     public static void pushTimerToFinishedState(EnsembleTimer ensembleTimer) {
         Instant timerStartedAt = Instant.now();
         ensembleTimer.startTimerAt(timerStartedAt);
-        Instant timerFinishedAt = timerStartedAt.plus(Duration.ofMinutes(4));
+        Instant timerFinishedAt = timerStartedAt.plus(EnsembleTimer.DEFAULT_TIMER_DURATION);
         ensembleTimer.tick(timerFinishedAt);
     }
 

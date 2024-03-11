@@ -88,6 +88,13 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
         }
     }
 
+    public void rotateTimerFor(EnsembleId ensembleId) {
+        EnsembleTimer ensembleTimer = timerFor(ensembleId);
+        ensembleTimer.rotateRoles();
+
+        broadcaster.sendCurrentTimer(ensembleTimer);
+    }
+
     static class SingleEntryHashMap<K, V> extends HashMap<K, V> {
         @Override
         public V put(K key, V value) {

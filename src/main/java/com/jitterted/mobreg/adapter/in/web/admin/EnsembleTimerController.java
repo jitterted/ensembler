@@ -53,6 +53,7 @@ public class EnsembleTimerController {
 
     @PostMapping("/rotate-timer/{ensembleId}")
     public ResponseEntity<Void> rotateTimer(@PathVariable("ensembleId") Long id) {
+        ensembleTimerHolder.rotateTimerFor(EnsembleId.of(id));
         return ResponseEntity.noContent().build();
     }
 

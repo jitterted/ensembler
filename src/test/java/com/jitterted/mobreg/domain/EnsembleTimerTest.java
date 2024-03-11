@@ -13,9 +13,9 @@ import static org.assertj.core.api.Assertions.*;
 class EnsembleTimerTest {
 
     @Nested
-    class TimerStates {
+    class TimerState {
         @Test
-        void newTimerIsWaitingToStartHasFullTimeRemaining() {
+        void isWaitingToStartHasFullTimeRemainingForNewTimer() {
             EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
 
             assertThat(ensembleTimer.state())
@@ -98,6 +98,16 @@ class EnsembleTimerTest {
                     .isEqualTo(new TimeRemaining(0, 0, 0));
         }
 
+        @Test
+        public void isWaitingToStartWhenRotateFinishedTimer() {
+            EnsembleTimerFactory.Fixture fixture = EnsembleTimerFactory.create4MinuteTimerInFinishedState();
+
+            fixture.ensembleTimer().rotateRoles();
+
+            assertThat(fixture.ensembleTimer().state())
+                    .isEqualByComparingTo(EnsembleTimer.TimerState.WAITING_TO_START);
+        }
+
     }
 
     @Nested
@@ -134,6 +144,11 @@ class EnsembleTimerTest {
                     .isThrownBy(() -> fixture.ensembleTimer().tick(finishedAtPlus20Millis))
                     .withMessage("Tick received at %s after Timer already Finished at %s."
                                          .formatted(finishedAtPlus20Millis, finishedAt));
+        }
+
+        @Test
+        public void rotateTimerWhenTimerNotFinishedThrowsException() throws Exception {
+            fail("TBD");
         }
 
     }

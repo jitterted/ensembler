@@ -105,6 +105,7 @@ public class EnsembleTimer {
 
     public void rotateRoles() {
         rotation.rotate();
+        currentState = TimerState.WAITING_TO_START;
     }
 
     public enum TimerState {

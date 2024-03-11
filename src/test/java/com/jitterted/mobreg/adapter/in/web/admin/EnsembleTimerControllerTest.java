@@ -7,6 +7,9 @@ import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
+import com.jitterted.mobreg.domain.EnsembleTimer;
+import com.jitterted.mobreg.domain.EnsembleTimerFactory;
+import com.jitterted.mobreg.domain.MemberId;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -19,8 +22,8 @@ class EnsembleTimerControllerTest {
     @Test
     void createAndRedirectToTimerSessionForSpecificEnsemble() {
         Ensemble ensemble = new EnsembleBuilder().id(87)
-                .startsNow()
-                .build();
+                                                 .startsNow()
+                                                 .build();
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
                 .withThreeParticipants();
@@ -77,5 +80,25 @@ class EnsembleTimerControllerTest {
 
         assertThat(ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(279L)))
                 .isTrue();
+    }
+
+    @Test
+    public void rotateTimerRotatesParticipantsForFinishedEnsembleTimer() throws Exception {
+        Ensemble ensemble = new EnsembleBuilder().id(279)
+                                                 .startsNow()
+                                                 .build();
+        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                .saveEnsemble(ensemble)
+                .withThreeParticipants();
+        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
+        EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(279));
+        MemberId nextDriverBeforeRotation = ensembleTimer.rotation().nextDriver();
+        EnsembleTimerFactory.pushTimerToFinishedState(ensembleTimer);
+        EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
+
+        ensembleTimerController.rotateTimer(279L);
+
+        assertThat(ensembleTimer.rotation().driver())
+                .isEqualTo(nextDriverBeforeRotation);
     }
 }

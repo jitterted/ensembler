@@ -15,6 +15,7 @@ import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.MemberId;
 import com.jitterted.mobreg.domain.TimeRemaining;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -74,9 +75,9 @@ public class EnsembleTimerHolderTest {
             fixture.ensembleTimerHolder().startTimerFor(EnsembleId.of(63), timerStartedAt);
 
             fixture.ensembleTimerHolder().handleTickFor(EnsembleId.of(63),
-                                              timerStartedAt
-                                                      .plus(EnsembleTimer.DEFAULT_TIMER_DURATION)
-                                                      .minusSeconds(1));
+                                                        timerStartedAt
+                                                                .plus(EnsembleTimer.DEFAULT_TIMER_DURATION)
+                                                                .minusSeconds(1));
 
             fixture.mockSecondsTicker().verifyStopNotCalled();
         }
@@ -88,8 +89,8 @@ public class EnsembleTimerHolderTest {
             fixture.ensembleTimerHolder().startTimerFor(EnsembleId.of(235), timerStartedAt);
 
             fixture.ensembleTimerHolder().handleTickFor(EnsembleId.of(235),
-                                              timerStartedAt
-                                                      .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
+                                                        timerStartedAt
+                                                                .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
 
             fixture.mockSecondsTicker().verifyStartThenStopWasCalledFor(235);
         }
@@ -107,7 +108,9 @@ public class EnsembleTimerHolderTest {
             return new TimerFixture(mockSecondsTicker, ensembleTimerHolder, ensembleTimer);
         }
 
-        private record TimerFixture(MockSecondsTicker mockSecondsTicker, EnsembleTimerHolder ensembleTimerHolder, EnsembleTimer ensembleTimer) {
+        private record TimerFixture(MockSecondsTicker mockSecondsTicker,
+                                    EnsembleTimerHolder ensembleTimerHolder,
+                                    EnsembleTimer ensembleTimer) {
         }
 
     }
@@ -143,7 +146,6 @@ public class EnsembleTimerHolderTest {
                     .withMessage("No timer for Ensemble ID 333 exists.");
         }
 
-
     }
 
     @Nested
@@ -177,23 +179,107 @@ public class EnsembleTimerHolderTest {
 
         @Test
         void onTimerCreationBroadcastsTimerWaitingToStart() {
-            TimeRemaining expectedTimeRemaining = new TimeRemaining(4, 0, 100);
-            Ensemble ensemble = new EnsembleBuilder().id(475)
+            BroadcastFixture broadcastFixture = createBroadcastFixture(475,
+                                                                       EnsembleTimer.TimerState.WAITING_TO_START,
+                                                                       new TimeRemaining(4, 0, 100));
+
+            broadcastFixture.ensembleTimerHolder().createTimerFor(EnsembleId.of(475));
+
+            broadcastFixture.mockBroadcaster().verifyTimerStateSent();
+        }
+
+        @Test
+        void finishedTimerOnRotateThenTimerMovesToWaitingToStart() {
+            BroadcastFixture broadcastFixture = createBroadcastFixture(
+                    873,
+                    EnsembleTimer.TimerState.WAITING_TO_START,
+                    new TimeRemaining(4, 0, 100));
+            EnsembleTimer ensembleTimer = broadcastFixture.ensembleTimerHolder()
+                                                          .timerFor(EnsembleId.of(873));
+            ensembleTimer.tick(broadcastFixture.timerStartedAt()
+                                               .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
+
+            broadcastFixture.ensembleTimerHolder().rotateTimerFor(EnsembleId.of(873));
+
+            broadcastFixture.mockBroadcaster().verifyTimerStateSent();
+        }
+
+        @Test
+        @Disabled("TODO")
+            // @TODO: composite interface of Test and Disabled with Reason
+        void onEnsembleEndedRemoveAssociatedTimer() {
+
+        }
+
+        // -- FIXTURE SETUP
+
+        private BroadcastFixture createBroadcastFixture(int ensembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
+            Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
                                                      .startsNow()
                                                      .build();
             TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                     .saveEnsemble(ensemble)
                     .withThreeParticipants();
-            MockBroadcaster mockBroadcaster = new MockBroadcaster(475, EnsembleTimer.TimerState.WAITING_TO_START, expectedTimeRemaining);
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(), mockBroadcaster, new DoNothingSecondsTicker());
-
-            ensembleTimerHolder.createTimerFor(EnsembleId.of(475));
-
-            mockBroadcaster.verifyTimerStateSent();
+            MockBroadcaster mockBroadcaster = new MockBroadcaster(ensembleId, expectedTimerState, expectedTimeRemaining);
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(),
+                                                                              mockBroadcaster,
+                                                                              new DoNothingSecondsTicker());
+            ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
+            Instant timerStartedAt = Instant.now();
+            ensembleTimerHolder.startTimerFor(EnsembleId.of(ensembleId), timerStartedAt);
+            mockBroadcaster.reset();
+            return new BroadcastFixture(mockBroadcaster, ensembleTimerHolder, timerStartedAt);
         }
 
-        void onEnsembleEndedRemoveAssociatedTimer() {
+        private record BroadcastFixture(MockBroadcaster mockBroadcaster,
+                                        EnsembleTimerHolder ensembleTimerHolder,
+                                        Instant timerStartedAt) {
+        }
 
+        private static class MockBroadcaster implements Broadcaster {
+            private boolean wasCalled;
+            private final int expectedEnsembleId;
+            private final EnsembleTimer.TimerState expectedTimerState;
+            private final TimeRemaining expectedTimeRemaining;
+            private EnsembleTimer.TimerState lastState;
+            private EnsembleId lastEnsembleId;
+            private TimeRemaining lastTimeRemaining;
+
+            public MockBroadcaster(int expectedEnsembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
+                this.expectedEnsembleId = expectedEnsembleId;
+                this.expectedTimerState = expectedTimerState;
+                this.expectedTimeRemaining = expectedTimeRemaining;
+            }
+
+            @Override
+            public void sendCurrentTimer(EnsembleTimer ensembleTimer) {
+                wasCalled = true;
+                lastState = ensembleTimer.state();
+                lastEnsembleId = ensembleTimer.ensembleId();
+                lastTimeRemaining = ensembleTimer.timeRemaining();
+            }
+
+            void reset() {
+                wasCalled = false;
+                lastState = null;
+                lastEnsembleId = null;
+                lastTimeRemaining = null;
+            }
+
+            private void verifyTimerStateSent() {
+                assertThat(wasCalled)
+                        .as("Expected sendCurrentTimer() to have been called on the Broadcaster")
+                        .isTrue();
+                assertAll(
+                        "Timer State",
+                        () -> assertThat(lastState)
+                                .isEqualByComparingTo(expectedTimerState),
+                        () -> assertThat(lastEnsembleId)
+                                .isEqualTo(EnsembleId.of(expectedEnsembleId)),
+                        () -> assertThat(lastTimeRemaining)
+                                .isEqualTo(expectedTimeRemaining)
+                );
+            }
         }
     }
 
@@ -222,66 +308,6 @@ public class EnsembleTimerHolderTest {
     private record Fixture(EnsembleRepository ensembleRepository, List<MemberId> participants) {
     }
 
-
-    private BroadcastFixture createBroadcastFixture(int ensembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
-        Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
-                                                 .startsNow()
-                                                 .build();
-        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
-                .saveEnsemble(ensemble)
-                .withThreeParticipants();
-        MockBroadcaster mockBroadcaster = new MockBroadcaster(ensembleId, expectedTimerState, expectedTimeRemaining);
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(),
-                                                                          mockBroadcaster, new DoNothingSecondsTicker());
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
-        Instant timerStartedAt = Instant.now();
-        ensembleTimerHolder.startTimerFor(EnsembleId.of(ensembleId), timerStartedAt);
-        return new BroadcastFixture(mockBroadcaster, ensembleTimerHolder, timerStartedAt);
-    }
-
-    private record BroadcastFixture(MockBroadcaster mockBroadcaster,
-                                    EnsembleTimerHolder ensembleTimerHolder, Instant timerStartedAt) {
-    }
-
-
-    private static class MockBroadcaster implements Broadcaster {
-        private boolean wasCalled;
-        private final int expectedEnsembleId;
-        private final EnsembleTimer.TimerState expectedTimerState;
-        private final TimeRemaining expectedTimeRemaining;
-        private EnsembleTimer.TimerState lastState;
-        private EnsembleId lastEnsembleId;
-        private TimeRemaining lastTimeRemaining;
-
-        public MockBroadcaster(int expectedEnsembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
-            this.expectedEnsembleId = expectedEnsembleId;
-            this.expectedTimerState = expectedTimerState;
-            this.expectedTimeRemaining = expectedTimeRemaining;
-        }
-
-        @Override
-        public void sendCurrentTimer(EnsembleTimer ensembleTimer) {
-            wasCalled = true;
-            lastState = ensembleTimer.state();
-            lastEnsembleId = ensembleTimer.ensembleId();
-            lastTimeRemaining = ensembleTimer.timeRemaining();
-        }
-
-        private void verifyTimerStateSent() {
-            assertThat(wasCalled)
-                    .as("Expected sendCurrentTimer() to have been called on the Broadcaster")
-                    .isTrue();
-            assertAll(
-                    "Timer State",
-                    () -> assertThat(lastState)
-                            .isEqualByComparingTo(expectedTimerState),
-                    () -> assertThat(lastEnsembleId)
-                            .isEqualTo(EnsembleId.of(expectedEnsembleId)),
-                    () -> assertThat(lastTimeRemaining)
-                            .isEqualTo(expectedTimeRemaining)
-            );
-        }
-    }
 
     static class MockSecondsTicker implements SecondsTicker {
         private boolean startWasCalled;
