@@ -82,10 +82,10 @@ public class EnsembleTimer {
         switch (currentState) {
             case FINISHED ->
                     throw new IllegalStateException("Tick received at %s after Timer already Finished at %s."
-                            .formatted(now, timerEnd));
+                                                            .formatted(now, timerEnd));
             case WAITING_TO_START ->
                     throw new IllegalStateException("Timer is Waiting to Start, but Tick was received at %s."
-                            .formatted(now));
+                                                            .formatted(now));
         }
     }
 
@@ -104,8 +104,16 @@ public class EnsembleTimer {
     }
 
     public void rotateRoles() {
+        requireFinished();
         rotation.rotate();
         currentState = TimerState.WAITING_TO_START;
+    }
+
+    private void requireFinished() {
+        if (currentState == TimerState.WAITING_TO_START
+                || currentState == TimerState.RUNNING) {
+            throw new IllegalStateException("Can't Rotate when timer state is %s".formatted(currentState));
+        }
     }
 
     public enum TimerState {

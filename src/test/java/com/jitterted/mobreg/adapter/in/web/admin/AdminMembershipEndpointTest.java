@@ -37,11 +37,10 @@ class AdminMembershipEndpointTest {
                .andExpect(status().isOk());
     }
 
-    @Disabled // need to post valid information
+    @Disabled("need to post valid information")
     @Test
     void postToAddMemberRedirects() throws Exception {
-        mockMvc.perform(post("/admin/add-member")
-                                .with(csrf()))
+        mockMvc.perform(post("/admin/add-member").with(csrf()))
                .andExpect(status().is3xxRedirection());
     }
 

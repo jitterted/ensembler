@@ -25,7 +25,7 @@ class EnsembleTimerTest {
         }
 
         @Test
-        void startedTimerIsRunning() {
+        void isRunningWhenTimerStarted() {
             EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
 
             ensembleTimer.startTimerAt(Instant.now());
@@ -147,8 +147,22 @@ class EnsembleTimerTest {
         }
 
         @Test
-        public void rotateTimerWhenTimerNotFinishedThrowsException() throws Exception {
-            fail("TBD");
+        public void rotateTimerWhenTimerNotStartedThrowsException() {
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
+
+            assertThatIllegalStateException()
+                    .isThrownBy(ensembleTimer::rotateRoles)
+                    .withMessage("Can't Rotate when timer state is WAITING_TO_START");
+        }
+
+        @Test
+        public void rotateTimerWhenTimerRunningThrowsException() {
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
+            ensembleTimer.startTimerAt(Instant.now());
+
+            assertThatIllegalStateException()
+                    .isThrownBy(ensembleTimer::rotateRoles)
+                    .withMessage("Can't Rotate when timer state is RUNNING");
         }
 
     }

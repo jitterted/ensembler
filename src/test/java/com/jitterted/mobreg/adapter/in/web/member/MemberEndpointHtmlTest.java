@@ -40,7 +40,7 @@ import org.springframework.web.servlet.support.RequestDataValueProcessor;
 
 import java.util.List;
 
-@Disabled
+@Disabled("Waiting for HtmlUnit to be updated from Spring")
 @WebMvcTest(controllers = MemberController.class,
         excludeAutoConfiguration = {SecurityAutoConfiguration.class,
                 SecurityFilterAutoConfiguration.class,
