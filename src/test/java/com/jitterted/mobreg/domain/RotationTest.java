@@ -27,6 +27,36 @@ class RotationTest {
     }
 
     @Test
+    void whenEnsembleSizeOfThreeRestOfParticipantsReturnsEmptyList() {
+        MemberId nextDriverId = MemberId.of(1L);
+        MemberId driverId = MemberId.of(2L);
+        MemberId navigatorId = MemberId.of(3L);
+
+        Rotation rotation = new Rotation(List.of(nextDriverId,
+                                                 driverId,
+                                                 navigatorId));
+
+        assertThat(rotation.restOfParticipants())
+                .isEmpty();
+    }
+
+    @Test
+    void whenEnsembleSizeOfFourRestOfParticipantsReturnsOneParticipant() {
+        MemberId nextDriverId = MemberId.of(1L);
+        MemberId driverId = MemberId.of(2L);
+        MemberId navigatorId = MemberId.of(3L);
+        MemberId participantId = MemberId.of(4L);
+
+        Rotation rotation = new Rotation(List.of(nextDriverId,
+                                                 driverId,
+                                                 navigatorId,
+                                                 participantId));
+
+        assertThat(rotation.restOfParticipants())
+                .containsExactly(participantId);
+    }
+
+    @Test
     void rotationThrowsExceptionIfFewerThan3Participants() {
         assertThatExceptionOfType(NotEnoughParticipants.class)
                 .isThrownBy(RotationTest::createRotationWithTwoParticipants)

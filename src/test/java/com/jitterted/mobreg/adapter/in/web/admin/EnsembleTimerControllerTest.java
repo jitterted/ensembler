@@ -10,13 +10,16 @@ import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.EnsembleTimerFactory;
 import com.jitterted.mobreg.domain.MemberId;
-import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.*;
 
+@SuppressWarnings("unchecked")
 class EnsembleTimerControllerTest {
 
     @Test
@@ -57,9 +60,12 @@ class EnsembleTimerControllerTest {
         assertThat(viewName)
                 .isEqualTo("ensemble-timer");
         assertThat(model.asMap())
-                .containsEntry("ensembleName", "Dolphin Ensemble")
-                .extractingByKey("participantNames", InstanceOfAssertFactories.list(String.class))
-                .containsExactlyInAnyOrder("Jane", "Sally", "Paul");
+                .containsEntry("ensembleName", "Dolphin Ensemble");
+        assertThat((Map<String, List<String>>) model.getAttribute("rolesToNames"))
+                .containsExactlyInAnyOrderEntriesOf(
+                        ParticipantsTransformer.participantsToRolesAndNames(
+                                builder.memberRepository(),
+                                ensembleTimerHolder.timerFor(EnsembleId.of(153))));
         assertThat(ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(153L)))
                 .isFalse();
     }

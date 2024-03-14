@@ -4,7 +4,6 @@ import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
-import com.jitterted.mobreg.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -35,7 +32,7 @@ public class EnsembleTimerController {
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(id));
         model.addAttribute("ensembleId", id);
         model.addAttribute("ensembleName", ensembleTimer.ensembleName());
-        model.addAttribute("participantNames", firstNamesOfParticipantsIn(ensembleTimer));
+        model.addAttribute("rolesToNames", ParticipantsTransformer.participantsToRolesAndNames(memberRepository, ensembleTimer));
         return "ensemble-timer";
     }
 
@@ -57,11 +54,4 @@ public class EnsembleTimerController {
         return ResponseEntity.noContent().build();
     }
 
-    private List<String> firstNamesOfParticipantsIn(EnsembleTimer ensembleTimer) {
-        return ensembleTimer.participants()
-                            .map(memberRepository::findById)
-                            .flatMap(Optional::stream)
-                            .map(Member::firstName)
-                            .toList();
-    }
 }

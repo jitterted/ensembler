@@ -134,9 +134,14 @@
         </button>
     </div>
 </div>
-<div id="participants-container">
-    <h1 class="font-bold text-sm text-gray-600 uppercase">Participants</h1>
-    <p th:each="participantName: ${participantNames}" th:text="${participantName}">Jane Participant</p>
+<div id="participants-container" class="grid grid-cols-5 gap-4 auto-rows-min">
+    <h1 class="col-span-5 font-bold text-xl text-gray-600 uppercase">Participants</h1>
+    <th:block th:each="roleToName: ${rolesToNames}">
+        <div class="col-span-2 text-gray-600" th:text="${roleToName.getKey()}">Rotation Role</div>
+        <div class="col-span-3 font-bold">
+            <p th:each="name: ${roleToName.getValue()}" th:text="${name}">Jane Participant</p>
+        </div>
+    </th:block>
 </div>
 </body>
 </html>
