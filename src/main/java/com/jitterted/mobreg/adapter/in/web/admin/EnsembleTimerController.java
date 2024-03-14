@@ -32,7 +32,7 @@ public class EnsembleTimerController {
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(id));
         model.addAttribute("ensembleId", id);
         model.addAttribute("ensembleName", ensembleTimer.ensembleName());
-        model.addAttribute("rolesToNames", ParticipantsTransformer.participantsToRolesAndNames(memberRepository, ensembleTimer));
+        model.addAttribute("rolesToNames", ParticipantsTransformer.participantsToRolesAndNames(ensembleTimer));
         return "ensemble-timer";
     }
 

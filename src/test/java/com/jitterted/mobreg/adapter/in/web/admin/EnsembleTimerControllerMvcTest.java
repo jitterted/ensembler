@@ -4,6 +4,7 @@ import com.jitterted.mobreg.adapter.in.web.TestAdminConfiguration;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
+import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -35,6 +36,9 @@ class EnsembleTimerControllerMvcTest {
 
     @Autowired
     EnsembleRepository ensembleRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @Autowired
     EnsembleTimerHolder ensembleTimerHolder;
@@ -85,6 +89,7 @@ class EnsembleTimerControllerMvcTest {
                                                  .build();
         new TestEnsembleServiceBuilder()
                 .withEnsembleRepository(ensembleRepository)
+                .withMemberRepository(memberRepository)
                 .saveEnsemble(ensemble)
                 .withThreeParticipants();
     }

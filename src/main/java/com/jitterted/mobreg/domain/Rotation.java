@@ -7,33 +7,33 @@ import java.util.Objects;
 
 @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
 public class Rotation {
-    private final List<MemberId> participants;
+    private final List<Member> participants;
 
-    public Rotation(List<MemberId> participants) {
+    public Rotation(List<Member> participants) {
         requireThreeOrMoreParticipants(participants);
         this.participants = new ArrayList<>(participants);
     }
 
-    private void requireThreeOrMoreParticipants(List<MemberId> participants) {
+    private void requireThreeOrMoreParticipants(List<Member> participants) {
         if (participants.size() < 3) {
             throw new NotEnoughParticipants("%d is too few participants, requires minimum of 3 participants."
                                                     .formatted(participants.size()));
         }
     }
 
-    public MemberId nextDriver() {
+    public Member nextDriver() {
         return participants.get(0);
     }
 
-    public MemberId driver() {
+    public Member driver() {
         return participants.get(1);
     }
 
-    public MemberId navigator() {
+    public Member navigator() {
         return participants.get(2);
     }
 
-    public List<MemberId> restOfParticipants() {
+    public List<Member> restOfParticipants() {
         return participants.stream().skip(3).toList();
     }
 

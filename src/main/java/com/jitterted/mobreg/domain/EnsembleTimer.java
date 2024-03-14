@@ -13,7 +13,7 @@ public class EnsembleTimer {
 
     private final EnsembleId ensembleId;
     private final String ensembleName;
-    private final List<MemberId> participants;
+    private final List<Member> participants;
     private final Rotation rotation;
 
     private TimerState currentState;
@@ -23,27 +23,27 @@ public class EnsembleTimer {
 
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,
-                         List<MemberId> participants) {
+                         List<Member> participants) {
         this(ensembleId, ensembleName, participants, DEFAULT_TIMER_DURATION);
     }
 
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,
-                         List<MemberId> participants,
+                         List<Member> participants,
                          Duration timerDuration) {
         this.ensembleId = ensembleId;
         this.ensembleName = ensembleName;
         this.participants = participants;
         this.timerDuration = timerDuration;
         this.currentState = TimerState.WAITING_TO_START;
-        rotation = new Rotation(participants);
+        this.rotation = new Rotation(participants);
     }
 
     public EnsembleId ensembleId() {
         return ensembleId;
     }
 
-    public Stream<MemberId> participants() {
+    public Stream<Member> participants() {
         return participants.stream();
     }
 

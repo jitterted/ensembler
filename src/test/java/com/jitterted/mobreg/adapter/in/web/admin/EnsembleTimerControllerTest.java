@@ -9,7 +9,7 @@ import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.EnsembleTimerFactory;
-import com.jitterted.mobreg.domain.MemberId;
+import com.jitterted.mobreg.domain.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
@@ -30,7 +30,7 @@ class EnsembleTimerControllerTest {
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
                 .withThreeParticipants();
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
 
         String redirectPage = ensembleTimerController.createTimerView(87L);
@@ -49,7 +49,7 @@ class EnsembleTimerControllerTest {
                 .saveMemberAndAccept("Jane", "ghjane")
                 .saveMemberAndAccept("Paul", "ghpaul")
                 .saveMemberAndAccept("Sally", "ghsally");
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, builder.memberRepository());
         ensembleTimerController.createTimerView(153L);
 
@@ -64,7 +64,6 @@ class EnsembleTimerControllerTest {
         assertThat((Map<String, List<String>>) model.getAttribute("rolesToNames"))
                 .containsExactlyInAnyOrderEntriesOf(
                         ParticipantsTransformer.participantsToRolesAndNames(
-                                builder.memberRepository(),
                                 ensembleTimerHolder.timerFor(EnsembleId.of(153))));
         assertThat(ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(153L)))
                 .isFalse();
@@ -78,7 +77,7 @@ class EnsembleTimerControllerTest {
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
                 .withThreeParticipants();
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
         ensembleTimerController.createTimerView(279L);
 
@@ -96,9 +95,9 @@ class EnsembleTimerControllerTest {
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
                 .withThreeParticipants();
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
         EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(279));
-        MemberId nextDriverBeforeRotation = ensembleTimer.rotation().nextDriver();
+        Member nextDriverBeforeRotation = ensembleTimer.rotation().nextDriver();
         EnsembleTimerFactory.pushTimerToFinishedState(ensembleTimer);
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
 

@@ -175,8 +175,8 @@ class EnsembleTimerTest {
             RotationFixture fixture = createParticipantRotation();
 
             assertThat(fixture.ensembleTimer().rotation().driver())
-                    .as("Expected rotation.driver() to be " + fixture.driverId())
-                    .isEqualTo(fixture.driverId());
+                    .as("Expected rotation.driver() to be " + fixture.driver())
+                    .isEqualTo(fixture.driver());
         }
 
         @Test
@@ -187,7 +187,7 @@ class EnsembleTimerTest {
 
             assertThat(fixture.ensembleTimer().rotation().driver())
                     .as("rotate should not happen until we invoke #nextRound() explicitly")
-                    .isEqualTo(fixture.driverId());
+                    .isEqualTo(fixture.driver());
         }
 
         @Test
@@ -198,24 +198,31 @@ class EnsembleTimerTest {
             fixture.ensembleTimer().rotateRoles();
 
             assertThat(fixture.ensembleTimer().rotation().driver())
-                    .isEqualTo(fixture.nextDriverId());
+                    .isEqualTo(fixture.nextDriver());
         }
 
         private RotationFixture createParticipantRotation() {
-            MemberId nextDriverId = MemberId.of(1L);
-            MemberId driverId = MemberId.of(2L);
-            MemberId navigatorId = MemberId.of(3L);
-            MemberId participantId1 = MemberId.of(4L);
-            MemberId participantId2 = MemberId.of(5L);
+            Member nextDriver = MemberFactory.createMember(1, "One", "irrelevant");
+            Member driver = MemberFactory.createMember(2, "Two", "irrelevant");
+            Member navigator = MemberFactory.createMember(3, "Three", "irrelevant");
+            Member participant1 = MemberFactory.createMember(4, "Four", "irrelevant");
+            Member participant2 = MemberFactory.createMember(5, "Five", "irrelevant");
+
+            List<Member> allParticipants = List.of(nextDriver,
+                                                   driver,
+                                                   navigator,
+                                                   participant1,
+                                                   participant2);
+
             EnsembleTimer ensembleTimer = new EnsembleTimer(
                     EnsembleTimerFactory.IRRELEVANT_ENSEMBLE_ID,
                     EnsembleTimerFactory.IRRELEVANT_NAME,
-                    List.of(nextDriverId, driverId, navigatorId, participantId1, participantId2),
+                    allParticipants,
                     Duration.ofMinutes(4));
-            return new RotationFixture(driverId, nextDriverId, ensembleTimer);
+            return new RotationFixture(driver, nextDriver, ensembleTimer);
         }
 
-        private record RotationFixture(MemberId driverId, MemberId nextDriverId,
+        private record RotationFixture(Member driver, Member nextDriver,
                                        EnsembleTimer ensembleTimer) {
         }
 

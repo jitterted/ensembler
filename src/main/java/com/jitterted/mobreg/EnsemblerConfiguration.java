@@ -35,8 +35,9 @@ public class EnsemblerConfiguration {
     }
 
     @Bean
-    public EnsembleTimerHolder createEnsembleTimerHolder(EnsembleRepository ensembleRepository, Broadcaster broadcaster) {
+    public EnsembleTimerHolder createEnsembleTimerHolder(EnsembleRepository ensembleRepository, MemberRepository memberRepository, Broadcaster broadcaster) {
         return new EnsembleTimerHolder(ensembleRepository,
+                                       memberRepository,
                                        broadcaster,
                                        new ScheduledExecutorSecondsTicker());
     }

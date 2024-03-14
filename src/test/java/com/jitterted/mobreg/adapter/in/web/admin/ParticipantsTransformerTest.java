@@ -24,12 +24,11 @@ class ParticipantsTransformerTest {
                 .saveMemberAndAccept("Jane", "nextdriver")
                 .saveMemberAndAccept("Paul", "driver")
                 .saveMemberAndAccept("Sally", "navigator");
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
         ensembleTimerHolder.createTimerFor(EnsembleId.of(371));
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(371));
 
-        Map<String, List<String>> rolesToNames = ParticipantsTransformer.participantsToRolesAndNames(builder.memberRepository(),
-                                                                                                     ensembleTimer);
+        Map<String, List<String>> rolesToNames = ParticipantsTransformer.participantsToRolesAndNames(ensembleTimer);
 
         assertThat(rolesToNames)
                 .containsOnly(entry("Driver", List.of("Paul")),
@@ -49,12 +48,12 @@ class ParticipantsTransformerTest {
                 .saveMemberAndAccept("Sally", "navigator")
                 .saveMemberAndAccept("Sri", "sri_participant")
                 .saveMemberAndAccept("Jha", "jha_participant");
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
         ensembleTimerHolder.createTimerFor(EnsembleId.of(543));
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(543));
 
         Map<String, List<String>> rolesToNames = ParticipantsTransformer
-                .participantsToRolesAndNames(builder.memberRepository(), ensembleTimer);
+                .participantsToRolesAndNames(ensembleTimer);
 
         assertThat(rolesToNames)
                 .containsOnly(entry("Driver", List.of("Paul")),

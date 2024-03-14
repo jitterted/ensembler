@@ -57,9 +57,9 @@ public class TestAdminConfiguration {
     }
 
     @Bean
-    public EnsembleTimerHolder createEnsembleTimerHolder(EnsembleRepository ensembleRepository) {
+    public EnsembleTimerHolder createEnsembleTimerHolder(EnsembleRepository ensembleRepository, MemberRepository memberRepository) {
         // TODO: enable real broadcaster when feature is ready
-        return EnsembleTimerHolder.createNull(ensembleRepository);
+        return EnsembleTimerHolder.createNull(ensembleRepository, memberRepository);
     }
 
     // TODO: remove this once member registration works

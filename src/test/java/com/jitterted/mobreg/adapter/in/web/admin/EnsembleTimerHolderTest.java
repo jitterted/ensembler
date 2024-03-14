@@ -4,24 +4,24 @@ import com.jitterted.mobreg.application.DoNothingSecondsTicker;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.EnsembleTimerTickHandler;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
-import com.jitterted.mobreg.application.TestMemberBuilder;
 import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
+import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
+import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.application.port.SecondsTicker;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleBuilder;
+import com.jitterted.mobreg.domain.EnsembleFactory;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
-import com.jitterted.mobreg.domain.MemberId;
+import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.TimeRemaining;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -35,8 +35,9 @@ public class EnsembleTimerHolderTest {
     @Test
     void newTimerHolderHasNoTimerForId() {
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+        MemberRepository memberRepository = new InMemoryMemberRepository();
 
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(ensembleRepository, DUMMY_BROADCASTER, new DoNothingSecondsTicker());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(ensembleRepository, memberRepository);
 
         assertThat(ensembleTimerHolder.hasTimerFor(EnsembleId.of(62)))
                 .isFalse();
@@ -45,7 +46,7 @@ public class EnsembleTimerHolderTest {
     @Test
     void existingTimerIsReturnedWhenHolderHasTimerForSpecificEnsemble() {
         Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(63));
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository(), DUMMY_BROADCASTER, new DoNothingSecondsTicker());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(fixture.ensembleRepository(), fixture.memberRepository());
         EnsembleTimer createdEnsemblerTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(63));
 
         EnsembleTimer foundEnsembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(63));
@@ -103,7 +104,7 @@ public class EnsembleTimerHolderTest {
                     .saveEnsemble(ensemble)
                     .withThreeParticipants();
             MockSecondsTicker mockSecondsTicker = new MockSecondsTicker();
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(), DUMMY_BROADCASTER, mockSecondsTicker);
+            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(), builder.memberRepository(), DUMMY_BROADCASTER, mockSecondsTicker);
             EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
             return new TimerFixture(mockSecondsTicker, ensembleTimerHolder, ensembleTimer);
         }
@@ -121,7 +122,7 @@ public class EnsembleTimerHolderTest {
         @Test
         void whenNoTimerExistsForEnsembleExceptionIsThrown() {
             Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(77));
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(fixture.ensembleRepository(), DUMMY_BROADCASTER, new DoNothingSecondsTicker());
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(fixture.ensembleRepository(), fixture.memberRepository());
 
             assertThatIllegalStateException()
                     .isThrownBy(() -> ensembleTimerHolder.timerFor(EnsembleId.of(77)))
@@ -130,7 +131,7 @@ public class EnsembleTimerHolderTest {
 
         @Test
         void askingTimerStartedThrowsExceptionIfTimerDoesNotExistForEnsemble() {
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository(), DUMMY_BROADCASTER, new DoNothingSecondsTicker());
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(new InMemoryEnsembleRepository(), new InMemoryMemberRepository());
 
             assertThatIllegalArgumentException()
                     .isThrownBy(() -> ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(444)))
@@ -139,7 +140,7 @@ public class EnsembleTimerHolderTest {
 
         @Test
         void startTimerThrowsExceptionIfTimerDoesNotExistForEnsemble() {
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(new InMemoryEnsembleRepository(), DUMMY_BROADCASTER, new DoNothingSecondsTicker());
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(new InMemoryEnsembleRepository(), new InMemoryMemberRepository());
 
             assertThatIllegalArgumentException()
                     .isThrownBy(() -> ensembleTimerHolder.startTimerFor(EnsembleId.of(333), Instant.now()))
@@ -222,6 +223,7 @@ public class EnsembleTimerHolderTest {
                     .withThreeParticipants();
             MockBroadcaster mockBroadcaster = new MockBroadcaster(ensembleId, expectedTimerState, expectedTimeRemaining);
             EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(),
+                                                                              builder.memberRepository(),
                                                                               mockBroadcaster,
                                                                               new DoNothingSecondsTicker());
             ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
@@ -286,26 +288,21 @@ public class EnsembleTimerHolderTest {
     // ---- ENCAPSULATED SETUP
 
     private static Fixture createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId ensembleId) {
-        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-        Ensemble ensemble = new Ensemble("Current", ZonedDateTime.now());
-        ensemble.setId(ensembleId);
-        List<MemberId> participants = createMembersAndJoinAsParticipant(ensemble);
-        ensembleRepository.save(ensemble);
-        return new Fixture(ensembleRepository, participants);
+        Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdOf(ensembleId.id());
+        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                .saveEnsemble(ensemble)
+                .withThreeParticipants();
+        return new Fixture(builder.ensembleRepository(),
+                           builder.memberRepository(),
+                           ensemble.participants()
+                                   .map(memberId -> builder.memberRepository().findById(memberId).orElseThrow())
+                                   .toList()
+                           );
     }
 
-    private static List<MemberId> createMembersAndJoinAsParticipant(Ensemble ensemble) {
-        TestMemberBuilder testMemberBuilder = new TestMemberBuilder();
-        List<MemberId> participants = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            MemberId firstMemberId = testMemberBuilder.buildAndSave().getId();
-            ensemble.joinAsParticipant(firstMemberId);
-            participants.add(firstMemberId);
-        }
-        return participants;
-    }
-
-    private record Fixture(EnsembleRepository ensembleRepository, List<MemberId> participants) {
+    private record Fixture(EnsembleRepository ensembleRepository,
+                           MemberRepository memberRepository,
+                           List<Member> participants) {
     }
 
 

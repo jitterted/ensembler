@@ -13,28 +13,28 @@ class RotationTest {
         RotationFixture fixture = createFiveParticipantRotation();
 
         assertThat(fixture.rotation().nextDriver())
-                .isEqualTo(fixture.nextDriverId());
+                .isEqualTo(fixture.nextDriver());
         assertThat(fixture.rotation().driver())
-                .isEqualTo(fixture.driverId());
+                .isEqualTo(fixture.driver());
         assertThat(fixture.rotation().navigator())
-                .isEqualTo(fixture.navigatorId());
+                .isEqualTo(fixture.navigator());
         assertThat(fixture.rotation().restOfParticipants())
-                .containsExactly(fixture.participantId1(), fixture.participantId2());
+                .containsExactly(fixture.participant1(), fixture.participant2());
 
         // above is exactly the same as this:
         assertThat(fixture.rotation().restOfParticipants())
-                .containsExactlyElementsOf(List.of(fixture.participantId1(), fixture.participantId2()));
+                .containsExactlyElementsOf(List.of(fixture.participant1(), fixture.participant2()));
     }
 
     @Test
     void whenEnsembleSizeOfThreeRestOfParticipantsReturnsEmptyList() {
-        MemberId nextDriverId = MemberId.of(1L);
-        MemberId driverId = MemberId.of(2L);
-        MemberId navigatorId = MemberId.of(3L);
+        Member nextDriver = MemberFactory.createMember(1, "One", "irrelevant");
+        Member driver = MemberFactory.createMember(2, "Two", "irrelevant");
+        Member navigator = MemberFactory.createMember(3, "Three", "irrelevant");
 
-        Rotation rotation = new Rotation(List.of(nextDriverId,
-                                                 driverId,
-                                                 navigatorId));
+        Rotation rotation = new Rotation(List.of(nextDriver,
+                                                 driver,
+                                                 navigator));
 
         assertThat(rotation.restOfParticipants())
                 .isEmpty();
@@ -42,18 +42,18 @@ class RotationTest {
 
     @Test
     void whenEnsembleSizeOfFourRestOfParticipantsReturnsOneParticipant() {
-        MemberId nextDriverId = MemberId.of(1L);
-        MemberId driverId = MemberId.of(2L);
-        MemberId navigatorId = MemberId.of(3L);
-        MemberId participantId = MemberId.of(4L);
+        Member nextDriver = MemberFactory.createMember(1, "One", "irrelevant");
+        Member driver = MemberFactory.createMember(2, "Two", "irrelevant");
+        Member navigator = MemberFactory.createMember(3, "Three", "irrelevant");
+        Member participant = MemberFactory.createMember(4, "Four", "irrelevant");
 
-        Rotation rotation = new Rotation(List.of(nextDriverId,
-                                                 driverId,
-                                                 navigatorId,
-                                                 participantId));
+        Rotation rotation = new Rotation(List.of(nextDriver,
+                                                 driver,
+                                                 navigator,
+                                                 participant));
 
         assertThat(rotation.restOfParticipants())
-                .containsExactly(participantId);
+                .containsExactly(participant);
     }
 
     @Test
@@ -69,61 +69,62 @@ class RotationTest {
         Rotation rotation = fixture.rotation();
         assertThat(rotation.toString())
                 .isEqualTo("""
-                                Next Driver: MemberId=1
-                                Driver: MemberId=2
-                                Navigator: MemberId=3
-                                Rest of participants: [MemberId=4, MemberId=5]""");
+                                   Next Driver: Member: id=MemberId=1, firstName='One', githubUsername='irrelevant', roles=[], timeZone=Z
+                                   Driver: Member: id=MemberId=2, firstName='Two', githubUsername='irrelevant', roles=[], timeZone=Z
+                                   Navigator: Member: id=MemberId=3, firstName='Three', githubUsername='irrelevant', roles=[], timeZone=Z
+                                   Rest of participants: [Member: id=MemberId=4, firstName='Four', githubUsername='irrelevant', roles=[], timeZone=Z, Member: id=MemberId=5, firstName='Five', githubUsername='irrelevant', roles=[], timeZone=Z]""");
 
         rotation.rotate();
 
         assertThat(rotation.driver())
-                .isEqualTo(fixture.nextDriverId());
+                .isEqualTo(fixture.nextDriver());
         assertThat(rotation.navigator())
-                .isEqualTo(fixture.driverId());
+                .isEqualTo(fixture.driver());
         assertThat(rotation.nextDriver())
-                .isEqualTo(fixture.participantId2());
+                .isEqualTo(fixture.participant2());
         assertThat(rotation.restOfParticipants())
-                .containsExactly(fixture.navigatorId(), fixture.participantId1());
+                .containsExactly(fixture.navigator(), fixture.participant1());
 
         assertThat(rotation.toString())
                 .isEqualTo("""
-                                   Next Driver: MemberId=5
-                                   Driver: MemberId=1
-                                   Navigator: MemberId=2
-                                   Rest of participants: [MemberId=3, MemberId=4]""");
+                                  Next Driver: Member: id=MemberId=5, firstName='Five', githubUsername='irrelevant', roles=[], timeZone=Z
+                                  Driver: Member: id=MemberId=1, firstName='One', githubUsername='irrelevant', roles=[], timeZone=Z
+                                  Navigator: Member: id=MemberId=2, firstName='Two', githubUsername='irrelevant', roles=[], timeZone=Z
+                                  Rest of participants: [Member: id=MemberId=3, firstName='Three', githubUsername='irrelevant', roles=[], timeZone=Z, Member: id=MemberId=4, firstName='Four', githubUsername='irrelevant', roles=[], timeZone=Z]""");
         rotation.rotate();
         assertThat(rotation.toString())
                 .isEqualTo("""
-                                   Next Driver: MemberId=4
-                                   Driver: MemberId=5
-                                   Navigator: MemberId=1
-                                   Rest of participants: [MemberId=2, MemberId=3]""");
+                                   Next Driver: Member: id=MemberId=4, firstName='Four', githubUsername='irrelevant', roles=[], timeZone=Z
+                                   Driver: Member: id=MemberId=5, firstName='Five', githubUsername='irrelevant', roles=[], timeZone=Z
+                                   Navigator: Member: id=MemberId=1, firstName='One', githubUsername='irrelevant', roles=[], timeZone=Z
+                                   Rest of participants: [Member: id=MemberId=2, firstName='Two', githubUsername='irrelevant', roles=[], timeZone=Z, Member: id=MemberId=3, firstName='Three', githubUsername='irrelevant', roles=[], timeZone=Z]""");
     }
 
     private static Rotation createRotationWithTwoParticipants() {
-        return new Rotation(List.of(MemberId.of(1L), MemberId.of(67L)));
+        return new Rotation(List.of(MemberFactory.createMember(1, "One", "irrelevant"),
+                                    MemberFactory.createMember(2, "Two", "irrelevant")));
     }
 
     private RotationFixture createFiveParticipantRotation() {
-        MemberId nextDriverId = MemberId.of(1L);
-        MemberId driverId = MemberId.of(2L);
-        MemberId navigatorId = MemberId.of(3L);
-        MemberId participantId1 = MemberId.of(4L);
-        MemberId participantId2 = MemberId.of(5L);
+        Member nextDriver = MemberFactory.createMember(1, "One", "irrelevant");
+        Member driver = MemberFactory.createMember(2, "Two", "irrelevant");
+        Member navigator = MemberFactory.createMember(3, "Three", "irrelevant");
+        Member participant1 = MemberFactory.createMember(4, "Four", "irrelevant");
+        Member participant2 = MemberFactory.createMember(5, "Five", "irrelevant");
 
-        Rotation rotation = new Rotation(List.of(nextDriverId,
-                                                 driverId,
-                                                 navigatorId,
-                                                 participantId1,
-                                                 participantId2));
-        return new RotationFixture(nextDriverId, driverId, navigatorId, participantId1, participantId2, rotation);
+        Rotation rotation = new Rotation(List.of(nextDriver,
+                                                 driver,
+                                                 navigator,
+                                                 participant1,
+                                                 participant2));
+        return new RotationFixture(nextDriver, driver, navigator, participant1, participant2, rotation);
     }
 
-    private record RotationFixture(MemberId nextDriverId,
-                                   MemberId driverId,
-                                   MemberId navigatorId,
-                                   MemberId participantId1,
-                                   MemberId participantId2,
+    private record RotationFixture(Member nextDriver,
+                                   Member driver,
+                                   Member navigator,
+                                   Member participant1,
+                                   Member participant2,
                                    Rotation rotation) {
     }
 }
