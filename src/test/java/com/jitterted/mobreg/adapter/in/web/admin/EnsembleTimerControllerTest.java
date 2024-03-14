@@ -30,7 +30,7 @@ class EnsembleTimerControllerTest {
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
                 .withThreeParticipants();
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
 
         String redirectPage = ensembleTimerController.createTimerView(87L);
@@ -49,7 +49,7 @@ class EnsembleTimerControllerTest {
                 .saveMemberAndAccept("Jane", "ghjane")
                 .saveMemberAndAccept("Paul", "ghpaul")
                 .saveMemberAndAccept("Sally", "ghsally");
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, builder.memberRepository());
         ensembleTimerController.createTimerView(153L);
 
@@ -78,7 +78,7 @@ class EnsembleTimerControllerTest {
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
                 .withThreeParticipants();
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
         ensembleTimerController.createTimerView(279L);
 
@@ -96,7 +96,7 @@ class EnsembleTimerControllerTest {
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
                 .withThreeParticipants();
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
         EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(279));
         MemberId nextDriverBeforeRotation = ensembleTimer.rotation().nextDriver();
         EnsembleTimerFactory.pushTimerToFinishedState(ensembleTimer);

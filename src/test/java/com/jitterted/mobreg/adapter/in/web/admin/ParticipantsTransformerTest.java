@@ -24,7 +24,7 @@ class ParticipantsTransformerTest {
                 .saveMemberAndAccept("Jane", "nextdriver")
                 .saveMemberAndAccept("Paul", "driver")
                 .saveMemberAndAccept("Sally", "navigator");
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
         ensembleTimerHolder.createTimerFor(EnsembleId.of(371));
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(371));
 
@@ -49,7 +49,7 @@ class ParticipantsTransformerTest {
                 .saveMemberAndAccept("Sally", "navigator")
                 .saveMemberAndAccept("Sri", "sri_participant")
                 .saveMemberAndAccept("Jha", "jha_participant");
-        EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository());
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository());
         ensembleTimerHolder.createTimerFor(EnsembleId.of(543));
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(543));
 

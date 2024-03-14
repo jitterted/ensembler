@@ -17,15 +17,16 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     private final SingleEntryHashMap<EnsembleId, EnsembleTimer> ensembleTimers = new SingleEntryHashMap<>();
     private final SecondsTicker secondsTicker;
 
-    @Deprecated // Must use the constructor that takes a Broadcaster implementation
-    public EnsembleTimerHolder(EnsembleRepository ensembleRepository) {
-        this(ensembleRepository, ensembleTimer -> {}, new DoNothingSecondsTicker());
-    }
-
     public EnsembleTimerHolder(EnsembleRepository ensembleRepository, Broadcaster broadcaster, SecondsTicker secondsTicker) {
         this.ensembleRepository = ensembleRepository;
         this.broadcaster = broadcaster;
         this.secondsTicker = secondsTicker;
+    }
+
+    public static EnsembleTimerHolder createNull(EnsembleRepository ensembleRepository) {
+        return new EnsembleTimerHolder(ensembleRepository,
+                                       ensembleTimer -> {},
+                                       new DoNothingSecondsTicker());
     }
 
     @NotNull
