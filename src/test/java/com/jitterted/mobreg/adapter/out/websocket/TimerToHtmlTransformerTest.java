@@ -3,10 +3,16 @@ package com.jitterted.mobreg.adapter.out.websocket;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.EnsembleTimerFactory;
+import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.domain.MemberFactory;
+import com.jitterted.mobreg.domain.Rotation;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.List;
 
+import static com.jitterted.mobreg.adapter.out.websocket.TimerToHtmlTransformer.htmlForSwappingInRotationMembers;
 import static org.assertj.core.api.Assertions.*;
 
 class TimerToHtmlTransformerTest {
@@ -36,6 +42,19 @@ class TimerToHtmlTransformerTest {
                                    <div class="timer-text">4:00</div>
                                </div>
                            </div>
+                           <swap-container id="driver" hx-swap-oob="innerHTML">
+                               <p>Two</p>
+                           </swap-container>
+                           <swap-container id="navigator" hx-swap-oob="innerHTML">
+                               <p>Three</p>
+                           </swap-container>
+                           <swap-container id="nextDriver" hx-swap-oob="innerHTML">
+                               <p>One</p>
+                           </swap-container>
+                           <swap-container id="restOfParticipants" hx-swap-oob="innerHTML">
+                               <p>Four</p>
+                               <p>Five</p>
+                           </swap-container>
                            """);
     }
 
@@ -90,4 +109,60 @@ class TimerToHtmlTransformerTest {
                            </div>
                            """);
     }
+
+    @Nested
+    class RotationHtml {
+        private static final Member MEMBER1 = MemberFactory.createMember(1, "One", "IRRELEVANT_GITHUB_USERNAME");
+        private static final Member MEMBER2 = MemberFactory.createMember(2, "Two", "IRRELEVANT_GITHUB_USERNAME");
+        private static final Member MEMBER3 = MemberFactory.createMember(3, "Three", "IRRELEVANT_GITHUB_USERNAME");
+        private static final Member MEMBER4 = MemberFactory.createMember(4, "Four", "IRRELEVANT_GITHUB_USERNAME");
+        private static final Member MEMBER5 = MemberFactory.createMember(5, "Five", "IRRELEVANT_GITHUB_USERNAME");
+
+        @Test
+        void isCorrectForThreeMembers() {
+            Rotation rotation = new Rotation(List.of(MEMBER1, MEMBER2, MEMBER3));
+
+            String actual = htmlForSwappingInRotationMembers(rotation);
+
+            assertThat(actual)
+                    .isEqualTo(""" 
+                           <swap-container id="driver" hx-swap-oob="innerHTML">
+                               <p>Two</p>
+                           </swap-container>
+                           <swap-container id="navigator" hx-swap-oob="innerHTML">
+                               <p>Three</p>
+                           </swap-container>
+                           <swap-container id="nextDriver" hx-swap-oob="innerHTML">
+                               <p>One</p>
+                           </swap-container>
+                           <swap-container id="restOfParticipants" hx-swap-oob="innerHTML">
+                               <p>(no other participants)</p>
+                           </swap-container>
+                           """);
+        }
+
+        @Test
+        void isCorrectForFourMembers() {
+            Rotation rotation = new Rotation(List.of(MEMBER1, MEMBER2, MEMBER3, MEMBER4));
+
+            String actual = htmlForSwappingInRotationMembers(rotation);
+
+            assertThat(actual)
+                    .isEqualTo(""" 
+                           <swap-container id="driver" hx-swap-oob="innerHTML">
+                               <p>Two</p>
+                           </swap-container>
+                           <swap-container id="navigator" hx-swap-oob="innerHTML">
+                               <p>Three</p>
+                           </swap-container>
+                           <swap-container id="nextDriver" hx-swap-oob="innerHTML">
+                               <p>One</p>
+                           </swap-container>
+                           <swap-container id="restOfParticipants" hx-swap-oob="innerHTML">
+                               <p>Four</p>
+                           </swap-container>
+                           """);
+        }
+    }
+
 }

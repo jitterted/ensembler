@@ -5,26 +5,20 @@ import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.Rotation;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ParticipantsTransformer {
-    public static Map<String, List<String>> participantsToRolesAndNames(EnsembleTimer ensembleTimer) {
-        Map<String, List<String>> rolesToNames = new HashMap<>();
+
+    public static Map<String, Object> participantRolesToNames(EnsembleTimer ensembleTimer) {
+        Map<String, Object> rolesToNames = new HashMap<>();
         Rotation rotation = ensembleTimer.rotation();
-        mapRoleToNames("Driver", List.of(rotation.driver()), rolesToNames);
-        mapRoleToNames("Navigator", List.of(rotation.navigator()), rolesToNames);
-        mapRoleToNames("Next Driver", List.of(rotation.nextDriver()), rolesToNames);
-        mapRoleToNames("Participant", rotation.restOfParticipants(), rolesToNames);
+        rolesToNames.put("driver", rotation.driver().firstName());
+        rolesToNames.put("navigator", rotation.navigator().firstName());
+        rolesToNames.put("nextDriver", rotation.nextDriver().firstName());
+        rolesToNames.put("restOfParticipants", rotation.restOfParticipants().stream()
+                                                       .map(Member::firstName)
+                                                       .toList());
         return rolesToNames;
     }
 
-    private static void mapRoleToNames(String roleName,
-                                       List<Member> members,
-                                       Map<String, List<String>> rolesToNames) {
-        List<String> memberNames = members.stream()
-                                          .map(Member::firstName)
-                                          .toList();
-        rolesToNames.put(roleName, memberNames);
-    }
 }

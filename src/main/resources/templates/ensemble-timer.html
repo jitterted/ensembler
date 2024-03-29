@@ -98,7 +98,7 @@
 </head>
 
 <body class="grid grid-cols-3 gap-4 p-4">
-<div id="timer-and-control" class="col-span-1">
+<div id="timer-and-control">
     <h1 class="text-xl font-bold py-2"
         th:text="${ensembleName}">Ensemble Name</h1>
     <div
@@ -116,16 +116,8 @@
                 <div class="timer-text">3:45</div>
             </div>
         </div>
-<!--  Timer when finished      -->
-<!--        <div id="timer-container"-->
-<!--             class="circle circle-finished">-->
-<!--            <div class="timer-text-container timer-finished">-->
-<!--                <div class="timer-text">next</div>-->
-<!--            </div>-->
-<!--        </div>-->
     </div>
     <div class="mt-2">
-<!--                th:hx-headers="'{' + ${_csrf.parameterName} + ': ' + ${_csrf.token} + '}'" -->
         <h2 class="text-xl font-bold">Timer Control</h2>
         <button hx-swap="none"
                 id="timer-control-button"
@@ -134,16 +126,58 @@
         </button>
     </div>
 </div>
-<div id="participants-container" class="grid grid-cols-5 gap-4 auto-rows-min">
-    <h1 class="col-span-5 font-bold text-xl text-gray-600 uppercase">Participants</h1>
-    <th:block th:each="roleToName: ${rolesToNames}">
-        <div class="col-span-2 text-gray-600"
-             th:text="${roleToName.getKey()}">Rotation Role</div>
-        <div class="col-span-3 font-bold"
-             th:id="${roleToName.getKey()}">
-            <p th:each="name: ${roleToName.getValue()}" th:text="${name}">Jane Participant</p>
+<!--<div id="participants-container" class="grid grid-cols-5 gap-4 auto-rows-min">-->
+<!--    <h1 class="col-span-5 font-bold text-xl text-gray-600 uppercase">Participants</h1>-->
+<!--    <th:block th:each="roleToName: ${rolesToNames}">-->
+<!--        <div class="col-span-2 text-gray-600"-->
+<!--             th:text="${roleToName.getKey()}">Rotation Role</div>-->
+<!--        <div class="col-span-3 font-bold"-->
+<!--             th:id="${roleToName.getKey()}">-->
+<!--            <p th:each="name: ${roleToName.getValue()}" th:text="${name}">Jane Participant</p>-->
+<!--        </div>-->
+<!--    </th:block>-->
+<!--</div>-->
+<div id="new-participants-container" class="col-span-2">
+    <dl class="mx-2 grid grid-cols-2 border-green-100 border-2">
+        <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 bg-green-50 px-4 py-10 sm:px-6 xl:px-8">
+            <dt class="text-sm font-semibold leading-8 text-green-700">DRIVER</dt>
+            <dd class="text-green-600 self-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="h-6 w-6 mr-8" fill="currentColor"><path d="M64 96c-17.7 0-32 14.3-32 32V384c0 17.7 14.3 32 32 32H512c17.7 0 32-14.3 32-32V128c0-17.7-14.3-32-32-32H64zM0 128C0 92.7 28.7 64 64 64H512c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128zm88 8h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H88c-8.8 0-16-7.2-16-16V152c0-8.8 7.2-16 16-16zM72 248c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H88c-8.8 0-16-7.2-16-16V248zm16 80h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H88c-8.8 0-16-7.2-16-16V344c0-8.8 7.2-16 16-16zm80-176c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H184c-8.8 0-16-7.2-16-16V152zm16 80h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H184c-8.8 0-16-7.2-16-16V248c0-8.8 7.2-16 16-16zm80-80c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H280c-8.8 0-16-7.2-16-16V152zm16 80h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H280c-8.8 0-16-7.2-16-16V248c0-8.8 7.2-16 16-16zm80-80c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H376c-8.8 0-16-7.2-16-16V152zm16 80h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H376c-8.8 0-16-7.2-16-16V248c0-8.8 7.2-16 16-16zm80-80c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H472c-8.8 0-16-7.2-16-16V152zm16 80h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H472c-8.8 0-16-7.2-16-16V248c0-8.8 7.2-16 16-16zM456 344c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H472c-8.8 0-16-7.2-16-16V344zm-280-8H400c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16s7.2-16 16-16z" /></svg>
+            </dd>
+            <dd class="w-full flex-none text-6xl font-medium leading-10 text-gray-900"
+                th:text="${driver}">Jane</dd>
         </div>
-    </th:block>
+        <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 bg-green-50 px-4 py-10 sm:px-6 xl:px-8">
+            <dt class="text-sm font-semibold leading-8 text-green-700">NAVIGATOR</dt>
+            <dd class="text-xs font-medium text-green-600">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 mr-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 0 1-1.44-4.282m3.102.069a18.03 18.03 0 0 1-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 0 1 8.835 2.535M10.34 6.66a23.847 23.847 0 0 0 8.835-2.535m0 0A23.74 23.74 0 0 0 18.795 3m.38 1.125a23.91 23.91 0 0 1 1.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 0 0 1.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 0 1 0 3.46" />
+                </svg>
+            </dd>
+            <dd class="w-full flex-none text-6xl font-medium leading-10 text-gray-900"
+                th:text="${navigator}">Joe</dd>
+        </div>
+    </dl>
+    <dl class="mx-2 grid grid-cols-2 border-gray-100 border-2">
+        <div class="flex flex-wrap content-start items-baseline justify-between gap-x-4 gap-y-2 px-6 py-10 bg-gray-50">
+            <dt class="text-sm font-semibold leading-6 text-gray-500">NEXT DRIVER</dt>
+            <dd class="text-xs font-medium text-gray-400 self-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="h-6 w-6 mr-8" fill="currentColor"><path d="M255.6 385.2C231.4 416.6 201.5 432 172 432s-59.4-15.4-83.6-46.8c-9.1-11.9-17.1-25.7-23.5-41.2c9.2 5.1 19.8 8 31.1 8c35.3 0 64-28.7 64-64s-28.7-64-64-64c-19 0-36.1 8.3-47.8 21.4c2-47.8 17.7-89.3 40.2-118.6C112.6 95.4 142.5 80 172 80s59.4 15.4 83.6 46.8c24.1 31.4 40.4 77 40.4 129.2s-16.3 97.7-40.4 129.2zM320 141.8C290 76.1 235 32 172 32C77 32 0 132.3 0 256S77 480 172 480c63 0 118-44.1 148-109.8C350 435.9 405 480 468 480c95 0 172-100.3 172-224s-77-224-172-224c-63 0-118 44.1-148 109.8zm42.8 206.6c6.6 2.3 13.7 3.6 21.2 3.6c35.3 0 64-28.7 64-64s-28.7-64-64-64c-14.8 0-28.5 5-39.3 13.5c3.3-44.4 18.5-83 39.8-110.6C408.6 95.4 438.5 80 468 80s59.4 15.4 83.6 46.8c24.1 31.4 40.4 77 40.4 129.2s-16.3 97.7-40.4 129.2C527.4 416.6 497.5 432 468 432s-59.4-15.4-83.6-46.8c-8.2-10.7-15.5-23.1-21.6-36.7z" /></svg>
+            </dd>
+            <dd class="w-full flex-none text-4xl font-medium leading-10 text-gray-800"
+                th:text="${nextDriver}">Ken</dd>
+        </div>
+        <div class="flex flex-wrap content-start items-baseline justify-between gap-x-4 gap-y-2 bg-gray-50 px-6 py-10">
+            <dt class="text-sm font-semibold leading-6 text-gray-500">REST OF PARTICIPANTS</dt>
+            <dd class="text-xs font-medium text-gray-400 self-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="h-6 w-6 mr-8" fill="currentColor"><path d="M255.6 385.2C231.4 416.6 201.5 432 172 432s-59.4-15.4-83.6-46.8c-9.1-11.9-17.1-25.7-23.5-41.2c9.2 5.1 19.8 8 31.1 8c35.3 0 64-28.7 64-64s-28.7-64-64-64c-19 0-36.1 8.3-47.8 21.4c2-47.8 17.7-89.3 40.2-118.6C112.6 95.4 142.5 80 172 80s59.4 15.4 83.6 46.8c24.1 31.4 40.4 77 40.4 129.2s-16.3 97.7-40.4 129.2zM320 141.8C290 76.1 235 32 172 32C77 32 0 132.3 0 256S77 480 172 480c63 0 118-44.1 148-109.8C350 435.9 405 480 468 480c95 0 172-100.3 172-224s-77-224-172-224c-63 0-118 44.1-148 109.8zm42.8 206.6c6.6 2.3 13.7 3.6 21.2 3.6c35.3 0 64-28.7 64-64s-28.7-64-64-64c-14.8 0-28.5 5-39.3 13.5c3.3-44.4 18.5-83 39.8-110.6C408.6 95.4 438.5 80 468 80s59.4 15.4 83.6 46.8c24.1 31.4 40.4 77 40.4 129.2s-16.3 97.7-40.4 129.2C527.4 416.6 497.5 432 468 432s-59.4-15.4-83.6-46.8c-8.2-10.7-15.5-23.1-21.6-36.7z" /></svg>
+            </dd>
+            <dd class="w-full flex-none text-4xl font-medium leading-10 text-gray-800"
+                th:each="participant : ${restOfParticipants}"
+                th:text="${participant}">Barbie</dd>
+        </div>
+    </dl>
+
 </div>
 </body>
 </html>

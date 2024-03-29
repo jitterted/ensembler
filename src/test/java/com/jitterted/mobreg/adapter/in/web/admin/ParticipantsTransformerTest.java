@@ -28,13 +28,13 @@ class ParticipantsTransformerTest {
         ensembleTimerHolder.createTimerFor(EnsembleId.of(371));
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(371));
 
-        Map<String, List<String>> rolesToNames = ParticipantsTransformer.participantsToRolesAndNames(ensembleTimer);
+        Map<String, Object> rolesToNames = ParticipantsTransformer.participantRolesToNames(ensembleTimer);
 
         assertThat(rolesToNames)
-                .containsOnly(entry("Driver", List.of("Paul")),
-                              entry("Navigator", List.of("Sally")),
-                              entry("Next Driver", List.of("Jane")),
-                              entry("Participant", Collections.emptyList())
+                .containsOnly(entry("driver", "Paul"),
+                              entry("navigator", "Sally"),
+                              entry("nextDriver", "Jane"),
+                              entry("restOfParticipants", Collections.emptyList())
                 );
     }
 
@@ -52,14 +52,14 @@ class ParticipantsTransformerTest {
         ensembleTimerHolder.createTimerFor(EnsembleId.of(543));
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(543));
 
-        Map<String, List<String>> rolesToNames = ParticipantsTransformer
-                .participantsToRolesAndNames(ensembleTimer);
+        Map<String, Object> rolesToNames = ParticipantsTransformer
+                .participantRolesToNames(ensembleTimer);
 
         assertThat(rolesToNames)
-                .containsOnly(entry("Driver", List.of("Paul")),
-                              entry("Navigator", List.of("Sally")),
-                              entry("Next Driver", List.of("Jane")),
-                              entry("Participant", List.of("Sri", "Jha"))
+                .containsOnly(entry("driver", "Paul"),
+                              entry("navigator", "Sally"),
+                              entry("nextDriver", "Jane"),
+                              entry("restOfParticipants", List.of("Sri", "Jha"))
                 );
     }
 }

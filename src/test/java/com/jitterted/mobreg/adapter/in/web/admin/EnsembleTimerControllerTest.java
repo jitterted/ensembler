@@ -14,9 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
-import java.util.List;
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.*;
 
 @SuppressWarnings("unchecked")
@@ -60,10 +57,9 @@ class EnsembleTimerControllerTest {
         assertThat(viewName)
                 .isEqualTo("ensemble-timer");
         assertThat(model.asMap())
-                .containsEntry("ensembleName", "Dolphin Ensemble");
-        assertThat((Map<String, List<String>>) model.getAttribute("rolesToNames"))
-                .containsExactlyInAnyOrderEntriesOf(
-                        ParticipantsTransformer.participantsToRolesAndNames(
+                .containsEntry("ensembleName", "Dolphin Ensemble")
+                .containsAllEntriesOf(
+                        ParticipantsTransformer.participantRolesToNames(
                                 ensembleTimerHolder.timerFor(EnsembleId.of(153))));
         assertThat(ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(153L)))
                 .isFalse();
