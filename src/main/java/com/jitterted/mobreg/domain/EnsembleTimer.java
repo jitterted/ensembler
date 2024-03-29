@@ -15,11 +15,8 @@ public class EnsembleTimer {
     private final String ensembleName;
     private final List<Member> participants;
     private final Rotation rotation;
+    private final CountdownTimer countdownTimer;
     private TimerState currentState;
-
-    private final Duration timerDuration;
-    private Instant timerEnd;
-    private Instant lastTick;
 
     // adjust timerEnd by adding pauseTime upon Resume
     //  -> add pausedTime to something (incrementing pause time)
@@ -38,7 +35,7 @@ public class EnsembleTimer {
         this.ensembleId = ensembleId;
         this.ensembleName = ensembleName;
         this.participants = participants;
-        this.timerDuration = timerDuration;
+        this.countdownTimer = new CountdownTimer(timerDuration);
         this.currentState = TimerState.WAITING_TO_START;
         this.rotation = new Rotation(participants);
     }
@@ -62,14 +59,14 @@ public class EnsembleTimer {
 
     public void startTimerAt(Instant timeStarted) {
         requireNotRunning();
-        lastTick = timeStarted;
-        timerEnd = timeStarted.plus(timerDuration);
+        countdownTimer.setLastTick(timeStarted);
+        countdownTimer.setTimerEnd(timeStarted.plus(countdownTimer.getTimerDuration()));
         currentState = TimerState.RUNNING;
     }
 
     public void tick(Instant now) {
         requireRunning(now);
-        lastTick = now;
+        countdownTimer.setLastTick(now);
         if (isFinished(now)) {
             currentState = TimerState.FINISHED;
         }
@@ -77,8 +74,8 @@ public class EnsembleTimer {
 
     public TimeRemaining timeRemaining() {
         return switch (currentState) {
-            case WAITING_TO_START -> TimeRemaining.beforeStarted(timerDuration);
-            case RUNNING, FINISHED -> TimeRemaining.whileRunning(lastTick, timerEnd, timerDuration);
+            case WAITING_TO_START -> TimeRemaining.beforeStarted(countdownTimer.getTimerDuration());
+            case RUNNING, FINISHED -> TimeRemaining.whileRunning(countdownTimer.getLastTick(), countdownTimer.getTimerEnd(), countdownTimer.getTimerDuration());
         };
     }
 
@@ -86,7 +83,7 @@ public class EnsembleTimer {
         switch (currentState) {
             case FINISHED ->
                     throw new IllegalStateException("Tick received at %s after Timer already Finished at %s."
-                                                            .formatted(now, timerEnd));
+                                                            .formatted(now, countdownTimer.getTimerEnd()));
             case WAITING_TO_START ->
                     throw new IllegalStateException("Timer is Waiting to Start, but Tick was received at %s."
                                                             .formatted(now));
@@ -100,7 +97,7 @@ public class EnsembleTimer {
     }
 
     private boolean isFinished(Instant now) {
-        return !now.isBefore(timerEnd);
+        return !now.isBefore(countdownTimer.getTimerEnd());
     }
 
     public Rotation rotation() {
