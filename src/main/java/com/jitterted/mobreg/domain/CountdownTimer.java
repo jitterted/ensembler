@@ -32,4 +32,15 @@ public class CountdownTimer {
         tick(timeStarted);
         timerEnd = timeStarted.plus(getTimerDuration());
     }
+
+    boolean isFinished(Instant now) {
+        return !now.isBefore(getTimerEnd());
+    }
+
+    public TimeRemaining timeRemaining() {
+        if (timerEnd == null) {
+            return TimeRemaining.beforeStarted(timerDuration);
+        }
+        return TimeRemaining.whileRunning(lastTick, timerEnd, timerDuration);
+    }
 }

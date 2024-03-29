@@ -106,6 +106,8 @@ class EnsembleTimerTest {
 
             assertThat(fixture.ensembleTimer().state())
                     .isEqualByComparingTo(EnsembleTimer.TimerState.WAITING_TO_START);
+            assertThat(fixture.ensembleTimer().timeRemaining())
+                    .isEqualTo(new TimeRemaining(4, 0, 100));
         }
 
     }
