@@ -6,7 +6,6 @@ import com.jitterted.mobreg.domain.Rotation;
 import com.jitterted.mobreg.domain.TimeRemaining;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TimerToHtmlTransformer {
 
@@ -45,11 +44,11 @@ public class TimerToHtmlTransformer {
                    <p>%s</p>
                </swap-container>
                """.formatted(RotationRole.ROLE_DRIVER.idString(),
-                                  rotation.driver().firstName(),
-                                  RotationRole.ROLE_NAVIGATOR.idString(),
-                                  rotation.navigator().firstName(),
-                                  RotationRole.ROLE_NEXT_DRIVER.idString(),
-                                  rotation.nextDriver().firstName())
+                             rotation.driver().firstName(),
+                             RotationRole.ROLE_NAVIGATOR.idString(),
+                             rotation.navigator().firstName(),
+                             RotationRole.ROLE_NEXT_DRIVER.idString(),
+                             rotation.nextDriver().firstName())
                + """
                  <swap-container id="%s" hx-swap-oob="innerHTML">
                  %s
@@ -59,15 +58,11 @@ public class TimerToHtmlTransformer {
     }
 
     public static String htmlForRestOfParticipants(List<Member> restOfParticipants) {
-        if (restOfParticipants.isEmpty()) {
-            String ptag = "<p>";
-            return "    " + ptag + "(no other participants)</p>";
-        }
-
         return restOfParticipants.stream()
                                  .map(Member::firstName)
                                  .map("    <p>%s</p>"::formatted)
-                                 .collect(Collectors.joining("\n"));
+                                 .reduce((left, right) -> left + "\n" + right)
+                                 .orElse("    <p>(no other participants)</p>");
     }
 
     // language=html
