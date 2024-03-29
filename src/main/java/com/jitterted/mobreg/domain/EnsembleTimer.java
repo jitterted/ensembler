@@ -75,10 +75,6 @@ public class EnsembleTimer {
 
     public TimeRemaining timeRemaining() {
         return turnTimer.timeRemaining();
-//        return switch (currentState) {
-//            case WAITING_TO_START -> TimeRemaining.beforeStarted(turnTimer.getTimerDuration());
-//            case RUNNING, FINISHED -> TimeRemaining.whileRunning(turnTimer.getLastTick(), turnTimer.getTimerEnd(), turnTimer.getTimerDuration());
-//        };
     }
 
     private void requireRunning(Instant now) {
