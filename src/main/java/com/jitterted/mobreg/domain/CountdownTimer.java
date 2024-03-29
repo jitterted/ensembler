@@ -11,6 +11,7 @@ public class CountdownTimer {
     public CountdownTimer(Duration timerDuration) {
         this.timerDuration = timerDuration;
     }
+
     public Duration getTimerDuration() {
         return timerDuration;
     }
@@ -19,17 +20,16 @@ public class CountdownTimer {
         return timerEnd;
     }
 
-    @Deprecated
-    public void setTimerEnd(Instant timerEnd) {
-        this.timerEnd = timerEnd;
-    }
-
     public Instant getLastTick() {
         return lastTick;
     }
 
-    @Deprecated
-    public void setLastTick(Instant lastTick) {
+    public void tick(Instant lastTick) {
         this.lastTick = lastTick;
+    }
+
+    public void startAt(Instant timeStarted) {
+        tick(timeStarted);
+        timerEnd = timeStarted.plus(getTimerDuration());
     }
 }
