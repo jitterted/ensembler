@@ -144,8 +144,8 @@ class EnsembleTimerTest {
             Instant finishedAtPlus20Millis = finishedAt.plusMillis(20);
             assertThatIllegalStateException()
                     .isThrownBy(() -> fixture.ensembleTimer().tick(finishedAtPlus20Millis))
-                    .withMessage("Tick received at %s after Timer already Finished at %s."
-                                         .formatted(finishedAtPlus20Millis, finishedAt));
+                    .withMessageStartingWith("Tick received at %s after Timer already Finished:"
+                                         .formatted(finishedAtPlus20Millis));
         }
 
         @Test

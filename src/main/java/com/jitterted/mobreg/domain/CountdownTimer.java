@@ -12,29 +12,17 @@ public class CountdownTimer {
         this.timerDuration = timerDuration;
     }
 
-    public Duration getTimerDuration() {
-        return timerDuration;
-    }
-
-    public Instant getTimerEnd() {
-        return timerEnd;
-    }
-
-    public Instant getLastTick() {
-        return lastTick;
-    }
-
     public void tick(Instant lastTick) {
         this.lastTick = lastTick;
     }
 
     public void startAt(Instant timeStarted) {
         tick(timeStarted);
-        timerEnd = timeStarted.plus(getTimerDuration());
+        timerEnd = timeStarted.plus(timerDuration);
     }
 
     boolean isFinished(Instant now) {
-        return !now.isBefore(getTimerEnd());
+        return !now.isBefore(timerEnd);
     }
 
     public TimeRemaining timeRemaining() {
@@ -42,5 +30,14 @@ public class CountdownTimer {
             return TimeRemaining.beforeStarted(timerDuration);
         }
         return TimeRemaining.whileRunning(lastTick, timerEnd, timerDuration);
+    }
+
+    @Override
+    public String toString() {
+        return "CountdownTimer {" +
+               "timerDuration=" + timerDuration +
+               ", lastTick=" + lastTick +
+               ", timerEnd=" + timerEnd +
+               '}';
     }
 }
