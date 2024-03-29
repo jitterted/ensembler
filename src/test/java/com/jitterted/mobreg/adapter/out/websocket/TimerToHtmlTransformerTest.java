@@ -142,8 +142,9 @@ class TimerToHtmlTransformerTest {
         }
 
         @Test
-        void isCorrectForFourMembers() {
-            Rotation rotation = new Rotation(List.of(MEMBER1, MEMBER2, MEMBER3, MEMBER4));
+        void isCorrectForFiveMembers() {
+            Rotation rotation = new Rotation(List.of(
+                    MEMBER1, MEMBER2, MEMBER3, MEMBER4, MEMBER5));
 
             String actual = htmlForSwappingInRotationMembers(rotation);
 
@@ -160,6 +161,7 @@ class TimerToHtmlTransformerTest {
                            </swap-container>
                            <swap-container id="restOfParticipants" hx-swap-oob="innerHTML">
                                <p>Four</p>
+                               <p>Five</p>
                            </swap-container>
                            """);
         }
