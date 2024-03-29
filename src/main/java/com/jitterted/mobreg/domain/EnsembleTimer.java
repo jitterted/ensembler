@@ -15,11 +15,15 @@ public class EnsembleTimer {
     private final String ensembleName;
     private final List<Member> participants;
     private final Rotation rotation;
-
     private TimerState currentState;
+
     private final Duration timerDuration;
     private Instant timerEnd;
     private Instant lastTick;
+
+    // adjust timerEnd by adding pauseTime upon Resume
+    //  -> add pausedTime to something (incrementing pause time)
+    // sand timer model: decrement "secondsRemaining" by one each "tick"
 
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,
@@ -66,7 +70,7 @@ public class EnsembleTimer {
     public void tick(Instant now) {
         requireRunning(now);
         lastTick = now;
-        if (isAtOrAfterTimerEnd(now)) {
+        if (isFinished(now)) {
             currentState = TimerState.FINISHED;
         }
     }
@@ -95,7 +99,7 @@ public class EnsembleTimer {
         }
     }
 
-    private boolean isAtOrAfterTimerEnd(Instant now) {
+    private boolean isFinished(Instant now) {
         return !now.isBefore(timerEnd);
     }
 
