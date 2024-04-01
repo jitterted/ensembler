@@ -60,7 +60,8 @@ class TimerToHtmlTransformerTest {
 
     @Test
     void timerRunningAfterSomeTimePassedHtmlIsCorrect() {
-        EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
+        EnsembleTimer ensembleTimer = EnsembleTimerFactory
+                .createTimerWith4MinuteDurationAndIdOf(EnsembleId.of(763));
         Instant timerStartedAt = Instant.now();
         ensembleTimer.startTimerAt(timerStartedAt);
         ensembleTimer.tick(timerStartedAt.plusSeconds(30));
@@ -69,9 +70,13 @@ class TimerToHtmlTransformerTest {
 
         assertThat(timerHtml)
                 .isEqualTo("""    
-                           <swap-container id='timer-control-button' hx-swap-oob='innerHTML'>
-                                Pause Timer
-                           </swap-container>
+                           <button id="timer-control-button"
+                                   hx-swap-oob="outerHTML"
+                                   hx-swap="none"
+                                   hx-post="/admin/pause-timer/763"
+                                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                               Pause Timer
+                           </button>
                            <div id="timer-container"
                                 class="circle circle-running"
                                 style="background: conic-gradient(lightgreen 0% 87.500000%, black 87.500000% 100%);">

@@ -24,7 +24,9 @@ public class TimerToHtmlTransformer {
                + htmlForSwappingInRotationMembers(ensembleTimer.rotation());
     }
 
-    private static String htmlForTimerControlButton(EnsembleTimer ensembleTimer, String buttonEndpointUrl, String buttonLabel) {
+    private static String htmlForTimerControlButton(EnsembleTimer ensembleTimer,
+                                                    String buttonEndpointUrl,
+                                                    String buttonLabel) {
         return """
                <button id="timer-control-button"
                        hx-swap-oob="outerHTML"
@@ -73,11 +75,7 @@ public class TimerToHtmlTransformer {
 
     // language=html
     private static String htmlForRunning(EnsembleTimer ensembleTimer) {
-        return """
-               <swap-container id='timer-control-button' hx-swap-oob='innerHTML'>
-                    Pause Timer
-               </swap-container>
-               """
+        return htmlForTimerControlButton(ensembleTimer, "/admin/pause-timer", "Pause Timer")
                + htmlForTimerContainer(ensembleTimer.timeRemaining());
     }
 
