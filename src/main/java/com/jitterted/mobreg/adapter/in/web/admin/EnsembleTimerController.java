@@ -19,12 +19,10 @@ import java.time.Instant;
 @RequestMapping("/admin")
 public class EnsembleTimerController {
     private final EnsembleTimerHolder ensembleTimerHolder;
-    private final MemberRepository memberRepository;
 
     @Autowired
     public EnsembleTimerController(EnsembleTimerHolder ensembleTimerHolder, MemberRepository memberRepository) {
         this.ensembleTimerHolder = ensembleTimerHolder;
-        this.memberRepository = memberRepository;
     }
 
     @GetMapping("/timer-view/{ensembleId}")
