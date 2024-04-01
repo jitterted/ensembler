@@ -32,6 +32,10 @@ public class CountdownTimer {
         isRunning = false;
     }
 
+    public void resume() {
+        isRunning = true;
+    }
+
     boolean isFinished() {
         return timeRemaining.isZero();
     }

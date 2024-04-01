@@ -47,9 +47,30 @@ class CountdownTimerTest {
                 .isEqualTo(40);
     }
 
-    // resume timer
+    @Test
+    void timeRemainingIsOnlyReducedDuringTimerRunning() {
+        CountdownTimer countdownTimer = new CountdownTimer(Duration.ofSeconds(50));
+        Instant timerStartedAt = Instant.now();
+        countdownTimer.startAt(timerStartedAt);
+        countdownTimer.tick(timerStartedAt.plusSeconds(10)); // -10 sec
+        countdownTimer.pause();
+        countdownTimer.tick(timerStartedAt.plusSeconds(11)); // ignored
+        countdownTimer.tick(timerStartedAt.plusSeconds(12)); // ignored
 
-    // unhappy:
+        countdownTimer.resume();
+        countdownTimer.tick(timerStartedAt.plusSeconds(13)); // -1 sec
+        countdownTimer.tick(timerStartedAt.plusSeconds(14)); // -1 sec
+
+        assertThat(countdownTimer.timeRemaining().seconds())
+                .as("Expected 38 seconds left on the timer")
+                .isEqualTo(50 - 10 - 1 - 1);
+
+    }
+
+
+    // unhappy/edge cases:
+    //      pause ignored when already paused [no test needed]
+    //      resume ignored when already running [no test needed]
     //      pause when not started
     //      pause when finished
 
