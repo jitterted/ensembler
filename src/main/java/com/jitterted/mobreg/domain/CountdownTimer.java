@@ -6,8 +6,6 @@ import java.time.Instant;
 public class CountdownTimer {
     private final Duration timerDuration;
     private Instant lastTick;
-    @Deprecated // this will be replaced by a "bag of time"
-    private Instant timerEnd;
     private Duration timeRemaining;
 
     public CountdownTimer(Duration timerDuration) {
@@ -15,32 +13,35 @@ public class CountdownTimer {
         this.timeRemaining = timerDuration;
     }
 
-    public void tick(Instant currentTick) {
-        Duration difference = Duration.between(lastTick, currentTick);
-        timeRemaining = timeRemaining.minus(difference);
-        this.lastTick = currentTick;
-    }
-
     public void startAt(Instant timeStarted) {
         lastTick = timeStarted;
         tick(timeStarted);
-        timerEnd = timeStarted.plus(timerDuration);
+    }
+
+    public void tick(Instant currentTick) {
+        Duration difference = Duration.between(lastTick, currentTick);
+        timeRemaining = floorZero(timeRemaining.minus(difference));
+        this.lastTick = currentTick;
     }
 
     boolean isFinished() {
-        return !lastTick.isBefore(timerEnd);
+        return timeRemaining.isZero();
     }
 
     public TimeRemaining timeRemaining() {
         return TimeRemaining.from(timeRemaining, timerDuration);
     }
 
+    private Duration floorZero(Duration duration) {
+        return duration.isNegative() ? Duration.ZERO : duration;
+    }
+
     @Override
     public String toString() {
-        return "CountdownTimer {" +
+        return "CountdownTimer: {" +
                "timerDuration=" + timerDuration +
                ", lastTick=" + lastTick +
-               ", timerEnd=" + timerEnd +
+               ", timeRemaining=" + timeRemaining +
                '}';
     }
 }

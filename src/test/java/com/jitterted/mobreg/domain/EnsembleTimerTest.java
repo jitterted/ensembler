@@ -92,10 +92,10 @@ class EnsembleTimerTest {
             Instant oneMilliAfterEnd = timerStartedAt.plus(Duration.ofMinutes(4).plusMillis(1));
             ensembleTimer.tick(oneMilliAfterEnd);
 
-            assertThat(ensembleTimer.state())
-                    .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
             assertThat(ensembleTimer.timeRemaining())
                     .isEqualTo(new TimeRemaining(0, 0, 0));
+            assertThat(ensembleTimer.state())
+                    .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
         }
 
         @Test
