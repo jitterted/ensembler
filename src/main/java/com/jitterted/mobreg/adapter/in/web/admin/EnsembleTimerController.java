@@ -52,4 +52,8 @@ public class EnsembleTimerController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/pause-timer/{ensembleId}")
+    public ResponseEntity<Void> pauseTimer(@PathVariable("ensembleId") Long id) {
+        return ResponseEntity.noContent().build();
+    }
 }

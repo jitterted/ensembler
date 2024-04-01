@@ -78,6 +78,16 @@ class EnsembleTimerControllerMvcTest {
                .andExpect(status().isNoContent());
     }
 
+    @Test
+    void postToPauseTimerEndpointReturns204NoContent() throws Exception {
+        createTimerForEnsembleWithId(113);
+        mockMvc.perform(post("/admin/start-timer/113").with(csrf()));
+
+        mockMvc.perform(post("/admin/pause-timer/113").with(csrf()))
+               .andExpect(status().isNoContent());
+
+    }
+
     private void createTimerForEnsembleWithId(int ensembleId) throws Exception {
         createAndSaveEnsembleInRepositoryForId(ensembleId);
         mockMvc.perform(post("/admin/timer-view/" + ensembleId).with(csrf()));
