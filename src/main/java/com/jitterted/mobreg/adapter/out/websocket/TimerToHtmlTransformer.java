@@ -19,17 +19,23 @@ public class TimerToHtmlTransformer {
 
     // language=html
     private static String htmlForWaitingToStart(EnsembleTimer ensembleTimer) {
+        return htmlForTimerControlButton(ensembleTimer, "/admin/start-timer", "Start Timer")
+               + htmlForTimerContainer(ensembleTimer.timeRemaining())
+               + htmlForSwappingInRotationMembers(ensembleTimer.rotation());
+    }
+
+    private static String htmlForTimerControlButton(EnsembleTimer ensembleTimer, String buttonEndpointUrl, String buttonLabel) {
         return """
                <button id="timer-control-button"
                        hx-swap-oob="outerHTML"
                        hx-swap="none"
-                       hx-post="/admin/start-timer/%s"
+                       hx-post="%s/%s"
                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                   Start Timer
+                   %s
                </button>
-               """.formatted(ensembleTimer.ensembleId().id())
-               + htmlForTimerContainer(ensembleTimer.timeRemaining())
-               + htmlForSwappingInRotationMembers(ensembleTimer.rotation());
+               """.formatted(buttonEndpointUrl,
+                             ensembleTimer.ensembleId().id(),
+                             buttonLabel);
     }
 
     public static String htmlForSwappingInRotationMembers(Rotation rotation) {
