@@ -12,8 +12,8 @@ public class CountdownTimer {
         this.timerDuration = timerDuration;
     }
 
-    public void tick(Instant lastTick) {
-        this.lastTick = lastTick;
+    public void tick(Instant currentTick) {
+        this.lastTick = currentTick;
     }
 
     public void startAt(Instant timeStarted) {
