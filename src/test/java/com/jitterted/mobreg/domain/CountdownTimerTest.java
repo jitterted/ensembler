@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.domain;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -34,7 +33,6 @@ class CountdownTimerTest {
     }
 
     @Test
-    @Disabled
     void timeRemainingIsUnaffectedByTickDuringPause() {
         CountdownTimer countdownTimer = new CountdownTimer(Duration.ofSeconds(50));
         Instant timerStartedAt = Instant.now();
@@ -48,6 +46,8 @@ class CountdownTimerTest {
         assertThat(countdownTimer.timeRemaining().seconds())
                 .isEqualTo(40);
     }
+
+    // resume timer
 
     // unhappy:
     //      pause when not started

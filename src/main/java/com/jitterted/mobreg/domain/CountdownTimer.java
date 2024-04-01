@@ -29,7 +29,7 @@ public class CountdownTimer {
     }
 
     public void pause() {
-
+        isRunning = false;
     }
 
     boolean isFinished() {
