@@ -7,6 +7,7 @@ public class CountdownTimer {
     private final Duration timerDuration;
     private Instant lastTick;
     private Duration timeRemaining;
+    private boolean isRunning;
 
     public CountdownTimer(Duration timerDuration) {
         this.timerDuration = timerDuration;
@@ -15,13 +16,20 @@ public class CountdownTimer {
 
     public void startAt(Instant timeStarted) {
         lastTick = timeStarted;
+        isRunning = true;
         tick(timeStarted);
     }
 
     public void tick(Instant currentTick) {
-        Duration difference = Duration.between(lastTick, currentTick);
-        timeRemaining = floorZero(timeRemaining.minus(difference));
+        if (isRunning) {
+            Duration difference = Duration.between(lastTick, currentTick);
+            timeRemaining = floorZero(timeRemaining.minus(difference));
+        }
         this.lastTick = currentTick;
+    }
+
+    public void pause() {
+
     }
 
     boolean isFinished() {

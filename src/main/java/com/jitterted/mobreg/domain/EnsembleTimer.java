@@ -19,10 +19,6 @@ public class EnsembleTimer {
     private final Duration turnDuration;
     private TimerState currentState;
 
-    // adjust timerEnd by adding pauseTime upon Resume
-    //  -> add pausedTime to something (incrementing pause time)
-    // sand timer model: decrement "secondsRemaining" by one each "tick"
-
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,
                          List<Member> participants) {
