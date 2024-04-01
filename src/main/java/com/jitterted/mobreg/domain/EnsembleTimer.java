@@ -68,7 +68,7 @@ public class EnsembleTimer {
     public void tick(Instant now) {
         requireRunning(now);
         turnTimer.tick(now);
-        if (turnTimer.isFinished(now)) {
+        if (turnTimer.isFinished()) {
             currentState = TimerState.FINISHED;
         }
     }

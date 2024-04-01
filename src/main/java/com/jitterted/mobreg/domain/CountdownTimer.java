@@ -27,8 +27,8 @@ public class CountdownTimer {
         timerEnd = timeStarted.plus(timerDuration);
     }
 
-    boolean isFinished(Instant now) {
-        return !now.isBefore(timerEnd);
+    boolean isFinished() {
+        return !lastTick.isBefore(timerEnd);
     }
 
     public TimeRemaining timeRemaining() {
