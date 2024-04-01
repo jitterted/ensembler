@@ -17,7 +17,7 @@ public class EnsembleTimer {
     private final Rotation rotation;
     private CountdownTimer turnTimer;
     private final Duration turnDuration;
-    private TimerState currentState;
+    private TimerState currentState; // TODO: push into CountdownTimer
 
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,

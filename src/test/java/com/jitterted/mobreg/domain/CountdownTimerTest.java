@@ -68,9 +68,7 @@ class CountdownTimerTest {
     }
 
 
-    // unhappy/edge cases:
-    //      pause ignored when already paused [no test needed]
-    //      resume ignored when already running [no test needed]
+    // TODO: unhappy cases:
     //      pause when not started
     //      pause when finished
 
