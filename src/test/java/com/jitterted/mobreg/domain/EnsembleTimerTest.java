@@ -133,39 +133,6 @@ class EnsembleTimerTest {
     class UnhappyScenarios {
 
         @Test
-        void startTimerThrowsExceptionIfAlreadyRunning() {
-            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
-            ensembleTimer.startTimerAt(Instant.now());
-
-            assertThatIllegalStateException()
-                    .isThrownBy(() -> ensembleTimer.startTimerAt(Instant.now()))
-                    .withMessage("Can't Start Timer when Running");
-        }
-
-        @Test
-        void timerTickWhenWaitingToStartThrowsException() {
-            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
-
-            Instant tickAtNow = Instant.now();
-            assertThatIllegalStateException()
-                    .isThrownBy(() -> ensembleTimer.tick(tickAtNow))
-                    .withMessage("Timer is Waiting to Start, but Tick was received at %s."
-                                         .formatted(tickAtNow));
-        }
-
-        @Test
-        void tickWhenFinishedThrowsException() {
-            EnsembleTimerFactory.Fixture fixture = EnsembleTimerFactory.create4MinuteTimerInFinishedState();
-
-            Instant finishedAt = fixture.timerStartedAt().plus(Duration.ofMinutes(4));
-            Instant finishedAtPlus20Millis = finishedAt.plusMillis(20);
-            assertThatIllegalStateException()
-                    .isThrownBy(() -> fixture.ensembleTimer().tick(finishedAtPlus20Millis))
-                    .withMessageStartingWith("Tick received at %s after Timer already Finished:"
-                                                     .formatted(finishedAtPlus20Millis));
-        }
-
-        @Test
         public void rotateTimerWhenTimerNotStartedThrowsException() {
             EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
 

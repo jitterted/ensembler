@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.StringJoiner;
 import java.util.stream.Stream;
 
+import static com.jitterted.mobreg.domain.CountdownTimer.TimerState.FINISHED;
+
 public class EnsembleTimer {
     public static final Duration DEFAULT_TIMER_DURATION = Duration.ofMinutes(4);
 
@@ -54,34 +56,15 @@ public class EnsembleTimer {
     }
 
     public void startTimerAt(Instant timeStarted) {
-        requireNotRunning();
         turnTimer.startAt(timeStarted);
     }
 
     public void tick(Instant now) {
-        requireRunning(now);
         turnTimer.tick(now);
     }
 
     public TimeRemaining timeRemaining() {
         return turnTimer.timeRemaining();
-    }
-
-    private void requireRunning(Instant now) {
-        switch (turnTimer.state()) {
-            case FINISHED ->
-                    throw new IllegalStateException("Tick received at %s after Timer already Finished: %s."
-                                                            .formatted(now, turnTimer));
-            case WAITING_TO_START ->
-                    throw new IllegalStateException("Timer is Waiting to Start, but Tick was received at %s."
-                                                            .formatted(now));
-        }
-    }
-
-    private void requireNotRunning() {
-        if (turnTimer.state() == CountdownTimer.TimerState.RUNNING) {
-            throw new IllegalStateException("Can't Start Timer when Running");
-        }
     }
 
     public Rotation rotation() {
@@ -94,15 +77,14 @@ public class EnsembleTimer {
         turnTimer = new CountdownTimer(turnDuration);
     }
 
-    private void requireFinished() {
-        if (turnTimer.state() == CountdownTimer.TimerState.WAITING_TO_START
-                || turnTimer.state() == CountdownTimer.TimerState.RUNNING) {
-            throw new IllegalStateException("Can't Rotate when timer state is %s".formatted(turnTimer.state()));
-        }
-    }
-
     public void pause() {
         turnTimer.pause();
+    }
+
+    private void requireFinished() {
+        if (turnTimer.state() != FINISHED) {
+            throw new IllegalStateException("Can't Rotate when timer state is %s".formatted(turnTimer.state()));
+        }
     }
 
     @Override

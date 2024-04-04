@@ -22,12 +22,16 @@ public class CountdownTimer {
     }
 
     public void startAt(Instant timeStarted) {
+        requireWaitingToStart();
+
         lastTick = timeStarted;
         timerState = RUNNING;
         tick(timeStarted);
     }
 
     public void tick(Instant currentTick) {
+        requireRunningOrPaused(currentTick);
+
         updateTimeRemaining(currentTick);
         this.lastTick = currentTick;
     }
@@ -46,10 +50,6 @@ public class CountdownTimer {
 
     public void resume() {
         timerState = RUNNING;
-    }
-
-    boolean isFinished() {
-        return timerState == TimerState.FINISHED;
     }
 
     public TimeRemaining timeRemaining() {
@@ -72,6 +72,23 @@ public class CountdownTimer {
 
     public TimerState state() {
         return timerState;
+    }
+
+    private void requireRunningOrPaused(Instant now) {
+        switch (timerState) {
+            case FINISHED ->
+                    throw new IllegalStateException("Tick received at %s after Timer already Finished: %s."
+                                                            .formatted(now, this));
+            case WAITING_TO_START ->
+                    throw new IllegalStateException("Timer is Waiting to Start, but Tick was received at %s."
+                                                            .formatted(now));
+        }
+    }
+
+    private void requireWaitingToStart() {
+        if (timerState != WAITING_TO_START) {
+            throw new IllegalStateException("Can't Start Timer when " + timerState);
+        }
     }
 
     public enum TimerState {
