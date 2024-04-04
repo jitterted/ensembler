@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.StringJoiner;
 
+import static com.jitterted.mobreg.domain.CountdownTimer.TimerState.FINISHED;
 import static com.jitterted.mobreg.domain.CountdownTimer.TimerState.PAUSED;
 import static com.jitterted.mobreg.domain.CountdownTimer.TimerState.RUNNING;
 import static com.jitterted.mobreg.domain.CountdownTimer.TimerState.WAITING_TO_START;
@@ -27,11 +28,16 @@ public class CountdownTimer {
     }
 
     public void tick(Instant currentTick) {
+        updateTimeRemaining(currentTick);
+        this.lastTick = currentTick;
+    }
+
+    public void updateTimeRemaining(Instant currentTick) {
         if (timerState == RUNNING) {
             Duration difference = Duration.between(lastTick, currentTick);
             timeRemaining = floorZero(timeRemaining.minus(difference));
+            timerState = timeRemaining.isZero() ? FINISHED : RUNNING;
         }
-        this.lastTick = currentTick;
     }
 
     public void pause() {
@@ -43,7 +49,7 @@ public class CountdownTimer {
     }
 
     boolean isFinished() {
-        return timeRemaining.isZero();
+        return timerState == TimerState.FINISHED;
     }
 
     public TimeRemaining timeRemaining() {
@@ -65,8 +71,9 @@ public class CountdownTimer {
     }
 
     enum TimerState {
+        WAITING_TO_START,
         RUNNING,
         PAUSED,
-        WAITING_TO_START
+        FINISHED
     }
 }
