@@ -4,6 +4,7 @@ import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.application.port.SecondsTicker;
+import com.jitterted.mobreg.domain.CountdownTimer;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
@@ -72,7 +73,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
         requireTimerToExistFor(ensembleId);
         return ensembleTimers
                 .get(ensembleId)
-                .state() == EnsembleTimer.TimerState.RUNNING;
+                .state() == CountdownTimer.TimerState.RUNNING;
     }
 
     public void startTimerFor(EnsembleId ensembleId, Instant timeStarted) {
@@ -89,7 +90,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
         EnsembleTimer ensembleTimer = timerFor(ensembleId);
         ensembleTimer.tick(now);
 
-        if (ensembleTimer.state() == EnsembleTimer.TimerState.FINISHED) {
+        if (ensembleTimer.state() == CountdownTimer.TimerState.FINISHED) {
             secondsTicker.stop();
         }
 

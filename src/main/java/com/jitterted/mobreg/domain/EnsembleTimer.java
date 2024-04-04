@@ -17,7 +17,6 @@ public class EnsembleTimer {
     private final Rotation rotation;
     private CountdownTimer turnTimer;
     private final Duration turnDuration;
-    private TimerState currentState; // TODO: push into CountdownTimer
 
     public EnsembleTimer(EnsembleId ensembleId,
                          String ensembleName,
@@ -34,7 +33,6 @@ public class EnsembleTimer {
         this.participants = participants;
         this.turnDuration = turnDuration;
         this.turnTimer = new CountdownTimer(turnDuration);
-        this.currentState = TimerState.WAITING_TO_START;
         this.rotation = new Rotation(participants);
     }
 
@@ -51,22 +49,18 @@ public class EnsembleTimer {
     }
 
     @NotNull
-    public TimerState state() {
-        return currentState;
+    public CountdownTimer.TimerState state() {
+        return turnTimer.state();
     }
 
     public void startTimerAt(Instant timeStarted) {
         requireNotRunning();
         turnTimer.startAt(timeStarted);
-        currentState = TimerState.RUNNING;
     }
 
     public void tick(Instant now) {
         requireRunning(now);
         turnTimer.tick(now);
-        if (turnTimer.isFinished()) {
-            currentState = TimerState.FINISHED;
-        }
     }
 
     public TimeRemaining timeRemaining() {
@@ -74,7 +68,7 @@ public class EnsembleTimer {
     }
 
     private void requireRunning(Instant now) {
-        switch (currentState) {
+        switch (turnTimer.state()) {
             case FINISHED ->
                     throw new IllegalStateException("Tick received at %s after Timer already Finished: %s."
                                                             .formatted(now, turnTimer));
@@ -85,7 +79,7 @@ public class EnsembleTimer {
     }
 
     private void requireNotRunning() {
-        if (currentState == TimerState.RUNNING) {
+        if (turnTimer.state() == CountdownTimer.TimerState.RUNNING) {
             throw new IllegalStateException("Can't Start Timer when Running");
         }
     }
@@ -98,26 +92,17 @@ public class EnsembleTimer {
         requireFinished();
         rotation.rotate();
         turnTimer = new CountdownTimer(turnDuration);
-        currentState = TimerState.WAITING_TO_START;
     }
 
     private void requireFinished() {
-        if (currentState == TimerState.WAITING_TO_START
-                || currentState == TimerState.RUNNING) {
-            throw new IllegalStateException("Can't Rotate when timer state is %s".formatted(currentState));
+        if (turnTimer.state() == CountdownTimer.TimerState.WAITING_TO_START
+                || turnTimer.state() == CountdownTimer.TimerState.RUNNING) {
+            throw new IllegalStateException("Can't Rotate when timer state is %s".formatted(turnTimer.state()));
         }
     }
 
     public void pause() {
         turnTimer.pause();
-        currentState = TimerState.PAUSED;
-    }
-
-    public enum TimerState {
-        WAITING_TO_START,
-        RUNNING,
-        PAUSED,
-        FINISHED
     }
 
     @Override
@@ -127,7 +112,6 @@ public class EnsembleTimer {
                 .add("ensembleName='" + ensembleName + "'")
                 .add("rotation=" + rotation)
                 .add("turnTimer=" + turnTimer)
-                .add("currentState=" + currentState)
                 .toString();
     }
 

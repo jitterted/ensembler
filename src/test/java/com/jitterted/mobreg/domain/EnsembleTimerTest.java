@@ -19,7 +19,7 @@ class EnsembleTimerTest {
             EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
 
             assertThat(ensembleTimer.state())
-                    .isEqualByComparingTo(EnsembleTimer.TimerState.WAITING_TO_START);
+                    .isEqualByComparingTo(CountdownTimer.TimerState.WAITING_TO_START);
             assertThat(ensembleTimer.timeRemaining())
                     .isEqualTo(new TimeRemaining(4, 0, 100));
         }
@@ -31,7 +31,7 @@ class EnsembleTimerTest {
             ensembleTimer.startTimerAt(Instant.now());
 
             assertThat(ensembleTimer.state())
-                    .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+                    .isEqualByComparingTo(CountdownTimer.TimerState.RUNNING);
             assertThat(ensembleTimer.timeRemaining())
                     .isEqualTo(new TimeRemaining(4, 0, 100));
         }
@@ -59,7 +59,7 @@ class EnsembleTimerTest {
             ensembleTimer.tick(oneMilliBeforeEnd);
 
             assertThat(ensembleTimer.state())
-                    .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+                    .isEqualByComparingTo(CountdownTimer.TimerState.RUNNING);
             assertThat(ensembleTimer.timeRemaining().minutes())
                     .isZero();
             assertThat(ensembleTimer.timeRemaining().seconds())
@@ -79,7 +79,7 @@ class EnsembleTimerTest {
             ensembleTimer.tick(timerStartedAt.plusSeconds(45));
 
             assertThat(ensembleTimer.state())
-                    .isEqualByComparingTo(EnsembleTimer.TimerState.PAUSED);
+                    .isEqualByComparingTo(CountdownTimer.TimerState.PAUSED);
             assertThat(ensembleTimer.timeRemaining())
                     .isEqualTo(TimeRemaining.from(Duration.ofMinutes(3).plusSeconds(30),
                                                   Duration.ofMinutes(4)));
@@ -95,7 +95,7 @@ class EnsembleTimerTest {
             ensembleTimer.tick(timerFinishedAt);
 
             assertThat(ensembleTimer.state())
-                    .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
+                    .isEqualByComparingTo(CountdownTimer.TimerState.FINISHED);
             assertThat(ensembleTimer.timeRemaining())
                     .isEqualTo(new TimeRemaining(0, 0, 0));
         }
@@ -112,7 +112,7 @@ class EnsembleTimerTest {
             assertThat(ensembleTimer.timeRemaining())
                     .isEqualTo(new TimeRemaining(0, 0, 0));
             assertThat(ensembleTimer.state())
-                    .isEqualByComparingTo(EnsembleTimer.TimerState.FINISHED);
+                    .isEqualByComparingTo(CountdownTimer.TimerState.FINISHED);
         }
 
         @Test
@@ -122,7 +122,7 @@ class EnsembleTimerTest {
             fixture.ensembleTimer().rotateRoles();
 
             assertThat(fixture.ensembleTimer().state())
-                    .isEqualByComparingTo(EnsembleTimer.TimerState.WAITING_TO_START);
+                    .isEqualByComparingTo(CountdownTimer.TimerState.WAITING_TO_START);
             assertThat(fixture.ensembleTimer().timeRemaining())
                     .isEqualTo(new TimeRemaining(4, 0, 100));
         }

@@ -70,10 +70,15 @@ public class CountdownTimer {
                 .toString();
     }
 
-    enum TimerState {
+    public TimerState state() {
+        return timerState;
+    }
+
+    public enum TimerState {
         WAITING_TO_START,
         RUNNING,
         PAUSED,
         FINISHED
     }
+
 }

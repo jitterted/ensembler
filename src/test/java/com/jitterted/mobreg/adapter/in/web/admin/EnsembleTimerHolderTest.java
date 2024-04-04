@@ -10,6 +10,7 @@ import com.jitterted.mobreg.application.port.InMemoryEnsembleRepository;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.application.port.SecondsTicker;
+import com.jitterted.mobreg.domain.CountdownTimer;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleFactory;
@@ -67,7 +68,7 @@ public class EnsembleTimerHolderTest {
             fixture.mockSecondsTicker().verifyStartWasCalledFor(679);
 
             assertThat(fixture.ensembleTimer().state())
-                    .isEqualByComparingTo(EnsembleTimer.TimerState.RUNNING);
+                    .isEqualByComparingTo(CountdownTimer.TimerState.RUNNING);
         }
 
         @Test
@@ -155,7 +156,7 @@ public class EnsembleTimerHolderTest {
         @Test
         void onTimerCreationBroadcastsTimerWaitingToStart() {
             BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(475,
-                                                                                 EnsembleTimer.TimerState.WAITING_TO_START,
+                                                                                 CountdownTimer.TimerState.WAITING_TO_START,
                                                                                  new TimeRemaining(4, 0, 100));
 
             fixture.ensembleTimerHolder().createTimerFor(EnsembleId.of(475));
@@ -167,7 +168,7 @@ public class EnsembleTimerHolderTest {
         void onTickWhileRunningBroadcastsCurrentTimerState() {
             BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
                     515,
-                    EnsembleTimer.TimerState.RUNNING,
+                    CountdownTimer.TimerState.RUNNING,
                     TimeRemaining.from(Duration.ofMinutes(3), Duration.ofMinutes(4)));
 
             fixture.tickAfterStart(Duration.ofSeconds(60));
@@ -179,7 +180,7 @@ public class EnsembleTimerHolderTest {
         void onTimerPauseBroadcastsPauseState() {
             BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
                     458,
-                    EnsembleTimer.TimerState.PAUSED,
+                    CountdownTimer.TimerState.PAUSED,
                     TimeRemaining.from(Duration.ofMinutes(2), Duration.ofMinutes(4)));
             fixture.tickAfterStart(Duration.ofMinutes(2));
             fixture.mockBroadcaster().reset();
@@ -193,7 +194,7 @@ public class EnsembleTimerHolderTest {
         void onTickWhenFinishedBroadcastsTimerFinished() {
             BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
                     737,
-                    EnsembleTimer.TimerState.FINISHED,
+                    CountdownTimer.TimerState.FINISHED,
                     new TimeRemaining(0, 0, 0));
 
             fixture.tickAfterStart(EnsembleTimer.DEFAULT_TIMER_DURATION);
@@ -205,7 +206,7 @@ public class EnsembleTimerHolderTest {
         void finishedTimerOnRotateThenTimerMovesToWaitingToStart() {
             BroadcastFixture broadcastFixture = createBroadcasterWithStartedEnsembleTimer(
                     873,
-                    EnsembleTimer.TimerState.WAITING_TO_START,
+                    CountdownTimer.TimerState.WAITING_TO_START,
                     new TimeRemaining(4, 0, 100));
             EnsembleTimer ensembleTimer = broadcastFixture.ensembleTimerHolder()
                                                           .timerFor(EnsembleId.of(873));
@@ -226,7 +227,7 @@ public class EnsembleTimerHolderTest {
 
         // -- FIXTURE SETUP
 
-        private BroadcastFixture createBroadcasterWithStartedEnsembleTimer(int ensembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
+        private BroadcastFixture createBroadcasterWithStartedEnsembleTimer(int ensembleId, CountdownTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
             Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
                                                      .startsNow()
                                                      .build();
@@ -258,13 +259,13 @@ public class EnsembleTimerHolderTest {
         private static class MockBroadcaster implements Broadcaster {
             private boolean wasCalled;
             private final int expectedEnsembleId;
-            private final EnsembleTimer.TimerState expectedTimerState;
+            private final CountdownTimer.TimerState expectedTimerState;
             private final TimeRemaining expectedTimeRemaining;
-            private EnsembleTimer.TimerState lastState;
+            private CountdownTimer.TimerState lastState;
             private EnsembleId lastEnsembleId;
             private TimeRemaining lastTimeRemaining;
 
-            public MockBroadcaster(int expectedEnsembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
+            public MockBroadcaster(int expectedEnsembleId, CountdownTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
                 this.expectedEnsembleId = expectedEnsembleId;
                 this.expectedTimerState = expectedTimerState;
                 this.expectedTimeRemaining = expectedTimeRemaining;

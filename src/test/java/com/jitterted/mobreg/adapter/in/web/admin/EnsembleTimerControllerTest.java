@@ -3,6 +3,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.port.InMemoryMemberRepository;
+import com.jitterted.mobreg.domain.CountdownTimer;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleFactory;
@@ -94,7 +95,7 @@ class EnsembleTimerControllerTest {
         fixture.ensembleTimerController().pauseTimer(743L);
 
         assertThat(fixture.ensembleTimer().state())
-                .isEqualByComparingTo(EnsembleTimer.TimerState.PAUSED);
+                .isEqualByComparingTo(CountdownTimer.TimerState.PAUSED);
     }
 
     // --- FIXTURES ---
