@@ -2,10 +2,10 @@ package com.jitterted.mobreg.domain;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Stream;
 
 public class EnsembleTimer {
@@ -111,14 +111,19 @@ public class EnsembleTimer {
     public enum TimerState {
         WAITING_TO_START,
         RUNNING,
+        PAUSED,
         FINISHED
     }
 
     @Override
     public String toString() {
-        return MessageFormat.format(
-                "EnsembleTimer [ensembleId={0}, participants={1}]",
-                ensembleId, participants);
+        return new StringJoiner(", ", EnsembleTimer.class.getSimpleName() + "[", "]")
+                .add("ensembleId=" + ensembleId)
+                .add("ensembleName='" + ensembleName + "'")
+                .add("rotation=" + rotation)
+                .add("turnTimer=" + turnTimer)
+                .add("currentState=" + currentState)
+                .toString();
     }
 
     @Override

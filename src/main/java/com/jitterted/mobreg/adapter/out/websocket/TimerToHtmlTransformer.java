@@ -13,6 +13,7 @@ public class TimerToHtmlTransformer {
         return switch (ensembleTimer.state()) {
             case WAITING_TO_START -> htmlForWaitingToStart(ensembleTimer);
             case RUNNING -> htmlForRunning(ensembleTimer);
+            case PAUSED -> null;
             case FINISHED -> htmlForFinished(ensembleTimer);
         };
     }

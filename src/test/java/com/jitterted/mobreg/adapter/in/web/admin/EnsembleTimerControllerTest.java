@@ -10,6 +10,7 @@ import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.EnsembleTimerFactory;
 import com.jitterted.mobreg.domain.Member;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
@@ -85,6 +86,20 @@ class EnsembleTimerControllerTest {
         assertThat(fixture.ensembleTimer().rotation().driver())
                 .isEqualTo(nextDriverBeforeRotation);
     }
+
+    @Test
+    @Disabled("Until PAUSE functionality exists in EnsembleTimerHolder and PAUSE state is in the timer")
+    void pauseTimerPausesTheSpecifiedEnsembleTimer() {
+        Fixture fixture = createEnsembleAndTimerWithIdOf(743);
+        fixture.ensembleTimerController().startTimer(743L);
+
+        fixture.ensembleTimerController().pauseTimer(743L);
+
+        assertThat(fixture.ensembleTimer().state())
+                .isEqualByComparingTo(EnsembleTimer.TimerState.PAUSED);
+    }
+
+    // --- FIXTURES ---
 
     public static Fixture createEnsembleAndTimerWithIdOf(int ensembleId) {
         Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
