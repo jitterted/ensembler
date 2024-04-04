@@ -60,11 +60,7 @@ class TimerToHtmlTransformerTest {
 
     @Test
     void timerRunningAfterSomeTimePassedHtmlIsCorrect() {
-        EnsembleTimer ensembleTimer = EnsembleTimerFactory
-                .createTimerWith4MinuteDurationAndIdOf(EnsembleId.of(763));
-        Instant timerStartedAt = Instant.now();
-        ensembleTimer.startTimerAt(timerStartedAt);
-        ensembleTimer.tick(timerStartedAt.plusSeconds(30));
+        EnsembleTimer ensembleTimer = createTimerWithTickAt30SecondsAfterStart(763);
 
         String timerHtml = TimerToHtmlTransformer.htmlFor(ensembleTimer);
 
@@ -88,6 +84,44 @@ class TimerToHtmlTransformerTest {
                                </div>
                            </div>
                            """);
+    }
+
+    @Test
+    void timerPausedHtmlIsCorrect() {
+        EnsembleTimer ensembleTimer = createTimerWithTickAt30SecondsAfterStart(827);
+        ensembleTimer.pause();
+
+        String timerHtml = TimerToHtmlTransformer.htmlFor(ensembleTimer);
+
+        assertThat(timerHtml)
+                .isEqualTo("""    
+                           <button id="timer-control-button"
+                                   hx-swap-oob="outerHTML"
+                                   hx-swap="none"
+                                   hx-post="/admin/resume-timer/827"
+                                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                               Resume Timer
+                           </button>
+                           <div id="timer-container"
+                                class="circle circle-running"
+                                style="background: conic-gradient(lightgreen 0% 87.500000%, black 87.500000% 100%);">
+                               <svg class="progress-ring">
+                                   <circle class="progress-circle"/>
+                               </svg>
+                               <div class="timer-text-container timer-running">
+                                   <div class="timer-text">3:30</div>
+                               </div>
+                           </div>
+                           """);
+    }
+
+    private EnsembleTimer createTimerWithTickAt30SecondsAfterStart(int id) {
+        EnsembleTimer ensembleTimer = EnsembleTimerFactory
+                .createTimerWith4MinuteDurationAndIdOf(EnsembleId.of(id));
+        Instant timerStartedAt = Instant.now();
+        ensembleTimer.startTimerAt(timerStartedAt);
+        ensembleTimer.tick(timerStartedAt.plusSeconds(30));
+        return ensembleTimer;
     }
 
     @Test

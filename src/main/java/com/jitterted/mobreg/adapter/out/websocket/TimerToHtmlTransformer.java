@@ -13,9 +13,14 @@ public class TimerToHtmlTransformer {
         return switch (ensembleTimer.state()) {
             case WAITING_TO_START -> htmlForWaitingToStart(ensembleTimer);
             case RUNNING -> htmlForRunning(ensembleTimer);
-            case PAUSED -> null;
+            case PAUSED -> htmlForPaused(ensembleTimer);
             case FINISHED -> htmlForFinished(ensembleTimer);
         };
+    }
+
+    private static String htmlForPaused(EnsembleTimer ensembleTimer) {
+        return htmlForTimerControlButton(ensembleTimer, "/admin/resume-timer", "Resume Timer")
+               + htmlForTimerContainer(ensembleTimer.timeRemaining());
     }
 
     // language=html
