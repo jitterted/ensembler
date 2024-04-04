@@ -103,12 +103,12 @@ class TimerToHtmlTransformerTest {
                                Resume Timer
                            </button>
                            <div id="timer-container"
-                                class="circle circle-running"
-                                style="background: conic-gradient(lightgreen 0% 87.500000%, black 87.500000% 100%);">
+                                class="circle circle-paused"
+                                style="background: conic-gradient(#FFD033 0% 87.500000%, black 87.500000% 100%);">
                                <svg class="progress-ring">
                                    <circle class="progress-circle"/>
                                </svg>
-                               <div class="timer-text-container timer-running">
+                               <div class="timer-text-container timer-paused">
                                    <div class="timer-text">3:30</div>
                                </div>
                            </div>

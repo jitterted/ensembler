@@ -20,13 +20,13 @@ public class TimerToHtmlTransformer {
 
     private static String htmlForPaused(EnsembleTimer ensembleTimer) {
         return htmlForTimerControlButton(ensembleTimer, "/admin/resume-timer", "Resume Timer")
-               + htmlForTimerContainer(ensembleTimer.timeRemaining());
+               + htmlForTimerContainer(ensembleTimer.timeRemaining(), "paused");
     }
 
     // language=html
     private static String htmlForWaitingToStart(EnsembleTimer ensembleTimer) {
         return htmlForTimerControlButton(ensembleTimer, "/admin/start-timer", "Start Timer")
-               + htmlForTimerContainer(ensembleTimer.timeRemaining())
+               + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running")
                + htmlForSwappingInRotationMembers(ensembleTimer.rotation());
     }
 
@@ -82,24 +82,27 @@ public class TimerToHtmlTransformer {
     // language=html
     private static String htmlForRunning(EnsembleTimer ensembleTimer) {
         return htmlForTimerControlButton(ensembleTimer, "/admin/pause-timer", "Pause Timer")
-               + htmlForTimerContainer(ensembleTimer.timeRemaining());
+               + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running");
     }
 
     // language=html
-    private static String htmlForTimerContainer(TimeRemaining timeRemaining) {
+    private static String htmlForTimerContainer(TimeRemaining timeRemaining, String cssState) {
         double percentRemaining = timeRemaining.percent();
         return """
                <div id="timer-container"
-                    class="circle circle-running"
-                    style="background: conic-gradient(lightgreen 0%% %f%%, black %f%% 100%%);">
+                    class="circle circle-%s"
+                    style="background: conic-gradient(%s 0%% %f%%, black %f%% 100%%);">
                    <svg class="progress-ring">
                        <circle class="progress-circle"/>
                    </svg>
-                   <div class="timer-text-container timer-running">
+                   <div class="timer-text-container timer-%s">
                        <div class="timer-text">%d:%02d</div>
                    </div>
                </div>
-               """.formatted(percentRemaining, percentRemaining,
+               """.formatted(cssState,
+                             cssState.equals("running") ? "lightgreen" : "#FFD033",
+                             percentRemaining, percentRemaining,
+                             cssState,
                              timeRemaining.minutes(),
                              timeRemaining.seconds());
     }
