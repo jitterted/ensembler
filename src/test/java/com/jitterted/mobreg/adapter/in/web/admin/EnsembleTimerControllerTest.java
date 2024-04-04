@@ -67,39 +67,40 @@ class EnsembleTimerControllerTest {
 
     @Test
     void startTimerStartsTheSpecifiedEnsembleTimer() {
-        Ensemble ensemble = new EnsembleBuilder().id(279)
-                                                 .startsNow()
-                                                 .build();
-        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
-                .saveEnsemble(ensemble)
-                .withThreeParticipants();
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-        EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
-        ensembleTimerController.createTimerView(279L);
+        Fixture fixture = createEnsembleAndTimerWithIdOf(653);
+        fixture.ensembleTimerController().startTimer(653L);
 
-        ensembleTimerController.startTimer(279L);
-
-        assertThat(ensembleTimerHolder.isTimerRunningFor(EnsembleId.of(279L)))
+        assertThat(fixture.ensembleTimerHolder().isTimerRunningFor(EnsembleId.of(653L)))
                 .isTrue();
     }
 
     @Test
     public void rotateTimerRotatesParticipantsForFinishedEnsembleTimer() throws Exception {
-        Ensemble ensemble = new EnsembleBuilder().id(279)
+        Fixture fixture = createEnsembleAndTimerWithIdOf(279);
+        Member nextDriverBeforeRotation = fixture.ensembleTimer().rotation().nextDriver();
+        EnsembleTimerFactory.pushTimerToFinishedState(fixture.ensembleTimer());
+
+        fixture.ensembleTimerController().rotateTimer(279L);
+
+        assertThat(fixture.ensembleTimer().rotation().driver())
+                .isEqualTo(nextDriverBeforeRotation);
+    }
+
+    public static Fixture createEnsembleAndTimerWithIdOf(int ensembleId) {
+        Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
                                                  .startsNow()
                                                  .build();
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
                 .withThreeParticipants();
         EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-        EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(279));
-        Member nextDriverBeforeRotation = ensembleTimer.rotation().nextDriver();
-        EnsembleTimerFactory.pushTimerToFinishedState(ensembleTimer);
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder, new InMemoryMemberRepository());
+        EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
+        return new Fixture(ensembleTimerController, ensembleTimerHolder, ensembleTimer);
+    }
 
-        ensembleTimerController.rotateTimer(279L);
-
-        assertThat(ensembleTimer.rotation().driver())
-                .isEqualTo(nextDriverBeforeRotation);
+    private record Fixture(EnsembleTimerController ensembleTimerController,
+                           EnsembleTimerHolder ensembleTimerHolder,
+                           EnsembleTimer ensembleTimer) {
     }
 }

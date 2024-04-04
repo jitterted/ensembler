@@ -69,8 +69,7 @@ class EnsembleTimerControllerMvcTest {
 
     @Test
     void postToNextRotationEndpointReturns204NoContent() throws Exception {
-        createTimerForEnsembleWithId(113);
-        mockMvc.perform(post("/admin/start-timer/113").with(csrf()));
+        createAndStartTimerForEnsembleWithId(113);
         ensembleTimerHolder.handleTickFor(EnsembleId.of(113),
                                           Instant.now().plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
 
@@ -80,12 +79,16 @@ class EnsembleTimerControllerMvcTest {
 
     @Test
     void postToPauseTimerEndpointReturns204NoContent() throws Exception {
-        createTimerForEnsembleWithId(113);
-        mockMvc.perform(post("/admin/start-timer/113").with(csrf()));
+        createAndStartTimerForEnsembleWithId(113);
 
         mockMvc.perform(post("/admin/pause-timer/113").with(csrf()))
                .andExpect(status().isNoContent());
 
+    }
+
+    private void createAndStartTimerForEnsembleWithId(int ensembleId) throws Exception {
+        createTimerForEnsembleWithId(ensembleId);
+        mockMvc.perform(post("/admin/start-timer/113").with(csrf()));
     }
 
     private void createTimerForEnsembleWithId(int ensembleId) throws Exception {
