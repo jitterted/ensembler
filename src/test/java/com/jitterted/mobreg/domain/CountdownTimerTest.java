@@ -1,5 +1,6 @@
 package com.jitterted.mobreg.domain;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -67,9 +68,16 @@ class CountdownTimerTest {
 
     }
 
+    @Test
+    @Disabled("Waiting for CountdownTimer to know its state")
+    void exceptionThrownOnPauseWhenTimerNotStarted() {
+        // implement me
+    }
 
-    // TODO: unhappy cases:
-    //      pause when not started
-    //      pause when finished
+    @Test
+    @Disabled("Waiting for CountdownTimer to know its state")
+    void exceptionThrownOnPauseWhenTimerFinished() {
+        // implement me
+    }
 
 }
