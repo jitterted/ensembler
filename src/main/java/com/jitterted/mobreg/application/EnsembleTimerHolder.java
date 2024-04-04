@@ -114,6 +114,8 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     public void pauseTimerFor(EnsembleId ensembleId) {
         EnsembleTimer ensembleTimer = timerFor(ensembleId);
 
+        ensembleTimer.pause();
+
         broadcaster.sendCurrentTimer(ensembleTimer);
     }
 

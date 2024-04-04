@@ -176,7 +176,6 @@ public class EnsembleTimerHolderTest {
         }
 
         @Test
-        @Disabled("Until the EnsembleTimer handles the pause command")
         void onTimerPauseBroadcastsPauseState() {
             BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
                     458,
