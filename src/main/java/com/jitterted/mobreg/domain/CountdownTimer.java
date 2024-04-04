@@ -2,26 +2,32 @@ package com.jitterted.mobreg.domain;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.StringJoiner;
+
+import static com.jitterted.mobreg.domain.CountdownTimer.TimerState.PAUSED;
+import static com.jitterted.mobreg.domain.CountdownTimer.TimerState.RUNNING;
+import static com.jitterted.mobreg.domain.CountdownTimer.TimerState.WAITING_TO_START;
 
 public class CountdownTimer {
     private final Duration timerDuration;
     private Instant lastTick;
     private Duration timeRemaining;
-    private boolean isRunning;
+    private TimerState timerState;
 
     public CountdownTimer(Duration timerDuration) {
         this.timerDuration = timerDuration;
         this.timeRemaining = timerDuration;
+        this.timerState = WAITING_TO_START;
     }
 
     public void startAt(Instant timeStarted) {
         lastTick = timeStarted;
-        isRunning = true;
+        timerState = RUNNING;
         tick(timeStarted);
     }
 
     public void tick(Instant currentTick) {
-        if (isRunning) {
+        if (timerState == RUNNING) {
             Duration difference = Duration.between(lastTick, currentTick);
             timeRemaining = floorZero(timeRemaining.minus(difference));
         }
@@ -29,11 +35,11 @@ public class CountdownTimer {
     }
 
     public void pause() {
-        isRunning = false;
+        timerState = PAUSED;
     }
 
     public void resume() {
-        isRunning = true;
+        timerState = RUNNING;
     }
 
     boolean isFinished() {
@@ -50,10 +56,17 @@ public class CountdownTimer {
 
     @Override
     public String toString() {
-        return "CountdownTimer: {" +
-               "timerDuration=" + timerDuration +
-               ", lastTick=" + lastTick +
-               ", timeRemaining=" + timeRemaining +
-               '}';
+        return new StringJoiner(", ", CountdownTimer.class.getSimpleName() + "[", "]")
+                .add("timerDuration=" + timerDuration)
+                .add("lastTick=" + lastTick)
+                .add("timeRemaining=" + timeRemaining)
+                .add("timerState=" + timerState)
+                .toString();
+    }
+
+    enum TimerState {
+        RUNNING,
+        PAUSED,
+        WAITING_TO_START
     }
 }
