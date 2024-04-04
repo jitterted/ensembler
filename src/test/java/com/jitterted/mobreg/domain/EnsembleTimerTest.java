@@ -69,6 +69,23 @@ class EnsembleTimerTest {
         }
 
         @Test
+        void isPausedWhenTimerPaused() {
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
+            Instant timerStartedAt = Instant.now();
+            ensembleTimer.startTimerAt(timerStartedAt);
+            ensembleTimer.tick(timerStartedAt.plusSeconds(30));
+
+            ensembleTimer.pause();
+            ensembleTimer.tick(timerStartedAt.plusSeconds(45));
+
+            assertThat(ensembleTimer.state())
+                    .isEqualByComparingTo(EnsembleTimer.TimerState.PAUSED);
+            assertThat(ensembleTimer.timeRemaining())
+                    .isEqualTo(TimeRemaining.from(Duration.ofMinutes(3).plusSeconds(30),
+                                                  Duration.ofMinutes(4)));
+        }
+
+        @Test
         void isFinishedWhenTickTimeAtEndTime() {
             EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
             Instant timerStartedAt = Instant.now();
@@ -145,7 +162,7 @@ class EnsembleTimerTest {
             assertThatIllegalStateException()
                     .isThrownBy(() -> fixture.ensembleTimer().tick(finishedAtPlus20Millis))
                     .withMessageStartingWith("Tick received at %s after Timer already Finished:"
-                                         .formatted(finishedAtPlus20Millis));
+                                                     .formatted(finishedAtPlus20Millis));
         }
 
         @Test

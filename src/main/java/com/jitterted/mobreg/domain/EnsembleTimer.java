@@ -108,6 +108,11 @@ public class EnsembleTimer {
         }
     }
 
+    public void pause() {
+        turnTimer.pause();
+        currentState = TimerState.PAUSED;
+    }
+
     public enum TimerState {
         WAITING_TO_START,
         RUNNING,

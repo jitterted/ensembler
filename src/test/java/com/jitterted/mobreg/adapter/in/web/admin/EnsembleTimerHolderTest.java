@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
@@ -151,47 +152,59 @@ public class EnsembleTimerHolderTest {
 
     @Nested
     class BroadcastEvents {
+        @Test
+        void onTimerCreationBroadcastsTimerWaitingToStart() {
+            BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(475,
+                                                                                 EnsembleTimer.TimerState.WAITING_TO_START,
+                                                                                 new TimeRemaining(4, 0, 100));
+
+            fixture.ensembleTimerHolder().createTimerFor(EnsembleId.of(475));
+
+            fixture.mockBroadcaster().verifyTimerStateSent();
+        }
 
         @Test
         void onTickWhileRunningBroadcastsCurrentTimerState() {
-            BroadcastFixture fixture = createBroadcastFixture(515,
-                                                              EnsembleTimer.TimerState.RUNNING,
-                                                              new TimeRemaining(3, 0, 75.0));
+            BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
+                    515,
+                    EnsembleTimer.TimerState.RUNNING,
+                    TimeRemaining.from(Duration.ofMinutes(3), Duration.ofMinutes(4)));
 
-            fixture.ensembleTimerHolder()
-                   .handleTickFor(EnsembleId.of(515), fixture.timerStartedAt().plusSeconds(60));
+            fixture.tickAfterStart(Duration.ofSeconds(60));
+
+            fixture.mockBroadcaster().verifyTimerStateSent();
+        }
+
+        @Test
+        @Disabled("Until the EnsembleTimer handles the pause command")
+        void onTimerPauseBroadcastsPauseState() {
+            BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
+                    458,
+                    EnsembleTimer.TimerState.PAUSED,
+                    TimeRemaining.from(Duration.ofMinutes(2), Duration.ofMinutes(4)));
+            fixture.tickAfterStart(Duration.ofMinutes(2));
+            fixture.mockBroadcaster().reset();
+
+            fixture.ensembleTimerHolder().pauseTimerFor(EnsembleId.of(458));
 
             fixture.mockBroadcaster().verifyTimerStateSent();
         }
 
         @Test
         void onTickWhenFinishedBroadcastsTimerFinished() {
-            BroadcastFixture fixture = createBroadcastFixture(737,
-                                                              EnsembleTimer.TimerState.FINISHED,
-                                                              new TimeRemaining(0, 0, 0));
+            BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
+                    737,
+                    EnsembleTimer.TimerState.FINISHED,
+                    new TimeRemaining(0, 0, 0));
 
-            fixture.ensembleTimerHolder()
-                   .handleTickFor(EnsembleId.of(737),
-                                  fixture.timerStartedAt()
-                                         .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
+            fixture.tickAfterStart(EnsembleTimer.DEFAULT_TIMER_DURATION);
 
             fixture.mockBroadcaster().verifyTimerStateSent();
         }
 
         @Test
-        void onTimerCreationBroadcastsTimerWaitingToStart() {
-            BroadcastFixture broadcastFixture = createBroadcastFixture(475,
-                                                                       EnsembleTimer.TimerState.WAITING_TO_START,
-                                                                       new TimeRemaining(4, 0, 100));
-
-            broadcastFixture.ensembleTimerHolder().createTimerFor(EnsembleId.of(475));
-
-            broadcastFixture.mockBroadcaster().verifyTimerStateSent();
-        }
-
-        @Test
         void finishedTimerOnRotateThenTimerMovesToWaitingToStart() {
-            BroadcastFixture broadcastFixture = createBroadcastFixture(
+            BroadcastFixture broadcastFixture = createBroadcasterWithStartedEnsembleTimer(
                     873,
                     EnsembleTimer.TimerState.WAITING_TO_START,
                     new TimeRemaining(4, 0, 100));
@@ -214,7 +227,7 @@ public class EnsembleTimerHolderTest {
 
         // -- FIXTURE SETUP
 
-        private BroadcastFixture createBroadcastFixture(int ensembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
+        private BroadcastFixture createBroadcasterWithStartedEnsembleTimer(int ensembleId, EnsembleTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
             Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
                                                      .startsNow()
                                                      .build();
@@ -230,12 +243,17 @@ public class EnsembleTimerHolderTest {
             Instant timerStartedAt = Instant.now();
             ensembleTimerHolder.startTimerFor(EnsembleId.of(ensembleId), timerStartedAt);
             mockBroadcaster.reset();
-            return new BroadcastFixture(mockBroadcaster, ensembleTimerHolder, timerStartedAt);
+            return new BroadcastFixture(mockBroadcaster, ensembleTimerHolder, ensembleId, timerStartedAt);
         }
 
         private record BroadcastFixture(MockBroadcaster mockBroadcaster,
                                         EnsembleTimerHolder ensembleTimerHolder,
+                                        int ensembleId,
                                         Instant timerStartedAt) {
+            private void tickAfterStart(Duration durationAfterStartToTick) {
+                ensembleTimerHolder()
+                        .handleTickFor(EnsembleId.of(ensembleId), timerStartedAt.plus(durationAfterStartToTick));
+            }
         }
 
         private static class MockBroadcaster implements Broadcaster {
@@ -295,9 +313,11 @@ public class EnsembleTimerHolderTest {
         return new Fixture(builder.ensembleRepository(),
                            builder.memberRepository(),
                            ensemble.participants()
-                                   .map(memberId -> builder.memberRepository().findById(memberId).orElseThrow())
+                                   .map(memberId -> builder.memberRepository()
+                                                           .findById(memberId)
+                                                           .orElseThrow())
                                    .toList()
-                           );
+        );
     }
 
     private record Fixture(EnsembleRepository ensembleRepository,
