@@ -7,10 +7,10 @@ import com.jitterted.mobreg.domain.Rotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.jitterted.mobreg.adapter.out.websocket.RotationRole.ROLE_DRIVER;
-import static com.jitterted.mobreg.adapter.out.websocket.RotationRole.ROLE_NAVIGATOR;
-import static com.jitterted.mobreg.adapter.out.websocket.RotationRole.ROLE_NEXT_DRIVER;
-import static com.jitterted.mobreg.adapter.out.websocket.RotationRole.ROLE_REST_OF_PARTICIPANTS;
+import static com.jitterted.mobreg.adapter.RotationRole.ROLE_DRIVER;
+import static com.jitterted.mobreg.adapter.RotationRole.ROLE_NAVIGATOR;
+import static com.jitterted.mobreg.adapter.RotationRole.ROLE_NEXT_DRIVER;
+import static com.jitterted.mobreg.adapter.RotationRole.ROLE_REST_OF_PARTICIPANTS;
 
 public class ParticipantsTransformer {
 

@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.adapter.out.websocket;
+package com.jitterted.mobreg.adapter;
 
 public enum RotationRole {
     ROLE_DRIVER("driver"),

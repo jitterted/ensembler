@@ -1,4 +1,4 @@
-package com.jitterted.mobreg.adapter.out.websocket;
+package com.jitterted.mobreg.adapter;
 
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.Member;
