@@ -39,7 +39,7 @@ class HexagonalArchitectureTest {
 
     @Test
     public void adaptersMustNotDependOnEachOther() {
-        slices().matching("..adapter.*.(*)..")
+        slices().matching("..adapter.(*.*)..")
                 .should().notDependOnEachOther()
                 .as("Adapters must not depend on each other")
                 .ignoreDependency(InviteEditor.class, InviteJdbcRepository.class)
