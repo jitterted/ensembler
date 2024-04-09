@@ -120,6 +120,14 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
         broadcaster.sendCurrentTimer(ensembleTimer);
     }
 
+    public void resumeTimerFor(EnsembleId ensembleId) {
+        EnsembleTimer ensembleTimer = timerFor(ensembleId);
+
+        ensembleTimer.resume();
+
+        broadcaster.sendCurrentTimer(ensembleTimer);
+    }
+
     static class SingleEntryHashMap<K, V> extends HashMap<K, V> {
         @Override
         public V put(K key, V value) {

@@ -86,6 +86,18 @@ class EnsembleTimerTest {
         }
 
         @Test
+        void isResumedWhenTimerResumed() {
+            EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimer();
+            ensembleTimer.startTimerAt(Instant.now());
+            ensembleTimer.pause();
+
+            ensembleTimer.resume();
+
+            assertThat(ensembleTimer.state())
+                    .isEqualByComparingTo(CountdownTimer.TimerState.RUNNING);
+        }
+
+        @Test
         void isFinishedWhenTickTimeAtEndTime() {
             EnsembleTimer ensembleTimer = EnsembleTimerFactory.createTimerWith4MinuteDuration();
             Instant timerStartedAt = Instant.now();

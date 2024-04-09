@@ -98,6 +98,18 @@ class EnsembleTimerControllerTest {
                 .isEqualByComparingTo(CountdownTimer.TimerState.PAUSED);
     }
 
+    @Test
+    void resumePausedTimerResumesTheSpecifiedTimer() {
+        Fixture fixture = createEnsembleAndTimerWithIdOf(672);
+        fixture.ensembleTimerController().startTimer(672L);
+        fixture.ensembleTimerController().pauseTimer(672L);
+
+        fixture.ensembleTimerController().resumeTimer(672L);
+
+        assertThat(fixture.ensembleTimer().state())
+                .isEqualByComparingTo(CountdownTimer.TimerState.RUNNING);
+    }
+
     // --- FIXTURES ---
 
     public static Fixture createEnsembleAndTimerWithIdOf(int ensembleId) {

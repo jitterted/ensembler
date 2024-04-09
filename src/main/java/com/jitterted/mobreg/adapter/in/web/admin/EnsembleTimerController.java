@@ -60,6 +60,7 @@ public class EnsembleTimerController {
 
     @PostMapping("/resume-timer/{ensembleId}")
     public ResponseEntity<Void> resumeTimer(@PathVariable("ensembleId") Long id) {
+        ensembleTimerHolder.resumeTimerFor(EnsembleId.of(id));
         return ResponseEntity.noContent().build();
     }
 

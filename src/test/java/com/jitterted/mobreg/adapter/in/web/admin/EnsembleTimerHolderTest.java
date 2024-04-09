@@ -191,6 +191,21 @@ public class EnsembleTimerHolderTest {
         }
 
         @Test
+        void onTimerResumeBroadcastsRunningState() {
+            BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
+                    218,
+                    CountdownTimer.TimerState.RUNNING,
+                    TimeRemaining.from(Duration.ofMinutes(2), Duration.ofMinutes(4)));
+            fixture.tickAfterStart(Duration.ofMinutes(2));
+            fixture.ensembleTimerHolder().pauseTimerFor(EnsembleId.of(218));
+            fixture.mockBroadcaster().reset();
+
+            fixture.ensembleTimerHolder().resumeTimerFor(EnsembleId.of(218));
+
+            fixture.mockBroadcaster().verifyTimerStateSent();
+        }
+
+        @Test
         void onTickWhenFinishedBroadcastsTimerFinished() {
             BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
                     737,
@@ -288,7 +303,7 @@ public class EnsembleTimerHolderTest {
 
             private void verifyTimerStateSent() {
                 assertThat(wasCalled)
-                        .as("Expected sendCurrentTimer() to have been called on the Broadcaster")
+                        .as("Expected sendCurrentTimer(%s) to have been called on the Broadcaster", expectedTimerState)
                         .isTrue();
                 assertAll(
                         "Timer State",

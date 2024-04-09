@@ -66,7 +66,18 @@ class CountdownTimerTest {
         assertThat(countdownTimer.timeRemaining().seconds())
                 .as("Expected 38 seconds left on the timer")
                 .isEqualTo(50 - 10 - 1 - 1);
+    }
 
+    @Test
+    @Disabled
+    void pauseAlreadyPausedTimerIsNoOp() {
+        // proves that pause() is idempotent
+    }
+
+    @Test
+    @Disabled
+    void resumeRunningTimerIsNoOp() {
+        // proves that resume() is idempotent
     }
 
     @Nested
@@ -125,17 +136,6 @@ class CountdownTimerTest {
                                                      .formatted(finishedAtPlus20Millis));
         }
 
-        private Fixture createFinishedTimer() {
-            CountdownTimer countdownTimer = new CountdownTimer(EnsembleTimer.DEFAULT_TIMER_DURATION);
-            Instant timerStartedAt = Instant.now();
-            countdownTimer.startAt(timerStartedAt);
-            countdownTimer.tick(timerStartedAt.plus(Duration.ofMinutes(4).plusMillis(1)));
-            return new Fixture(countdownTimer, timerStartedAt);
-        }
-
-        private record Fixture(CountdownTimer countdownTimer, Instant timerStartedAt) {
-        }
-
         @Test
         @Disabled("Waiting for CountdownTimer to know its state")
         void exceptionThrownOnPauseWhenTimerNotStarted() {
@@ -146,6 +146,31 @@ class CountdownTimerTest {
         @Disabled("Waiting for CountdownTimer to know its state")
         void exceptionThrownOnPauseWhenTimerFinished() {
             // implement me
+        }
+
+        @Test
+        @Disabled("Waiting for CountdownTimer to know its state")
+        void exceptionThrownOnResumeWhenTimerNotStarted() {
+            // implement me
+        }
+
+        @Test
+        @Disabled("Waiting for CountdownTimer to know its state")
+        void exceptionThrownOnResumeWhenTimerFinished() {
+            // implement me
+        }
+
+
+
+        private Fixture createFinishedTimer() {
+            CountdownTimer countdownTimer = new CountdownTimer(EnsembleTimer.DEFAULT_TIMER_DURATION);
+            Instant timerStartedAt = Instant.now();
+            countdownTimer.startAt(timerStartedAt);
+            countdownTimer.tick(timerStartedAt.plus(Duration.ofMinutes(4).plusMillis(1)));
+            return new Fixture(countdownTimer, timerStartedAt);
+        }
+        private record Fixture(CountdownTimer countdownTimer, Instant timerStartedAt) {
+
         }
     }
 
