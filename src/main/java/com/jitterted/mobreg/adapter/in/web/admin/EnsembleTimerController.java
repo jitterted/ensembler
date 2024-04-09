@@ -1,7 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
-import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class EnsembleTimerController {
     private final EnsembleTimerHolder ensembleTimerHolder;
 
     @Autowired
-    public EnsembleTimerController(EnsembleTimerHolder ensembleTimerHolder, MemberRepository memberRepository) {
+    public EnsembleTimerController(EnsembleTimerHolder ensembleTimerHolder) {
         this.ensembleTimerHolder = ensembleTimerHolder;
     }
 
