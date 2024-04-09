@@ -57,4 +57,10 @@ public class EnsembleTimerController {
         ensembleTimerHolder.pauseTimerFor(EnsembleId.of(id));
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/resume-timer/{ensembleId}")
+    public ResponseEntity<Void> resumeTimer(@PathVariable("ensembleId") Long id) {
+        return ResponseEntity.noContent().build();
+    }
+
 }
