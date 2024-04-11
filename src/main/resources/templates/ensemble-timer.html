@@ -110,7 +110,7 @@
 
 <body class="grid grid-cols-3 gap-4 p-4">
 <div id="timer-and-control">
-    <h1 class="text-xl font-bold py-2"
+    <h1 class="text-center text-xl font-bold py-2"
         th:text="${ensembleName}">Ensemble Name</h1>
     <div
             class="flex flex-col justify-center items-center p-4"
@@ -128,13 +128,17 @@
             </div>
         </div>
     </div>
-    <div class="mt-2">
-        <h2 class="text-xl font-bold">Timer Control</h2>
+    <div class="mt-4 flex justify-center">
         <button hx-swap="none"
                 id="timer-control-button"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >Unknown
         </button>
+        <!-- extra button
+        <button class="ml-4 inline-flex items-center bg-red-200 hover:bg-gray-700 text-gray-800 font-bold py-2 px-4 rounded">
+        Reset
+        </button>
+        -->
     </div>
 </div>
 <div id="new-participants-container" class="col-span-2">
