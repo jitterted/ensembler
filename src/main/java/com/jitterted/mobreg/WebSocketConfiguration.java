@@ -20,7 +20,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/admin/ws/timer");
+        registry.addHandler(webSocketHandler, "/member/ws/timer");
     }
 
 }
