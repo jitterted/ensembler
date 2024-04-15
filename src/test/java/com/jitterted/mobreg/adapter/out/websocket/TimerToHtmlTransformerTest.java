@@ -29,7 +29,7 @@ class TimerToHtmlTransformerTest {
                            <button id="timer-control-button"
                                    hx-swap-oob="outerHTML"
                                    hx-swap="none"
-                                   hx-post="/admin/start-timer/57"
+                                   hx-post="/member/start-timer/57"
                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                Start Timer
                            </button>
@@ -70,7 +70,7 @@ class TimerToHtmlTransformerTest {
                            <button id="timer-control-button"
                                    hx-swap-oob="outerHTML"
                                    hx-swap="none"
-                                   hx-post="/admin/pause-timer/763"
+                                   hx-post="/member/pause-timer/763"
                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                Pause Timer
                            </button>
@@ -99,7 +99,7 @@ class TimerToHtmlTransformerTest {
                            <button id="timer-control-button"
                                    hx-swap-oob="outerHTML"
                                    hx-swap="none"
-                                   hx-post="/admin/resume-timer/827"
+                                   hx-post="/member/resume-timer/827"
                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                Resume Timer
                            </button>
@@ -137,7 +137,7 @@ class TimerToHtmlTransformerTest {
                            <button id="timer-control-button"
                                    hx-swap-oob="outerHTML"
                                    hx-swap="none"
-                                   hx-post="/admin/rotate-timer/78"
+                                   hx-post="/member/rotate-timer/78"
                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                Next Rotation
                            </button>

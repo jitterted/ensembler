@@ -1,5 +1,6 @@
-package com.jitterted.mobreg.adapter.in.web.admin;
+package com.jitterted.mobreg.adapter.in.web.member;
 
+import com.jitterted.mobreg.adapter.in.web.admin.ParticipantsTransformer;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.domain.CountdownTimer;
@@ -16,27 +17,7 @@ import org.springframework.ui.Model;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SuppressWarnings("unchecked")
 class EnsembleTimerControllerTest {
-
-    @Test
-    void createAndRedirectToTimerSessionForSpecificEnsemble() {
-        Ensemble ensemble = new EnsembleBuilder().id(87)
-                                                 .startsNow()
-                                                 .build();
-        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
-                .saveEnsemble(ensemble)
-                .withThreeParticipants();
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-        EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder);
-
-        String redirectPage = ensembleTimerController.createTimerView(87L);
-
-        assertThat(redirectPage)
-                .isEqualTo("redirect:/admin/timer-view/87");
-        assertThat(ensembleTimerHolder.hasTimerFor(EnsembleId.of(87)))
-                .isTrue();
-    }
 
     @Test
     void viewTimerHasParticipantsInTheViewModelFromTheSpecifiedEnsembleAndTimerNotStarted() {
@@ -47,8 +28,8 @@ class EnsembleTimerControllerTest {
                 .saveMemberAndAccept("Paul", "ghpaul")
                 .saveMemberAndAccept("Sally", "ghsally");
         EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(153));
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder);
-        ensembleTimerController.createTimerView(153L);
 
         Model model = new ConcurrentModel();
         ensembleTimerController.viewTimer(153L, model);
@@ -75,7 +56,7 @@ class EnsembleTimerControllerTest {
     }
 
     @Test
-    public void rotateTimerRotatesParticipantsForFinishedEnsembleTimer() throws Exception {
+    public void rotateTimerRotatesParticipantsForFinishedEnsembleTimer() {
         Fixture fixture = createEnsembleAndTimerWithIdOf(279);
         Member nextDriverBeforeRotation = fixture.ensembleTimer().rotation().nextDriver();
         EnsembleTimerFactory.pushTimerToFinishedState(fixture.ensembleTimer());
@@ -111,7 +92,7 @@ class EnsembleTimerControllerTest {
 
     // --- FIXTURES ---
 
-    public static Fixture createEnsembleAndTimerWithIdOf(int ensembleId) {
+    static Fixture createEnsembleAndTimerWithIdOf(int ensembleId) {
         Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
                                                  .startsNow()
                                                  .build();

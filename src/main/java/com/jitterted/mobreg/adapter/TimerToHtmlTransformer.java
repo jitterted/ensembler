@@ -19,13 +19,13 @@ public class TimerToHtmlTransformer {
     }
 
     private static String htmlForPaused(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButton(ensembleTimer, "/admin/resume-timer", "Resume Timer")
+        return htmlForTimerControlButton(ensembleTimer, "/member/resume-timer", "Resume Timer")
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "paused");
     }
 
     // language=html
     private static String htmlForWaitingToStart(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButton(ensembleTimer, "/admin/start-timer", "Start Timer")
+        return htmlForTimerControlButton(ensembleTimer, "/member/start-timer", "Start Timer")
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running")
                + htmlForSwappingInRotationMembers(ensembleTimer.rotation());
     }
@@ -81,7 +81,7 @@ public class TimerToHtmlTransformer {
 
     // language=html
     private static String htmlForRunning(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButton(ensembleTimer, "/admin/pause-timer", "Pause Timer")
+        return htmlForTimerControlButton(ensembleTimer, "/member/pause-timer", "Pause Timer")
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running");
     }
 
@@ -113,7 +113,7 @@ public class TimerToHtmlTransformer {
                <button id="timer-control-button"
                        hx-swap-oob="outerHTML"
                        hx-swap="none"
-                       hx-post="/admin/rotate-timer/%s"
+                       hx-post="/member/rotate-timer/%s"
                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                    Next Rotation
                </button>

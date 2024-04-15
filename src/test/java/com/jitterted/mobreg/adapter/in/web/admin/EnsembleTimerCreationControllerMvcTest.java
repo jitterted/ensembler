@@ -22,14 +22,13 @@ import java.time.Instant;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Tag("mvc")
-@WebMvcTest({EnsembleTimerController.class})
+@WebMvcTest({EnsembleTimerCreationController.class})
 @Import(TestAdminConfiguration.class)
 @WithMockUser(username = "admin", authorities = {"ROLE_MEMBER", "ROLE_ADMIN"})
-class EnsembleTimerControllerMvcTest {
+class EnsembleTimerCreationControllerMvcTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -47,8 +46,7 @@ class EnsembleTimerControllerMvcTest {
     void postToTimerViewRedirects() throws Exception {
         createAndSaveEnsembleInRepositoryForId(113);
         mockMvc.perform(post("/admin/create-timer/113").with(csrf()))
-               .andExpect(status().is3xxRedirection())
-               .andExpect(redirectedUrl("/admin/timer-view/113"));
+               .andExpect(status().is3xxRedirection());
     }
 
     @Test

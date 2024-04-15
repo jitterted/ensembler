@@ -1,5 +1,6 @@
-package com.jitterted.mobreg.adapter.in.web.admin;
+package com.jitterted.mobreg.adapter.in.web.member;
 
+import com.jitterted.mobreg.adapter.in.web.admin.ParticipantsTransformer;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
@@ -15,19 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.time.Instant;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/member")
 public class EnsembleTimerController {
     private final EnsembleTimerHolder ensembleTimerHolder;
 
     @Autowired
     public EnsembleTimerController(EnsembleTimerHolder ensembleTimerHolder) {
         this.ensembleTimerHolder = ensembleTimerHolder;
-    }
-
-    @PostMapping("/create-timer/{ensembleId}")
-    public String createTimerView(@PathVariable("ensembleId") Long id) {
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(id));
-        return "redirect:/admin/timer-view/" + id;
     }
 
     @GetMapping("/timer-view/{ensembleId}")
