@@ -24,6 +24,12 @@ public class EnsembleTimerController {
         this.ensembleTimerHolder = ensembleTimerHolder;
     }
 
+    @PostMapping("/create-timer/{ensembleId}")
+    public String createTimerView(@PathVariable("ensembleId") Long id) {
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(id));
+        return "redirect:/admin/timer-view/" + id;
+    }
+
     @GetMapping("/timer-view/{ensembleId}")
     public String viewTimer(@PathVariable("ensembleId") Long id, Model model) {
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(id));
@@ -31,12 +37,6 @@ public class EnsembleTimerController {
         model.addAttribute("ensembleName", ensembleTimer.ensembleName());
         model.addAllAttributes(ParticipantsTransformer.participantRolesToNames(ensembleTimer));
         return "ensemble-timer";
-    }
-
-    @PostMapping("/timer-view/{ensembleId}")
-    public String createTimerView(@PathVariable("ensembleId") Long id) {
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(id));
-        return "redirect:/admin/timer-view/" + id;
     }
 
     @PostMapping("/start-timer/{ensembleId}")

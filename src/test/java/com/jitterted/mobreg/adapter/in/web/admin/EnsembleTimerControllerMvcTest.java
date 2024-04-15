@@ -46,7 +46,7 @@ class EnsembleTimerControllerMvcTest {
     @Test
     void postToTimerViewRedirects() throws Exception {
         createAndSaveEnsembleInRepositoryForId(113);
-        mockMvc.perform(post("/admin/timer-view/113").with(csrf()))
+        mockMvc.perform(post("/admin/create-timer/113").with(csrf()))
                .andExpect(status().is3xxRedirection())
                .andExpect(redirectedUrl("/admin/timer-view/113"));
     }
@@ -103,7 +103,7 @@ class EnsembleTimerControllerMvcTest {
 
     private void createTimerForEnsembleWithId(int ensembleId) throws Exception {
         createAndSaveEnsembleInRepositoryForId(ensembleId);
-        mockMvc.perform(post("/admin/timer-view/" + ensembleId).with(csrf()));
+        mockMvc.perform(post("/admin/create-timer/" + ensembleId).with(csrf()));
     }
 
     private void createAndSaveEnsembleInRepositoryForId(long ensembleId) {
