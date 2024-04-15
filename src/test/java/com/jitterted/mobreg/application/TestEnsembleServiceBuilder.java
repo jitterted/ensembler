@@ -66,10 +66,21 @@ public class TestEnsembleServiceBuilder {
         return this;
     }
 
+    public TestEnsembleServiceBuilder saveMemberAsSpectator(String firstName) {
+        Member member = new Member(firstName, "spectator1");
+        MemberId memberId = memberRepository.save(member).getId();
+        lastEnsemble.joinAsSpectator(memberId);
+        return this;
+    }
+
     public TestEnsembleServiceBuilder withThreeParticipants() {
-        return saveMemberAndAccept("Jane", "ghjane")
-                .saveMemberAndAccept("Paul", "ghpaul")
-                .saveMemberAndAccept("Sally", "ghsally");
+        return withThreeParticipants("Jane", "Paul", "Sally");
+    }
+
+    public TestEnsembleServiceBuilder withThreeParticipants(String participant1, String participant2, String participant3) {
+        return saveMemberAndAccept(participant1, "ghjane")
+                .saveMemberAndAccept(participant2, "ghpaul")
+                .saveMemberAndAccept(participant3, "ghsally");
     }
 
     public EnsembleId lastSavedEnsembleId() {

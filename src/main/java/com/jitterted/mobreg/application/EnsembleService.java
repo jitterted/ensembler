@@ -40,9 +40,9 @@ public class EnsembleService {
         this.videoConferenceScheduler = videoConferenceScheduler;
     }
 
-    public void scheduleEnsemble(String name, URI meetingLink, ZonedDateTime startDateTime) {
+    public Ensemble scheduleEnsemble(String name, URI meetingLink, ZonedDateTime startDateTime) {
         Ensemble ensemble = new Ensemble(name, meetingLink, startDateTime);
-        saveAndNotifyEnsembleScheduled(ensemble);
+        return saveAndNotifyEnsembleScheduled(ensemble);
     }
 
     public Ensemble scheduleEnsemble(String name, ZonedDateTime startDateTime) {

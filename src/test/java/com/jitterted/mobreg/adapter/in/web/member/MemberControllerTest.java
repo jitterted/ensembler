@@ -4,6 +4,7 @@ import com.jitterted.mobreg.adapter.in.web.OAuth2UserFactory;
 import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleServiceFactory;
+import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.DummyNotifier;
 import com.jitterted.mobreg.application.port.DummyVideoConferenceScheduler;
@@ -86,7 +87,8 @@ class MemberControllerTest {
             InMemoryMemberRepository memberRepository = new InMemoryMemberRepository();
             MemberService memberService = new DefaultMemberService(memberRepository);
 
-            MemberController memberController = new MemberController(ensembleService, memberService);
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(ensembleRepository, memberRepository);
+            MemberController memberController = new MemberController(ensembleService, memberService, ensembleTimerHolder);
 
             Model model = new ConcurrentModel();
             AuthFixture authFixture = createAuthUser(memberService);
@@ -164,7 +166,8 @@ class MemberControllerTest {
                                                               new DummyNotifier(),
                                                               new DummyVideoConferenceScheduler());
         DefaultMemberService memberService = new DefaultMemberService(memberRepository);
-        MemberController memberController = new MemberController(ensembleService, memberService);
+        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(ensembleRepository, memberRepository);
+        MemberController memberController = new MemberController(ensembleService, memberService, ensembleTimerHolder);
         return new Fixture(ensemble, memberService, ensembleService, memberController);
     }
 

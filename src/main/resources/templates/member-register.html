@@ -83,6 +83,10 @@
                 </a>
             </p>
             <p class="mt-4">Started At <span th:text="*{startTime}">9:00am</span></p>
+            <p class="mt-4" th:if="*{ensembleTimerCreated}">
+                <a class="font-medium text-blue-700 hover:border-blue-700 border-b-2 border-blue-500"
+                  href="#" th:href="*{timerUrl}">Participant Rotation Timer</a>
+            </p>
         </div>
         <div>
             <h2 class="font-semibold">PARTICIPANTS</h2>

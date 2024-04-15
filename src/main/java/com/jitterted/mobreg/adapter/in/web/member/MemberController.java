@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.application.EnsembleService;
+import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -30,11 +31,15 @@ public class MemberController {
     private final EnsembleService ensembleService;
     private final MemberLookup memberLookup;
     private final MemberService memberService;
+    private final EnsembleTimerHolder ensembleTimerHolder;
 
-    public MemberController(EnsembleService ensembleService, MemberService memberService) {
+    public MemberController(EnsembleService ensembleService,
+                            MemberService memberService,
+                            EnsembleTimerHolder ensembleTimerHolder) {
         this.ensembleService = ensembleService;
         this.memberLookup = new MemberLookup(memberService);
         this.memberService = memberService;
+        this.ensembleTimerHolder = ensembleTimerHolder;
     }
 
     @GetMapping("/member/register")
@@ -54,29 +59,6 @@ public class MemberController {
 
         addEnsemblesToModel(model, member);
         return "member-register";
-    }
-
-    public void addEnsemblesToModel(Model model, Member member) {
-        MemberId memberId = member.getId();
-
-        Optional<InProgressEnsembleView> inProgressEnsemble =
-                ensembleService.inProgressEnsemble(ZonedDateTime.now(), memberId)
-                               .map(ensemble -> InProgressEnsembleView.from(ensemble, memberService));
-        model.addAttribute("inProgressEnsembleViewOptional", inProgressEnsemble);
-
-        List<Ensemble> upcomingEnsembles = ensembleService.allUpcomingEnsembles(ZonedDateTime.now());
-        List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(upcomingEnsembles, memberId, memberService, EnsembleSortOrder.ASCENDING_ORDER);
-        model.addAttribute("upcomingEnsembles", availableEnsembleSummaryViews);
-
-        List<Ensemble> pastEnsembles = ensembleService.allInThePastFor(memberId, ZonedDateTime.now());
-        List<EnsembleSummaryView> pastEnsembleSummaryViews = EnsembleSummaryView.from(pastEnsembles, memberId, memberService, EnsembleSortOrder.DESCENDING_ORDER);
-        model.addAttribute("pastEnsembles", pastEnsembleSummaryViews);
-    }
-
-    private MemberRegisterForm createRegistrationForm(MemberId memberId) {
-        MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
-        memberRegisterForm.setMemberId(memberId.id());
-        return memberRegisterForm;
     }
 
     @PostMapping("/member/accept")
@@ -108,4 +90,30 @@ public class MemberController {
 
         return "redirect:/member/register";
     }
+
+    private void addEnsemblesToModel(Model model, Member member) {
+        MemberId memberId = member.getId();
+
+        Optional<InProgressEnsembleView> inProgressEnsemble =
+                ensembleService.inProgressEnsemble(ZonedDateTime.now(), memberId)
+                               .map(ensemble -> InProgressEnsembleView.from(ensemble,
+                                                                            memberService,
+                                                                            ensembleTimerHolder));
+        model.addAttribute("inProgressEnsembleViewOptional", inProgressEnsemble);
+
+        List<Ensemble> upcomingEnsembles = ensembleService.allUpcomingEnsembles(ZonedDateTime.now());
+        List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(upcomingEnsembles, memberId, memberService, EnsembleSortOrder.ASCENDING_ORDER);
+        model.addAttribute("upcomingEnsembles", availableEnsembleSummaryViews);
+
+        List<Ensemble> pastEnsembles = ensembleService.allInThePastFor(memberId, ZonedDateTime.now());
+        List<EnsembleSummaryView> pastEnsembleSummaryViews = EnsembleSummaryView.from(pastEnsembles, memberId, memberService, EnsembleSortOrder.DESCENDING_ORDER);
+        model.addAttribute("pastEnsembles", pastEnsembleSummaryViews);
+    }
+
+    private MemberRegisterForm createRegistrationForm(MemberId memberId) {
+        MemberRegisterForm memberRegisterForm = new MemberRegisterForm();
+        memberRegisterForm.setMemberId(memberId.id());
+        return memberRegisterForm;
+    }
+
 }
