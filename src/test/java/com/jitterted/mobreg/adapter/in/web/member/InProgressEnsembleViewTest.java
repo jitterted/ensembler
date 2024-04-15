@@ -41,7 +41,7 @@ class InProgressEnsembleViewTest {
                         "in-progress",
                         "https://zoom.us/inprogress",
                         "11:00 AM", // hour = 11
-                        "/member/ensemble-timer/378",
+                        "/member/timer-view/378",
                         false,
                         List.of("Participant 1", "Participant 2", "Participant 3"),
                         List.of("Spectator 1")));

@@ -27,7 +27,7 @@ public record InProgressEnsembleView(String name,
                                           ensemble.startDateTime()
                                                   .toLocalTime()
                                                   .format(DateTimeFormatter.ofPattern("hh:mm a")),
-                                          "/member/ensemble-timer/" + ensembleId.id(),
+                                          "/member/timer-view/" + ensembleId.id(),
                                           ensembleTimerHolder.hasTimerFor(ensembleId),
                                           namesOf(ensemble.participants(), memberService),
                                           namesOf(ensemble.spectators(), memberService));
