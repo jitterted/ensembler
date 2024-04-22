@@ -49,13 +49,13 @@ public class TimerToHtmlTransformer {
     public static String htmlForSwappingInRotationMembers(Rotation rotation) {
         return """
                <swap-container id="%s" hx-swap-oob="innerHTML">
-                   <p>%s</p>
+                   %s
                </swap-container>
                <swap-container id="%s" hx-swap-oob="innerHTML">
-                   <p>%s</p>
+                   %s
                </swap-container>
                <swap-container id="%s" hx-swap-oob="innerHTML">
-                   <p>%s</p>
+                   %s
                </swap-container>
                """.formatted(RotationRole.ROLE_DRIVER.idString(),
                              rotation.driver().firstName(),

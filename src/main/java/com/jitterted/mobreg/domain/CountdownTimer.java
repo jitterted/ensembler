@@ -39,6 +39,7 @@ public class CountdownTimer {
     public void updateTimeRemaining(Instant currentTick) {
         if (timerState == RUNNING) {
             Duration difference = Duration.between(lastTick, currentTick);
+            difference = difference.multipliedBy(30);
             timeRemaining = floorZero(timeRemaining.minus(difference));
             timerState = timeRemaining.isZero() ? FINISHED : RUNNING;
         }
