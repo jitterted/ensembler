@@ -44,13 +44,13 @@ class TimerToHtmlTransformerTest {
                                </div>
                            </div>
                            <swap-container id="driver" hx-swap-oob="innerHTML">
-                               <p>Two</p>
+                               Two
                            </swap-container>
                            <swap-container id="navigator" hx-swap-oob="innerHTML">
-                               <p>Three</p>
+                               Three
                            </swap-container>
                            <swap-container id="nextDriver" hx-swap-oob="innerHTML">
-                               <p>One</p>
+                               One
                            </swap-container>
                            <swap-container id="restOfParticipants" hx-swap-oob="innerHTML">
                                <p>Four</p>
@@ -167,13 +167,13 @@ class TimerToHtmlTransformerTest {
             assertThat(actual)
                     .isEqualTo(""" 
                            <swap-container id="driver" hx-swap-oob="innerHTML">
-                               <p>Two</p>
+                               Two
                            </swap-container>
                            <swap-container id="navigator" hx-swap-oob="innerHTML">
-                               <p>Three</p>
+                               Three
                            </swap-container>
                            <swap-container id="nextDriver" hx-swap-oob="innerHTML">
-                               <p>One</p>
+                               One
                            </swap-container>
                            <swap-container id="restOfParticipants" hx-swap-oob="innerHTML">
                                <p>(no other participants)</p>
@@ -191,13 +191,13 @@ class TimerToHtmlTransformerTest {
             assertThat(actual)
                     .isEqualTo(""" 
                            <swap-container id="driver" hx-swap-oob="innerHTML">
-                               <p>Two</p>
+                               Two
                            </swap-container>
                            <swap-container id="navigator" hx-swap-oob="innerHTML">
-                               <p>Three</p>
+                               Three
                            </swap-container>
                            <swap-container id="nextDriver" hx-swap-oob="innerHTML">
-                               <p>One</p>
+                               One
                            </swap-container>
                            <swap-container id="restOfParticipants" hx-swap-oob="innerHTML">
                                <p>Four</p>
