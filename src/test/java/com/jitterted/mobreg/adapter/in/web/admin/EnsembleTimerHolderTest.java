@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
-import com.jitterted.mobreg.application.DoNothingSecondsTicker;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.EnsembleTimerTickHandler;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
@@ -106,7 +105,9 @@ public class EnsembleTimerHolderTest {
                     .saveEnsemble(ensemble)
                     .withThreeParticipants();
             MockSecondsTicker mockSecondsTicker = new MockSecondsTicker();
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(), builder.memberRepository(), DUMMY_BROADCASTER, mockSecondsTicker);
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(),
+                                                                                     builder.memberRepository(),
+                                                                                     mockSecondsTicker);
             EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
             return new TimerFixture(mockSecondsTicker, ensembleTimerHolder, ensembleTimer);
         }
@@ -250,10 +251,9 @@ public class EnsembleTimerHolderTest {
                     .saveEnsemble(ensemble)
                     .withThreeParticipants();
             MockBroadcaster mockBroadcaster = new MockBroadcaster(ensembleId, expectedTimerState, expectedTimeRemaining);
-            EnsembleTimerHolder ensembleTimerHolder = new EnsembleTimerHolder(builder.ensembleRepository(),
-                                                                              builder.memberRepository(),
-                                                                              mockBroadcaster,
-                                                                              new DoNothingSecondsTicker());
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(),
+                                                                                     builder.memberRepository(),
+                                                                                     mockBroadcaster);
             ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
             Instant timerStartedAt = Instant.now();
             ensembleTimerHolder.startTimerFor(EnsembleId.of(ensembleId), timerStartedAt);

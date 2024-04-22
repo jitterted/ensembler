@@ -33,9 +33,24 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     }
 
     public static EnsembleTimerHolder createNull(EnsembleRepository ensembleRepository, MemberRepository memberRepository) {
-        return new EnsembleTimerHolder(ensembleRepository,
-                                       memberRepository,
+        return new EnsembleTimerHolder(ensembleRepository, memberRepository,
                                        ensembleTimer -> {},
+                                       new DoNothingSecondsTicker());
+    }
+
+    public static EnsembleTimerHolder createNull(EnsembleRepository ensembleRepository,
+                                                 MemberRepository memberRepository,
+                                                 SecondsTicker secondsTicker) {
+        return new EnsembleTimerHolder(ensembleRepository, memberRepository,
+                                       ensembleTimer -> {},
+                                       secondsTicker);
+    }
+
+    public static EnsembleTimerHolder createNull(EnsembleRepository ensembleRepository,
+                                                 MemberRepository memberRepository,
+                                                 Broadcaster broadcaster) {
+        return new EnsembleTimerHolder(ensembleRepository, memberRepository,
+                                       broadcaster,
                                        new DoNothingSecondsTicker());
     }
 
