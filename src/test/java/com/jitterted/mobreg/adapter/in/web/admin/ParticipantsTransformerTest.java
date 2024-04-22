@@ -1,6 +1,7 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
+import com.jitterted.mobreg.application.NoOpShuffler;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleFactory;
@@ -25,7 +26,7 @@ class ParticipantsTransformerTest {
                 .saveMemberAndAccept("Paul", "driver")
                 .saveMemberAndAccept("Sally", "navigator");
         EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(371));
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(371), new NoOpShuffler());
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(371));
 
         Map<String, Object> rolesToNames = ParticipantsTransformer.participantRolesToNames(ensembleTimer);
@@ -49,7 +50,7 @@ class ParticipantsTransformerTest {
                 .saveMemberAndAccept("Sri", "sri_participant")
                 .saveMemberAndAccept("Jha", "jha_participant");
         EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(543));
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(543), new NoOpShuffler());
         EnsembleTimer ensembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(543));
 
         Map<String, Object> rolesToNames = ParticipantsTransformer

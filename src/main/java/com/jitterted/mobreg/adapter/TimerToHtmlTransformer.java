@@ -23,7 +23,6 @@ public class TimerToHtmlTransformer {
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "paused");
     }
 
-    // language=html
     private static String htmlForWaitingToStart(EnsembleTimer ensembleTimer) {
         return htmlForTimerControlButton(ensembleTimer, "/member/start-timer", "Start Timer")
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running")
@@ -33,6 +32,7 @@ public class TimerToHtmlTransformer {
     private static String htmlForTimerControlButton(EnsembleTimer ensembleTimer,
                                                     String buttonEndpointUrl,
                                                     String buttonLabel) {
+        // language=html
         return """
                <button id="timer-control-button"
                        hx-swap-oob="outerHTML"

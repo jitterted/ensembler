@@ -4,6 +4,7 @@ import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
 import com.jitterted.mobreg.application.port.SecondsTicker;
+import com.jitterted.mobreg.application.port.Shuffler;
 import com.jitterted.mobreg.domain.CountdownTimer;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleId;
@@ -12,8 +13,10 @@ import com.jitterted.mobreg.domain.Member;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     private final EnsembleRepository ensembleRepository;
@@ -63,12 +66,14 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     }
 
     @NotNull
-    public EnsembleTimer createTimerFor(EnsembleId ensembleId) {
+    public EnsembleTimer createTimerFor(EnsembleId ensembleId, Shuffler shuffler) {
         Ensemble ensemble = ensembleRepository.findById(ensembleId)
                                               .orElseThrow();
+        List<Member> participants = membersFrom(ensemble);
+        shuffler.shuffle(participants);
         EnsembleTimer ensembleTimer = new EnsembleTimer(ensembleId,
                                                         ensemble.name(),
-                                                        membersFrom(ensemble));
+                                                        participants);
         ensembleTimers.put(ensembleId, ensembleTimer);
         broadcaster.sendCurrentTimer(ensembleTimer);
         return ensembleTimer;
@@ -77,7 +82,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     private List<Member> membersFrom(Ensemble ensemble) {
         return ensemble.participants()
                        .map(memberId -> memberRepository.findById(memberId).orElseThrow())
-                       .toList();
+                       .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public boolean hasTimerFor(EnsembleId ensembleId) {

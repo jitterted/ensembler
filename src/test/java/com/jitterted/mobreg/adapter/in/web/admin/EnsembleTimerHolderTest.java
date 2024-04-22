@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.EnsembleTimerTickHandler;
+import com.jitterted.mobreg.application.NoOpShuffler;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
@@ -48,7 +49,7 @@ public class EnsembleTimerHolderTest {
     void existingTimerIsReturnedWhenHolderHasTimerForSpecificEnsemble() {
         Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(63));
         EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(fixture.ensembleRepository(), fixture.memberRepository());
-        EnsembleTimer createdEnsemblerTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(63));
+        EnsembleTimer createdEnsemblerTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(63), new NoOpShuffler());
 
         EnsembleTimer foundEnsembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(63));
 
@@ -108,7 +109,7 @@ public class EnsembleTimerHolderTest {
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(),
                                                                                      builder.memberRepository(),
                                                                                      mockSecondsTicker);
-            EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
+            EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId), new NoOpShuffler());
             return new TimerFixture(mockSecondsTicker, ensembleTimerHolder, ensembleTimer);
         }
 
@@ -160,7 +161,7 @@ public class EnsembleTimerHolderTest {
                                                                                  CountdownTimer.TimerState.WAITING_TO_START,
                                                                                  new TimeRemaining(4, 0, 100));
 
-            fixture.ensembleTimerHolder().createTimerFor(EnsembleId.of(475));
+            fixture.ensembleTimerHolder().createTimerFor(EnsembleId.of(475), new NoOpShuffler());
 
             fixture.mockBroadcaster().verifyTimerStateSent();
         }
@@ -254,7 +255,7 @@ public class EnsembleTimerHolderTest {
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(),
                                                                                      builder.memberRepository(),
                                                                                      mockBroadcaster);
-            ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
+            ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId), new NoOpShuffler());
             Instant timerStartedAt = Instant.now();
             ensembleTimerHolder.startTimerFor(EnsembleId.of(ensembleId), timerStartedAt);
             mockBroadcaster.reset();

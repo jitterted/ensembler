@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.TestAdminConfiguration;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
+import com.jitterted.mobreg.application.NoOpShuffler;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
 import com.jitterted.mobreg.application.port.MemberRepository;
@@ -94,7 +95,7 @@ class EnsembleTimerControllerMvcTest {
 
     private void createTimerForEnsembleWithId(int ensembleId) throws Exception {
         createAndSaveEnsembleInRepositoryForId(ensembleId);
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(113));
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(113), new NoOpShuffler());
         mockMvc.perform(post("/admin/create-timer/" + ensembleId).with(csrf()));
     }
 

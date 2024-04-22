@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.admin.ParticipantsTransformer;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
+import com.jitterted.mobreg.application.NoOpShuffler;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.domain.CountdownTimer;
 import com.jitterted.mobreg.domain.Ensemble;
@@ -28,7 +29,7 @@ class EnsembleTimerControllerTest {
                 .saveMemberAndAccept("Paul", "ghpaul")
                 .saveMemberAndAccept("Sally", "ghsally");
         EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(153));
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(153), new NoOpShuffler());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder);
 
         Model model = new ConcurrentModel();
@@ -101,7 +102,7 @@ class EnsembleTimerControllerTest {
                 .withThreeParticipants();
         EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder);
-        EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId));
+        EnsembleTimer ensembleTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(ensembleId), new NoOpShuffler());
         return new Fixture(ensembleTimerController, ensembleTimerHolder, ensembleTimer);
     }
 
