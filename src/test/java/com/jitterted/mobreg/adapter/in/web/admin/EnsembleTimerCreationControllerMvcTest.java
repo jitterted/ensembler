@@ -16,6 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,6 +43,13 @@ class EnsembleTimerCreationControllerMvcTest {
         createAndSaveEnsembleInRepositoryForId(257);
         mockMvc.perform(post("/admin/create-timer/257").with(csrf()))
                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    void htmxGetEndpointReturns200Ok() throws Exception {
+        createAndSaveEnsembleInRepositoryForId(582);
+        mockMvc.perform(get("/admin/ensemble-timer-state/582"))
+               .andExpect(status().isOk());
     }
 
     // -- Encapsulated Setup
