@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/admin")
-public class EnsembleTimerCreationController {
+public class EnsembleTimerLifecycleController {
     private final EnsembleTimerHolder ensembleTimerHolder;
     private final RandomShuffler shuffler;
 
     @Autowired
-    public EnsembleTimerCreationController(EnsembleTimerHolder ensembleTimerHolder) {
+    public EnsembleTimerLifecycleController(EnsembleTimerHolder ensembleTimerHolder) {
         this.ensembleTimerHolder = ensembleTimerHolder;
         shuffler = new RandomShuffler();
     }
@@ -29,7 +29,11 @@ public class EnsembleTimerCreationController {
         return "redirect:/member/timer-view/" + id;
     }
 
-    // delete-timer endpoint here
+    @PostMapping("/delete-timer/{ensembleId}")
+    @ResponseBody
+    public String deleteTimerView(@PathVariable("ensembleId") Long id) {
+        return "";
+    }
 
     @GetMapping("/ensemble-timer-state/{ensembleId}")
     @ResponseBody

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 
 @SuppressWarnings("unchecked")
-class EnsembleTimerCreationControllerTest {
+class EnsembleTimerLifecycleControllerTest {
 
     @Test
     void createAndRedirectToTimerSessionForSpecificEnsemble() {
@@ -24,7 +24,7 @@ class EnsembleTimerCreationControllerTest {
                 .saveEnsemble(ensemble)
                 .withThreeParticipants();
         EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-        EnsembleTimerCreationController ensembleTimerController = new EnsembleTimerCreationController(ensembleTimerHolder);
+        EnsembleTimerLifecycleController ensembleTimerController = new EnsembleTimerLifecycleController(ensembleTimerHolder);
 
         String redirectPage = ensembleTimerController.createTimerView(87L);
 
@@ -38,7 +38,7 @@ class EnsembleTimerCreationControllerTest {
     class Htmx {
         @Test
         void returnsOnlyCreateButtonWhenNoTimerExists() {
-            EnsembleTimerCreationController ensembleTimerController = createEnsembleAndTimerHolder(109);
+            EnsembleTimerLifecycleController ensembleTimerController = createEnsembleAndTimerHolder(109);
 
             String actualHtml = ensembleTimerController.timerState(109L);
 
@@ -59,7 +59,7 @@ class EnsembleTimerCreationControllerTest {
                     .isEqualTo(expectedHtml);
         }
 
-        private static EnsembleTimerCreationController createEnsembleAndTimerHolder(int ensembleId) {
+        private static EnsembleTimerLifecycleController createEnsembleAndTimerHolder(int ensembleId) {
             Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
                                                      .startsNow()
                                                      .build();
@@ -67,14 +67,14 @@ class EnsembleTimerCreationControllerTest {
                     .saveEnsemble(ensemble)
                     .withThreeParticipants();
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-            return new EnsembleTimerCreationController(ensembleTimerHolder);
+            return new EnsembleTimerLifecycleController(ensembleTimerHolder);
         }
 
         // timer exists for THIS ensemble: no CREATE button, only DELETE button
 
         @Test
         void returnsOnlyDeleteButtonAndLinkToTimerWhenTimerExistsForThisEnsemble() {
-            EnsembleTimerCreationController ensembleTimerController = createEnsembleAndTimerHolder(362);
+            EnsembleTimerLifecycleController ensembleTimerController = createEnsembleAndTimerHolder(362);
             ensembleTimerController.createTimerView(362L);
 
             String actualHtml = ensembleTimerController.timerState(362L);
@@ -114,7 +114,7 @@ class EnsembleTimerCreationControllerTest {
                     .withThreeParticipants();
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
             ensembleTimerHolder.createTimerFor(EnsembleId.of(96), new NoOpShuffler());
-            EnsembleTimerCreationController ensembleTimerController = new EnsembleTimerCreationController(ensembleTimerHolder);
+            EnsembleTimerLifecycleController ensembleTimerController = new EnsembleTimerLifecycleController(ensembleTimerHolder);
 
             String actualHtml = ensembleTimerController.timerState(583L);
 

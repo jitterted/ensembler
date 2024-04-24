@@ -21,10 +21,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Tag("mvc")
-@WebMvcTest({EnsembleTimerCreationController.class})
+@WebMvcTest({EnsembleTimerLifecycleController.class})
 @Import(TestAdminConfiguration.class)
 @WithMockUser(username = "admin", authorities = {"ROLE_MEMBER", "ROLE_ADMIN"})
-class EnsembleTimerCreationControllerMvcTest {
+class EnsembleTimerLifecycleControllerMvcTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -43,6 +43,15 @@ class EnsembleTimerCreationControllerMvcTest {
         createAndSaveEnsembleInRepositoryForId(257);
         mockMvc.perform(post("/admin/create-timer/257").with(csrf()))
                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    void postToDeleteTimerReturns200Ok() throws Exception {
+        createAndSaveEnsembleInRepositoryForId(492);
+        mockMvc.perform(post("/admin/create-timer/492").with(csrf()));
+
+        mockMvc.perform(post("/admin/delete-timer/492").with(csrf()))
+               .andExpect(status().isOk());
     }
 
     @Test
