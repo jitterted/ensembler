@@ -15,23 +15,49 @@ import static org.assertj.core.api.Assertions.*;
 @SuppressWarnings("unchecked")
 class EnsembleTimerLifecycleControllerTest {
 
-    @Test
-    void createAndRedirectToTimerSessionForSpecificEnsemble() {
-        Ensemble ensemble = new EnsembleBuilder().id(87)
-                                                 .startsNow()
-                                                 .build();
-        TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
-                .saveEnsemble(ensemble)
-                .withThreeParticipants();
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-        EnsembleTimerLifecycleController ensembleTimerController = new EnsembleTimerLifecycleController(ensembleTimerHolder);
+    @Nested
+    class Lifecycle {
+        @Test
+        void createAndRedirectToTimerSessionForSpecificEnsemble() {
+            Fixture fixture = createEnsembleAndTimerHolder(87);
 
-        String redirectPage = ensembleTimerController.createTimerView(87L);
+            String redirectPage = fixture.ensembleTimerController().createTimer(87L);
 
-        assertThat(redirectPage)
-                .isEqualTo("redirect:/member/timer-view/87");
-        assertThat(ensembleTimerHolder.hasTimerFor(EnsembleId.of(87)))
-                .isTrue();
+            assertThat(redirectPage)
+                    .isEqualTo("redirect:/member/timer-view/87");
+            assertThat(fixture.ensembleTimerHolder().hasTimerFor(EnsembleId.of(87)))
+                    .isTrue();
+        }
+
+        @Test
+        void updatedTimerStateHtmlReturnedWhenExistingTimerDeleted() {
+            Fixture fixture = createEnsembleAndTimerHolder(135);
+            fixture.ensembleTimerHolder().createTimerFor(EnsembleId.of(135), new NoOpShuffler());
+
+            String actualHtml = fixture.ensembleTimerController().deleteTimer(135L);
+
+            assertThat(fixture.ensembleTimerHolder().hasTimerFor(EnsembleId.of(135)))
+                    .isFalse();
+            assertThat(actualHtml)
+                    .contains("Create Timer");
+        }
+
+        private Fixture createEnsembleAndTimerHolder(int id) {
+            Ensemble ensemble = new EnsembleBuilder().id(id)
+                                                     .startsNow()
+                                                     .build();
+            TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                    .saveEnsemble(ensemble)
+                    .withThreeParticipants();
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
+            EnsembleTimerLifecycleController ensembleTimerController = new EnsembleTimerLifecycleController(ensembleTimerHolder);
+            return new Fixture(ensembleTimerHolder, ensembleTimerController);
+        }
+
+        private record Fixture(EnsembleTimerHolder ensembleTimerHolder,
+                               EnsembleTimerLifecycleController ensembleTimerController) {
+        }
+
     }
 
     @Nested
@@ -43,18 +69,18 @@ class EnsembleTimerLifecycleControllerTest {
             String actualHtml = ensembleTimerController.timerState(109L);
 
             String expectedHtml = """
-                <swap id="timer-status-container" hx-swap-oob="innerHTML">
-                    <p>No timer currently exists.</p>
-                </swap>
-                <swap id="timer-button-container" hx-swap-oob="innerHTML">
-                    <form action="/admin/create-timer/109" method="post">
-                        <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                        >
-                            Create Timer
-                        </button>
-                    </form>
-                </swap>
-                """;
+                                  <swap id="timer-status-container" hx-swap-oob="innerHTML">
+                                      <p>No timer currently exists.</p>
+                                  </swap>
+                                  <swap id="timer-button-container" hx-swap-oob="innerHTML">
+                                      <form action="/admin/create-timer/109" method="post">
+                                          <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                                          >
+                                              Create Timer
+                                          </button>
+                                      </form>
+                                  </swap>
+                                  """;
             assertThat(actualHtml)
                     .isEqualTo(expectedHtml);
         }
@@ -70,30 +96,28 @@ class EnsembleTimerLifecycleControllerTest {
             return new EnsembleTimerLifecycleController(ensembleTimerHolder);
         }
 
-        // timer exists for THIS ensemble: no CREATE button, only DELETE button
-
         @Test
         void returnsOnlyDeleteButtonAndLinkToTimerWhenTimerExistsForThisEnsemble() {
             EnsembleTimerLifecycleController ensembleTimerController = createEnsembleAndTimerHolder(362);
-            ensembleTimerController.createTimerView(362L);
+            ensembleTimerController.createTimer(362L);
 
             String actualHtml = ensembleTimerController.timerState(362L);
 
             String expectedHtml = """
-                <swap id="timer-status-container" hx-swap-oob="innerHTML">
-                    <p>Timer exists and can be seen
-                        <a class="underline font-semibold text-blue-600"
-                           href="/member/timer-view/362">here</a>.
-                    </p>
-                </swap>
-                <swap id="timer-button-container" hx-swap-oob="innerHTML">
-                    <button class="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2"
-                            hx-post="/admin/delete-timer/362"
-                    >
-                        Delete Timer
-                    </button>
-                </swap>
-                """;
+                                  <swap id="timer-status-container" hx-swap-oob="innerHTML">
+                                      <p>Timer exists and can be seen
+                                          <a class="underline font-semibold text-blue-600"
+                                             href="/member/timer-view/362">here</a>.
+                                      </p>
+                                  </swap>
+                                  <swap id="timer-button-container" hx-swap-oob="innerHTML">
+                                      <button class="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2"
+                                              hx-post="/admin/delete-timer/362"
+                                      >
+                                          Delete Timer
+                                      </button>
+                                  </swap>
+                                  """;
 
             assertThat(actualHtml)
                     .isEqualTo(expectedHtml);
@@ -106,8 +130,8 @@ class EnsembleTimerLifecycleControllerTest {
                                                         .startsNow()
                                                         .build();
             Ensemble ensemble96 = new EnsembleBuilder().id(96)
-                                                        .startsNow()
-                                                        .build();
+                                                       .startsNow()
+                                                       .build();
             TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                     .saveEnsemble(ensemble583)
                     .saveEnsemble(ensemble96)
@@ -119,14 +143,14 @@ class EnsembleTimerLifecycleControllerTest {
             String actualHtml = ensembleTimerController.timerState(583L);
 
             String expectedHtml = """
-                <swap id="timer-status-container" hx-swap-oob="innerHTML">
-                    <p>Timer exists for
-                    <a class="underline font-semibold text-blue-600"
-                    href="/admin/ensemble/96">another ensemble</a>.
-                </swap>
-                <swap id="timer-button-container" hx-swap-oob="innerHTML">
-                </swap>
-                """;
+                                  <swap id="timer-status-container" hx-swap-oob="innerHTML">
+                                      <p>Timer exists for
+                                      <a class="underline font-semibold text-blue-600"
+                                      href="/admin/ensemble/96">another ensemble</a>.
+                                  </swap>
+                                  <swap id="timer-button-container" hx-swap-oob="innerHTML">
+                                  </swap>
+                                  """;
 
             assertThat(actualHtml)
                     .isEqualTo(expectedHtml);

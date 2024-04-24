@@ -148,6 +148,10 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
         broadcaster.sendCurrentTimer(ensembleTimer);
     }
 
+    public void deleteTimer(EnsembleId ensembleId) {
+        ensembleTimers.remove(ensembleId);
+    }
+
     static class SingleEntryHashMap<K, V> extends HashMap<K, V> {
         @Override
         public V put(K key, V value) {

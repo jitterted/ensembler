@@ -24,15 +24,16 @@ public class EnsembleTimerLifecycleController {
     }
 
     @PostMapping("/create-timer/{ensembleId}")
-    public String createTimerView(@PathVariable("ensembleId") Long id) {
+    public String createTimer(@PathVariable("ensembleId") Long id) {
         ensembleTimerHolder.createTimerFor(EnsembleId.of(id), shuffler);
         return "redirect:/member/timer-view/" + id;
     }
 
     @PostMapping("/delete-timer/{ensembleId}")
     @ResponseBody
-    public String deleteTimerView(@PathVariable("ensembleId") Long id) {
-        return "";
+    public String deleteTimer(@PathVariable("ensembleId") Long id) {
+        ensembleTimerHolder.deleteTimer(EnsembleId.of(id));
+        return timerState(id);
     }
 
     @GetMapping("/ensemble-timer-state/{ensembleId}")
