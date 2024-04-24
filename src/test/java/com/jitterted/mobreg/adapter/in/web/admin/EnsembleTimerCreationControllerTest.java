@@ -1,10 +1,12 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
+import com.jitterted.mobreg.application.NoOpShuffler;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleId;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -97,8 +99,38 @@ class EnsembleTimerCreationControllerTest {
                     .isEqualTo(expectedHtml);
         }
 
-        // timer exists for ANOTHER ensemble, NO buttons appear, status says timer for another ensemble exists with link to the detail page
+        @Test
+        @Disabled("YAGNI? Not sure if I need this functionality.")
+        void noButtonsOnlyStatusWithLinkToEnsembleDetailsWhenAnotherEnsembleTimerExists() {
+            Ensemble ensemble583 = new EnsembleBuilder().id(583)
+                                                        .startsNow()
+                                                        .build();
+            Ensemble ensemble96 = new EnsembleBuilder().id(96)
+                                                        .startsNow()
+                                                        .build();
+            TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                    .saveEnsemble(ensemble583)
+                    .saveEnsemble(ensemble96)
+                    .withThreeParticipants();
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
+            ensembleTimerHolder.createTimerFor(EnsembleId.of(96), new NoOpShuffler());
+            EnsembleTimerCreationController ensembleTimerController = new EnsembleTimerCreationController(ensembleTimerHolder);
 
+            String actualHtml = ensembleTimerController.timerState(583L);
+
+            String expectedHtml = """
+                <swap id="timer-status-container" hx-swap-oob="innerHTML">
+                    <p>Timer exists for
+                    <a class="underline font-semibold text-blue-600"
+                    href="/admin/ensemble/96">another ensemble</a>.
+                </swap>
+                <swap id="timer-button-container" hx-swap-oob="innerHTML">
+                </swap>
+                """;
+
+            assertThat(actualHtml)
+                    .isEqualTo(expectedHtml);
+        }
     }
 
 }
