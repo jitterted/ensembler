@@ -76,7 +76,7 @@ public class TimerToHtmlTransformer {
                                  .map(Member::firstName)
                                  .map("    <p>%s</p>"::formatted)
                                  .reduce((left, right) -> left + "\n" + right)
-                                 .orElse("    <p>(no other participants)</p>");
+                                 .orElse("    <p class=\"text-xl\">(no other participants)</p>");
     }
 
     // language=html

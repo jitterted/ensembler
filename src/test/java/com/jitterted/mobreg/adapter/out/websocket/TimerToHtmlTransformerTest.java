@@ -176,7 +176,7 @@ class TimerToHtmlTransformerTest {
                                One
                            </swap-container>
                            <swap-container id="restOfParticipants" hx-swap-oob="innerHTML">
-                               <p>(no other participants)</p>
+                               <p class="text-xl">(no other participants)</p>
                            </swap-container>
                            """);
         }
