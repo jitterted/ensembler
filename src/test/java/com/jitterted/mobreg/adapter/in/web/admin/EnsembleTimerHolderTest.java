@@ -31,9 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class EnsembleTimerHolderTest {
 
-    private static final Broadcaster DUMMY_BROADCASTER = ensembleTimer -> {
-    };
-
     @Test
     void newTimerHolderHasNoTimerForId() {
         EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
@@ -121,10 +118,10 @@ public class EnsembleTimerHolderTest {
     }
 
     @Nested
-    class UnhappyScenarios {
+    class UnhappyScenarios_ExceptionThrownWhen {
 
         @Test
-        void whenNoTimerExistsForEnsembleExceptionIsThrown() {
+        void askForTimerButNoTimerExists() {
             Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(77));
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(fixture.ensembleRepository(), fixture.memberRepository());
 
@@ -134,7 +131,7 @@ public class EnsembleTimerHolderTest {
         }
 
         @Test
-        void askingTimerStartedThrowsExceptionIfTimerDoesNotExistForEnsemble() {
+        void queryIfTimerStartedButNoTimerExists() {
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(new InMemoryEnsembleRepository(), new InMemoryMemberRepository());
 
             assertThatIllegalArgumentException()
@@ -143,7 +140,7 @@ public class EnsembleTimerHolderTest {
         }
 
         @Test
-        void startTimerThrowsExceptionIfTimerDoesNotExistForEnsemble() {
+        void startTimerButNoTimerExists() {
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(new InMemoryEnsembleRepository(), new InMemoryMemberRepository());
 
             assertThatIllegalArgumentException()

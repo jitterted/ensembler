@@ -10,9 +10,9 @@ import java.util.concurrent.CountDownLatch;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Tag("manual")
 class ScheduledExecutorSecondsTickerTest {
 
+    @Tag("manual")
     @Test
     void startedTickerTicksOncePerSecond() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(2);
@@ -34,5 +34,25 @@ class ScheduledExecutorSecondsTickerTest {
 
         assertThat(System.currentTimeMillis() - startedAt)
                 .isGreaterThan(1000);
+    }
+
+    @Test
+    void exceptionThrownWhenStartInvokedButCountdownAlreadyScheduled() {
+        ScheduledExecutorSecondsTicker ticker = new ScheduledExecutorSecondsTicker();
+        ticker.start(EnsembleId.of(3), (ensembleId, now) -> {});
+
+        assertThatIllegalStateException()
+                .isThrownBy(() -> ticker.start(EnsembleId.of(2), (ensembleId, now) -> {}))
+                .withMessage("Countdown timer already scheduled for EnsembleId=3");
+    }
+
+    @Test
+    void countdownStartedWhenPreviousCountdownStopped() {
+        ScheduledExecutorSecondsTicker ticker = new ScheduledExecutorSecondsTicker();
+        ticker.start(EnsembleId.of(4), (ensembleId, now) -> {});
+        ticker.stop();
+
+        assertThatCode(() -> ticker.start(EnsembleId.of(5), (ensembleId, now) -> {}))
+                .doesNotThrowAnyException();
     }
 }
