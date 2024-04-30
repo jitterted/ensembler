@@ -31,17 +31,26 @@ public class TimerToHtmlTransformer {
 
     private static String htmlForTimerControlButtonContainer(
             EnsembleTimer ensembleTimer,
-            Button button) {
+            Button... button) {
         // language=html
         return """
                <swap id="timer-control-container"
                      hx-swap-oob="innerHTML"
                      hx-swap="none">
+               """ +
+               htmlForTimerControlButton(ensembleTimer, button[0])
+               +
+               """
+               </swap>
+               """;
+    }
+
+    private static String htmlForTimerControlButton(EnsembleTimer ensembleTimer, Button button) {
+        return """
                    <button hx-post="%s/%s"
                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                        %s
                    </button>
-               </swap>
                """.formatted(button.buttonEndpointUrl(),
                              ensembleTimer.ensembleId().id(),
                              button.buttonLabel());
