@@ -11,6 +11,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class ScheduledExecutorSecondsTicker implements SecondsTicker {
+    private static final int TIMER_INITIAL_DELAY = 0;
+    private static final int TIMER_PERIOD_IN_SECONDS = 1;
+
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private final ScheduledCountdown scheduledCountdown = new ScheduledCountdown();
 
@@ -24,7 +27,7 @@ public class ScheduledExecutorSecondsTicker implements SecondsTicker {
         Runnable tickHandlerTask = () ->
                 ensembleTimerTickHandler.handleTickFor(ensembleId, Instant.now());
 
-        ScheduledFuture<?> countdownHandle = scheduler.scheduleAtFixedRate(tickHandlerTask, 0, 1, TimeUnit.SECONDS);
+        ScheduledFuture<?> countdownHandle = scheduler.scheduleAtFixedRate(tickHandlerTask, TIMER_INITIAL_DELAY, TIMER_PERIOD_IN_SECONDS, TimeUnit.SECONDS);
         scheduledCountdown.scheduledWith(ensembleId, countdownHandle);
     }
 

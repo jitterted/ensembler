@@ -149,6 +149,8 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     }
 
     public void deleteTimer(EnsembleId ensembleId) {
+        secondsTicker.stop();
+
         ensembleTimers.remove(ensembleId);
     }
 

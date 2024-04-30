@@ -95,6 +95,16 @@ public class EnsembleTimerHolderTest {
             fixture.mockSecondsTicker().verifyStartThenStopWasCalledFor(235);
         }
 
+        @Test
+        void timerDeletedStopsSecondsTicker() {
+            TimerFixture fixture = createTimerFixture(235);
+            fixture.ensembleTimerHolder().startTimerFor(EnsembleId.of(235), Instant.now());
+
+            fixture.ensembleTimerHolder().deleteTimer(EnsembleId.of(235));
+
+            fixture.mockSecondsTicker().verifyStartThenStopWasCalledFor(235);
+        }
+
         private TimerFixture createTimerFixture(int ensembleId) {
             Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
                                                      .startsNow()
