@@ -11,6 +11,8 @@ import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.Member;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -19,6 +21,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnsembleTimerHolder.class);
+
     private final EnsembleRepository ensembleRepository;
     private final MemberRepository memberRepository;
     private final Broadcaster broadcaster;
@@ -107,6 +111,11 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
 
     @Override
     public void handleTickFor(EnsembleId ensembleId, Instant now) {
+        if (!hasTimerFor(ensembleId)) {
+            secondsTicker.stop();
+            LOGGER.warn("Received a TICK for an Ensemble with {} that has no Timer.", ensembleId);
+        }
+
         EnsembleTimer ensembleTimer = timerFor(ensembleId);
         ensembleTimer.tick(now);
 

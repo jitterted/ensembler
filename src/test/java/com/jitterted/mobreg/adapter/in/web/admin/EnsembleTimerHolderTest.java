@@ -105,6 +105,26 @@ public class EnsembleTimerHolderTest {
             fixture.mockSecondsTicker().verifyStartThenStopWasCalledFor(235);
         }
 
+        @Test
+        void secondsTickerStoppedWhenHandleTickForNonExistentTimer() {
+            Ensemble ensemble = new EnsembleBuilder().id(637)
+                                                     .startsNow()
+                                                     .build();
+            TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                    .saveEnsemble(ensemble);
+            MockSecondsTicker mockSecondsTicker = new MockSecondsTicker();
+            EnsembleTimerHolder ensembleTimerHolder =
+                    EnsembleTimerHolder.createNull(builder.ensembleRepository(),
+                                                   builder.memberRepository(),
+                                                   mockSecondsTicker);
+
+            try {
+                ensembleTimerHolder.handleTickFor(EnsembleId.of(637), Instant.now());
+            } catch (IllegalStateException ise){
+                mockSecondsTicker.verifyStopCalled();
+            }
+        }
+
         private TimerFixture createTimerFixture(int ensembleId) {
             Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
                                                      .startsNow()
@@ -385,6 +405,12 @@ public class EnsembleTimerHolderTest {
             assertThat(stopWasCalled)
                     .as("Expected SecondsTicker.stop() to NOT be called, but it was")
                     .isFalse();
+        }
+
+        public void verifyStopCalled() {
+            assertThat(stopWasCalled)
+                    .as("Expected SecondsTicker.stop() to be called, but it was NOT called")
+                    .isTrue();
         }
     }
 
