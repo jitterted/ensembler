@@ -1,7 +1,5 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jitterted.mobreg.NoSecurityTestConfiguration;
 import com.jitterted.mobreg.WebSecurityConfig;
 import com.jitterted.mobreg.application.EnsembleService;
@@ -16,12 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.htmlunit.MockMvcWebClientBuilder;
 import org.springframework.web.context.WebApplicationContext;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @Disabled
 @Import(NoSecurityTestConfiguration.class)
@@ -47,24 +40,24 @@ class ThymeleafTemplateTest {
     @Test
     @WithMockUser
     void template() throws Exception {
-        WebClient webClient = MockMvcWebClientBuilder
-                .webAppContextSetup(webApplicationContext, springSecurity())
+//        WebClient webClient = MockMvcWebClientBuilder
+//                .webAppContextSetup(webApplicationContext, springSecurity())
 //                .mockMvcSetup(mockMvc)
-                .build();
-
-        webClient.getOptions().setCssEnabled(false);
-        webClient.getOptions().setJavaScriptEnabled(false);
-
-        HtmlPage page = webClient.getPage("http://localhost/admin/dashboard");
-        String pageContent = page.asXml();
-
-        assertThat(page.getWebResponse().getStatusCode())
-                .isEqualTo(200);
-
-        assertThat(page.getForms().size())
-                .isEqualTo(1);
-
-        assertTrue(pageContent.contains("<h1>Hello, Thymeleaf!</h1>"));
+//                .build();
+//
+//        webClient.getOptions().setCssEnabled(false);
+//        webClient.getOptions().setJavaScriptEnabled(false);
+//
+//        HtmlPage page = webClient.getPage("http://localhost/admin/dashboard");
+//        String pageContent = page.asXml();
+//
+//        assertThat(page.getWebResponse().getStatusCode())
+//                .isEqualTo(200);
+//
+//        assertThat(page.getForms().size())
+//                .isEqualTo(1);
+//
+//        assertTrue(pageContent.contains("<h1>Hello, Thymeleaf!</h1>"));
     }
 }
 

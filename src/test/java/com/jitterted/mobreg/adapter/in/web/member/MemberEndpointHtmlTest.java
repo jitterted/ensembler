@@ -1,7 +1,5 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.MemberRepository;
@@ -51,8 +49,8 @@ import java.util.List;
 @Import(MyWebMvcSecurityConfiguration.class)
 class MemberEndpointHtmlTest {
 
-    //    @Autowired
-    WebClient webClient;
+//    @Autowired
+//    WebClient webClient;
 
     @MockBean
     MemberService memberService;
@@ -74,17 +72,17 @@ class MemberEndpointHtmlTest {
 
         MockMvcWebClientBuilder
                 .mockMvcSetup(mockMvc);
-        webClient = MockMvcWebClientBuilder
-                .webAppContextSetup(context)
-                .build();
+//        webClient = MockMvcWebClientBuilder
+//                .webAppContextSetup(context)
+//                .build();
     }
 
     @Test
     void html() throws Exception {
-        HtmlPage memberRegisterPage = webClient
-                .getPage("http://localhost/member/register");
-
-        System.out.println(memberRegisterPage.getForms().get(0).getElementsByTagName("input"));
+//        HtmlPage memberRegisterPage = webClient
+//                .getPage("http://localhost/member/register");
+//
+//        System.out.println(memberRegisterPage.getForms().get(0).getElementsByTagName("input"));
 
     }
 
