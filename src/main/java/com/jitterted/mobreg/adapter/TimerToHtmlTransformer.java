@@ -19,28 +19,29 @@ public class TimerToHtmlTransformer {
     }
 
     private static String htmlForPaused(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButton(ensembleTimer, "/member/resume-timer", "Resume Timer")
+        return htmlForTimerControlButtonContainer(ensembleTimer, "/member/resume-timer", "Resume Timer")
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "paused");
     }
 
     private static String htmlForWaitingToStart(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButton(ensembleTimer, "/member/start-timer", "Start Timer")
+        return htmlForTimerControlButtonContainer(ensembleTimer, "/member/start-timer", "Start Timer")
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running")
                + htmlForSwappingInRotationMembers(ensembleTimer.rotation());
     }
 
-    private static String htmlForTimerControlButton(EnsembleTimer ensembleTimer,
-                                                    String buttonEndpointUrl,
-                                                    String buttonLabel) {
+    private static String htmlForTimerControlButtonContainer(EnsembleTimer ensembleTimer,
+                                                             String buttonEndpointUrl,
+                                                             String buttonLabel) {
         // language=html
         return """
-               <button id="timer-control-button"
-                       hx-swap-oob="outerHTML"
-                       hx-swap="none"
-                       hx-post="%s/%s"
-                       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                   %s
-               </button>
+               <swap id="timer-control-container"
+                     hx-swap-oob="innerHTML"
+                     hx-swap="none">
+                   <button hx-post="%s/%s"
+                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                       %s
+                   </button>
+               </swap>
                """.formatted(buttonEndpointUrl,
                              ensembleTimer.ensembleId().id(),
                              buttonLabel);
@@ -81,7 +82,7 @@ public class TimerToHtmlTransformer {
 
     // language=html
     private static String htmlForRunning(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButton(ensembleTimer, "/member/pause-timer", "Pause Timer")
+        return htmlForTimerControlButtonContainer(ensembleTimer, "/member/pause-timer", "Pause Timer")
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running");
     }
 
@@ -109,15 +110,9 @@ public class TimerToHtmlTransformer {
 
     // language=html
     private static String htmlForFinished(EnsembleTimer ensembleTimer) {
-        return """
-               <button id="timer-control-button"
-                       hx-swap-oob="outerHTML"
-                       hx-swap="none"
-                       hx-post="/member/rotate-timer/%s"
-                       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                   Next Rotation
-               </button>
-               """.formatted(ensembleTimer.ensembleId().id())
+        return htmlForTimerControlButtonContainer(ensembleTimer,
+                                                  "/member/rotate-timer",
+                                                  "Next Rotation")
                +
                """ 
                <div id="timer-container"

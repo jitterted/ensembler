@@ -49,6 +49,9 @@ public class ScheduledExecutorSecondsTicker implements SecondsTicker {
         }
 
         public void stop() {
+            if (countdownHandle == null) {
+                return;
+            }
             countdownHandle.cancel(false);
             countdownHandle = null;
             ensembleId = null;

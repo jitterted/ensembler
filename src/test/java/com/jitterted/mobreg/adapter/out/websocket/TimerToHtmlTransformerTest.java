@@ -26,13 +26,14 @@ class TimerToHtmlTransformerTest {
 
         assertThat(timerHtml)
                 .isEqualTo("""
-                           <button id="timer-control-button"
-                                   hx-swap-oob="outerHTML"
-                                   hx-swap="none"
-                                   hx-post="/member/start-timer/57"
-                                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                               Start Timer
-                           </button>
+                           <swap id="timer-control-container"
+                                 hx-swap-oob="innerHTML"
+                                 hx-swap="none">
+                               <button hx-post="/member/start-timer/57"
+                                       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                   Start Timer
+                               </button>
+                           </swap>
                            <div id="timer-container"
                                 class="circle circle-running"
                                 style="background: conic-gradient(lightgreen 0% 100.000000%, black 100.000000% 100%);">
@@ -67,13 +68,14 @@ class TimerToHtmlTransformerTest {
 
         assertThat(timerHtml)
                 .isEqualTo("""    
-                           <button id="timer-control-button"
-                                   hx-swap-oob="outerHTML"
-                                   hx-swap="none"
-                                   hx-post="/member/pause-timer/763"
-                                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                               Pause Timer
-                           </button>
+                           <swap id="timer-control-container"
+                                 hx-swap-oob="innerHTML"
+                                 hx-swap="none">
+                               <button hx-post="/member/pause-timer/763"
+                                       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                   Pause Timer
+                               </button>
+                           </swap>
                            <div id="timer-container"
                                 class="circle circle-running"
                                 style="background: conic-gradient(lightgreen 0% 87.500000%, black 87.500000% 100%);">
@@ -96,13 +98,14 @@ class TimerToHtmlTransformerTest {
 
         assertThat(timerHtml)
                 .isEqualTo("""    
-                           <button id="timer-control-button"
-                                   hx-swap-oob="outerHTML"
-                                   hx-swap="none"
-                                   hx-post="/member/resume-timer/827"
-                                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                               Resume Timer
-                           </button>
+                           <swap id="timer-control-container"
+                                 hx-swap-oob="innerHTML"
+                                 hx-swap="none">
+                               <button hx-post="/member/resume-timer/827"
+                                       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                   Resume Timer
+                               </button>
+                           </swap>
                            <div id="timer-container"
                                 class="circle circle-paused"
                                 style="background: conic-gradient(#FFD033 0% 87.500000%, black 87.500000% 100%);">
@@ -134,13 +137,14 @@ class TimerToHtmlTransformerTest {
 
         assertThat(timerHtml)
                 .isEqualTo("""
-                           <button id="timer-control-button"
-                                   hx-swap-oob="outerHTML"
-                                   hx-swap="none"
-                                   hx-post="/member/rotate-timer/78"
-                                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                               Next Rotation
-                           </button>
+                           <swap id="timer-control-container"
+                                 hx-swap-oob="innerHTML"
+                                 hx-swap="none">
+                               <button hx-post="/member/rotate-timer/78"
+                                       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                   Next Rotation
+                               </button>
+                           </swap>
                            <div id="timer-container"
                                 class="circle circle-finished">
                                <div class="timer-text-container timer-finished">
