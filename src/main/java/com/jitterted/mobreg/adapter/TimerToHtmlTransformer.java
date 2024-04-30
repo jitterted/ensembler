@@ -19,19 +19,19 @@ public class TimerToHtmlTransformer {
     }
 
     private static String htmlForPaused(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButtonContainer(ensembleTimer, "/member/resume-timer", "Resume Timer")
+        return htmlForTimerControlButtonContainer(ensembleTimer, new Button("/member/resume-timer", "Resume Timer"))
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "paused");
     }
 
     private static String htmlForWaitingToStart(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButtonContainer(ensembleTimer, "/member/start-timer", "Start Timer")
+        return htmlForTimerControlButtonContainer(ensembleTimer, new Button("/member/start-timer", "Start Timer"))
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running")
                + htmlForSwappingInRotationMembers(ensembleTimer.rotation());
     }
 
-    private static String htmlForTimerControlButtonContainer(EnsembleTimer ensembleTimer,
-                                                             String buttonEndpointUrl,
-                                                             String buttonLabel) {
+    private static String htmlForTimerControlButtonContainer(
+            EnsembleTimer ensembleTimer,
+            Button button) {
         // language=html
         return """
                <swap id="timer-control-container"
@@ -42,9 +42,9 @@ public class TimerToHtmlTransformer {
                        %s
                    </button>
                </swap>
-               """.formatted(buttonEndpointUrl,
+               """.formatted(button.buttonEndpointUrl(),
                              ensembleTimer.ensembleId().id(),
-                             buttonLabel);
+                             button.buttonLabel());
     }
 
     public static String htmlForSwappingInRotationMembers(Rotation rotation) {
@@ -82,7 +82,7 @@ public class TimerToHtmlTransformer {
 
     // language=html
     private static String htmlForRunning(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButtonContainer(ensembleTimer, "/member/pause-timer", "Pause Timer")
+        return htmlForTimerControlButtonContainer(ensembleTimer, new Button("/member/pause-timer", "Pause Timer"))
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running");
     }
 
@@ -111,8 +111,7 @@ public class TimerToHtmlTransformer {
     // language=html
     private static String htmlForFinished(EnsembleTimer ensembleTimer) {
         return htmlForTimerControlButtonContainer(ensembleTimer,
-                                                  "/member/rotate-timer",
-                                                  "Next Rotation")
+                                                  new Button("/member/rotate-timer", "Next Rotation"))
                +
                """ 
                <div id="timer-container"
@@ -124,4 +123,5 @@ public class TimerToHtmlTransformer {
                """;
     }
 
+    private record Button(String buttonEndpointUrl, String buttonLabel) {}
 }
