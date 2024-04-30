@@ -60,6 +60,17 @@ class EnsembleTimerControllerMvcTest {
     }
 
     @Test
+    void postToResetTimerEndpointReturns204NoContent() throws Exception {
+        createAndStartTimerForEnsembleWithId(113);
+        ensembleTimerHolder.handleTickFor(EnsembleId.of(113),
+                                          Instant.now().plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
+
+        mockMvc.perform(post("/member/reset-timer/113").with(csrf()))
+               .andExpect(status().isNoContent());
+    }
+
+
+    @Test
     void postToNextRotationEndpointReturns204NoContent() throws Exception {
         createAndStartTimerForEnsembleWithId(113);
         ensembleTimerHolder.handleTickFor(EnsembleId.of(113),

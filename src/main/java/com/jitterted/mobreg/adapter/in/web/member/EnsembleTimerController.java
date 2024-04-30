@@ -5,13 +5,14 @@ import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.Instant;
 
@@ -35,27 +36,32 @@ public class EnsembleTimerController {
     }
 
     @PostMapping("/start-timer/{ensembleId}")
-    public ResponseEntity<Void> startTimer(@PathVariable("ensembleId") Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void startTimer(@PathVariable("ensembleId") Long id) {
         ensembleTimerHolder.startTimerFor(EnsembleId.of(id), Instant.now());
-        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/reset-timer/{ensembleId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void resetTimer(@PathVariable("ensembleId") Long id) {
     }
 
     @PostMapping("/rotate-timer/{ensembleId}")
-    public ResponseEntity<Void> rotateTimer(@PathVariable("ensembleId") Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void rotateTimer(@PathVariable("ensembleId") Long id) {
         ensembleTimerHolder.rotateTimerFor(EnsembleId.of(id));
-        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/pause-timer/{ensembleId}")
-    public ResponseEntity<Void> pauseTimer(@PathVariable("ensembleId") Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void pauseTimer(@PathVariable("ensembleId") Long id) {
         ensembleTimerHolder.pauseTimerFor(EnsembleId.of(id));
-        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/resume-timer/{ensembleId}")
-    public ResponseEntity<Void> resumeTimer(@PathVariable("ensembleId") Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void resumeTimer(@PathVariable("ensembleId") Long id) {
         ensembleTimerHolder.resumeTimerFor(EnsembleId.of(id));
-        return ResponseEntity.noContent().build();
     }
 
 }
