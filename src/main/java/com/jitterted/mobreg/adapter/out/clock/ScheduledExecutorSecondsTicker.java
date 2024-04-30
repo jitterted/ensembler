@@ -19,9 +19,8 @@ public class ScheduledExecutorSecondsTicker implements SecondsTicker {
 
     @Override
     public void start(EnsembleId ensembleId, EnsembleTimerTickHandler ensembleTimerTickHandler) {
-        if (scheduledCountdown.isScheduled()) {
-            throw new IllegalStateException("Countdown timer already scheduled for " + scheduledCountdown.ensembleId());
-        }
+        scheduledCountdown.requireNotScheduled();
+
         Runnable tickHandlerTask = () ->
                 ensembleTimerTickHandler.handleTickFor(ensembleId, Instant.now());
 
@@ -46,10 +45,6 @@ public class ScheduledExecutorSecondsTicker implements SecondsTicker {
             this.ensembleId = ensembleId;
         }
 
-        public EnsembleId ensembleId() {
-            return ensembleId;
-        }
-
         public void stop() {
             countdownHandle.cancel(false);
             countdownHandle = null;
@@ -58,6 +53,12 @@ public class ScheduledExecutorSecondsTicker implements SecondsTicker {
 
         public boolean isScheduled() {
             return countdownHandle != null;
+        }
+
+        public void requireNotScheduled() {
+            if (isScheduled()) {
+                throw new IllegalStateException("Countdown timer already scheduled for " + ensembleId);
+            }
         }
     }
 }
