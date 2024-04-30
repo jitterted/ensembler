@@ -12,27 +12,52 @@ import java.util.concurrent.TimeUnit;
 
 public class ScheduledExecutorSecondsTicker implements SecondsTicker {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private ScheduledFuture<?> countdownHandle;
-    private EnsembleId countdownEnsembleId;
+    private final ScheduledCountdown scheduledCountdown = new ScheduledCountdown();
 
     public ScheduledExecutorSecondsTicker() {
     }
 
     @Override
     public void start(EnsembleId ensembleId, EnsembleTimerTickHandler ensembleTimerTickHandler) {
-        if (countdownHandle != null) {
-            throw new IllegalStateException("Countdown timer already scheduled for " + countdownEnsembleId);
+        if (scheduledCountdown.isScheduled()) {
+            throw new IllegalStateException("Countdown timer already scheduled for " + scheduledCountdown.ensembleId());
         }
         Runnable tickHandlerTask = () ->
                 ensembleTimerTickHandler.handleTickFor(ensembleId, Instant.now());
 
-        countdownHandle = scheduler.scheduleAtFixedRate(tickHandlerTask, 0, 1, TimeUnit.SECONDS);
-        countdownEnsembleId = ensembleId;
+        ScheduledFuture<?> countdownHandle = scheduler.scheduleAtFixedRate(tickHandlerTask, 0, 1, TimeUnit.SECONDS);
+        scheduledCountdown.scheduledWith(ensembleId, countdownHandle);
     }
 
     @Override
     public void stop() {
-        countdownHandle.cancel(false);
-        countdownHandle = null;
+        scheduledCountdown.stop();
+    }
+
+    private static class ScheduledCountdown {
+        private ScheduledFuture<?> countdownHandle;
+        private EnsembleId ensembleId;
+
+        public ScheduledCountdown() {
+        }
+
+        public void scheduledWith(EnsembleId ensembleId, ScheduledFuture<?> countdownHandle) {
+            this.countdownHandle = countdownHandle;
+            this.ensembleId = ensembleId;
+        }
+
+        public EnsembleId ensembleId() {
+            return ensembleId;
+        }
+
+        public void stop() {
+            countdownHandle.cancel(false);
+            countdownHandle = null;
+            ensembleId = null;
+        }
+
+        public boolean isScheduled() {
+            return countdownHandle != null;
+        }
     }
 }
