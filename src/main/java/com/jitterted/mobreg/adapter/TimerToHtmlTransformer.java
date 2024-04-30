@@ -5,7 +5,9 @@ import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.Rotation;
 import com.jitterted.mobreg.domain.TimeRemaining;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TimerToHtmlTransformer {
 
@@ -19,26 +21,28 @@ public class TimerToHtmlTransformer {
     }
 
     private static String htmlForPaused(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButtonContainer(ensembleTimer, new Button("/member/resume-timer", "Resume Timer"))
+        return htmlForTimerControlButtonContainer(ensembleTimer, new Button("/member/resume-timer", "Resume Timer", "blue"))
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "paused");
     }
 
     private static String htmlForWaitingToStart(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButtonContainer(ensembleTimer, new Button("/member/start-timer", "Start Timer"))
+        return htmlForTimerControlButtonContainer(ensembleTimer, new Button("/member/start-timer", "Start Timer", "blue"))
                + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running")
                + htmlForSwappingInRotationMembers(ensembleTimer.rotation());
     }
 
     private static String htmlForTimerControlButtonContainer(
             EnsembleTimer ensembleTimer,
-            Button... button) {
+            Button... buttons) {
         // language=html
         return """
                <swap id="timer-control-container"
                      hx-swap-oob="innerHTML"
                      hx-swap="none">
                """ +
-               htmlForTimerControlButton(ensembleTimer, button[0])
+               Arrays.stream(buttons)
+                     .map(button -> htmlForTimerControlButton(ensembleTimer, button))
+                     .collect(Collectors.joining())
                +
                """
                </swap>
@@ -48,11 +52,12 @@ public class TimerToHtmlTransformer {
     private static String htmlForTimerControlButton(EnsembleTimer ensembleTimer, Button button) {
         return """
                    <button hx-post="%s/%s"
-                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                           class="bg-%3$s-500 hover:bg-%s-700 text-white font-bold py-2 px-4 rounded">
                        %s
                    </button>
                """.formatted(button.buttonEndpointUrl(),
                              ensembleTimer.ensembleId().id(),
+                             button.backgroundColor(),
                              button.buttonLabel());
     }
 
@@ -91,8 +96,12 @@ public class TimerToHtmlTransformer {
 
     // language=html
     private static String htmlForRunning(EnsembleTimer ensembleTimer) {
-        return htmlForTimerControlButtonContainer(ensembleTimer, new Button("/member/pause-timer", "Pause Timer"))
-               + htmlForTimerContainer(ensembleTimer.timeRemaining(), "running");
+        return htmlForTimerControlButtonContainer(
+                ensembleTimer,
+                new Button("/member/pause-timer", "Pause Timer", "blue"),
+                new Button("/member/reset-timer", "Reset Timer", "red"))
+               +
+               htmlForTimerContainer(ensembleTimer.timeRemaining(), "running");
     }
 
     // language=html
@@ -120,7 +129,7 @@ public class TimerToHtmlTransformer {
     // language=html
     private static String htmlForFinished(EnsembleTimer ensembleTimer) {
         return htmlForTimerControlButtonContainer(ensembleTimer,
-                                                  new Button("/member/rotate-timer", "Next Rotation"))
+                                                  new Button("/member/rotate-timer", "Next Rotation", "blue"))
                +
                """ 
                <div id="timer-container"
@@ -132,5 +141,6 @@ public class TimerToHtmlTransformer {
                """;
     }
 
-    private record Button(String buttonEndpointUrl, String buttonLabel) {}
+    private record Button(String buttonEndpointUrl, String buttonLabel, String backgroundColor) {
+    }
 }

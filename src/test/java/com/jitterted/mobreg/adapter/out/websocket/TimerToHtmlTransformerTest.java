@@ -75,6 +75,10 @@ class TimerToHtmlTransformerTest {
                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                    Pause Timer
                                </button>
+                               <button hx-post="/member/reset-timer/763"
+                                       class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                   Reset Timer
+                               </button>
                            </swap>
                            <div id="timer-container"
                                 class="circle circle-running"
