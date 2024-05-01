@@ -1,7 +1,6 @@
 package com.jitterted.mobreg.adapter.out.websocket;
 
 import com.jitterted.mobreg.application.port.Broadcaster;
-import com.jitterted.mobreg.domain.CountdownTimer;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +30,8 @@ public class WebSocketBroadcaster extends TextWebSocketHandler implements Broadc
     }
 
     @Override
-    public void sendEvent(CountdownTimer.TimerState timerState) {
-        String html = """
-                      <audio id="audio-container"
-                             hx-swap-oob="innerHTML"
-                             src="/horn.wav"
-                             autoplay>
-                      </audio>
-                      """;
+    public void sendEvent(EnsembleTimer.TimerEvent timerEvent) {
+        String html = EventToHtmlTransformer.htmlFor(timerEvent);
         sendHtml(html);
     }
 

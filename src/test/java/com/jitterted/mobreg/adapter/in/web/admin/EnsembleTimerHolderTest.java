@@ -338,7 +338,7 @@ public class EnsembleTimerHolderTest {
             private CountdownTimer.TimerState lastState;
             private EnsembleId lastEnsembleId;
             private TimeRemaining lastTimeRemaining;
-            private CountdownTimer.TimerState lastEventSent;
+            private EnsembleTimer.TimerEvent lastEventSent;
 
             public MockBroadcaster(int expectedEnsembleId, CountdownTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
                 this.expectedEnsembleId = expectedEnsembleId;
@@ -355,8 +355,8 @@ public class EnsembleTimerHolderTest {
             }
 
             @Override
-            public void sendEvent(CountdownTimer.TimerState timerState) {
-                lastEventSent = timerState;
+            public void sendEvent(EnsembleTimer.TimerEvent timerEvent) {
+                lastEventSent = timerEvent;
             }
 
             void reset() {
@@ -385,7 +385,7 @@ public class EnsembleTimerHolderTest {
                 assertThat(lastEventSent)
                         .as("Expected last sendEvent() to be called with FINISHED, but wasn't.")
                         .isNotNull()
-                        .isEqualByComparingTo(CountdownTimer.TimerState.FINISHED);
+                        .isEqualByComparingTo(EnsembleTimer.TimerEvent.FINISHED);
             }
         }
     }

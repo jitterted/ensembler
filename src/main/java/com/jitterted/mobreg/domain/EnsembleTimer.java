@@ -123,4 +123,8 @@ public class EnsembleTimer {
     public int hashCode() {
         return ensembleId.hashCode();
     }
+
+    public enum TimerEvent {
+        FINISHED
+    }
 }
