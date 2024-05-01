@@ -125,6 +125,6 @@ public class EnsembleTimer {
     }
 
     public enum TimerEvent {
-        PAUSED, FINISHED
+        PAUSED, RESUMED, FINISHED
     }
 }
