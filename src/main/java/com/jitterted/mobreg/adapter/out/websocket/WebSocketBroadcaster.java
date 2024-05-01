@@ -28,14 +28,25 @@ public class WebSocketBroadcaster extends TextWebSocketHandler implements Broadc
     @Override
     public void sendCurrentTimer(EnsembleTimer ensembleTimer) {
         String html = TimerToHtmlTransformer.htmlFor(ensembleTimer);
-        TextMessage textMessage = new TextMessage(html);
-        currentTextMessage = Optional.of(textMessage);
-        sessionMap.values().forEach(session -> sendMessageViaWebSocket(session, textMessage));
+        sendHtml(html);
     }
 
     @Override
     public void sendEvent(CountdownTimer.TimerState timerState) {
+        String html = """
+                      <audio id="audio-container"
+                             hx-swap-oob="innerHTML"
+                             src="/horn.wav"
+                             autoplay>
+                      </audio>
+                      """;
+        sendHtml(html);
+    }
 
+    private void sendHtml(String html) {
+        TextMessage textMessage = new TextMessage(html);
+        currentTextMessage = Optional.of(textMessage);
+        sessionMap.values().forEach(session -> sendMessageViaWebSocket(session, textMessage));
     }
 
     @Override

@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:hx-on="http://www.w3.org/1999/xhtml">
+>
 <head>
     <meta charset="UTF-8"/>
     <link th:href="@{/tailwind.css}" href="../static/tailwind.css" rel="stylesheet">
@@ -11,16 +11,6 @@
     <link rel="icon" href="/favicon-16x16.png" sizes="16x16">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png"><!-- 180×180 -->
     <link rel="manifest" href="/site.webmanifest">
-    <script type="application/javascript">
-        let hornAudio = new Audio('/horn.wav');
-
-        function afterMessage(event) {
-            let wsMessage = event.detail.message
-            if (wsMessage.includes('<div class="timer-text">next</div>')) {
-                hornAudio.play()
-            }
-        }
-    </script>
     <script src="https://unpkg.com/htmx.org@1.9.10"
             integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
             crossorigin="anonymous"></script>
@@ -127,7 +117,6 @@
             class="flex flex-col justify-center items-center p-4"
             hx-ext="ws"
             ws-connect="/member/ws/timer"
-            hx-on:htmx:ws-after-message="afterMessage(event)"
     >
         <div id="timer-container"
              class="circle circle-running"
@@ -147,6 +136,7 @@
             Start Timer
         </button>
     </div>
+    <div id="audio-container" hx-swap="none"></div>
 </div>
 <div id="new-participants-container" class="col-span-2">
     <dl class="mx-2 grid grid-cols-2 border-green-100 border-2">

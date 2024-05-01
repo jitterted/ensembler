@@ -127,6 +127,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
 
         if (ensembleTimer.state() == CountdownTimer.TimerState.FINISHED) {
             secondsTicker.stop();
+            broadcaster.sendEvent(CountdownTimer.TimerState.FINISHED);
         }
 
         broadcaster.sendCurrentTimer(ensembleTimer);

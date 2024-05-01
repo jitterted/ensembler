@@ -253,7 +253,7 @@ public class EnsembleTimerHolderTest {
         }
 
         @Test
-        void onTickWhenFinishedBroadcastsTimerFinished() {
+        void onTickWhenFinishedBroadcastsTimerFinishedWithFinishedEvent() {
             BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
                     737,
                     CountdownTimer.TimerState.FINISHED,
@@ -262,10 +262,11 @@ public class EnsembleTimerHolderTest {
             fixture.tickAfterStart(EnsembleTimer.DEFAULT_TIMER_DURATION);
 
             fixture.mockBroadcaster().verifyTimerStateSent();
+            fixture.mockBroadcaster().verifyFinishedEventSent();
         }
 
         @Test
-        void finishedTimerOnRotateThenTimerMovesToWaitingToStartAndSendsFinishedEvent() {
+        void finishedTimerOnRotateThenTimerMovesToWaitingToStart() {
             BroadcastFixture broadcastFixture = createBroadcasterWithStartedEnsembleTimer(
                     873,
                     CountdownTimer.TimerState.WAITING_TO_START,
@@ -278,7 +279,6 @@ public class EnsembleTimerHolderTest {
             broadcastFixture.ensembleTimerHolder().rotateTimerFor(EnsembleId.of(873));
 
             broadcastFixture.mockBroadcaster().verifyTimerStateSent();
-            broadcastFixture.mockBroadcaster().verifyFinishedEventSent();
         }
 
         @Test
@@ -384,6 +384,7 @@ public class EnsembleTimerHolderTest {
             public void verifyFinishedEventSent() {
                 assertThat(lastEventSent)
                         .as("Expected last sendEvent() to be called with FINISHED, but wasn't.")
+                        .isNotNull()
                         .isEqualByComparingTo(CountdownTimer.TimerState.FINISHED);
             }
         }
