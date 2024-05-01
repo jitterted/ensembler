@@ -224,7 +224,7 @@ public class EnsembleTimerHolderTest {
         }
 
         @Test
-        void onTimerPauseBroadcastsPauseState() {
+        void onTimerPauseBroadcastsPauseStateAndPausedEvent() {
             BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
                     458,
                     CountdownTimer.TimerState.PAUSED,
@@ -235,10 +235,11 @@ public class EnsembleTimerHolderTest {
             fixture.ensembleTimerHolder().pauseTimerFor(EnsembleId.of(458));
 
             fixture.mockBroadcaster().verifyTimerStateSent();
+            fixture.mockBroadcaster().verifyPausedEventSent();
         }
 
         @Test
-        void onTimerResumeBroadcastsRunningState() {
+        void onTimerResumeBroadcastsRunningStateAndSendsResumedEvent() {
             BroadcastFixture fixture = createBroadcasterWithStartedEnsembleTimer(
                     218,
                     CountdownTimer.TimerState.RUNNING,
@@ -250,6 +251,7 @@ public class EnsembleTimerHolderTest {
             fixture.ensembleTimerHolder().resumeTimerFor(EnsembleId.of(218));
 
             fixture.mockBroadcaster().verifyTimerStateSent();
+            fixture.mockBroadcaster().verifyResumedEventSent();
         }
 
         @Test
@@ -364,6 +366,7 @@ public class EnsembleTimerHolderTest {
                 lastState = null;
                 lastEnsembleId = null;
                 lastTimeRemaining = null;
+                lastEventSent = null;
             }
 
             private void verifyTimerStateSent() {
@@ -382,10 +385,22 @@ public class EnsembleTimerHolderTest {
             }
 
             public void verifyFinishedEventSent() {
+                verifyLastEventSent(EnsembleTimer.TimerEvent.FINISHED);
+            }
+
+            public void verifyPausedEventSent() {
+                verifyLastEventSent(EnsembleTimer.TimerEvent.PAUSED);
+            }
+
+            public void verifyResumedEventSent() {
+                verifyLastEventSent(EnsembleTimer.TimerEvent.RESUMED);
+            }
+
+            private void verifyLastEventSent(EnsembleTimer.TimerEvent timerEvent) {
                 assertThat(lastEventSent)
-                        .as("Expected last sendEvent() to be called with FINISHED, but wasn't.")
+                        .as("Expected last sendEvent() to be called with " + timerEvent + ", but wasn't.")
                         .isNotNull()
-                        .isEqualByComparingTo(EnsembleTimer.TimerEvent.FINISHED);
+                        .isEqualByComparingTo(timerEvent);
             }
         }
     }

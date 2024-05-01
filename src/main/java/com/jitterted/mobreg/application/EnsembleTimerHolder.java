@@ -102,8 +102,8 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     public boolean isTimerRunningFor(EnsembleId ensembleId) {
         requireTimerToExistFor(ensembleId);
         return ensembleTimers
-                .get(ensembleId)
-                .state() == CountdownTimer.TimerState.RUNNING;
+                       .get(ensembleId)
+                       .state() == CountdownTimer.TimerState.RUNNING;
     }
 
     public void startTimerFor(EnsembleId ensembleId, Instant timeStarted) {
@@ -154,6 +154,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
 
         ensembleTimer.pause();
 
+        broadcaster.sendEvent(EnsembleTimer.TimerEvent.PAUSED);
         broadcaster.sendCurrentTimer(ensembleTimer);
     }
 
@@ -162,6 +163,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
 
         ensembleTimer.resume();
 
+        broadcaster.sendEvent(EnsembleTimer.TimerEvent.RESUMED);
         broadcaster.sendCurrentTimer(ensembleTimer);
     }
 
