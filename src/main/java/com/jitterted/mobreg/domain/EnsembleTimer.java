@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import static com.jitterted.mobreg.domain.CountdownTimer.TimerState.FINISHED;
 
 public class EnsembleTimer {
-    public static final Duration DEFAULT_TIMER_DURATION = Duration.ofSeconds(4);
+    public static final Duration DEFAULT_TIMER_DURATION = Duration.ofMinutes(4);
 
     private final EnsembleId ensembleId;
     private final String ensembleName;

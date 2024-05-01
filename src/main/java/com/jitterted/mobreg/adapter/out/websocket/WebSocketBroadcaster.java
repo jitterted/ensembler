@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.adapter.out.websocket;
 
-import com.jitterted.mobreg.adapter.TimerToHtmlTransformer;
 import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.domain.CountdownTimer;
 import com.jitterted.mobreg.domain.EnsembleTimer;

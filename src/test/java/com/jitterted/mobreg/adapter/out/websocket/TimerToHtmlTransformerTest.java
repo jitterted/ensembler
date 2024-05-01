@@ -1,6 +1,5 @@
 package com.jitterted.mobreg.adapter.out.websocket;
 
-import com.jitterted.mobreg.adapter.TimerToHtmlTransformer;
 import com.jitterted.mobreg.domain.EnsembleId;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.EnsembleTimerFactory;
@@ -13,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Instant;
 import java.util.List;
 
-import static com.jitterted.mobreg.adapter.TimerToHtmlTransformer.htmlForSwappingInRotationMembers;
+import static com.jitterted.mobreg.adapter.out.websocket.TimerToHtmlTransformer.htmlForSwappingInRotationMembers;
 import static org.assertj.core.api.Assertions.*;
 
 class TimerToHtmlTransformerTest {

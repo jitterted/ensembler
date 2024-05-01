@@ -1,5 +1,6 @@
-package com.jitterted.mobreg.adapter;
+package com.jitterted.mobreg.adapter.out.websocket;
 
+import com.jitterted.mobreg.adapter.RotationRole;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.Rotation;
