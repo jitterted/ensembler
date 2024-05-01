@@ -28,6 +28,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     private final Broadcaster broadcaster;
     private final SingleEntryHashMap<EnsembleId, EnsembleTimer> ensembleTimers = new SingleEntryHashMap<>();
     private final SecondsTicker secondsTicker;
+    private final OutputListener<TimerControlData> outputListener = new OutputListener<>();
 
     public EnsembleTimerHolder(EnsembleRepository ensembleRepository,
                                MemberRepository memberRepository,
@@ -60,6 +61,11 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
                                        broadcaster,
                                        new DoNothingSecondsTicker());
     }
+
+    public OutputTracker<TimerControlData> trackOutput() {
+        return outputListener.createTracker();
+    }
+
 
     @NotNull
     public EnsembleTimer timerFor(EnsembleId ensembleId) {
@@ -161,6 +167,10 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
         secondsTicker.stop();
 
         ensembleTimers.remove(ensembleId);
+    }
+
+    public void resetTimerFor(EnsembleId ensembleId) {
+        outputListener.track(new TimerControlData("reset", 924L));
     }
 
     static class SingleEntryHashMap<K, V> extends HashMap<K, V> {

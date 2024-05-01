@@ -3,7 +3,9 @@ package com.jitterted.mobreg.adapter.in.web.member;
 import com.jitterted.mobreg.adapter.in.web.admin.ParticipantsTransformer;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.NoOpShuffler;
+import com.jitterted.mobreg.application.OutputTracker;
 import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
+import com.jitterted.mobreg.application.TimerControlData;
 import com.jitterted.mobreg.domain.CountdownTimer;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleBuilder;
@@ -54,6 +56,18 @@ class EnsembleTimerControllerTest {
 
         assertThat(fixture.ensembleTimerHolder().isTimerRunningFor(EnsembleId.of(653L)))
                 .isTrue();
+    }
+
+    @Test
+    void resetTimerAsksTimerHolderToResetTheTimer() {
+        Fixture fixture = createEnsembleAndTimerWithIdOf(924);
+        fixture.ensembleTimerController().startTimer(924L);
+        OutputTracker<TimerControlData> outputTracker = fixture.ensembleTimerHolder().trackOutput();
+
+        fixture.ensembleTimerController().resetTimer(924L);
+
+        assertThat(outputTracker.data())
+                .containsExactly(new TimerControlData("reset", 924L));
     }
 
     @Test

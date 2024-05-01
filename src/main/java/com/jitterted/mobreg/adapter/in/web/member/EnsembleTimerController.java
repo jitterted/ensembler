@@ -44,6 +44,7 @@ public class EnsembleTimerController {
     @PostMapping("/reset-timer/{ensembleId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void resetTimer(@PathVariable("ensembleId") Long id) {
+        ensembleTimerHolder.resetTimerFor(EnsembleId.of(id));
     }
 
     @PostMapping("/rotate-timer/{ensembleId}")
