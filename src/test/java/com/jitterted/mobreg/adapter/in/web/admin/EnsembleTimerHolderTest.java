@@ -280,7 +280,17 @@ public class EnsembleTimerHolderTest {
             broadcastFixture.mockBroadcaster().verifyTimerStateSent();
         }
 
+        @Test
+        void resetTimerBroadcastsTimerWaitingToStart() {
+            BroadcastFixture broadcastFixture = createBroadcasterWithStartedEnsembleTimer(
+                    571,
+                    CountdownTimer.TimerState.WAITING_TO_START,
+                    new TimeRemaining(4, 0, 100));
 
+            broadcastFixture.ensembleTimerHolder().resetTimerFor(EnsembleId.of(571));
+
+            broadcastFixture.mockBroadcaster().verifyTimerStateSent();
+        }
 
         @Test
         @Disabled("TODO")
