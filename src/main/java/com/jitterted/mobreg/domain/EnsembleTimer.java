@@ -85,6 +85,10 @@ public class EnsembleTimer {
         turnTimer.resume();
     }
 
+    public void reset() {
+        turnTimer = new CountdownTimer(turnDuration);
+    }
+
     private void requireFinished() {
         if (turnTimer.state() != FINISHED) {
             throw new IllegalStateException("Can't Rotate when timer state is %s".formatted(turnTimer.state()));
@@ -119,5 +123,4 @@ public class EnsembleTimer {
     public int hashCode() {
         return ensembleId.hashCode();
     }
-
 }

@@ -171,6 +171,10 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
 
     public void resetTimerFor(EnsembleId ensembleId) {
         outputListener.track(new TimerControlData("reset", 924L));
+
+        secondsTicker.stop();
+
+        timerFor(ensembleId).reset();
     }
 
     static class SingleEntryHashMap<K, V> extends HashMap<K, V> {

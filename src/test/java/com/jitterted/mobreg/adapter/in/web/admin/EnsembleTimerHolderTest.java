@@ -83,6 +83,24 @@ public class EnsembleTimerHolderTest {
         }
 
         @Test
+        void resetTimerThenStateIsWaitingToStartAndTickerStopped() {
+            EnsembleId ensembleId = EnsembleId.of(63);
+            TimerFixture fixture = createTimerFixture(ensembleId.id());
+            Instant timerStartedAt = Instant.now();
+            fixture.ensembleTimerHolder().startTimerFor(ensembleId, timerStartedAt);
+            fixture.ensembleTimerHolder().handleTickFor(ensembleId, timerStartedAt.plusSeconds(3));
+
+            fixture.ensembleTimerHolder().resetTimerFor(ensembleId);
+
+            fixture.mockSecondsTicker().verifyStopCalled();
+
+            assertThat(fixture.ensembleTimer().state())
+                    .isEqualByComparingTo(CountdownTimer.TimerState.WAITING_TO_START);
+            assertThat(fixture.ensembleTimer().timeRemaining().percent())
+                    .isEqualTo(100.0);
+        }
+
+        @Test
         void timerFinishedStopsSecondsTicker() {
             TimerFixture fixture = createTimerFixture(235);
             Instant timerStartedAt = Instant.now();
@@ -120,12 +138,12 @@ public class EnsembleTimerHolderTest {
 
             try {
                 ensembleTimerHolder.handleTickFor(EnsembleId.of(637), Instant.now());
-            } catch (IllegalStateException ise){
+            } catch (IllegalStateException ise) {
                 mockSecondsTicker.verifyStopCalled();
             }
         }
 
-        private TimerFixture createTimerFixture(int ensembleId) {
+        private TimerFixture createTimerFixture(long ensembleId) {
             Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
                                                      .startsNow()
                                                      .build();
@@ -261,6 +279,8 @@ public class EnsembleTimerHolderTest {
 
             broadcastFixture.mockBroadcaster().verifyTimerStateSent();
         }
+
+
 
         @Test
         @Disabled("TODO")
