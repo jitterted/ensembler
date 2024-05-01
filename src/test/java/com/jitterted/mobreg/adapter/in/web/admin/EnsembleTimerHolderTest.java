@@ -265,7 +265,7 @@ public class EnsembleTimerHolderTest {
         }
 
         @Test
-        void finishedTimerOnRotateThenTimerMovesToWaitingToStart() {
+        void finishedTimerOnRotateThenTimerMovesToWaitingToStartAndSendsFinishedEvent() {
             BroadcastFixture broadcastFixture = createBroadcasterWithStartedEnsembleTimer(
                     873,
                     CountdownTimer.TimerState.WAITING_TO_START,
@@ -278,6 +278,7 @@ public class EnsembleTimerHolderTest {
             broadcastFixture.ensembleTimerHolder().rotateTimerFor(EnsembleId.of(873));
 
             broadcastFixture.mockBroadcaster().verifyTimerStateSent();
+            broadcastFixture.mockBroadcaster().verifyFinishedEventSent();
         }
 
         @Test
@@ -330,13 +331,14 @@ public class EnsembleTimerHolderTest {
         }
 
         private static class MockBroadcaster implements Broadcaster {
-            private boolean wasCalled;
+            private boolean currentTimerWasSent;
             private final int expectedEnsembleId;
             private final CountdownTimer.TimerState expectedTimerState;
             private final TimeRemaining expectedTimeRemaining;
             private CountdownTimer.TimerState lastState;
             private EnsembleId lastEnsembleId;
             private TimeRemaining lastTimeRemaining;
+            private CountdownTimer.TimerState lastEventSent;
 
             public MockBroadcaster(int expectedEnsembleId, CountdownTimer.TimerState expectedTimerState, TimeRemaining expectedTimeRemaining) {
                 this.expectedEnsembleId = expectedEnsembleId;
@@ -346,21 +348,26 @@ public class EnsembleTimerHolderTest {
 
             @Override
             public void sendCurrentTimer(EnsembleTimer ensembleTimer) {
-                wasCalled = true;
+                currentTimerWasSent = true;
                 lastState = ensembleTimer.state();
                 lastEnsembleId = ensembleTimer.ensembleId();
                 lastTimeRemaining = ensembleTimer.timeRemaining();
             }
 
+            @Override
+            public void sendEvent(CountdownTimer.TimerState timerState) {
+                lastEventSent = timerState;
+            }
+
             void reset() {
-                wasCalled = false;
+                currentTimerWasSent = false;
                 lastState = null;
                 lastEnsembleId = null;
                 lastTimeRemaining = null;
             }
 
             private void verifyTimerStateSent() {
-                assertThat(wasCalled)
+                assertThat(currentTimerWasSent)
                         .as("Expected sendCurrentTimer(%s) to have been called on the Broadcaster", expectedTimerState)
                         .isTrue();
                 assertAll(
@@ -372,6 +379,12 @@ public class EnsembleTimerHolderTest {
                         () -> assertThat(lastTimeRemaining)
                                 .isEqualTo(expectedTimeRemaining)
                 );
+            }
+
+            public void verifyFinishedEventSent() {
+                assertThat(lastEventSent)
+                        .as("Expected last sendEvent() to be called with FINISHED, but wasn't.")
+                        .isEqualByComparingTo(CountdownTimer.TimerState.FINISHED);
             }
         }
     }

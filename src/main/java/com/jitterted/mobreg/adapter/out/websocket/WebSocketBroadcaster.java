@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.out.websocket;
 
 import com.jitterted.mobreg.adapter.TimerToHtmlTransformer;
 import com.jitterted.mobreg.application.port.Broadcaster;
+import com.jitterted.mobreg.domain.CountdownTimer;
 import com.jitterted.mobreg.domain.EnsembleTimer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,11 @@ public class WebSocketBroadcaster extends TextWebSocketHandler implements Broadc
         TextMessage textMessage = new TextMessage(html);
         currentTextMessage = Optional.of(textMessage);
         sessionMap.values().forEach(session -> sendMessageViaWebSocket(session, textMessage));
+    }
+
+    @Override
+    public void sendEvent(CountdownTimer.TimerState timerState) {
+
     }
 
     @Override

@@ -42,7 +42,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
 
     public static EnsembleTimerHolder createNull(EnsembleRepository ensembleRepository, MemberRepository memberRepository) {
         return new EnsembleTimerHolder(ensembleRepository, memberRepository,
-                                       ensembleTimer -> {},
+                                       new DoNothingBroadcaster(),
                                        new DoNothingSecondsTicker());
     }
 
@@ -50,7 +50,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
                                                  MemberRepository memberRepository,
                                                  SecondsTicker secondsTicker) {
         return new EnsembleTimerHolder(ensembleRepository, memberRepository,
-                                       ensembleTimer -> {},
+                                       new DoNothingBroadcaster(),
                                        secondsTicker);
     }
 
@@ -142,6 +142,7 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
 
     public void rotateTimerFor(EnsembleId ensembleId) {
         EnsembleTimer ensembleTimer = timerFor(ensembleId);
+
         ensembleTimer.rotateRoles();
 
         broadcaster.sendCurrentTimer(ensembleTimer);
