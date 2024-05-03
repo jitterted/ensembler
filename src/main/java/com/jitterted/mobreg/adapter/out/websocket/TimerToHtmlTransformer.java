@@ -50,18 +50,20 @@ public class TimerToHtmlTransformer {
                """;
     }
 
+    // language=html
     private static String htmlForTimerControlButton(EnsembleTimer ensembleTimer, Button button) {
         return """
-                   <button hx-post="%s/%s"
-                           class="bg-%3$s-500 hover:bg-%s-700 text-white font-bold py-2 px-4 rounded">
-                       %s
-                   </button>
+               <button hx-post="%s/%s"
+                       class="bg-%3$s-500 hover:bg-%s-700 text-white font-bold py-2 px-4 rounded">
+                   %s
+               </button>
                """.formatted(button.buttonEndpointUrl(),
                              ensembleTimer.ensembleId().id(),
                              button.backgroundColor(),
                              button.buttonLabel());
     }
 
+    // language=html
     public static String htmlForSwappingInRotationMembers(Rotation rotation) {
         return """
                <swap-container id="%s" hx-swap-oob="innerHTML">
