@@ -13,6 +13,9 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
@@ -59,6 +62,21 @@ class HexagonalArchitectureTest {
                 .orShould().callMethod(LocalDateTime.class, "now")
 
                 .as("Application and Domain must not access System Time.")
+                .check(new ClassFileImporter()
+                               .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
+                               .importPackages("com.jitterted.mobreg"));
+    }
+
+    @Test
+    void domainAndApplicationMustNotAccessRandom() {
+        noClasses()
+                .that().resideInAPackage("..domain..")
+                .or().resideInAPackage("..application..")
+
+                .should().callMethod(Collections.class, "shuffle", List.class)
+                .orShould().dependOnClassesThat().areAssignableTo(Random.class)
+
+                .as("Neither Application nor Domain should access Random or Random-related code (e.g., Collections.shuffle).")
                 .check(new ClassFileImporter()
                                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
                                .importPackages("com.jitterted.mobreg"));

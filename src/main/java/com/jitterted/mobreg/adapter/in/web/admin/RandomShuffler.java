@@ -1,5 +1,6 @@
-package com.jitterted.mobreg.application.port;
+package com.jitterted.mobreg.adapter.in.web.admin;
 
+import com.jitterted.mobreg.application.port.Shuffler;
 import com.jitterted.mobreg.domain.Member;
 
 import java.util.Collections;

@@ -1,7 +1,6 @@
 package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
-import com.jitterted.mobreg.application.port.RandomShuffler;
 import com.jitterted.mobreg.domain.EnsembleId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
