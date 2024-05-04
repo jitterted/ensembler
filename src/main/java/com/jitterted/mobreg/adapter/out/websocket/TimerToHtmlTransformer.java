@@ -44,6 +44,7 @@ public class TimerToHtmlTransformer {
                Arrays.stream(buttons)
                      .map(button -> htmlForTimerControlButton(ensembleTimer, button))
                      .collect(Collectors.joining())
+                     .indent(4)
                +
                """
                </swap>

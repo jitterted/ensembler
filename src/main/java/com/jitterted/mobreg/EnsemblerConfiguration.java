@@ -1,6 +1,7 @@
 package com.jitterted.mobreg;
 
 import com.jitterted.mobreg.adapter.out.clock.ScheduledExecutorSecondsTicker;
+import com.jitterted.mobreg.adapter.out.jdbc.EnsembleJdbcRepository;
 import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
@@ -61,14 +62,21 @@ public class EnsemblerConfiguration {
 
     @Bean
     @Profile("local")
-    public CommandLineRunner createInProgressEnsemble(EnsembleService ensembleService) {
+    public CommandLineRunner createInProgressEnsemble(EnsembleService ensembleService,
+                                                      EnsembleJdbcRepository jdbcRepository) {
         return args -> {
-            Ensemble ensemble = ensembleService.scheduleEnsemble("In Progress Ensemble",
+            if (jdbcRepository.countAllByNameContainingIgnoreCase("Ensemble Timer Demo") > 2) {
+                System.err.println("Too many timer demo ensembles, deleting them.");
+                jdbcRepository.deleteWhereNameEquals("Ensemble Timer Demo");
+            }
+            Ensemble ensemble = ensembleService.scheduleEnsemble("Ensemble Timer Demo",
                                                                  URI.create("https://zoom.us"),
                                                                  ZonedDateTime.now().withZoneSameInstant(ZoneOffset.UTC).minusMinutes(5));
             ensembleService.joinAsParticipant(ensemble.getId(), MemberId.of(1));
             ensembleService.joinAsParticipant(ensemble.getId(), MemberId.of(2));
             ensembleService.joinAsParticipant(ensemble.getId(), MemberId.of(3));
+            ensembleService.joinAsParticipant(ensemble.getId(), MemberId.of(4));
+            ensembleService.joinAsParticipant(ensemble.getId(), MemberId.of(5));
         };
     }
 }
