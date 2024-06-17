@@ -21,7 +21,7 @@ public class SendGridNotifier {
         Content content = new Content("text/html", "and easy to do anywhere, even with Java");
 
         Personalization personalization = new Personalization();
-        personalization.addTo(new Email("")); // TODO
+        personalization.addTo(to);
 
         Mail mail = new Mail();
         mail.setFrom(from);
