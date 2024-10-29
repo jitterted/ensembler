@@ -308,9 +308,10 @@ public class EnsembleTimerHolderTest {
             Ensemble ensemble = new EnsembleBuilder().id(ensembleId)
                                                      .startsNow()
                                                      .build();
-            TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
-                    .saveEnsemble(ensemble)
-                    .withThreeParticipants();
+            TestEnsembleServiceBuilder builder =
+                    new TestEnsembleServiceBuilder()
+                            .saveEnsemble(ensemble)
+                            .withThreeParticipants();
             MockBroadcaster mockBroadcaster = new MockBroadcaster(ensembleId, expectedTimerState, expectedTimeRemaining);
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(),
                                                                                      builder.memberRepository(),

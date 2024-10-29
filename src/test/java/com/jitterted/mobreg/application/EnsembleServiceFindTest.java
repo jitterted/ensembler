@@ -47,7 +47,10 @@ class EnsembleServiceFindTest {
 
         assertThat(ensembles)
                 .extracting(Ensemble::name)
-                .containsExactly("three", "two", "one");
+                .containsExactly(
+                        "three",
+                        "two",
+                        "one");
     }
 
 }

@@ -1,0 +1,20 @@
+# API for Conductor
+
+## Outbound HTTP API to Conductor
+
+Configuration: base URL
+
+* Sync Timer
+  * PUT /timers/:name:
+    * {
+          "state":
+            WAITING_TO_START -> "Waiting"
+            RUNNING -> "Running"
+            PAUSED -> "Paused"
+            FINISHED -> "Finished",
+          "driver": "name",
+          "navigator": "name",
+          "nextDriver": "name",
+          "restOfParticipants": ["name1", "name2"],
+          "timeRemainingSeconds": 99
+      }

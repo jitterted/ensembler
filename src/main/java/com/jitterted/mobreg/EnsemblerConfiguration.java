@@ -1,5 +1,6 @@
 package com.jitterted.mobreg;
 
+import com.jitterted.mobreg.adapter.out.CompositeBroadcaster;
 import com.jitterted.mobreg.adapter.out.clock.ScheduledExecutorSecondsTicker;
 import com.jitterted.mobreg.adapter.out.jdbc.EnsembleJdbcRepository;
 import com.jitterted.mobreg.application.DefaultMemberService;
@@ -14,6 +15,7 @@ import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import com.jitterted.mobreg.domain.MemberId;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +24,7 @@ import org.springframework.context.annotation.Profile;
 import java.net.URI;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Configuration
 public class EnsemblerConfiguration {
@@ -43,7 +46,14 @@ public class EnsemblerConfiguration {
     }
 
     @Bean
-    public EnsembleTimerHolder ensembleTimerHolder(EnsembleRepository ensembleRepository, MemberRepository memberRepository, Broadcaster broadcaster) {
+    public Broadcaster compositeBroadcaster(List<Broadcaster> broadcasters) {
+        return new CompositeBroadcaster(broadcasters);
+    }
+
+    @Bean
+    public EnsembleTimerHolder ensembleTimerHolder(EnsembleRepository ensembleRepository,
+                                                   MemberRepository memberRepository,
+                                                   @Qualifier("compositeBroadcaster") Broadcaster broadcaster) {
         return new EnsembleTimerHolder(ensembleRepository,
                                        memberRepository,
                                        broadcaster,
