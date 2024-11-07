@@ -3,16 +3,20 @@ package com.jitterted.mobreg.adapter.out.conductor;
 import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.domain.CountdownTimer;
 import com.jitterted.mobreg.domain.EnsembleTimer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Component
 public class ConductorHttpBroadcaster implements Broadcaster {
     private final RestClient restClient = RestClient.create();
+
+    private static final Logger logger = LoggerFactory.getLogger(ConductorHttpBroadcaster.class);
 
     @Override
     public void sendCurrentTimer(EnsembleTimer ensembleTimer) {
@@ -31,8 +35,8 @@ public class ConductorHttpBroadcaster implements Broadcaster {
                                   .retrieve()
                                   .toBodilessEntity();
                 System.out.println("POST response: " + responseEntity);
-            } catch (HttpClientErrorException e) {
-                System.err.println(e.getMessage());
+            } catch (RestClientException e) {
+                logger.warn("Attempted to POST to Conductor service", e);
             }
         }
     }
