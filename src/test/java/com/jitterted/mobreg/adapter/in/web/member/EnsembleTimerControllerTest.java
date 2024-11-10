@@ -1,24 +1,13 @@
 package com.jitterted.mobreg.adapter.in.web.member;
 
 import com.jitterted.mobreg.adapter.in.web.admin.ParticipantsTransformer;
-import com.jitterted.mobreg.application.EnsembleTimerHolder;
-import com.jitterted.mobreg.application.NoOpShuffler;
-import com.jitterted.mobreg.application.OutputTracker;
-import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
-import com.jitterted.mobreg.application.TimerControlData;
-import com.jitterted.mobreg.domain.CountdownTimer;
-import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.EnsembleBuilder;
-import com.jitterted.mobreg.domain.EnsembleFactory;
-import com.jitterted.mobreg.domain.EnsembleId;
-import com.jitterted.mobreg.domain.EnsembleTimer;
-import com.jitterted.mobreg.domain.EnsembleTimerFactory;
-import com.jitterted.mobreg.domain.Member;
+import com.jitterted.mobreg.application.*;
+import com.jitterted.mobreg.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class EnsembleTimerControllerTest {
 
@@ -27,9 +16,7 @@ class EnsembleTimerControllerTest {
         Ensemble ensemble = EnsembleFactory.withStartTimeNowAndIdAndName(153, "Dolphin Ensemble");
         TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
                 .saveEnsemble(ensemble)
-                .saveMemberAndAccept("Jane", "ghjane")
-                .saveMemberAndAccept("Paul", "ghpaul")
-                .saveMemberAndAccept("Sally", "ghsally");
+                .withThreeParticipants();
         EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
         ensembleTimerHolder.createTimerFor(EnsembleId.of(153), new NoOpShuffler());
         EnsembleTimerController ensembleTimerController = new EnsembleTimerController(ensembleTimerHolder);
