@@ -29,7 +29,7 @@ public class ConductorHttpBroadcaster implements Broadcaster {
             try {
                 ResponseEntity<Void> responseEntity =
                         restClient.post()
-                                  .uri("https://conductor-service-ld5mdxm4za-ey.a.run.app/timers")
+                                  .uri("https://conductor.suigi.dev/timers")
                                   .contentType(APPLICATION_JSON)
                                   .body(createTimerRequest)
                                   .retrieve()
