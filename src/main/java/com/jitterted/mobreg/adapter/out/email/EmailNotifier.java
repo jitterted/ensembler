@@ -15,14 +15,15 @@ import java.net.URI;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Primary
 @Component
 public class EmailNotifier implements Notifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailNotifier.class);
-    private static final DateTimeFormatter LONG_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("LLLL d, uuuu 'at' h:mma (zzz)");
-    private static final DateTimeFormatter SHORT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' h:mma (zzz)");
+    private static final DateTimeFormatter LONG_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("LLLL d, uuuu 'at' h:mma (zzz)", Locale.US);
+    private static final DateTimeFormatter SHORT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' h:mma (zzz)", Locale.US);
 
     private final MemberService memberService;
     private final Emailer emailer;

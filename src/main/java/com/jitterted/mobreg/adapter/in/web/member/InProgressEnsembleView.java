@@ -8,6 +8,7 @@ import com.jitterted.mobreg.domain.MemberId;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 public record InProgressEnsembleView(String name,
@@ -26,7 +27,7 @@ public record InProgressEnsembleView(String name,
                                           ensemble.meetingLink().toString(),
                                           ensemble.startDateTime()
                                                   .toLocalTime()
-                                                  .format(DateTimeFormatter.ofPattern("hh:mm a")),
+                                                  .format(DateTimeFormatter.ofPattern("hh:mm a", Locale.US)),
                                           "/member/timer-view/" + ensembleId.id(),
                                           ensembleTimerHolder.hasTimerFor(ensembleId),
                                           namesOf(ensemble.participants(), memberService),

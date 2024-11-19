@@ -8,6 +8,7 @@ import com.jitterted.mobreg.domain.TimeRemaining;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class TimerToHtmlTransformer {
@@ -111,23 +112,25 @@ public class TimerToHtmlTransformer {
     // language=html
     private static String htmlForTimerContainer(TimeRemaining timeRemaining, String cssState) {
         double percentRemaining = timeRemaining.percent();
-        return """
-               <div id="timer-container"
-                    class="circle circle-%s"
-                    style="background: conic-gradient(%s 0%% %f%%, black %f%% 100%%);">
-                   <svg class="progress-ring">
-                       <circle class="progress-circle"/>
-                   </svg>
-                   <div class="timer-text-container timer-%s">
-                       <div class="timer-text">%d:%02d</div>
-                   </div>
-               </div>
-               """.formatted(cssState,
-                             cssState.equals("running") ? "lightgreen" : "#FFD033",
-                             percentRemaining, percentRemaining,
-                             cssState,
-                             timeRemaining.minutes(),
-                             timeRemaining.seconds());
+        String template = """
+                <div id="timer-container"
+                     class="circle circle-%s"
+                     style="background: conic-gradient(%s 0%% %f%%, black %f%% 100%%);">
+                    <svg class="progress-ring">
+                        <circle class="progress-circle"/>
+                    </svg>
+                    <div class="timer-text-container timer-%s">
+                        <div class="timer-text">%d:%02d</div>
+                    </div>
+                </div>
+                """;
+        return String.format(Locale.ROOT, template,
+                cssState,
+                cssState.equals("running") ? "lightgreen" : "#FFD033",
+                percentRemaining, percentRemaining,
+                cssState,
+                timeRemaining.minutes(),
+                timeRemaining.seconds());
     }
 
     // language=html
