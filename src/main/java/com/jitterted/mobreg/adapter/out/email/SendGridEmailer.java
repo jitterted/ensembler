@@ -47,7 +47,7 @@ public class SendGridEmailer implements Emailer {
             Response response = sg.api(request);
             LOGGER.info("Emails sent via SendGrid, response={}, to emails={}", response.getStatusCode(), toEmailsAsStrings(personalization));
         } catch (IOException e) {
-            LOGGER.warn("Exception when trying to send email via SendGrid. Request={}. Exception: {}", request.getBody(), e);
+            LOGGER.warn("Exception when trying to send email via SendGrid. Request=" + request.getBody(), e);
         }
     }
 

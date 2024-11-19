@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.out.websocket;
 
 import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.domain.EnsembleTimer;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -62,7 +63,7 @@ public class WebSocketBroadcaster extends TextWebSocketHandler implements Broadc
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, @NotNull CloseStatus closeStatus) throws Exception {
         sessionMap.remove(session.getId());
     }
 
