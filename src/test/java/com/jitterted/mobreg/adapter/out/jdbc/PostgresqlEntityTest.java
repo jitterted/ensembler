@@ -12,11 +12,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJdbcTest(properties = {
         "spring.test.database.replace=NONE",
-        "spring.datasource.url=jdbc:tc:postgresql:14:///springboot"
+        "spring.datasource.url=jdbc:tc:postgresql:15:///springboot"
 })
 
 @Tag("integration")
