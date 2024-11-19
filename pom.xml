@@ -5,22 +5,22 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.6</version>
+    <version>3.3.5</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.jitterted</groupId>
   <artifactId>ensembler</artifactId>
-  <version>1.0.21</version>
+  <version>1.0.22</version>
   <name>ensembler</name>
   <description>Ensemble Registration Manager</description>
   <properties>
-    <java.version>22</java.version>
+    <java.version>23</java.version>
   </properties>
   <dependencies>
     <dependency>
       <groupId>org.zalando</groupId>
       <artifactId>logbook-spring-boot-starter</artifactId>
-      <version>3.7.2</version>
+      <version>3.10.0</version>
     </dependency>
 
     <dependency>
@@ -113,7 +113,10 @@
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-database-postgresql</artifactId>
+    </dependency>
 
     <!--  TEST RELATED   -->
     <dependency>
