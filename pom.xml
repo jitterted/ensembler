@@ -20,7 +20,7 @@
     <dependency>
       <groupId>org.zalando</groupId>
       <artifactId>logbook-spring-boot-starter</artifactId>
-      <version>3.7.2</version>
+      <version>3.9.0</version>
     </dependency>
 
     <dependency>
