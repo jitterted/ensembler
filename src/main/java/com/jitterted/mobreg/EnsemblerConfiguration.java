@@ -6,7 +6,6 @@ import com.jitterted.mobreg.adapter.out.jdbc.EnsembleJdbcRepository;
 import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
-import com.jitterted.mobreg.application.MemberNotFoundByIdException;
 import com.jitterted.mobreg.application.MemberService;
 import com.jitterted.mobreg.application.port.Broadcaster;
 import com.jitterted.mobreg.application.port.EnsembleRepository;
@@ -15,13 +14,14 @@ import com.jitterted.mobreg.application.port.Notifier;
 import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberId;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.net.URI;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -64,14 +64,15 @@ public class EnsemblerConfiguration {
     @Bean
     public CommandLineRunner commandLineRunner(MemberService memberService, MemberRepository memberRepository) {
         return _ -> {
-            if (memberRepository.findByGithubUsername("tedyoung").isEmpty()) {
+            if (memberRepository.findByGithubUsername("tedyoung")
+                                .isEmpty()) {
                 memberService.save(new Member("Ted", "tedyoung", "ROLE_USER", "ROLE_MEMBER", "ROLE_ADMIN"));
             }
         };
     }
 
-//    @Bean
-//    @Profile("local")
+    @Bean
+    @Profile("local")
     public CommandLineRunner createInProgressEnsemble(MemberService memberService,
                                                       MemberRepository memberRepository,
                                                       EnsembleService ensembleService,
@@ -82,35 +83,23 @@ public class EnsemblerConfiguration {
                 jdbcRepository.deleteWhereNameEquals("Ensemble Timer Demo");
             }
 
-            try {
-                for (int i = 1; i <= 5; i++) {
-                    memberService.findById(MemberId.of(i));
-                }
-                System.out.println("Found all members with IDs 1 through 5, skipping member creation...");
-            } catch (MemberNotFoundByIdException e) {
-                System.out.println("Could not find all 5 test members, creating 5 new members...");
-                // wasn't found, so assume that no default members exist: let's go create them
-                for (int i = 1; i <= 5; i++) {
-                    if (memberRepository.findById(MemberId.of(i)).isEmpty()) {
-                        Member member = new Member("Member " + i, "member" + i, "ROLE_USER", "ROLE_MEMBER");
-                        member.setId(MemberId.of(i));
-                        try {
-                            memberService.save(member);
-                        } catch (Exception ex) {
-                            System.err.println("Could not save member: " + member);
-                            ex.printStackTrace();
-                        }
-                    }
+            List<Member> allMembers = memberRepository.findAll();
+            if (allMembers.size() < 5) {
+                int numberOfMembersToCreate = 5 - allMembers.size();
+                for (int i = 0; i < numberOfMembersToCreate; i++) {
+                    Member member = new Member("Member " + i, "member" + i + "@" + LocalTime.now(), "ROLE_USER", "ROLE_MEMBER");
+                    memberService.save(member);
                 }
             }
             Ensemble ensemble = ensembleService.scheduleEnsemble("Ensemble Timer Demo",
                                                                  URI.create("https://zoom.us"),
-                                                                 ZonedDateTime.now().withZoneSameInstant(ZoneOffset.UTC).minusMinutes(5));
-            ensembleService.joinAsParticipant(ensemble.getId(), MemberId.of(1));
-            ensembleService.joinAsParticipant(ensemble.getId(), MemberId.of(2));
-            ensembleService.joinAsParticipant(ensemble.getId(), MemberId.of(3));
-            ensembleService.joinAsParticipant(ensemble.getId(), MemberId.of(4));
-            ensembleService.joinAsParticipant(ensemble.getId(), MemberId.of(5));
+                                                                 ZonedDateTime.now()
+                                                                              .withZoneSameInstant(ZoneOffset.UTC)
+                                                                              .minusMinutes(5));
+            allMembers = memberRepository.findAll(); // get the 5 (or more) members from the repo and use the first 5
+            allMembers.stream()
+                      .limit(5)
+                      .forEach(member -> ensembleService.joinAsParticipant(ensemble.getId(), member.getId()));
         };
     }
 }
