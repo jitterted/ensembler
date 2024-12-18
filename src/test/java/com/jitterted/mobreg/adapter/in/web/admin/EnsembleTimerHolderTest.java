@@ -31,27 +31,54 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class EnsembleTimerHolderTest {
 
-    @Test
-    void newTimerHolderHasNoTimerForId() {
-        EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
-        MemberRepository memberRepository = new InMemoryMemberRepository();
+    @Nested
+    class HappyScenarios {
+        @Test
+        void newTimerHolderHasNoTimerForId() {
+            EnsembleRepository ensembleRepository = new InMemoryEnsembleRepository();
+            MemberRepository memberRepository = new InMemoryMemberRepository();
 
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(ensembleRepository, memberRepository);
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(ensembleRepository, memberRepository);
 
-        assertThat(ensembleTimerHolder.hasTimerFor(EnsembleId.of(62)))
-                .isFalse();
-    }
+            assertThat(ensembleTimerHolder.hasTimerFor(EnsembleId.of(62)))
+                    .isFalse();
+        }
 
-    @Test
-    void existingTimerIsReturnedWhenHolderHasTimerForSpecificEnsemble() {
-        Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(EnsembleId.of(63));
-        EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(fixture.ensembleRepository(), fixture.memberRepository());
-        EnsembleTimer createdEnsemblerTimer = ensembleTimerHolder.createTimerFor(EnsembleId.of(63), new NoOpShuffler());
+        @Test
+        void existingTimerIsReturnedWhenHolderHasTimerForSpecificEnsemble() {
+            EnsembleId ensembleId = EnsembleId.of(63);
+            Fixture fixture = createEnsembleRepositoryWithEnsembleHavingParticipants(ensembleId);
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(fixture.ensembleRepository(), fixture.memberRepository());
+            EnsembleTimer createdEnsemblerTimer = ensembleTimerHolder.createTimerFor(ensembleId, new NoOpShuffler());
 
-        EnsembleTimer foundEnsembleTimer = ensembleTimerHolder.timerFor(EnsembleId.of(63));
+            EnsembleTimer foundEnsembleTimer = ensembleTimerHolder.timerFor(ensembleId);
 
-        assertThat(foundEnsembleTimer)
-                .isSameAs(createdEnsemblerTimer);
+            assertThat(foundEnsembleTimer)
+                    .isSameAs(createdEnsemblerTimer);
+        }
+
+        @Test
+        void createTimerFailsWhenTimerExistsForAnotherEnsemble() {
+            long ensembleWithoutTimerId = 583L;
+            Ensemble ensembleWithoutTimer = new EnsembleBuilder().id(ensembleWithoutTimerId)
+                                                                 .startsNow()
+                                                                 .build();
+            int ensembleWithTimerId = 96;
+            Ensemble ensembleWithTimer = new EnsembleBuilder().id(ensembleWithTimerId)
+                                                              .startsNow()
+                                                              .build();
+            TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
+                    .saveEnsemble(ensembleWithoutTimer)
+                    .withThreeParticipants()
+                    .saveEnsemble(ensembleWithTimer)
+                    .withThreeParticipants();
+            EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
+            ensembleTimerHolder.createTimerFor(ensembleWithTimer.getId(), new NoOpShuffler());
+
+            assertThatIllegalStateException()
+                    .isThrownBy(
+                            () -> ensembleTimerHolder.createTimerFor(ensembleWithoutTimer.getId(), new NoOpShuffler()));
+        }
     }
 
     @Nested
@@ -60,11 +87,14 @@ public class EnsembleTimerHolderTest {
         @Test
         void startTimerStartsSecondsTicker() {
             TimerFixture fixture = createTimerFixture(679);
-            fixture.ensembleTimerHolder().startTimerFor(EnsembleId.of(679), Instant.now());
+            fixture.ensembleTimerHolder()
+                   .startTimerFor(EnsembleId.of(679), Instant.now());
 
-            fixture.mockSecondsTicker().verifyStartWasCalledFor(679);
+            fixture.mockSecondsTicker()
+                   .verifyStartWasCalledFor(679);
 
-            assertThat(fixture.ensembleTimer().state())
+            assertThat(fixture.ensembleTimer()
+                              .state())
                     .isEqualByComparingTo(CountdownTimer.TimerState.RUNNING);
         }
 
@@ -72,14 +102,17 @@ public class EnsembleTimerHolderTest {
         void timerRunningNotFinishedDoesNotStopTicker() {
             TimerFixture fixture = createTimerFixture(63);
             Instant timerStartedAt = Instant.now();
-            fixture.ensembleTimerHolder().startTimerFor(EnsembleId.of(63), timerStartedAt);
+            fixture.ensembleTimerHolder()
+                   .startTimerFor(EnsembleId.of(63), timerStartedAt);
 
-            fixture.ensembleTimerHolder().handleTickFor(EnsembleId.of(63),
-                                                        timerStartedAt
-                                                                .plus(EnsembleTimer.DEFAULT_TIMER_DURATION)
-                                                                .minusSeconds(1));
+            fixture.ensembleTimerHolder()
+                   .handleTickFor(EnsembleId.of(63),
+                                  timerStartedAt
+                                          .plus(EnsembleTimer.DEFAULT_TIMER_DURATION)
+                                          .minusSeconds(1));
 
-            fixture.mockSecondsTicker().verifyStopNotCalled();
+            fixture.mockSecondsTicker()
+                   .verifyStopNotCalled();
         }
 
         @Test
@@ -87,16 +120,23 @@ public class EnsembleTimerHolderTest {
             EnsembleId ensembleId = EnsembleId.of(63);
             TimerFixture fixture = createTimerFixture(ensembleId.id());
             Instant timerStartedAt = Instant.now();
-            fixture.ensembleTimerHolder().startTimerFor(ensembleId, timerStartedAt);
-            fixture.ensembleTimerHolder().handleTickFor(ensembleId, timerStartedAt.plusSeconds(3));
+            fixture.ensembleTimerHolder()
+                   .startTimerFor(ensembleId, timerStartedAt);
+            fixture.ensembleTimerHolder()
+                   .handleTickFor(ensembleId, timerStartedAt.plusSeconds(3));
 
-            fixture.ensembleTimerHolder().resetTimerFor(ensembleId);
+            fixture.ensembleTimerHolder()
+                   .resetTimerFor(ensembleId);
 
-            fixture.mockSecondsTicker().verifyStopCalled();
+            fixture.mockSecondsTicker()
+                   .verifyStopCalled();
 
-            assertThat(fixture.ensembleTimer().state())
+            assertThat(fixture.ensembleTimer()
+                              .state())
                     .isEqualByComparingTo(CountdownTimer.TimerState.WAITING_TO_START);
-            assertThat(fixture.ensembleTimer().timeRemaining().percent())
+            assertThat(fixture.ensembleTimer()
+                              .timeRemaining()
+                              .percent())
                     .isEqualTo(100.0);
         }
 
@@ -104,23 +144,29 @@ public class EnsembleTimerHolderTest {
         void timerFinishedStopsSecondsTicker() {
             TimerFixture fixture = createTimerFixture(235);
             Instant timerStartedAt = Instant.now();
-            fixture.ensembleTimerHolder().startTimerFor(EnsembleId.of(235), timerStartedAt);
+            fixture.ensembleTimerHolder()
+                   .startTimerFor(EnsembleId.of(235), timerStartedAt);
 
-            fixture.ensembleTimerHolder().handleTickFor(EnsembleId.of(235),
-                                                        timerStartedAt
-                                                                .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
+            fixture.ensembleTimerHolder()
+                   .handleTickFor(EnsembleId.of(235),
+                                  timerStartedAt
+                                          .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
 
-            fixture.mockSecondsTicker().verifyStartThenStopWasCalledFor(235);
+            fixture.mockSecondsTicker()
+                   .verifyStartThenStopWasCalledFor(235);
         }
 
         @Test
         void timerDeletedStopsSecondsTicker() {
             TimerFixture fixture = createTimerFixture(235);
-            fixture.ensembleTimerHolder().startTimerFor(EnsembleId.of(235), Instant.now());
+            fixture.ensembleTimerHolder()
+                   .startTimerFor(EnsembleId.of(235), Instant.now());
 
-            fixture.ensembleTimerHolder().deleteTimer(EnsembleId.of(235));
+            fixture.ensembleTimerHolder()
+                   .deleteTimer(EnsembleId.of(235));
 
-            fixture.mockSecondsTicker().verifyStartThenStopWasCalledFor(235);
+            fixture.mockSecondsTicker()
+                   .verifyStartThenStopWasCalledFor(235);
         }
 
         @Test
@@ -206,9 +252,11 @@ public class EnsembleTimerHolderTest {
                                                                                  CountdownTimer.TimerState.WAITING_TO_START,
                                                                                  new TimeRemaining(4, 0, 100));
 
-            fixture.ensembleTimerHolder().createTimerFor(EnsembleId.of(475), new NoOpShuffler());
+            fixture.ensembleTimerHolder()
+                   .createTimerFor(EnsembleId.of(475), new NoOpShuffler());
 
-            fixture.mockBroadcaster().verifyTimerStateSent();
+            fixture.mockBroadcaster()
+                   .verifyTimerStateSent();
         }
 
         @Test
@@ -220,7 +268,8 @@ public class EnsembleTimerHolderTest {
 
             fixture.tickAfterStart(Duration.ofSeconds(60));
 
-            fixture.mockBroadcaster().verifyTimerStateSent();
+            fixture.mockBroadcaster()
+                   .verifyTimerStateSent();
         }
 
         @Test
@@ -230,12 +279,16 @@ public class EnsembleTimerHolderTest {
                     CountdownTimer.TimerState.PAUSED,
                     TimeRemaining.from(Duration.ofMinutes(2), Duration.ofMinutes(4)));
             fixture.tickAfterStart(Duration.ofMinutes(2));
-            fixture.mockBroadcaster().reset();
+            fixture.mockBroadcaster()
+                   .reset();
 
-            fixture.ensembleTimerHolder().pauseTimerFor(EnsembleId.of(458));
+            fixture.ensembleTimerHolder()
+                   .pauseTimerFor(EnsembleId.of(458));
 
-            fixture.mockBroadcaster().verifyTimerStateSent();
-            fixture.mockBroadcaster().verifyPausedEventSent();
+            fixture.mockBroadcaster()
+                   .verifyTimerStateSent();
+            fixture.mockBroadcaster()
+                   .verifyPausedEventSent();
         }
 
         @Test
@@ -245,13 +298,18 @@ public class EnsembleTimerHolderTest {
                     CountdownTimer.TimerState.RUNNING,
                     TimeRemaining.from(Duration.ofMinutes(2), Duration.ofMinutes(4)));
             fixture.tickAfterStart(Duration.ofMinutes(2));
-            fixture.ensembleTimerHolder().pauseTimerFor(EnsembleId.of(218));
-            fixture.mockBroadcaster().reset();
+            fixture.ensembleTimerHolder()
+                   .pauseTimerFor(EnsembleId.of(218));
+            fixture.mockBroadcaster()
+                   .reset();
 
-            fixture.ensembleTimerHolder().resumeTimerFor(EnsembleId.of(218));
+            fixture.ensembleTimerHolder()
+                   .resumeTimerFor(EnsembleId.of(218));
 
-            fixture.mockBroadcaster().verifyTimerStateSent();
-            fixture.mockBroadcaster().verifyResumedEventSent();
+            fixture.mockBroadcaster()
+                   .verifyTimerStateSent();
+            fixture.mockBroadcaster()
+                   .verifyResumedEventSent();
         }
 
         @Test
@@ -263,8 +321,10 @@ public class EnsembleTimerHolderTest {
 
             fixture.tickAfterStart(EnsembleTimer.DEFAULT_TIMER_DURATION);
 
-            fixture.mockBroadcaster().verifyTimerStateSent();
-            fixture.mockBroadcaster().verifyFinishedEventSent();
+            fixture.mockBroadcaster()
+                   .verifyTimerStateSent();
+            fixture.mockBroadcaster()
+                   .verifyFinishedEventSent();
         }
 
         @Test
@@ -278,9 +338,11 @@ public class EnsembleTimerHolderTest {
             ensembleTimer.tick(broadcastFixture.timerStartedAt()
                                                .plus(EnsembleTimer.DEFAULT_TIMER_DURATION));
 
-            broadcastFixture.ensembleTimerHolder().rotateTimerFor(EnsembleId.of(873));
+            broadcastFixture.ensembleTimerHolder()
+                            .rotateTimerFor(EnsembleId.of(873));
 
-            broadcastFixture.mockBroadcaster().verifyTimerStateSent();
+            broadcastFixture.mockBroadcaster()
+                            .verifyTimerStateSent();
         }
 
         @Test
@@ -290,9 +352,11 @@ public class EnsembleTimerHolderTest {
                     CountdownTimer.TimerState.WAITING_TO_START,
                     new TimeRemaining(4, 0, 100));
 
-            broadcastFixture.ensembleTimerHolder().resetTimerFor(EnsembleId.of(571));
+            broadcastFixture.ensembleTimerHolder()
+                            .resetTimerFor(EnsembleId.of(571));
 
-            broadcastFixture.mockBroadcaster().verifyTimerStateSent();
+            broadcastFixture.mockBroadcaster()
+                            .verifyTimerStateSent();
         }
 
         @Test
