@@ -24,7 +24,7 @@ public class MobRegApplication {
     }
 
     @Bean
-    @ConditionalOnProperty("mobreg.repository.inmemory")
+    @ConditionalOnProperty("ensembler.repository.inmemory")
     public EnsembleRepository ensembleRepository(MemberRepository memberRepository) {
         InMemoryEnsembleRepository inMemoryEnsembleRepository = new InMemoryEnsembleRepository();
         inMemoryEnsembleRepository.save(new Ensemble("Created by App Startup: Future Event", URI.create("https://zoom.us"), ZonedDateTime.now().plusHours(1)));
@@ -36,7 +36,7 @@ public class MobRegApplication {
     }
 
     @Bean
-    @ConditionalOnProperty("mobreg.repository.inmemory")
+    @ConditionalOnProperty("ensembler.repository.inmemory")
     public MemberRepository memberRepository() {
         return new InMemoryMemberRepository();
     }
