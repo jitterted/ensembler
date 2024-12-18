@@ -6,7 +6,6 @@ import com.jitterted.mobreg.application.TestEnsembleServiceBuilder;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleId;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -21,22 +20,27 @@ class EnsembleTimerLifecycleControllerTest {
         void createAndRedirectToTimerSessionForSpecificEnsemble() {
             Fixture fixture = createEnsembleAndTimerHolder(87);
 
-            String redirectPage = fixture.ensembleTimerController().createTimer(87L);
+            String redirectPage = fixture.ensembleTimerController()
+                                         .createTimer(87L);
 
             assertThat(redirectPage)
                     .isEqualTo("redirect:/member/timer-view/87");
-            assertThat(fixture.ensembleTimerHolder().hasTimerFor(EnsembleId.of(87)))
+            assertThat(fixture.ensembleTimerHolder()
+                              .hasTimerFor(EnsembleId.of(87)))
                     .isTrue();
         }
 
         @Test
         void updatedTimerStateHtmlReturnedWhenExistingTimerDeleted() {
             Fixture fixture = createEnsembleAndTimerHolder(135);
-            fixture.ensembleTimerHolder().createTimerFor(EnsembleId.of(135), new NoOpShuffler());
+            fixture.ensembleTimerHolder()
+                   .createTimerFor(EnsembleId.of(135), new NoOpShuffler());
 
-            String actualHtml = fixture.ensembleTimerController().deleteTimer(135L);
+            String actualHtml = fixture.ensembleTimerController()
+                                       .deleteTimer(135L);
 
-            assertThat(fixture.ensembleTimerHolder().hasTimerFor(EnsembleId.of(135)))
+            assertThat(fixture.ensembleTimerHolder()
+                              .hasTimerFor(EnsembleId.of(135)))
                     .isFalse();
             assertThat(actualHtml)
                     .contains("Create Timer");
@@ -124,31 +128,40 @@ class EnsembleTimerLifecycleControllerTest {
         }
 
         @Test
-        @Disabled("YAGNI? Not sure if I need this functionality.")
-        void noButtonsOnlyStatusWithLinkToEnsembleDetailsWhenAnotherEnsembleTimerExists() {
-            Ensemble ensemble583 = new EnsembleBuilder().id(583)
-                                                        .startsNow()
-                                                        .build();
-            Ensemble ensemble96 = new EnsembleBuilder().id(96)
-                                                       .startsNow()
-                                                       .build();
+        void messageWithLinkToOtherEnsembleWhenAnotherEnsembleTimerAlreadyExists() {
+            long ensembleWithoutTimerId = 583L;
+            Ensemble ensembleWithoutTimer = new EnsembleBuilder().id(ensembleWithoutTimerId)
+                                                                 .startsNow()
+                                                                 .build();
+            int ensembleWithTimerId = 96;
+            Ensemble ensembleWithTimer = new EnsembleBuilder().id(ensembleWithTimerId)
+                                                              .startsNow()
+                                                              .build();
             TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
-                    .saveEnsemble(ensemble583)
-                    .saveEnsemble(ensemble96)
+                    .saveEnsemble(ensembleWithoutTimer)
+                    .saveEnsemble(ensembleWithTimer)
                     .withThreeParticipants();
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-            ensembleTimerHolder.createTimerFor(EnsembleId.of(96), new NoOpShuffler());
+            ensembleTimerHolder.createTimerFor(ensembleWithTimer.getId(), new NoOpShuffler());
             EnsembleTimerLifecycleController ensembleTimerController = new EnsembleTimerLifecycleController(ensembleTimerHolder);
 
-            String actualHtml = ensembleTimerController.timerState(583L);
+            String actualHtml = ensembleTimerController
+                    .timerState(ensembleWithoutTimerId);
 
             String expectedHtml = """
                                   <swap id="timer-status-container" hx-swap-oob="innerHTML">
                                       <p>Timer exists for
                                       <a class="underline font-semibold text-blue-600"
                                       href="/admin/ensemble/96">another ensemble</a>.
+                                      Create will replace that timer with a new one for this Ensemble.
                                   </swap>
                                   <swap id="timer-button-container" hx-swap-oob="innerHTML">
+                                      <form action="/admin/create-timer/583" method="post">
+                                          <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                                          >
+                                              Create Timer
+                                          </button>
+                                      </form>
                                   </swap>
                                   """;
 

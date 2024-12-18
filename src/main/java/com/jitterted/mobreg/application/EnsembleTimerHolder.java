@@ -184,6 +184,10 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
         broadcaster.sendCurrentTimer(ensembleTimer);
     }
 
+    public boolean hasTimer() {
+        return !ensembleTimers.isEmpty();
+    }
+
     static class SingleEntryHashMap<K, V> extends HashMap<K, V> {
         @Override
         public V put(K key, V value) {
