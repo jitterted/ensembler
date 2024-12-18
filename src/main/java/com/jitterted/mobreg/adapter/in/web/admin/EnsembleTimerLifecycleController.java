@@ -74,13 +74,13 @@ public class EnsembleTimerLifecycleController {
     public String htmlForTimerStatusText(Long id) {
         if (ensembleTimerHolder.hasTimerFor(EnsembleId.of(id))) {
             return """
-                    <p>Timer exists and can be seen
+                    <p>A timer is currently running for this Ensemble
                         <a class="underline font-semibold text-blue-600"
                            href="/member/timer-view/%s">here</a>.
                     </p>""".formatted(id);
         }
 
-        return "<p>No timer currently exists.</p>";
+        return "<p>No timer currently exists for this Ensemble.</p>";
     }
 
 }

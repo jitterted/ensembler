@@ -70,7 +70,7 @@ class EnsembleTimerLifecycleControllerTest {
 
             String expectedHtml = """
                                   <swap id="timer-status-container" hx-swap-oob="innerHTML">
-                                      <p>No timer currently exists.</p>
+                                      <p>No timer currently exists for this Ensemble.</p>
                                   </swap>
                                   <swap id="timer-button-container" hx-swap-oob="innerHTML">
                                       <form action="/admin/create-timer/109" method="post">
@@ -105,7 +105,7 @@ class EnsembleTimerLifecycleControllerTest {
 
             String expectedHtml = """
                                   <swap id="timer-status-container" hx-swap-oob="innerHTML">
-                                      <p>Timer exists and can be seen
+                                      <p>A timer is currently running for this Ensemble
                                           <a class="underline font-semibold text-blue-600"
                                              href="/member/timer-view/362">here</a>.
                                       </p>

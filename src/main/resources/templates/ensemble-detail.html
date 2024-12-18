@@ -40,8 +40,8 @@
         <h3 class="text-xl font-semibold leading-6 text-gray-900">Participant Timer</h3>
         <div class="mt-2 max-w-xl text-sm text-gray-500"
              id="timer-status-container">
-            <p>No timer currently exists.</p>
-            <p>Timer currently running <a class="underline font-semibold text-blue-600" href="#">here</a>.
+            <p>No timer currently exists for this Ensemble.</p>
+            <p>A timer is currently running for this Ensemble <a class="underline font-semibold text-blue-600" href="#">here</a>.
         </div>
         <div class="mt-5" id="timer-button-container">
             <form th:action="@{/admin/create-timer/__${ensemble.id}__}" action="#" method="post">
