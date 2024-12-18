@@ -21,7 +21,7 @@ public class ConductorHttpBroadcaster implements Broadcaster {
     @Override
     public void sendCurrentTimer(EnsembleTimer ensembleTimer) {
         try {
-            String timerName = "Ensembler - " + ensembleTimer.ensembleName();
+            String timerName = "ensemblerTimer";
             String uri = BASE_URL + "/timers/" + timerName;
             ResponseEntity<Void> responseEntity =
                     restClient.put()
