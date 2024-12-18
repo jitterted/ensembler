@@ -59,25 +59,29 @@ public class EnsembleTimerHolderTest {
 
         @Test
         void createTimerFailsWhenTimerExistsForAnotherEnsemble() {
-            long ensembleWithoutTimerId = 583L;
-            Ensemble ensembleWithoutTimer = new EnsembleBuilder().id(ensembleWithoutTimerId)
-                                                                 .startsNow()
-                                                                 .build();
-            int ensembleWithTimerId = 96;
-            Ensemble ensembleWithTimer = new EnsembleBuilder().id(ensembleWithTimerId)
-                                                              .startsNow()
-                                                              .build();
+            int ensembleWithTimerCreatedFirstId = 96;
+            Ensemble ensembleWithTimerCreatedFirst =
+                    new EnsembleBuilder()
+                            .id(ensembleWithTimerCreatedFirstId)
+                            .startsNow()
+                            .build();
+            long ensembleWithTimerCreatedSecondId = 583L;
+            Ensemble ensembleWithTimerCreatedSecond =
+                    new EnsembleBuilder()
+                            .id(ensembleWithTimerCreatedSecondId)
+                            .startsNow()
+                            .build();
             TestEnsembleServiceBuilder builder = new TestEnsembleServiceBuilder()
-                    .saveEnsemble(ensembleWithoutTimer)
+                    .saveEnsemble(ensembleWithTimerCreatedSecond)
                     .withThreeParticipants()
-                    .saveEnsemble(ensembleWithTimer)
+                    .saveEnsemble(ensembleWithTimerCreatedFirst)
                     .withThreeParticipants();
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
-            ensembleTimerHolder.createTimerFor(ensembleWithTimer.getId(), new NoOpShuffler());
+            ensembleTimerHolder.createTimerFor(ensembleWithTimerCreatedFirst.getId(), new NoOpShuffler());
 
-            assertThatIllegalStateException()
-                    .isThrownBy(
-                            () -> ensembleTimerHolder.createTimerFor(ensembleWithoutTimer.getId(), new NoOpShuffler()));
+            assertThatIllegalStateException().isThrownBy(
+                () -> ensembleTimerHolder
+                        .createTimerFor(ensembleWithTimerCreatedSecond.getId(), new NoOpShuffler()));
         }
     }
 
