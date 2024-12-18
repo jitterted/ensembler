@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
@@ -184,12 +185,10 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
         broadcaster.sendCurrentTimer(ensembleTimer);
     }
 
-    public boolean hasTimer() {
-        return !ensembleTimers.isEmpty();
-    }
-
-    public EnsembleTimer currentTimer() {
-        return ensembleTimers.values().iterator().next();
+    public Optional<EnsembleTimer> currentTimer() {
+        return ensembleTimers.values()
+                             .stream()
+                             .findFirst();
     }
 
     static class SingleEntryHashMap<K, V> extends HashMap<K, V> {

@@ -2,6 +2,7 @@ package com.jitterted.mobreg.adapter.in.web.admin;
 
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.domain.EnsembleId;
+import com.jitterted.mobreg.domain.EnsembleTimer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,21 +75,25 @@ public class EnsembleTimerLifecycleController {
     public String htmlForTimerStatusText(Long id) {
         if (ensembleTimerHolder.hasTimerFor(EnsembleId.of(id))) {
             return """
-                    <p>A timer is currently running for this Ensemble
-                        <a class="underline font-semibold text-blue-600"
-                           href="/member/timer-view/%s">here</a>.
-                    </p>""".formatted(id);
+                   <p>A timer is currently running for this Ensemble
+                       <a class="underline font-semibold text-blue-600"
+                          href="/member/timer-view/%s">here</a>.
+                   </p>""".formatted(id);
         }
 
-        if (ensembleTimerHolder.hasTimer()) {
-            return """
-                   <p>Timer exists for
-                       <a class="underline font-semibold text-blue-600"
-                       href="/admin/ensemble/%s">another ensemble</a>.
-                       Create will replace that timer with a new one for this Ensemble.
-                   </p>""".formatted(ensembleTimerHolder.currentTimer().ensembleId().id());
-        }
-        return "<p>No timer currently exists for this Ensemble.</p>";
+        return ensembleTimerHolder
+                .currentTimer()
+                .map(this::htmlWithLinkToTimer)
+                .orElse("<p>No timer currently exists for this Ensemble.</p>");
+    }
+
+    private String htmlWithLinkToTimer(EnsembleTimer timer) {
+        return """
+               <p>Timer exists for
+                   <a class="underline font-semibold text-blue-600"
+                   href="/admin/ensemble/%s">another ensemble</a>.
+                   Create will replace that timer with a new one for this Ensemble.
+               </p>""".formatted(timer.ensembleId().id());
     }
 
 }
