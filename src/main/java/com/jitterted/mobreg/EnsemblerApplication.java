@@ -17,10 +17,10 @@ import java.time.ZonedDateTime;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
-public class MobRegApplication {
+public class EnsemblerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MobRegApplication.class, args);
+        SpringApplication.run(EnsemblerApplication.class, args);
     }
 
     @Bean
