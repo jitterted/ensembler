@@ -191,9 +191,8 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
     static class SingleEntryHashMap<K, V> extends HashMap<K, V> {
         @Override
         public V put(K key, V value) {
-            if (this.size() == 1 && !this.containsKey(key)) {
-                throw new IllegalStateException("A SingleEntryHashMap cannot have more than one entry, has entry for %s, attempting to add entry for %s"
-                                                        .formatted(keySet().iterator().next(), key));
+            if (this.size() == 1) {
+                this.clear();
             }
             return super.put(key, value);
         }

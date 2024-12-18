@@ -79,9 +79,12 @@ public class EnsembleTimerHolderTest {
             EnsembleTimerHolder ensembleTimerHolder = EnsembleTimerHolder.createNull(builder.ensembleRepository(), builder.memberRepository());
             ensembleTimerHolder.createTimerFor(ensembleWithTimerCreatedFirst.getId(), new NoOpShuffler());
 
-            assertThatIllegalStateException().isThrownBy(
-                () -> ensembleTimerHolder
-                        .createTimerFor(ensembleWithTimerCreatedSecond.getId(), new NoOpShuffler()));
+            EnsembleTimer timerForSecondEnsemble = ensembleTimerHolder.createTimerFor(ensembleWithTimerCreatedSecond.getId(), new NoOpShuffler());
+
+            assertThat(timerForSecondEnsemble.ensembleId().id())
+                    .isEqualTo(ensembleWithTimerCreatedSecondId);
+            assertThatIllegalStateException()
+                    .isThrownBy(() -> ensembleTimerHolder.timerFor(ensembleWithTimerCreatedFirst.getId()));
         }
     }
 
