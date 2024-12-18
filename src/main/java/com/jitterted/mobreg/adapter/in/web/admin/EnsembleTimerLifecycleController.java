@@ -83,10 +83,10 @@ public class EnsembleTimerLifecycleController {
         if (ensembleTimerHolder.hasTimer()) {
             return """
                    <p>Timer exists for
-                   <a class="underline font-semibold text-blue-600"
-                   href="/admin/ensemble/96">another ensemble</a>.
-                   Create will replace that timer with a new one for this Ensemble.
-                   """;
+                       <a class="underline font-semibold text-blue-600"
+                       href="/admin/ensemble/%s">another ensemble</a>.
+                       Create will replace that timer with a new one for this Ensemble.
+                   </p>""".formatted(ensembleTimerHolder.currentTimer().ensembleId().id());
         }
         return "<p>No timer currently exists for this Ensemble.</p>";
     }

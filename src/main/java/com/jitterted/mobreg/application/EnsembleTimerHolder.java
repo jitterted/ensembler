@@ -188,6 +188,10 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
         return !ensembleTimers.isEmpty();
     }
 
+    public EnsembleTimer currentTimer() {
+        return ensembleTimers.values().iterator().next();
+    }
+
     static class SingleEntryHashMap<K, V> extends HashMap<K, V> {
         @Override
         public V put(K key, V value) {

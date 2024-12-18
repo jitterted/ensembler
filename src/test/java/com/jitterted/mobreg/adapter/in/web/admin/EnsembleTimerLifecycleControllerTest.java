@@ -129,11 +129,11 @@ class EnsembleTimerLifecycleControllerTest {
 
         @Test
         void messageWithLinkToOtherEnsembleWhenAnotherEnsembleTimerAlreadyExists() {
-            long ensembleWithoutTimerId = 583L;
+            long ensembleWithoutTimerId = 581L;
             Ensemble ensembleWithoutTimer = new EnsembleBuilder().id(ensembleWithoutTimerId)
                                                                  .startsNow()
                                                                  .build();
-            int ensembleWithTimerId = 96;
+            int ensembleWithTimerId = 97;
             Ensemble ensembleWithTimer = new EnsembleBuilder().id(ensembleWithTimerId)
                                                               .startsNow()
                                                               .build();
@@ -151,12 +151,13 @@ class EnsembleTimerLifecycleControllerTest {
             String expectedHtml = """
                                   <swap id="timer-status-container" hx-swap-oob="innerHTML">
                                       <p>Timer exists for
-                                      <a class="underline font-semibold text-blue-600"
-                                      href="/admin/ensemble/96">another ensemble</a>.
-                                      Create will replace that timer with a new one for this Ensemble.
+                                          <a class="underline font-semibold text-blue-600"
+                                          href="/admin/ensemble/97">another ensemble</a>.
+                                          Create will replace that timer with a new one for this Ensemble.
+                                      </p>
                                   </swap>
                                   <swap id="timer-button-container" hx-swap-oob="innerHTML">
-                                      <form action="/admin/create-timer/583" method="post">
+                                      <form action="/admin/create-timer/581" method="post">
                                           <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                                           >
                                               Create Timer
