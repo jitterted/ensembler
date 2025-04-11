@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.time.Duration;
 
 @Controller
 @RequestMapping("/admin")
@@ -24,8 +27,12 @@ public class EnsembleTimerLifecycleController {
     }
 
     @PostMapping("/create-timer/{ensembleId}")
-    public String createTimer(@PathVariable("ensembleId") Long id) {
-        ensembleTimerHolder.createTimerFor(EnsembleId.of(id), shuffler);
+    public String createTimer(@PathVariable("ensembleId") Long id, 
+                             @RequestParam(value = "duration", required = false) Integer durationMinutes) {
+        Duration duration = (durationMinutes != null && durationMinutes == 5) 
+                          ? Duration.ofMinutes(5) 
+                          : EnsembleTimer.DEFAULT_TIMER_DURATION;
+        ensembleTimerHolder.createTimerFor(EnsembleId.of(id), shuffler, duration);
         return "redirect:/member/timer-view/" + id;
     }
 
@@ -64,12 +71,21 @@ public class EnsembleTimerLifecycleController {
         }
         return
                 """
-                <form action="/admin/create-timer/%s" method="post">
-                    <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                    >
-                        Create Timer
-                    </button>
-                </form>""".formatted(id);
+                <div class="flex flex-col space-y-2">
+                    <form action="/admin/create-timer/%s" method="post">
+                        <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                        >
+                            Create 4-Minute Timer
+                        </button>
+                    </form>
+                    <form action="/admin/create-timer/%s" method="post">
+                        <input type="hidden" name="duration" value="5">
+                        <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                        >
+                            Create 5-Minute Timer
+                        </button>
+                    </form>
+                </div>""".formatted(id, id);
     }
 
     public String htmlForTimerStatusText(Long id) {

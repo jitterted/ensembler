@@ -46,6 +46,15 @@ class EnsembleTimerLifecycleControllerMvcTest {
     }
 
     @Test
+    void postToCreateTimerWithDurationRedirects() throws Exception {
+        createAndSaveEnsembleInRepositoryForId(258);
+        mockMvc.perform(post("/admin/create-timer/258")
+                .param("duration", "5")
+                .with(csrf()))
+               .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
     void postToDeleteTimerReturns200Ok() throws Exception {
         createAndSaveEnsembleInRepositoryForId(492);
         mockMvc.perform(post("/admin/create-timer/492").with(csrf()));

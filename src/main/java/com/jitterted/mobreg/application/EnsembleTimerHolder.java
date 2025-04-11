@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,13 +79,19 @@ public class EnsembleTimerHolder implements EnsembleTimerTickHandler {
 
     @NotNull
     public EnsembleTimer createTimerFor(EnsembleId ensembleId, Shuffler shuffler) {
+        return createTimerFor(ensembleId, shuffler, EnsembleTimer.DEFAULT_TIMER_DURATION);
+    }
+
+    @NotNull
+    public EnsembleTimer createTimerFor(EnsembleId ensembleId, Shuffler shuffler, Duration duration) {
         Ensemble ensemble = ensembleRepository.findById(ensembleId)
                                               .orElseThrow();
         List<Member> participants = membersFrom(ensemble);
         shuffler.shuffle(participants);
         EnsembleTimer ensembleTimer = new EnsembleTimer(ensembleId,
                                                         ensemble.name(),
-                                                        participants);
+                                                        participants,
+                                                        duration);
         ensembleTimers.put(ensembleId, ensembleTimer);
         broadcaster.sendCurrentTimer(ensembleTimer);
         return ensembleTimer;

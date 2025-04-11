@@ -21,7 +21,7 @@ class EnsembleTimerLifecycleControllerTest {
             Fixture fixture = createEnsembleAndTimerHolder(87);
 
             String redirectPage = fixture.ensembleTimerController()
-                                         .createTimer(87L);
+                                         .createTimer(87L, null);
 
             assertThat(redirectPage)
                     .isEqualTo("redirect:/member/timer-view/87");
@@ -43,7 +43,8 @@ class EnsembleTimerLifecycleControllerTest {
                               .hasTimerFor(EnsembleId.of(135)))
                     .isFalse();
             assertThat(actualHtml)
-                    .contains("Create Timer");
+                    .contains("Create 4-Minute Timer")
+                    .contains("Create 5-Minute Timer");
         }
 
         private Fixture createEnsembleAndTimerHolder(int id) {
@@ -77,12 +78,21 @@ class EnsembleTimerLifecycleControllerTest {
                                       <p>No timer currently exists for this Ensemble.</p>
                                   </swap>
                                   <swap id="timer-button-container" hx-swap-oob="innerHTML">
-                                      <form action="/admin/create-timer/109" method="post">
-                                          <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                                          >
-                                              Create Timer
-                                          </button>
-                                      </form>
+                                      <div class="flex flex-col space-y-2">
+                                          <form action="/admin/create-timer/109" method="post">
+                                              <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                                              >
+                                                  Create 4-Minute Timer
+                                              </button>
+                                          </form>
+                                          <form action="/admin/create-timer/109" method="post">
+                                              <input type="hidden" name="duration" value="5">
+                                              <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                                              >
+                                                  Create 5-Minute Timer
+                                              </button>
+                                          </form>
+                                      </div>
                                   </swap>
                                   """;
             assertThat(actualHtml)
@@ -103,7 +113,7 @@ class EnsembleTimerLifecycleControllerTest {
         @Test
         void returnsOnlyDeleteButtonAndLinkToTimerWhenTimerExistsForThisEnsemble() {
             EnsembleTimerLifecycleController ensembleTimerController = createEnsembleAndTimerHolder(362);
-            ensembleTimerController.createTimer(362L);
+            ensembleTimerController.createTimer(362L, null);
 
             String actualHtml = ensembleTimerController.timerState(362L);
 
@@ -157,12 +167,21 @@ class EnsembleTimerLifecycleControllerTest {
                                       </p>
                                   </swap>
                                   <swap id="timer-button-container" hx-swap-oob="innerHTML">
-                                      <form action="/admin/create-timer/581" method="post">
-                                          <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                                          >
-                                              Create Timer
-                                          </button>
-                                      </form>
+                                      <div class="flex flex-col space-y-2">
+                                          <form action="/admin/create-timer/581" method="post">
+                                              <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                                              >
+                                                  Create 4-Minute Timer
+                                              </button>
+                                          </form>
+                                          <form action="/admin/create-timer/581" method="post">
+                                              <input type="hidden" name="duration" value="5">
+                                              <button class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                                              >
+                                                  Create 5-Minute Timer
+                                              </button>
+                                          </form>
+                                      </div>
                                   </swap>
                                   """;
 
