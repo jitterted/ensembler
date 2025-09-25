@@ -12,19 +12,23 @@ import java.net.URI;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("RedundantThrows")
 class EnsembleServiceEnsembleScheduledNotificationTest {
 
     @Test
     void whenEnsembleScheduledEnsembleOpenNotificationIsSent() throws Exception {
-        MockEnsembleScheduledNotifier mockEnsembleScheduledNotifier = new MockEnsembleScheduledNotifier();
-        EnsembleService ensembleService = new EnsembleService(new InMemoryEnsembleRepository(),
-                                                              new InMemoryMemberRepository(),
-                                                              mockEnsembleScheduledNotifier, new DummyVideoConferenceScheduler());
+        MockEnsembleScheduledNotifier mockEnsembleScheduledNotifier =
+                new MockEnsembleScheduledNotifier();
+        EnsembleService ensembleService = new EnsembleService(
+                new InMemoryEnsembleRepository(),
+                new InMemoryMemberRepository(),
+                mockEnsembleScheduledNotifier,
+                new DummyVideoConferenceScheduler());
 
-        ensembleService.scheduleEnsemble("Notifying Ensemble", ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
+        ensembleService.scheduleEnsemble("Notifying Ensemble",
+                ZonedDateTime.of(2021, 11, 10, 17, 0, 0, 0, ZoneOffset.UTC));
 
         mockEnsembleScheduledNotifier.verify();
     }
