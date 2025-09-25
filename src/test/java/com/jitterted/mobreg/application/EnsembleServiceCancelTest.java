@@ -8,7 +8,7 @@ import com.jitterted.mobreg.domain.EnsembleBuilder;
 import com.jitterted.mobreg.domain.EnsembleId;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class EnsembleServiceCancelTest {
 
@@ -31,10 +31,10 @@ class EnsembleServiceCancelTest {
     @Test
     void canceledEnsembleDeletesVideoConferenceMeeting() throws Exception {
         Ensemble ensemble = new EnsembleBuilder()
-                .withConferenceDetails("zoomMeetingId", "https://start.link", "https://join.link")
+                .withConferenceDetails("meetingId", "https://start.link", "https://join.link")
                 .build();
         VideoConferenceScheduler succeedsIfMeetingIdMatchesEnsemble =
-                new ZoomConferenceSchedulerDeletesExpectedMeetingId("zoomMeetingId");
+                new ZoomConferenceSchedulerDeletesExpectedMeetingId("meetingId");
         TestEnsembleServiceBuilder ensembleServiceBuilder =
                 new TestEnsembleServiceBuilder()
                         .withVideoConferenceScheduler(succeedsIfMeetingIdMatchesEnsemble)

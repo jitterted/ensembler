@@ -4,6 +4,8 @@ import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
 import com.jitterted.mobreg.domain.ConferenceDetails;
 import com.jitterted.mobreg.domain.Ensemble;
 
+@SuppressWarnings("ClassCanBeRecord")
+
 class ZoomConferenceSchedulerDeletesExpectedMeetingId implements VideoConferenceScheduler {
     private final String expectedMeetingId;
 
