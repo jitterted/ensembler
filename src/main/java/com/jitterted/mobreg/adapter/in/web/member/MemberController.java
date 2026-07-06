@@ -46,9 +46,11 @@ public class MemberController {
     public String showEnsemblesForUser(Model model,
                                        @AuthenticationPrincipal AuthenticatedPrincipal principal,
                                        @CurrentSecurityContext SecurityContext context) {
-        LOGGER.debug("Received request to show Ensembles for user {}", principal.getName());
         if (context.getAuthentication().getName().equalsIgnoreCase("anonymousUser")) {
             throw new AccessDeniedException("Access Denied for Anonymous User");
+        }
+        if (principal == null) {
+            return "redirect:/";
         }
 
         LOGGER.debug("Finding member for principal.name {}", principal.getName());
