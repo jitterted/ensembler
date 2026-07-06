@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25-jdk as build
+FROM eclipse-temurin:25-jdk AS build
 COPY . /app
 WORKDIR /app
 RUN ./mvnw --no-transfer-progress clean package -DskipTests
