@@ -1,15 +1,7 @@
 package com.jitterted.mobreg.application;
 
-import com.jitterted.mobreg.application.port.EnsembleRepository;
-import com.jitterted.mobreg.application.port.FailedToScheduleMeeting;
-import com.jitterted.mobreg.application.port.MemberRepository;
-import com.jitterted.mobreg.application.port.Notifier;
-import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
-import com.jitterted.mobreg.domain.ConferenceDetails;
-import com.jitterted.mobreg.domain.Ensemble;
-import com.jitterted.mobreg.domain.EnsembleId;
-import com.jitterted.mobreg.domain.Member;
-import com.jitterted.mobreg.domain.MemberId;
+import com.jitterted.mobreg.application.port.*;
+import com.jitterted.mobreg.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -177,10 +169,13 @@ public class EnsembleService {
     }
 
     private Ensemble execute(EnsembleId ensembleId, Consumer<Ensemble> action) {
+        LOGGER.debug("Loading Ensemble {}", ensembleId);
         Ensemble ensemble = findOrThrow(ensembleId);
 
+        LOGGER.debug("Executing action on ensemble...");
         action.accept(ensemble);
 
+        LOGGER.debug("Saving changes to ensemble...");
         return ensembleRepository.save(ensemble);
     }
 

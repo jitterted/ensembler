@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EnsembleStateTest {
 
@@ -13,7 +14,7 @@ class EnsembleStateTest {
     private static final Duration ENSEMBLE_DURATION = Duration.ofHours(1).plusMinutes(55);
 
     @Test
-    void newEnsembleIsNotCanceled() throws Exception {
+    void newEnsembleIsNotCanceled() {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
         assertThat(ensemble.isCanceled())
@@ -21,7 +22,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    void newEnsembleIsNotCompleted() throws Exception {
+    void newEnsembleIsNotCompleted() {
         Ensemble ensemble = new Ensemble("not completed", ZonedDateTime.now());
 
         assertThat(ensemble.isCompleted())
@@ -29,7 +30,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    void whenCompletingEnsembleThenEnsembleIsCompleted() throws Exception {
+    void whenCompletingEnsembleThenEnsembleIsCompleted() {
         Ensemble ensemble = new Ensemble("completed", ZonedDateTime.now());
 
         ensemble.complete();
@@ -39,7 +40,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    void whenCancelingScheduledEnsembleThenEnsembleIsCanceled() throws Exception {
+    void whenCancelingScheduledEnsembleThenEnsembleIsCanceled() {
         Ensemble ensemble = EnsembleFactory.withStartTimeNow();
 
         ensemble.cancel();
@@ -49,7 +50,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    void cancelCompletedEnsembleThenThrowsException() throws Exception {
+    void cancelCompletedEnsembleThenThrowsException() {
         Ensemble ensemble = new EnsembleBuilder()
                 .id(-2)
                 .named("completed")
@@ -61,22 +62,20 @@ class EnsembleStateTest {
     }
 
     @Test
-    void canceledEnsembleWhenAcceptMemberThrowsException() throws Exception {
+    void canceledEnsembleWhenAcceptMemberThrowsException() {
         Ensemble ensemble = new EnsembleBuilder()
                 .id(-2)
                 .named("canceled")
                 .asCanceled()
                 .build();
 
-        assertThatThrownBy(() -> {
-            ensemble.joinAsParticipant(DUMMY_MEMBER_ID);
-        })
+        assertThatThrownBy(() -> ensemble.joinAsParticipant(DUMMY_MEMBER_ID))
                 .isInstanceOf(EnsembleCanceled.class)
                 .hasMessage("Ensemble (EnsembleId=-2) is Canceled");
     }
 
     @Test
-    void completedEnsembleWhenRegisterMemberThrowsException() throws Exception {
+    void completedEnsembleWhenRegisterMemberThrowsException() {
         Ensemble ensemble = new EnsembleBuilder()
                 .id(-2)
                 .named("completed")
@@ -89,7 +88,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    void completingCanceledEnsembleThrowsException() throws Exception {
+    void completingCanceledEnsembleThrowsException() {
         Ensemble ensemble = new EnsembleBuilder()
                 .id(-2)
                 .named("canceled")
@@ -102,7 +101,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    void completeIsIdempotent() throws Exception {
+    void completeIsIdempotent() {
         Ensemble ensemble = new Ensemble("completed", ZonedDateTime.now());
         ensemble.complete();
 
@@ -114,7 +113,7 @@ class EnsembleStateTest {
 
 
     @Test
-    void uncompletedEnsembleHasNotEndedThenPendingCompletedIsFalse() throws Exception {
+    void uncompletedEnsembleHasNotEndedThenPendingCompletedIsFalse() {
         ZonedDateTime startTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 12);
         Ensemble ensemble = EnsembleFactory.withStartTime(startTime);
 
@@ -124,7 +123,7 @@ class EnsembleStateTest {
     }
 
     @Test
-    void uncompletedEnsembleEndedInThePastThenPendingCompletedIsTrue() throws Exception {
+    void uncompletedEnsembleEndedInThePastThenPendingCompletedIsTrue() {
         ZonedDateTime startTime = ZonedDateTimeFactory.zoneDateTimeUtc(2021, 11, 22, 12);
         Ensemble ensemble = EnsembleFactory.withStartTime(startTime);
 

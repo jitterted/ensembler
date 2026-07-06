@@ -7,18 +7,13 @@ import com.jitterted.mobreg.application.DefaultMemberService;
 import com.jitterted.mobreg.application.EnsembleService;
 import com.jitterted.mobreg.application.EnsembleTimerHolder;
 import com.jitterted.mobreg.application.MemberService;
-import com.jitterted.mobreg.application.port.Broadcaster;
-import com.jitterted.mobreg.application.port.EnsembleRepository;
-import com.jitterted.mobreg.application.port.MemberRepository;
-import com.jitterted.mobreg.application.port.Notifier;
-import com.jitterted.mobreg.application.port.VideoConferenceScheduler;
+import com.jitterted.mobreg.application.port.*;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.net.URI;
 import java.time.LocalTime;
@@ -66,13 +61,15 @@ public class EnsemblerConfiguration {
         return _ -> {
             if (memberRepository.findByGithubUsername("tedyoung")
                                 .isEmpty()) {
-                memberService.save(new Member("Ted", "tedyoung", "ROLE_USER", "ROLE_MEMBER", "ROLE_ADMIN"));
+                Member memberTed = new Member("Ted", "tedyoung", "ROLE_USER", "ROLE_MEMBER", "ROLE_ADMIN");
+                memberTed.changeEmailTo("ted@ted.dev");
+                memberService.save(memberTed);
             }
         };
     }
 
-    @Bean
-    @Profile("local")
+//    @Bean
+//    @Profile("local")
     public CommandLineRunner createInProgressEnsemble(MemberService memberService,
                                                       MemberRepository memberRepository,
                                                       EnsembleService ensembleService,

@@ -46,10 +46,12 @@ public class MemberController {
     public String showEnsemblesForUser(Model model,
                                        @AuthenticationPrincipal AuthenticatedPrincipal principal,
                                        @CurrentSecurityContext SecurityContext context) {
+        LOGGER.debug("Received request to show Ensembles for user {}", principal.getName());
         if (context.getAuthentication().getName().equalsIgnoreCase("anonymousUser")) {
             throw new AccessDeniedException("Access Denied for Anonymous User");
         }
 
+        LOGGER.debug("Finding member for principal.name {}", principal.getName());
         Member member = memberLookup.findMemberBy(principal);
         model.addAttribute("githubUsername", member.githubUsername());
         model.addAttribute("firstName", member.firstName());
@@ -76,8 +78,10 @@ public class MemberController {
         EnsembleId ensembleId = EnsembleId.of(memberRegisterForm.getEnsembleId());
         MemberId memberId = MemberId.of(memberRegisterForm.getMemberId());
 
+        LOGGER.debug("Join as spectator for member id {}", memberId);
         ensembleService.joinAsSpectator(ensembleId, memberId);
 
+        LOGGER.debug("Redirecting to /member/register");
         return "redirect:/member/register";
     }
 
@@ -93,20 +97,25 @@ public class MemberController {
 
     private void addEnsemblesToModel(Model model, Member member) {
         MemberId memberId = member.getId();
+        LOGGER.debug("Adding ensemble list to MVC model...");
 
         Optional<InProgressEnsembleView> inProgressEnsemble =
-                ensembleService.inProgressEnsemble(ZonedDateTime.now(), memberId)
-                               .map(ensemble -> InProgressEnsembleView.from(ensemble,
-                                                                            memberService,
-                                                                            ensembleTimerHolder));
+                        ensembleService.inProgressEnsemble(ZonedDateTime.now(), memberId)
+                                .map(ensemble -> InProgressEnsembleView.from(ensemble,
+                                        memberService,
+                                        ensembleTimerHolder));
         model.addAttribute("inProgressEnsembleViewOptional", inProgressEnsemble);
 
+        LOGGER.debug("Finding upcoming Ensembles...");
         List<Ensemble> upcomingEnsembles = ensembleService.allUpcomingEnsembles(ZonedDateTime.now());
         List<EnsembleSummaryView> availableEnsembleSummaryViews = EnsembleSummaryView.from(upcomingEnsembles, memberId, memberService, EnsembleSortOrder.ASCENDING_ORDER);
+        LOGGER.debug("Adding {} upcoming ensembles to the view", availableEnsembleSummaryViews.size());
         model.addAttribute("upcomingEnsembles", availableEnsembleSummaryViews);
 
+        LOGGER.debug("Finding past Ensembles...");
         List<Ensemble> pastEnsembles = ensembleService.allInThePastFor(memberId, ZonedDateTime.now());
         List<EnsembleSummaryView> pastEnsembleSummaryViews = EnsembleSummaryView.from(pastEnsembles, memberId, memberService, EnsembleSortOrder.DESCENDING_ORDER);
+        LOGGER.debug("Adding {} past ensembles to the view", pastEnsembleSummaryViews.size());
         model.addAttribute("pastEnsembles", pastEnsembleSummaryViews);
     }
 
