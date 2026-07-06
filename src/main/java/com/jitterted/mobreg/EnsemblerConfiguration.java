@@ -11,9 +11,11 @@ import com.jitterted.mobreg.application.port.*;
 import com.jitterted.mobreg.domain.Ensemble;
 import com.jitterted.mobreg.domain.Member;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jdbc.core.mapping.JdbcMappingContext;
 
 import java.net.URI;
 import java.time.LocalTime;
@@ -23,6 +25,19 @@ import java.util.List;
 
 @Configuration
 public class EnsemblerConfiguration {
+
+    @Bean
+    public BeanPostProcessor singleQueryLoadingEnabler() {
+        return new BeanPostProcessor() {
+            @Override
+            public Object postProcessAfterInitialization(Object bean, String beanName) {
+                if (bean instanceof JdbcMappingContext mappingContext) {
+                    mappingContext.setSingleQueryLoadingEnabled(true);
+                }
+                return bean;
+            }
+        };
+    }
 
     @Bean
     public MemberService memberService(MemberRepository memberRepository) {
