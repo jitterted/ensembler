@@ -96,7 +96,10 @@ public class EnsembleService {
 
     // TODO: return Stream<> instead of List<>
     public List<Ensemble> allEnsembles() {
-        return ensembleRepository.findAll();
+        LOGGER.debug("Fetching all ensembles...");
+        List<Ensemble> allEnsembles = ensembleRepository.findAll();
+        LOGGER.debug("Fetched all ensembles, count = {}", allEnsembles.size());
+        return allEnsembles;
     }
 
     public List<Ensemble> allEnsemblesByDateTimeDescending() {
