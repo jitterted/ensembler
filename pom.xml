@@ -94,11 +94,6 @@
       <version>0.1.59</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.sendgrid</groupId>
-      <artifactId>sendgrid-java</artifactId>
-    </dependency>
-
     <!-- DATABASE STUFF   -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
